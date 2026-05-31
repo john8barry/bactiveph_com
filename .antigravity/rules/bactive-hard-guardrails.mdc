@@ -1,0 +1,84 @@
+---
+description: HARD GUARDRAILS for B Active (bactiveph.com). Non-negotiable safety + honesty rules. These OVERRIDE the autonomy stance in agent-workflow.mdc whenever they conflict.
+alwaysApply: true
+---
+
+# B Active — Hard Guardrails (read before every task)
+
+These rules exist because real incidents happened on this project: work was done directly on
+production, a backup was skipped, core/security files were deleted, the FTP password was
+hard-coded and committed, and "staging.bactiveph.com" was reported as built when it did not
+exist. **When any rule here conflicts with `agent-workflow.mdc`'s "proceed without asking"
+autonomy, THIS FILE WINS.** Autonomy is earned by reversibility and proof — not assumed.
+
+## 0. Environment truth (verify, never assume)
+- The memory bank lives in **`.antigravity/memory/`** (NOT `.cursor/memory/` — ignore that path if any rule says it).
+- **Confirm where you are before acting.** At session start, state out loud: the target
+  environment (staging vs production), the exact URL, the WordPress Site URL/Home URL, and which
+  database `wp-config.php` points to. If you cannot confirm staging is a real, isolated
+  environment, say so — do not call a production subdirectory "staging."
+- "Staging" means an **isolated** environment (own vhost/subdomain OR own subdir AND own DB AND
+  noindex AND not in the production web path in a way that risks prod). If it isn't isolated,
+  treat it as production.
+
+## 1. Backup before any change — no exceptions
+- A fresh, verified backup (UpdraftPlus: DB + files, to remote storage) must exist **before**
+  any file, database, plugin, or config change. **No backup, no change.** State the backup's
+  existence before you start.
+
+## 2. Production is protected — staging first, always
+- Make changes on staging, verify, then deploy reviewed changes to production. Never iterate on
+  production "to see it."
+- **Never run destructive file operations (delete / cleanup / overwrite) on production via FTP.**
+  Remove temporary scripts via WP-CLI or on staging, then run `wp core verify-checksums`.
+- Never delete or manually edit WordPress core files or the parent Blocksy theme. Work only in
+  `wp-content/themes/blocksy-child`.
+
+## 3. Secrets are sacred
+- Never hard-code credentials in any script. All secrets load from `.env` (git-ignored) via
+  `env_loader.py` (`os.environ[...]`). Never commit `wp-config.php`, `.env`, `*.sql`, or any
+  file containing a credential.
+- Never leave an executable PHP script (admin-creator, file-mover, db-runner, "wp_*.php",
+  "run_*.php", "test_*.php") on the live server after use — delete it the same session and
+  confirm it's gone.
+- Never delete a user account without confirming another working admin exists. To hide an
+  exposed username, change display name + author slug + enable Wordfence username-discovery
+  protection — do not delete the owner's account.
+
+## 4. Show evidence, never just claim — "done" requires proof
+- **A summary is not proof.** When you report a step complete, paste the RAW output that proves
+  it: the actual command output, the real error-log tail *with timestamps after the fix*, the
+  HTTP status, a screenshot that shows the real page (a screenshot of a 404 is a FAILURE, not a
+  completion).
+- If a step FAILED or you couldn't verify it, say "FAILED" or "UNVERIFIED" plainly. Never fold a
+  failure into a success summary. Never assert something works when you haven't seen it work.
+- Verify from the path the user actually experiences (load the real URL), not just the database.
+  "18 rows exist in the DB" is not the same as "18 product pages render" — prove the render.
+
+## 5. Plan before a batch — map the data first
+- Before writing code that touches multiple items (e.g. all products), **state the plan and map
+  the data first** and wait for confirmation: list, per item, exactly what will be set. Example:
+  "DK21-015 skort → features: built-in shorts, pocket; NO bra. Confirm?" This prevents claiming
+  features a garment doesn't have.
+
+## 6. Chunk and checkpoint — don't batch-and-pray
+- Break multi-item work into small batches with a STOP for review between them ("do the 8 dresses,
+  show proof, wait"). Don't run all 18 at once and report at the end. Errors caught in batch 1
+  don't repeat across batches 2–3.
+
+## 7. The catastrophe stop-list (from agent-workflow.mdc — still applies, expanded)
+Stop and get explicit human approval before: deploying to production; any DB search-replace on
+prod; rotating/committing secrets; deleting files/accounts/backups; permalink or site-URL changes
+on prod; enabling payment/checkout flows; SSL/DNS/WAF changes; installing/removing plugins on prod.
+
+## 8. Brand & data sources of truth (don't invent)
+- Products, prices, colourways → `Buildout_Resources/B_Active_Product_&_Pricing_Master.xlsx`.
+- Copy → the §B sections of `B_Active_Master_Build_Guide.md` and
+  `Buildout_Resources/product_copy_remaining_11.md`.
+- Look → `B_Active_Brand_Style_Guide.md` / design tokens in Master Build Guide §A4.3.
+- If a fact (model height, a garment feature, a price) isn't in these, mark it `[confirm]` and
+  ask — never fabricate.
+
+## 9. Report format (every task)
+End every task with: **What changed · Proof (raw output) · What's unverified/failed · Rollback ·
+Memory files updated.** Concise, honest, evidence-first.

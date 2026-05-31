@@ -1,8 +1,10 @@
 import requests
 import json
 import os
+from dotenv import load_dotenv
 
-API_TOKEN = os.environ.get("CF_API_TOKEN", "")
+load_dotenv()
+API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 headers = {
     "Authorization": f"Bearer {API_TOKEN}",
     "Content-Type": "application/json"

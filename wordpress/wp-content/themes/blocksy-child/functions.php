@@ -161,3 +161,83 @@ function bactive_sticky_add_to_cart() {
 	</div>
 	<?php
 }
+
+// BEGIN PHASE 6 SNIPPETS
+// Minimal Address Fields
+add_filter( 'woocommerce_checkout_fields' , 'bactive_custom_override_checkout_fields' );
+function bactive_custom_override_checkout_fields( $fields ) {
+    unset($fields['billing']['billing_company']);
+    unset($fields['billing']['billing_address_2']);
+    return $fields;
+}
+
+// COD Fee
+add_action( 'woocommerce_cart_calculate_fees', 'bactive_add_cod_fee', 20, 1 );
+function bactive_add_cod_fee( $cart ) {
+    if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
+    $chosen_gateway = WC()->session->get( 'chosen_payment_method' );
+    if ( 'cod' === $chosen_gateway ) {
+        $fee = 50;
+        $cart->add_fee( 'COD Fee', $fee, true, 'standard' );
+    }
+}
+// Force checkout update on payment method change to apply fee
+add_action( 'wp_footer', 'bactive_checkout_update_script' );
+function bactive_checkout_update_script() {
+    if ( is_checkout() && ! is_wc_endpoint_url() ) {
+        echo '<script type="text/javascript">
+            jQuery(document).ready(function($){
+                $(document.body).on("change", "input[name=\"payment_method\"]", function() {
+                    $("body").trigger("update_checkout");
+                });
+            });
+        </script>';
+    }
+}
+
+// Hide COD over 2500
+add_filter( 'woocommerce_available_payment_gateways', 'bactive_hide_cod_over_cap' );
+function bactive_hide_cod_over_cap( $available_gateways ) {
+    if ( is_admin() ) return $available_gateways;
+    if ( isset( $available_gateways['cod'] ) && WC()->cart ) {
+        if ( WC()->cart->get_cart_contents_total() > 2500 ) {
+            unset( $available_gateways['cod'] );
+        }
+    }
+    return $available_gateways;
+}
+
+// Reassurance Row
+add_action( 'woocommerce_review_order_after_submit', 'bactive_checkout_reassurance', 10 );
+function bactive_checkout_reassurance() {
+    echo '<div style="text-align:center; font-size:13px; margin-top:20px; color:#2B2A28;">Secure checkout &middot; GCash &middot; Maya &middot; Cards &middot; COD &middot; 7-day size-exchange guarantee</div>';
+}
+
+// Slide-out Cart Drawer Text
+add_action( 'woocommerce_widget_shopping_cart_before_buttons', 'bactive_cart_drawer_text', 10 );
+function bactive_cart_drawer_text() {
+    echo '<div style="text-align:center; font-style:italic; margin-bottom:15px; color:#5E6E54;">Thank you for choosing quality.</div>';
+}
+
+// Rename Checkout Button
+add_filter( 'woocommerce_order_button_text', 'bactive_custom_button_text' );
+function bactive_custom_button_text() {
+    return 'Checkout securely';
+}
+
+// Free Shipping Progress Bar
+add_action( 'woocommerce_widget_shopping_cart_before_buttons', 'bactive_free_shipping_progress_bar', 5 );
+function bactive_free_shipping_progress_bar() {
+    if ( ! WC()->cart || WC()->cart->is_empty() ) return;
+    
+    $free_shipping_threshold = 2000;
+    $cart_subtotal = WC()->cart->get_cart_contents_total();
+    
+    if ( $cart_subtotal < $free_shipping_threshold ) {
+        $amount_left = $free_shipping_threshold - $cart_subtotal;
+        echo '<div style="background:#FAF8F4; border:1px solid #E5E5E5; padding:10px; text-align:center; margin-bottom:15px; font-size:13px; color:#2B2A28;">You are just <strong>₱' . number_format($amount_left, 2) . '</strong> away from free shipping!</div>';
+    } else {
+        echo '<div style="background:#5E6E54; color:#FAF8F4; padding:10px; text-align:center; margin-bottom:15px; font-size:13px;">You have unlocked <strong>Free Shipping!</strong></div>';
+    }
+}
+// END PHASE 6 SNIPPETS

@@ -114,3 +114,103 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   color: var(--bactive-charcoal);
   font-weight: 500;
 }
+
+/* Phase 4: Size Guide Modal */
+.bactive-size-guide-link {
+  display: inline-block;
+  margin-bottom: var(--bactive-space-2);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--bactive-charcoal);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+dialog.bactive-modal {
+  padding: 0;
+  border: none;
+  border-radius: var(--bactive-radius-card);
+  box-shadow: var(--bactive-shadow-card);
+  max-width: 500px;
+  width: 90%;
+  background: var(--bactive-ivory);
+  color: var(--bactive-charcoal);
+}
+dialog.bactive-modal::backdrop {
+  background: rgba(28, 27, 25, 0.5); /* Charcoal with opacity */
+}
+.bactive-modal-inner {
+  padding: var(--bactive-space-4);
+  position: relative;
+}
+.bactive-modal-close {
+  position: absolute;
+  top: var(--bactive-space-2);
+  right: var(--bactive-space-2);
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--bactive-charcoal);
+  cursor: pointer;
+  padding: 0;
+}
+.bactive-size-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--bactive-space-2);
+}
+.bactive-size-table th, .bactive-size-table td {
+  border: 1px solid var(--bactive-greige);
+  padding: var(--bactive-space-1) var(--bactive-space-2);
+  text-align: left;
+}
+.bactive-size-table th {
+  background: var(--bactive-white);
+  font-weight: 600;
+}
+
+/* Phase 4: Sticky Add-to-Cart */
+.bactive-sticky-cart {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--bactive-ivory);
+  border-top: 1px solid var(--bactive-greige);
+  box-shadow: 0 -4px 12px rgba(28,27,25,.05);
+  padding: var(--bactive-space-2) 0;
+  z-index: 9999;
+  transform: translateY(100%);
+  transition: transform var(--bactive-ease);
+}
+.bactive-sticky-cart.visible {
+  transform: translateY(0);
+}
+.sticky-cart-inner {
+  max-width: var(--bactive-container);
+  margin: 0 auto;
+  padding: 0 var(--bactive-gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sticky-cart-info {
+  display: flex;
+  align-items: center;
+  gap: var(--bactive-space-3);
+}
+.sticky-cart-title {
+  font-family: var(--bactive-font-head);
+  font-size: 1.125rem;
+  color: var(--bactive-ink);
+}
+.sticky-cart-price {
+  font-weight: 500;
+}
+@media (max-width: 768px) {
+  .sticky-cart-title { display: none; }
+  .sticky-cart-info { flex: 1; justify-content: center; }
+  .sticky-cart-action { flex: 1; }
+  .sticky-cart-action button { width: 100%; }
+}

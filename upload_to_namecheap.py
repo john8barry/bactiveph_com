@@ -1,8 +1,10 @@
+import os
+import env_loader  # auto-loads .env into os.environ
 import ftplib
 
 ftp = ftplib.FTP()
 ftp.connect('ftp.bactiveph.com', 21)
-ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+ftp.login(os.environ.get('FTP_USER','bactive@bactiveph.com'), os.environ['FTP_PASSWORD'])
 
 ftp.cwd('/') # assuming root is public_html equivalent
 

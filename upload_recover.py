@@ -1,9 +1,10 @@
+import env_loader  # auto-loads .env into os.environ
 import ftplib
 import os
 import requests
 
 ftp = ftplib.FTP('ftp.bactiveph.com')
-ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+ftp.login(os.environ.get('FTP_USER','bactive@bactiveph.com'), os.environ['FTP_PASSWORD'])
 
 # Check if we are in the root where wp-config.php is
 files = ftp.nlst()

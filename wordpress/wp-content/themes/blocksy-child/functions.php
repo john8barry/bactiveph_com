@@ -35,3 +35,119 @@ function blocksy_child_enqueue_styles() {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'blocksy_child_enqueue_styles' );
+
+/**
+ * Phase 4: Custom Product Tabs
+ */
+add_filter( 'woocommerce_product_tabs', 'bactive_custom_product_tabs', 98 );
+function bactive_custom_product_tabs( $tabs ) {
+	// Rename Description Tab
+	if ( isset( $tabs['description'] ) ) {
+		$tabs['description']['title'] = __( 'Description', 'bactive' );
+	}
+
+	// Add Features & Fit Tab
+	$tabs['features_fit'] = array(
+		'title' 	=> __( 'Features & Fit', 'bactive' ),
+		'priority' 	=> 20,
+		'callback' 	=> 'bactive_features_fit_tab_content'
+	);
+
+	// Add Shipping & Returns Tab
+	$tabs['shipping_returns'] = array(
+		'title' 	=> __( 'Shipping & Returns', 'bactive' ),
+		'priority' 	=> 30,
+		'callback' 	=> 'bactive_shipping_returns_tab_content'
+	);
+
+	// Add Fabric & Care Tab
+	$tabs['fabric_care'] = array(
+		'title' 	=> __( 'Fabric & Care', 'bactive' ),
+		'priority' 	=> 40,
+		'callback' 	=> 'bactive_fabric_care_tab_content'
+	);
+
+	// Remove standard Reviews/Additional Info for now to keep it clean (optional based on preference, keeping reviews is fine, removing additional info)
+	unset( $tabs['additional_information'] );
+
+	return $tabs;
+}
+
+function bactive_features_fit_tab_content() {
+	global $post;
+	echo '<h2>Features & Fit</h2>';
+	echo apply_filters( 'the_excerpt', $post->post_excerpt );
+}
+
+function bactive_shipping_returns_tab_content() {
+	echo '<h2>Shipping & Returns</h2>';
+	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and Ninja Van. Complimentary shipping on orders over ₱2,000.</p>';
+	echo '<p><strong>Returns & Exchanges</strong><br>We want you in the right size. If your fit isn\'t perfect, we accept size exchanges within 7 days of delivery for unworn items with tags attached and original packaging.</p>';
+}
+
+function bactive_fabric_care_tab_content() {
+	echo '<h2>Fabric & Care</h2>';
+	echo '<p><strong>CourtSoft™</strong><br>Our signature four-way-stretch knit: buttery-soft, squat-proof, sweat-wicking and built to hold its shape.</p>';
+	echo '<p><strong>BreezeKnit™</strong><br>Lightweight and breathable for hot-court days — moves air, moves sweat, keeps you cool.</p>';
+	echo '<p><strong>Care basics</strong><br>Machine wash cold on gentle with like colours. Skip the fabric softener (it coats performance fibres). Hang dry or tumble low. Don\'t bleach or iron print.</p>';
+}
+
+/**
+ * Phase 4: Size Guide Modal Link
+ */
+add_action( 'woocommerce_single_product_summary', 'bactive_size_guide_link', 25 );
+function bactive_size_guide_link() {
+	echo '<a href="#" class="bactive-size-guide-link" aria-label="Open Size Guide">True to size (Asian fit) &rarr; Size Guide</a>';
+}
+
+/**
+ * Phase 4: Size Guide Modal HTML (Output in footer)
+ */
+add_action( 'wp_footer', 'bactive_size_guide_modal' );
+function bactive_size_guide_modal() {
+	if ( ! is_product() ) return;
+	?>
+	<dialog id="bactive-size-modal" class="bactive-modal">
+		<div class="bactive-modal-inner">
+			<button class="bactive-modal-close" aria-label="Close modal">&times;</button>
+			<h2>Find your fit</h2>
+			<p>B Active is designed with an Asian fit and runs true to size. If you\'re between sizes, size up for a relaxed feel or stay true for a closer fit.</p>
+			<h3>How to measure</h3>
+			<p><strong>Bust</strong> — around the fullest part.<br><strong>Waist</strong> — the narrowest part of your torso.<br><strong>Hips</strong> — the fullest part.</p>
+			<table class="bactive-size-table">
+				<thead>
+					<tr><th>Size</th><th>Bust (cm)</th><th>Waist (cm)</th><th>Hips (cm)</th></tr>
+				</thead>
+				<tbody>
+					<tr><td>S</td><td>80–84</td><td>62–66</td><td>86–90</td></tr>
+					<tr><td>M</td><td>85–89</td><td>67–71</td><td>91–95</td></tr>
+					<tr><td>L</td><td>90–95</td><td>72–77</td><td>96–101</td></tr>
+					<tr><td>XL</td><td>96–101</td><td>78–83</td><td>102–107</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</dialog>
+	<?php
+}
+
+/**
+ * Phase 4: Sticky Add-to-Cart HTML
+ */
+add_action( 'woocommerce_after_single_product', 'bactive_sticky_add_to_cart' );
+function bactive_sticky_add_to_cart() {
+	global $product;
+	if ( ! $product || ! $product->is_purchasable() ) return;
+	?>
+	<div id="bactive-sticky-cart" class="bactive-sticky-cart hidden">
+		<div class="sticky-cart-inner">
+			<div class="sticky-cart-info">
+				<strong class="sticky-cart-title"><?php echo esc_html( $product->get_name() ); ?></strong>
+				<span class="sticky-cart-price"><?php echo $product->get_price_html(); ?></span>
+			</div>
+			<div class="sticky-cart-action">
+				<button class="button alt" id="sticky-cart-button">Add to Cart</button>
+			</div>
+		</div>
+	</div>
+	<?php
+}

@@ -118,7 +118,9 @@ Plugins to actively avoid:
 
 ### 2.2 Blocksy Pro — Is It Worth It?
 
-**Yes — highly recommended for B Active.** Blocksy Pro Personal (~$49/year for 1 site) unlocks the **Shop Extra** WooCommerce extension which includes:
+**DECISION UPDATE (supersedes this section):** Staying on FREE Blocksy; NOT buying Pro (owner prefers a free, long-term stack). Shop Extra features are instead provided by free plugins + child-theme code — see Master Build Guide Step 1.6. Original analysis kept for reference.
+
+**Original note: Yes — highly recommended for B Active.** Blocksy Pro Personal (~$49/year for 1 site) unlocks the **Shop Extra** WooCommerce extension which includes:
 
 - **Variation Swatches** — color/image/button swatches replacing default dropdowns (critical for activewear with color variants)
 - **Product Wishlist** — heart icon on products, shareable wishlist, wishlist in header

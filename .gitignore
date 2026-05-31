@@ -40,3 +40,14 @@ lerna-debug.log*
 
 # Graphify
 graphify-out/
+
+# Secrets & server artifacts (security pass)
+wp-config.php
+*.sql
+recover.php
+step*.php
+wp_*.php
+test_*.php
+cache_fix.php
+research.php
+extract.php

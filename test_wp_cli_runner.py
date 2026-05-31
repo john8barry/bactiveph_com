@@ -1,3 +1,4 @@
+import env_loader  # auto-loads .env into os.environ
 import ftplib
 import os
 import requests
@@ -5,7 +6,7 @@ import requests
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login(os.environ.get('FTP_USER','bactive@bactiveph.com'), os.environ['FTP_PASSWORD'])
     
     with open('test_wp_cli.php', 'rb') as f:
         ftp.storbinary('STOR test_wp_cli.php', f)

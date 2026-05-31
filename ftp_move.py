@@ -1,10 +1,11 @@
+import env_loader  # auto-loads .env into os.environ
 import ftplib
 import os
 
 def move_files():
     ftp = ftplib.FTP()
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login(os.environ.get('FTP_USER','bactive@bactiveph.com'), os.environ['FTP_PASSWORD'])
 
     # Move files from /wordpress to /
     ftp.cwd('/wordpress')

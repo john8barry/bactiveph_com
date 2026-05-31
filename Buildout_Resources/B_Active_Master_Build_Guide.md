@@ -693,10 +693,12 @@ Then, using your planning mode:
 - Do NOT make any changes yet. Output the plan and the access gaps, and wait for my approval.
 
 Hard rules for this whole project:
+- BEFORE any change, ensure a fresh full backup exists (UpdraftPlus → database + files → remote storage). No backup, no change.
+- Work on a STAGING copy first; deploy to production only after review. NEVER run destructive file operations (deletes/cleanup) directly on production via FTP — remove temp scripts on staging or via WP-CLI, then run `wp core verify-checksums`. Never delete WordPress core or plugin files manually.
 - Work ONLY in wp-content/themes/blocksy-child. Never edit WordPress core or the parent Blocksy theme.
-- Test every change on staging before production. Commit to Git before and after each change.
-- Use the design tokens in the guide (§A4.3) — reference CSS variables, never hardcode hex.
+- Commit to Git before and after each change. Use the design tokens in the guide (§A4.3) — reference CSS variables, never hardcode hex.
 - Match the brand voice (§A3) and the DO/DON'T guardrails (§A4.6). No discounts, countdowns, or fast-fashion patterns, ever.
+- Never delete a user account without confirming an alternate admin exists; secure admins with 2FA. (See Phase 3.5.)
 ```
 
 ### Step 0.2 — Access & credentials [You — external]
@@ -739,7 +741,7 @@ Begin now; they unblock later phases:
 - **Google Business Profile** for the Davao store → request **video verification**. Needed in Phase 7.
 - **Google Analytics 4** property + **Google Search Console** access. Phase 7.
 - **Email tool** (Omnisend free tier recommended) account. Phase 6/8.
-- **Blocksy Pro** licence (~$49/yr) — purchase so Phase 1/2 can activate Shop Extra.
+- *(No paid theme or add-on needed — Blocksy's core is free and actively maintained. We use free plugins + light child-theme code instead of Blocksy Pro; see Step 1.6.)*
 - Decide the **physical store NAP** exactly (name/address/phone) — used identically everywhere (§B7).
 
 ---
@@ -812,9 +814,15 @@ Harden security (Wordfence, Limit Login, WPS Hide Login, Akismet are already ins
 Never disable security plugins. Report the hardening checklist completed.
 ```
 
-### Step 1.6 — Activate Blocksy Pro (Shop Extra) [Admin]
+### Step 1.6 — WooCommerce feature stack (free — no paid add-on) [Admin/Agent]
+We stay on **free Blocksy** (one of the most-installed, actively-maintained free WooCommerce themes). Do **not** buy Blocksy Pro — provide the few premium shop features with free, well-maintained tools, kept lean:
 ```
-Install and license Blocksy Pro (Personal plan is fine for 1 site). Activate the Companion Pro plugin and enable the "WooCommerce Extra" extension — this gives us Variation Swatches, Wishlist, Quick View, Size Guide, Custom Product Tabs and Sticky Add-to-Cart natively, so we avoid 4–5 separate plugins. Do not install standalone swatch/wishlist plugins. Confirm Shop Extra is active.
+Do NOT purchase Blocksy Pro. Add the premium shop features with free tools:
+- Variation swatches (colour + size): install "Variation Swatches for WooCommerce" (by GetWooPlugins — free, 300k+ installs).
+- Sticky Add-to-Cart, the Size-Guide popup, and custom product tabs (Care, Fabric): build these into the blocksy-child theme as lightweight custom code that references the design tokens (§A4.3) — no plugin, faster site.
+- Wishlist + Quick View (optional, not launch-critical): if wanted, use free "TI WooCommerce Wishlist" + a free quick-view plugin; otherwise defer.
+- Product filtering (Colour/Size/Features): use Blocksy's built-in filters or the free "Filter Everything" plugin / native WooCommerce filter blocks.
+Confirm swatches render on the shop grid and PDP. Keep the total plugin count lean (the tech research warns against bloat).
 ```
 
 ---
@@ -896,6 +904,28 @@ Use the newsletter copy from §B0. Commit.
 Maintain the premium voice — no hype, no discounts. Commit and list the URLs.
 ```
 
+## PHASE 3.5 — Recovery & Safety Gate (honour throughout; clear before Phase 4)
+
+**Why this exists:** during the first design build, work was done directly on production with no backup, and a cleanup step accidentally deleted core/security files (`wp-comments-post.php`, `wp-activate.php`, `wordfence-waf.php`). No customer harm (store was in coming-soon mode and Cloudflare's WAF held), but it must not recur. These are hard gates, not suggestions.
+
+**The five rules (non-negotiable):**
+1. **Backup before every change.** A fresh UpdraftPlus backup (database + files, to remote storage) must exist before any modification. No backup, no change. Keep ≥ 7 days; test a restore once.
+2. **Staging first.** All work happens on `staging.bactiveph.com` (cPanel subdomain, password-protected + noindex). Production updates only by deploying reviewed, changed files — never by editing live.
+3. **No destructive FTP on production.** Never delete or "clean up" files directly on the live server over FTP. Remove temporary deployment scripts on staging or via WP-CLI, and always run `wp core verify-checksums` afterward to catch any missing core file.
+4. **Protect admin access.** Keep ≥ 2 admin accounts you control; never delete the owner's account; secure each with a strong password + 2FA (Wordfence Login Security); don't expose login usernames publicly (below).
+5. **Have a rollback path.** If anything breaks, restore the latest UpdraftPlus backup. If a missing `wordfence-waf.php` causes a fatal error, remove the `auto_prepend_file` line in `.user.ini`/`php.ini` to restore the site, then reinstall Wordfence.
+
+**Gate checklist — clear all before starting Phase 4:**
+- [ ] A verified, restorable UpdraftPlus backup exists (and runs daily).
+- [ ] `wp core verify-checksums` passes (no missing/modified core files; deleted files restored).
+- [ ] Wordfence healthy (regenerated `wordfence-waf.php`, firewall optimised); Cloudflare WAF active.
+- [ ] `staging.bactiveph.com` exists and is the working environment.
+- [ ] Owner admin secured (strong password + 2FA); a second backup admin exists; login username not exposed.
+- [ ] Category taxonomy corrected to the seven in §A5.1; tags = The Court Edit / The Rally Set / Everyday Active.
+- [ ] Homepage renders the designed Home page (static front page set), not the blog.
+
+**Securing the admin account without deleting it:** the owner's account stays. To stop leaking its login name — WP Admin → Users → [account]: set a public Display name that is *not* the login; change the author slug so `/author/<login>/` no longer reveals it (`wp user update <login> --user_nicename=b-active`); in Wordfence → All Options, enable "Prevent discovery of usernames through '?author=N' scans and the REST API"; add 2FA via Wordfence Login Security. Create one additional admin (non-obvious username) as a backup.
+
 ## PHASE 4 — Catalogue & products
 
 **Objective:** a beautifully merchandised catalogue with premium PDPs, real products, swatches, and on-brand copy for every SKU.
@@ -903,7 +933,7 @@ Maintain the premium voice — no hype, no discounts. Commit and list the URLs.
 ### Step 4.1 — Global attributes & swatches [Admin/Agent]
 ```
 Create global product attributes in WooCommerce:
-- Colour (type: colour swatch via Blocksy Pro) — add the B Active colour vocabulary terms using the names from §A3.1 with these swatch hex values (Court Ivory #FAF8F4, Midnight #1F2A44, Onyx #1C1B19, Sakura #E9C3CA, Powder #BFD2E0, Sagewood #9CAE92, Wisteria #B9A7C9, Stone #9A958C, Apricot #E7B58E, Almond #C9B7A4, Bloom #C65F8E, Clay Red #A9544A). 
+- Colour (type: colour swatch via the free "Variation Swatches for WooCommerce" plugin) — add the B Active colour vocabulary terms using the names from §A3.1 with these swatch hex values (Court Ivory #FAF8F4, Midnight #1F2A44, Onyx #1C1B19, Sakura #E9C3CA, Powder #BFD2E0, Sagewood #9CAE92, Wisteria #B9A7C9, Stone #9A958C, Apricot #E7B58E, Almond #C9B7A4, Bloom #C65F8E, Clay Red #A9544A). 
 - Size (button swatch): S, M, L, XL.
 - Features (used for filtering, Lululemon-style): Built-in shorts, Ball pocket, Built-in bra, Pockets, UPF50+, Squat-proof.
 Confirm swatches render on product cards and PDPs. Commit.
@@ -911,11 +941,11 @@ Confirm swatches render on product cards and PDPs. Commit.
 
 ### Step 4.2 — PDP layout configuration [Admin/Agent]
 ```
-Configure the single-product (PDP) template via Blocksy WooCommerce + Shop Extra to match guide §B4.1 and the premium UX research (report 04):
+Configure the single-product (PDP) template via Blocksy WooCommerce + the free Variation Swatches plugin + child-theme code, to match guide §B4.1 and the premium UX research (report 04):
 - Image gallery: vertical thumbnails / large main image; support 5–9 images; zoom on hover; show a dedicated "Features & Details" image. (No gallery = no sale — enforce min 3 images later.)
 - Variation swatches for Colour + Size directly under the title.
 - "Sticky Add to Cart" bar appears once the main button scrolls out of view (mobile + desktop).
-- A "Size guide" link directly beside the size selector that opens the size-guide modal (Shop Extra Size Guide).
+- A "Size guide" link directly beside the size selector that opens the size-guide modal (custom modal built into the child theme).
 - Custom product tabs/accordions: Description · Features & Fit · Shipping & Returns (7-day size exchange) · Fabric & Care.
 - "Complete the Look" cross-sell block (link dress → matching bra/skort/paddle).
 - Show model height + size worn, fabric %, and the Asian-fit line prominently.
@@ -956,7 +986,7 @@ Rules: premium voice; no hype, no discounts, no fake claims; if you're unsure of
 
 ### Step 4.6 — Filtering & size guide [Admin/Agent]
 ```
-- Enable collection-page filtering by Colour, Size, and Features (Built-in shorts, Ball pocket, Built-in bra, Pockets, UPF50+) using Blocksy's product filters — a premium, Lululemon-style filter experience.
+- Enable collection-page filtering by Colour, Size, and Features (Built-in shorts, Ball pocket, Built-in bra, Pockets, UPF50+) using Blocksy's built-in filters or the free "Filter Everything" plugin — a premium, Lululemon-style filter experience.
 - Build the Size Guide modal content from build-guide §B5 (Asian-fit chart, how-to-measure) and link it from every PDP and the /size-guide page.
 - Confirm sort options (Featured, Newest, Price) and that the grid is 3-up desktop / 2-up mobile with generous spacing. Commit.
 ```

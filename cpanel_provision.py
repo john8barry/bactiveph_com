@@ -1,3 +1,4 @@
+import env_loader  # auto-loads .env into os.environ
 import os
 import requests
 from dotenv import load_dotenv
@@ -33,7 +34,7 @@ cpanel_req("Mysql", "create_database", {
 })
 
 # 3. Create Database User
-db_pass = "StagingDB_BActive2026!"
+db_pass = os.environ.get('STAGING_DB_PASSWORD','')
 cpanel_req("Mysql", "create_user", {
     "name": f"{CPANEL_USER}_stg",
     "password": db_pass

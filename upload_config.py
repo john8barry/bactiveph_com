@@ -1,9 +1,11 @@
+import os
+import env_loader  # auto-loads .env into os.environ
 import ftplib
 
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login(os.environ.get('FTP_USER','bactive@bactiveph.com'), os.environ['FTP_PASSWORD'])
     
     with open('.user.ini', 'rb') as f:
         ftp.storbinary('STOR .user.ini', f)

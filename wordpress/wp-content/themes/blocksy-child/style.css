@@ -92,6 +92,14 @@ a:hover {
 }
 
 /* Ensure contrasting container backgrounds for dark mode */
-.ct-container, .site-main, .site-header {
+.site-main {
     background-color: var(--bactive-bg) !important;
+}
+
+/* Fix strange rectangles in desktop view corners */
+body, html, .ct-site-frame, .ct-container, .ct-container-full, #main, .site-main, .site-content, .hero-section, .wp-block-cover, .wp-block-group {
+    border-radius: 0 !important;
+}
+.ct-site-frame {
+    display: none !important;
 }

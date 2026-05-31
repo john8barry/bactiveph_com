@@ -1,0 +1,97 @@
+/*
+Theme Name: Blocksy Child
+Theme URI: https://creativethemes.com/blocksy/
+Template: blocksy
+Author: Antigravity AI
+Author URI: https://bactiveph.com
+Description: Blocksy Child Theme with UI/UX Pro Max vibrant design system for BActive PH
+Version: 1.0.0
+Text Domain: blocksy
+*/
+
+/* --- UI/UX Pro Max Design System --- */
+:root {
+  /* Brand Colors */
+  --bactive-primary: #F97316;
+  --bactive-secondary: #FB923C;
+  --bactive-cta: #22C55E;
+  --bactive-bg: #1F2937;
+  --bactive-text: #F8FAFC;
+
+  /* Blocksy Palette Overrides */
+  --paletteColor1: var(--bactive-primary);
+  --paletteColor2: var(--bactive-secondary);
+  --paletteColor3: var(--bactive-bg);
+  --paletteColor4: var(--bactive-text);
+  --paletteColor5: var(--bactive-cta);
+  --paletteColor6: var(--bactive-bg);
+  --paletteColor7: var(--bactive-text);
+  --paletteColor8: var(--bactive-text);
+  
+  /* Typography Scale Overrides */
+  --font-family-base: 'Barlow', sans-serif;
+  --font-family-headings: 'Barlow Condensed', sans-serif;
+}
+
+/* Core Element Styling */
+body {
+    background-color: var(--bactive-bg) !important;
+    color: var(--bactive-text) !important;
+    font-family: var(--font-family-base) !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .site-title, .widget-title {
+    font-family: var(--font-family-headings) !important;
+    color: var(--bactive-text) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Button & CTA Styles */
+.ct-button, 
+button, 
+input[type="submit"], 
+.wp-block-button__link {
+    background-color: var(--bactive-primary) !important;
+    color: #fff !important;
+    font-family: var(--font-family-headings) !important;
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    border-radius: 4px !important;
+    transition: all 250ms ease-in-out !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.ct-button:hover, 
+button:hover, 
+input[type="submit"]:hover, 
+.wp-block-button__link:hover {
+    background-color: var(--bactive-cta) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+}
+
+/* Structure and Gaps for Vibrant Block Layout */
+.entry-content > *,
+.wp-block-group,
+section {
+    margin-bottom: 48px !important;
+}
+
+/* Links */
+a {
+    color: var(--bactive-primary);
+    transition: color 200ms ease;
+}
+a:hover {
+    color: var(--bactive-cta);
+}
+
+/* Ensure contrasting container backgrounds for dark mode */
+.ct-container, .site-main, .site-header {
+    background-color: var(--bactive-bg) !important;
+}

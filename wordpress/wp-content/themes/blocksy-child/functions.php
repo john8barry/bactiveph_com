@@ -25,6 +25,16 @@ function blocksy_child_enqueue_styles() {
 		filemtime(get_stylesheet_directory() . '/assets/css/custom.css')
 	);
 
+	// Enqueue fonts
+	wp_enqueue_style(
+		'bactive-inter-font',
+		get_stylesheet_directory_uri() . '/assets/css/inter-fonts.css'
+	);
+	wp_enqueue_style(
+		'bactive-fraunces-font',
+		get_stylesheet_directory_uri() . '/assets/css/fraunces-fonts.css'
+	);
+
 	// Enqueue child custom JS
 	wp_enqueue_script(
 		'blocksy-child-custom-js',

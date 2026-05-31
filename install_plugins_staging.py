@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env into os.environ
 import ftplib
 import requests
 
@@ -13,7 +15,7 @@ with open('install_plugins.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('install_plugins.php', 'rb') as f:
         ftp.storbinary('STOR install_plugins.php', f)
     

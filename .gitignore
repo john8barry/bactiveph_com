@@ -51,3 +51,6 @@ test_*.php
 cache_fix.php
 research.php
 extract.php
+test_remote.php
+install_plugins.php
+verify_phase4.php

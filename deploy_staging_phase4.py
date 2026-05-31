@@ -1,3 +1,4 @@
+import env_loader  # loads .env into os.environ
 import ftplib
 import os
 
@@ -7,7 +8,7 @@ remote_dir = "staging/wp-content/themes/blocksy-child"
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     
     # Try creating the root directory
     try:

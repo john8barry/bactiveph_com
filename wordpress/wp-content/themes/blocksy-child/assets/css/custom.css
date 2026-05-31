@@ -1,216 +1,119 @@
+/* B Active Custom CSS */
+
 :root {
   /* Colour */
-  --bactive-ivory: #FAF8F4;
-  --bactive-white: #FFFFFF;
-  --bactive-charcoal: #2B2A28;
-  --bactive-ink: #1C1B19;
-  --bactive-sage: #9CAE92;
-  --bactive-sage-deep: #5E6E54;
-  --bactive-rose: #D8A7A0;
-  --bactive-rose-deep: #A96E66;
-  --bactive-greige: #E6DFD5;
-  --bactive-stone: #6E675F;
-  --bactive-sale: #A9544A;
-
+  --bactive-ivory:#FAF8F4;  --bactive-white:#FFFFFF;
+  --bactive-charcoal:#2B2A28; --bactive-ink:#1C1B19;
+  --bactive-sage:#9CAE92; --bactive-sage-deep:#5E6E54;
+  --bactive-rose:#D8A7A0; --bactive-rose-deep:#A96E66;
+  --bactive-greige:#E6DFD5; --bactive-stone:#6E675F;
+  --bactive-sale:#A9544A;
+  
   /* Type */
-  --bactive-font-head: 'Fraunces', Georgia, serif;
-  --bactive-font-body: 'Inter', system-ui, sans-serif;
-  --bactive-fs-base: 16px;
-
+  --bactive-font-head:'Fraunces',Georgia,serif;
+  --bactive-font-body:'Inter',system-ui,sans-serif;
+  --bactive-fs-base:16px;
+  
   /* Space (8pt grid) */
-  --bactive-space-1: 8px;
-  --bactive-space-2: 16px;
-  --bactive-space-3: 24px;
-  --bactive-space-4: 32px;
-  --bactive-space-6: 48px;
-  --bactive-space-8: 64px;
-  --bactive-space-12: 96px;
-
+  --bactive-space-1:8px; --bactive-space-2:16px; --bactive-space-3:24px;
+  --bactive-space-4:32px; --bactive-space-6:48px; --bactive-space-8:64px; --bactive-space-12:96px;
+  
   /* Radius / shadow / motion */
-  --bactive-radius-btn: 2px;
-  --bactive-radius-card: 6px;
-  --bactive-shadow-card: 0 1px 3px rgba(28,27,25,.06), 0 8px 24px rgba(28,27,25,.05);
-  --bactive-ease: 0.25s cubic-bezier(.4,0,.2,1);
-
-  /* Container */
-  --bactive-container: 1280px;
-  --bactive-gutter: clamp(16px, 4vw, 48px);
+  --bactive-radius-btn:2px; --bactive-radius-card:6px;
+  --bactive-shadow-card:0 1px 3px rgba(28,27,25,.06),0 8px 24px rgba(28,27,25,.05);
+  --bactive-ease:0.25s cubic-bezier(.4,0,.2,1);
+  --bactive-container:1280px; --bactive-gutter:clamp(16px,4vw,48px);
 }
 
 /* Base Component Styles */
 body {
-  background-color: var(--bactive-ivory);
-  color: var(--bactive-charcoal);
-  font-family: var(--bactive-font-body);
-  font-size: var(--bactive-fs-base);
+    background-color: var(--bactive-ivory);
+    color: var(--bactive-charcoal);
+    font-family: var(--bactive-font-body);
 }
 
-h1, h2, h3, h4, h5, h6, .entry-title {
-  color: var(--bactive-ink);
-  font-family: var(--bactive-font-head);
-  font-weight: 600;
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--bactive-font-head);
+    color: var(--bactive-ink);
 }
 
 a {
-  color: var(--bactive-sage-deep);
-  transition: color var(--bactive-ease);
+    color: var(--bactive-sage-deep);
+    transition: color var(--bactive-ease);
 }
-a:hover {
-  color: var(--bactive-charcoal);
+
+a:hover, a:focus {
+    color: var(--bactive-sage);
 }
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid var(--bactive-sage-deep);
-  outline-offset: 2px;
+
+:focus-visible {
+    outline: 2px solid var(--bactive-sage-deep);
+    outline-offset: 2px;
 }
 
 /* Buttons */
-.button, button, input[type="button"], input[type="reset"], input[type="submit"], .wp-block-button__link {
-  background-color: var(--bactive-charcoal);
-  color: var(--bactive-ivory);
-  border-radius: var(--bactive-radius-btn);
-  padding: 14px 28px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-family: var(--bactive-font-body);
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: background-color var(--bactive-ease), color var(--bactive-ease);
-}
-.button:hover, button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover, .wp-block-button__link:hover {
-  background-color: var(--bactive-sage-deep);
-  color: var(--bactive-ivory);
+.button, button, input[type="submit"], input[type="reset"], input[type="button"], .wp-block-button__link, .added_to_cart {
+    font-family: var(--bactive-font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    border-radius: var(--bactive-radius-btn);
+    transition: all var(--bactive-ease);
+    cursor: pointer;
+    padding: 14px 28px;
 }
 
-.button.secondary, .btn-secondary {
-  background-color: transparent;
-  color: var(--bactive-charcoal);
-  border: 1px solid var(--bactive-charcoal);
+/* Primary Button */
+.button, button, input[type="submit"], .wp-block-button__link, .added_to_cart {
+    background-color: var(--bactive-charcoal);
+    color: var(--bactive-ivory);
+    border: 1px solid var(--bactive-charcoal);
 }
-.button.secondary:hover, .btn-secondary:hover {
-  background-color: rgba(156, 174, 146, 0.1); /* Sagewood 10% */
+
+.button:hover, button:hover, input[type="submit"]:hover, .wp-block-button__link:hover, .added_to_cart:hover {
+    background-color: var(--bactive-sage-deep);
+    border-color: var(--bactive-sage-deep);
+    color: var(--bactive-white);
+}
+
+/* Secondary Button (outline) */
+.button-secondary, .wp-block-button.is-style-outline .wp-block-button__link {
+    background-color: transparent;
+    color: var(--bactive-charcoal);
+    border: 1px solid var(--bactive-charcoal);
+}
+
+.button-secondary:hover, .wp-block-button.is-style-outline .wp-block-button__link:hover {
+    background-color: rgba(156, 174, 146, 0.1); /* Sagewood 10% */
+    color: var(--bactive-charcoal);
 }
 
 /* Product Cards */
 .products .product {
-  background-color: var(--bactive-white);
-  border: 1px solid var(--bactive-greige);
-  border-radius: var(--bactive-radius-card);
-  overflow: hidden;
-  box-shadow: var(--bactive-shadow-card);
-  transition: transform var(--bactive-ease), box-shadow var(--bactive-ease);
+    border: 1px solid var(--bactive-greige);
+    border-radius: var(--bactive-radius-card);
+    overflow: hidden;
+    background: var(--bactive-white);
+    transition: box-shadow var(--bactive-ease);
 }
+
 .products .product:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(28,27,25,.08);
-}
-.products .product .woocommerce-loop-product__title {
-  font-family: var(--bactive-font-head);
-  font-size: 1.125rem;
-  color: var(--bactive-ink);
-  margin-top: var(--bactive-space-2);
-}
-.products .product .price {
-  color: var(--bactive-charcoal);
-  font-weight: 500;
+    box-shadow: var(--bactive-shadow-card);
 }
 
-/* Phase 4: Size Guide Modal */
-.bactive-size-guide-link {
-  display: inline-block;
-  margin-bottom: var(--bactive-space-2);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--bactive-charcoal);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.products .product img {
+    border-radius: var(--bactive-radius-card) var(--bactive-radius-card) 0 0;
 }
 
-dialog.bactive-modal {
-  padding: 0;
-  border: none;
-  border-radius: var(--bactive-radius-card);
-  box-shadow: var(--bactive-shadow-card);
-  max-width: 500px;
-  width: 90%;
-  background: var(--bactive-ivory);
-  color: var(--bactive-charcoal);
-}
-dialog.bactive-modal::backdrop {
-  background: rgba(28, 27, 25, 0.5); /* Charcoal with opacity */
-}
-.bactive-modal-inner {
-  padding: var(--bactive-space-4);
-  position: relative;
-}
-.bactive-modal-close {
-  position: absolute;
-  top: var(--bactive-space-2);
-  right: var(--bactive-space-2);
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--bactive-charcoal);
-  cursor: pointer;
-  padding: 0;
-}
-.bactive-size-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: var(--bactive-space-2);
-}
-.bactive-size-table th, .bactive-size-table td {
-  border: 1px solid var(--bactive-greige);
-  padding: var(--bactive-space-1) var(--bactive-space-2);
-  text-align: left;
-}
-.bactive-size-table th {
-  background: var(--bactive-white);
-  font-weight: 600;
+.woocommerce ul.products li.product .woocommerce-loop-product__title {
+    font-family: var(--bactive-font-head);
+    color: var(--bactive-ink);
+    font-weight: 500;
 }
 
-/* Phase 4: Sticky Add-to-Cart */
-.bactive-sticky-cart {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: var(--bactive-ivory);
-  border-top: 1px solid var(--bactive-greige);
-  box-shadow: 0 -4px 12px rgba(28,27,25,.05);
-  padding: var(--bactive-space-2) 0;
-  z-index: 9999;
-  transform: translateY(100%);
-  transition: transform var(--bactive-ease);
-}
-.bactive-sticky-cart.visible {
-  transform: translateY(0);
-}
-.sticky-cart-inner {
-  max-width: var(--bactive-container);
-  margin: 0 auto;
-  padding: 0 var(--bactive-gutter);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.sticky-cart-info {
-  display: flex;
-  align-items: center;
-  gap: var(--bactive-space-3);
-}
-.sticky-cart-title {
-  font-family: var(--bactive-font-head);
-  font-size: 1.125rem;
-  color: var(--bactive-ink);
-}
-.sticky-cart-price {
-  font-weight: 500;
-}
-@media (max-width: 768px) {
-  .sticky-cart-title { display: none; }
-  .sticky-cart-info { flex: 1; justify-content: center; }
-  .sticky-cart-action { flex: 1; }
-  .sticky-cart-action button { width: 100%; }
+/* Announcement Bar */
+.ct-header-announcement {
+    background-color: var(--bactive-ivory);
+    color: var(--bactive-charcoal);
+    border-bottom: 1px solid var(--bactive-greige);
 }

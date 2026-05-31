@@ -1,0 +1,186 @@
+---
+description: WordPress + Cloudflare + cPanel operating workflow for autonomous agents, paired with the memory bank.
+alwaysApply: true
+---
+
+# WordPress Website Workflow
+
+Default stance: work autonomously, verify changes, protect production, and keep the memory bank current. Pair this with `@memory-bank.mdc` and the files in `.cursor/memory/` before and after every non-trivial task.
+
+## Scope
+
+This rule governs work on a WordPress website where:
+- Cloudflare handles DNS, CDN, SSL mode decisions, caching, WAF, bot/security controls, and edge rules.
+- cPanel/shared hosting handles the origin server, file manager/SSH/FTP, MySQL, PHP settings, cron, backups, and email-related hosting concerns.
+- WordPress handles the application layer: themes, plugins, media, users, content, custom code, and database-backed settings.
+
+Treat the stack as three separate control planes:
+1. Cloudflare = edge and public traffic.
+2. cPanel/shared hosting = origin infrastructure.
+3. WordPress = application and content.
+
+Do not make changes in one layer without checking the impact on the other two.
+
+## Session start
+
+Before any meaningful task, silently do this in order:
+1. Read `.cursor/memory/activeContext.md`, `.cursor/memory/progress.md`, and `.cursor/memory/preferences.md`.
+2. Scan `.cursor/memory/tech-debt.md` for HIGH items.
+3. Pull in `.cursor/memory/systemPatterns.md` and `.cursor/memory/techContext.md` if the task touches hosting, deployment, plugins, themes, DNS, security, caching, or performance.
+4. Confirm the current environment: production vs staging, live domain vs temp domain, Cloudflare zone status, cPanel account, WordPress install path, active theme, and critical plugins.
+5. Prefer existing documented patterns over inventing new ones.
+
+If required memory files are missing or stale, flag that early and keep working with clearly stated assumptions.
+
+## Operating model
+
+- Work autonomously unless the action is catastrophic or irreversible.
+- Always prefer reversible changes first: backups, exports, staging, snapshots, versioned files, feature flags, maintenance windows, or temporary rule changes.
+- Keep changes small and isolate layers: DNS changes in Cloudflare, PHP/server changes in cPanel, application changes in WordPress or the codebase.
+- Record decisions and sharp edges in memory as you work.
+- Never say a task is done until the website behavior is verified from the browser/user level and the relevant admin/system level.
+
+## Stop-and-confirm list
+
+Ask the human before doing any of these:
+- Changing nameservers or transferring DNS authority.
+- Deleting a live site, database, mailbox, plugin, theme, or backup.
+- Bulk search-replace on the production database.
+- Changing the primary domain, WordPress URL, or permalink structure on a live site.
+- Enabling, disabling, or tightening security controls that may block legitimate users, admins, APIs, webhooks, payment flows, or email delivery.
+- Upgrading PHP, WordPress core, WooCommerce, or a mission-critical plugin on production when compatibility is unknown.
+- Turning on Cloudflare features that alter origin behavior without rollback clarity, such as APO, aggressive caching rules, challenge rules on admin/API paths, or SSL/TLS mode changes.
+- Anything involving billing, account ownership, credentials rotation, or external transactional side effects.
+
+For everything else, proceed, but document exactly what changed and how to roll it back.
+
+## WordPress rules
+
+- Prefer code/configuration changes over manual wp-admin clicking when the change should be repeatable.
+- Before changing themes, plugins, or custom code, identify where the functionality actually lives: theme, child theme, mu-plugin, standard plugin, custom plugin, snippet plugin, or database option.
+- Never edit a parent theme directly unless the project explicitly uses that as its accepted pattern.
+- Check for page builders, custom post types, custom fields, WooCommerce, multilingual plugins, caching plugins, security plugins, and SMTP/email plugins before making assumptions.
+- For plugin issues, determine whether the problem is configuration, conflict, version compatibility, data corruption, cron failure, or cache interference.
+- For content issues, distinguish editor/content problems from template/rendering problems.
+- For performance issues, separate backend slowness, frontend payload bloat, cache misses, and third-party script load.
+
+When making WordPress changes:
+1. Locate the source of truth.
+2. Make the smallest viable fix.
+3. Clear only the caches that matter.
+4. Verify both logged-in and logged-out behavior when relevant.
+5. Update memory with the cause, fix, and any follow-up risk.
+
+## Cloudflare rules
+
+Treat Cloudflare as the public edge and validate edge behavior separately from origin behavior.
+
+- Before changing DNS, verify whether the record is proxied or DNS-only and whether mail or third-party verification depends on that record type.
+- Before changing caching, identify what is already caching at Cloudflare, at WordPress/plugin level, and at the browser level.
+- Never cache `wp-admin`, login flows, cart/checkout/account pages, authenticated sessions, preview links, or dynamic endpoints unless the project explicitly documents safe handling.
+- Be careful with WAF/custom rules, bot fights, rate limiting, country rules, and JavaScript challenges; they can break admin actions, forms, APIs, webhooks, and integrations.
+- SSL/TLS mode must match origin reality. Do not change Flexible/Full/Full (strict) casually.
+- If debugging, temporarily bypass one layer at a time so the real source of failure is clear.
+
+For Cloudflare work, always note:
+- Exact record/rule/setting changed.
+- Whether it affects public traffic, admin traffic, APIs, or email.
+- Expected propagation/behavior delay.
+- Rollback path.
+
+## cPanel and shared hosting rules
+
+Treat cPanel as the origin control panel and assume shared-hosting constraints.
+
+- Verify document root, PHP version, memory limit, max execution time, upload size, cron setup, SSL certificate state, and database access before diagnosing application failures.
+- Prefer backups before touching files, databases, or PHP settings.
+- Be careful with File Manager edits on production; prefer versioned/local edits when possible.
+- Check disk usage, inode limits, CPU throttling, and error logs when issues seem random or intermittent.
+- Distinguish Apache/Nginx/LiteSpeed behavior, if known, because caching and rewrite behavior may differ.
+- If `.htaccess` is involved, preserve formatting and existing custom rules, and validate WordPress rewrites after edits.
+- If cron is used instead of WP-Cron, preserve that pattern unless there is a clear reason to change it.
+- Never expose secrets in commits, notes, screenshots, or memory files.
+
+## Debugging order
+
+When something is broken, diagnose in this order unless the evidence strongly suggests otherwise:
+1. Clarify environment and recent changes from memory.
+2. Reproduce the issue and capture exact symptoms.
+3. Check Cloudflare edge behavior: DNS, proxy status, SSL mode, caching/security rules.
+4. Check cPanel/origin behavior: DNS target, vhost/docroot, PHP/runtime limits, logs, file presence, database connectivity.
+5. Check WordPress behavior: plugin/theme conflicts, hooks, templates, cron, options, transients, object/page cache.
+6. Verify the fix from the same path the user actually experiences.
+
+Do not guess. Isolate the failing layer first.
+
+## Change categories
+
+### DNS and domain work
+- Inventory all relevant records first: A, AAAA, CNAME, MX, TXT, SRV, CAA, verification records.
+- Protect email and third-party services from accidental record changes.
+- Lower TTL only when useful and restore it if the project expects that.
+- Document propagation expectations and the authoritative source.
+
+### SSL and HTTPS
+- Confirm Cloudflare SSL/TLS mode, origin certificate state, WordPress Site URL/Home URL, mixed-content risk, and redirect rules before changing anything.
+- Avoid redirect loops by checking edge redirects, `.htaccess`, WordPress settings, and plugin redirects together.
+
+### Performance and caching
+- Map the caching stack first: Cloudflare cache, APO, server cache, WordPress cache plugin, object cache, browser cache.
+- Purge narrowly before purging everything.
+- After a performance change, verify TTFB/user experience and make sure no dynamic pages are being cached incorrectly.
+
+### Security
+- Harden with minimal user friction.
+- Prefer precise firewall or rate-limit exceptions over broad disablements.
+- When blocking attack traffic, protect admin/API endpoints without locking out legitimate automation.
+- Log why a security rule was added and what would signal it should be revisited.
+
+### Plugin/theme development
+- Use child themes, custom plugins, or mu-plugins according to the project's established pattern.
+- Keep custom business logic out of ad-hoc snippet plugins unless the project explicitly accepts that tradeoff.
+- Preserve upgrade safety.
+- Test with caching disabled or bypassed when debugging render or hook issues.
+
+## Verification standard
+
+A task is only done when the relevant checks pass.
+
+Use the strongest available set:
+- Browser-level verification on the affected page/flow.
+- Logged-out and logged-in checks when relevant.
+- Mobile/responsive spot check when UI changed.
+- Error log review when debugging backend issues.
+- WordPress admin verification for settings/content/plugin state.
+- Cache verification, including whether stale content persists at Cloudflare or plugin/server level.
+- Form, webhook, checkout, email, or API test when the task touches those flows.
+- Visual regression spot check on affected templates/components.
+
+If a change cannot be verified directly, state that clearly and do not claim certainty.
+
+## Memory updates
+
+After every non-trivial task, update memory deliberately:
+- `activeContext.md`: current focus, latest change, immediate next step.
+- `progress.md`: what now works, known remaining issues, blockers.
+- `decisions.md`: append any meaningful decision, especially around hosting, DNS, caching, security, plugin choices, or deployment patterns.
+- `tech-debt.md`: append shortcuts, risky hosting workarounds, fragile plugin patches, or temporary Cloudflare rules.
+- `systemPatterns.md`: update if architecture or operational patterns changed.
+- `techContext.md`: update versions, plugins, hosting constraints, verification commands, domain/DNS notes, and environment details.
+- `preferences.md`: update only when the human expresses a new working preference.
+
+Always state which memory files were reviewed and which were updated.
+
+## Deliverable expectations
+
+For implementation tasks, finish fully.
+- No placeholders, no "next steps," no half-configured settings.
+- No unverified claims.
+- No silent production risk.
+- No memory drift.
+
+The final report should be concise and include:
+- What changed.
+- What was verified.
+- Any risks or rollback notes.
+- Which memory files were updated.

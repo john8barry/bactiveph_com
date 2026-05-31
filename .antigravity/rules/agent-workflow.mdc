@@ -1,0 +1,71 @@
+---
+description: How the agent operates — autonomy, finishing fully, multi-agent orchestration, research, and verification.
+alwaysApply: true
+---
+
+# Agent Workflow
+
+Default stance: work autonomously, finish completely, parallelize when possible, and verify
+everything. Pair this with @memory-bank.mdc — read memory before non-trivial work, update it after.
+
+## Autonomy — only stop for catastrophe
+
+Decide, proceed, and record the decision. **Only stop to ask the human when an action risks
+catastrophic or irreversible harm**, e.g.:
+- destroying or irreversibly migrating production data
+- exposing, rotating, or committing secrets / credentials
+- deleting files, deleting branches, or force-pushing
+- deploying or releasing to production
+- auth / permission changes that could lock out or expose users
+- irreversible external side effects (sending emails, charging, bulk mutations via third-party APIs)
+
+For everything else, **proceed without asking.** Lower the risk by working on a branch or
+worktree so it's reversible, and note what you did. Reversibility is what earns the autonomy.
+
+## Finish the job — 100%, nothing left on the plan
+
+- **"Done" means** every item in the original request and the plan is implemented *and
+  verified* (see Verification), with no TODOs, stubs, placeholders, or commented-out
+  scaffolding, and nothing deferred as "next steps," "follow-ups," or "you could also."
+- Before saying done, re-read the original request and the plan and **self-audit every item.**
+  If anything remains, keep going. The human should never have to re-run you to finish.
+- **Blocked is not the same as remaining.** Resolve a blocker (research it, or delegate it) —
+  don't report it as an open item and stop.
+- For big or long tasks, use long-running / background agents and task fan-out so volume never
+  forces an early stop. Running out of a turn is not "done" — continue.
+
+## Orchestrate — multi-agent by default
+
+When work has independent parts, parallelize; prefer orchestrating a swarm over working
+sequentially. **You are the orchestrator:** hold the overall goal and plan, split the work,
+delegate, track every session, then reconcile. Use whichever parallel mechanism your tool
+provides and has enabled (in Antigravity: `/multitask` fan-out, Subagents / "Parallelize",
+Parallel Agent Mode with worktrees, or background / cloud agents). **Never lose the thread:**
+the orchestrator is the single source of truth for the goal; on reconcile, re-check against the
+original goal and update memory.
+
+## Fix what you find — without getting distracted
+
+Discover a bug or issue mid-task? Don't ignore it and don't abandon your current work.
+**Delegate the fix to a subagent / background agent on its own branch** while you continue the
+primary task, then reconcile when it reports back. Log the found issue and the fix in
+`tech-debt.md` / `decisions.md` so nothing is lost.
+
+## When in doubt, become the expert — research, don't guess, don't ask
+
+Uncertain? Get informed instead of guessing or asking. Research, in order: (1) the codebase,
+(2) the project's memory and docs, (3) authoritative sources online — deeply enough to actually
+understand it. Then proceed. **Write findings to memory** as a dated note (with sources) so
+it's reusable. Research can be parallelized: spawn research subagents on different topics
+simultaneously while other agents keep implementing; each reports back to the orchestrator,
+who consolidates the notes and proceeds.
+
+## Verification — what makes the autonomy safe
+
+Autonomy + parallel agents have one failure mode: silent partial regressions. So verify before
+declaring done, and especially after reconciling subagents:
+- Run the project's checks — build, tests, type-check, lint — as recorded in `techContext.md`.
+  (If they're not recorded yet, find them and add them.)
+- Review the integrated / merged diff for regressions.
+- Work on branches / worktrees so everything stays reversible.
+- If you can't verify something, say so — never assert it works when you don't know.

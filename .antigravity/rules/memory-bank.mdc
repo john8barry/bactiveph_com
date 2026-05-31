@@ -1,0 +1,80 @@
+---
+description: Read and maintain the project's persistent memory in .antigravity/memory/ before and after non-trivial work.
+alwaysApply: true
+---
+
+# Memory Bank
+
+The agent's memory resets between sessions, so `.antigravity/memory/` IS the project's durable
+knowledge. Reading it is the first step of every non-trivial task. Memory is the curated
+*why / intent / state* layer; the code and git history are the source of truth for
+*what currently exists*.
+
+## Files (all in `.antigravity/memory/`)
+
+| File | Holds | Read | Update |
+|---|---|---|---|
+| `activeContext.md` | current focus, recent changes, next steps, open questions | every session | every session |
+| `progress.md` | what works, what's left, known issues, blockers | every session | every session |
+| `decisions.md` | why decisions were made (append-only) | on demand | on any real decision |
+| `tech-debt.md` | shortcuts + location + proper fix (append-only) | scan HIGH each session | on debt incurred |
+| `projectbrief.md` | vision, scope, core goals (source of truth) | first session / on demand | rarely |
+| `productContext.md` | why it exists, problems, users | first session / on demand | rarely |
+| `systemPatterns.md` | architecture, key patterns, conventions | when the task touches it | on architectural change |
+| `techContext.md` | stack, versions, setup, verification commands, constraints | when the task touches it | on dependency change |
+| `preferences.md` | how the human wants the agent to work; code style; pet peeves | every session | as needed |
+
+**Tiered reads** keep startup cheap and reliable: always load `activeContext.md`,
+`progress.md`, and `preferences.md`, and scan `tech-debt.md` for HIGH items; pull the
+foundational files (brief, product, patterns, tech) on the first session of a chat or when
+the task enters their domain.
+
+## Logging formats
+
+Decision -> `decisions.md` (append-only):
+```
+## [YYYY-MM-DD] — [Title]   #tags: ...
+**What:** ...   **Why:** ...   **Alternatives:** ...   **Revisit if:** ...
+```
+
+Tech debt -> `tech-debt.md` (append-only):
+```
+## [YYYY-MM-DD] — [Short description]   [Priority: Low | Medium | High]
+**Location:** [file : line]   **Debt:** ...   **Proper fix:** ...
+```
+
+Mark resolved items `[RESOLVED]`, then archive — never delete history.
+
+## Keep memory lean
+
+- Don't duplicate what's already in the code, git history, or other docs — memory holds the
+  *decision and the why*, not a re-listing of the wiring.
+- Soft caps: `activeContext.md` <= ~50 lines, `progress.md` <= ~80. Past that, roll completed
+  items into `progress.md` and move stale entries to `.antigravity/memory/archive/`.
+- `decisions.md` and `tech-debt.md` are append-only and may grow; archive resolved entries.
+
+## Update after the task (run this checklist; don't freestyle)
+
+1. `activeContext.md` (always): current focus, recent changes, next steps.
+2. `progress.md` (always): what newly works, what's newly blocked.
+3. Made an architectural / cross-cutting decision? -> `decisions.md`.
+4. Took a shortcut or hit a recurring sharp edge? -> `tech-debt.md`.
+5. New pattern, or stack / dependency change? -> `systemPatterns.md` / `techContext.md`.
+6. Learned the human's preference or style from a correction? -> `preferences.md`.
+
+State which files you changed and which you reviewed but left unchanged.
+
+## Safety & conflicts
+
+- Never delete or overwrite memory files without explicit confirmation. (Archiving moves; it doesn't delete.)
+- Never fabricate project context — use only what's documented or verifiable in the repo. Flag unknowns.
+- If the memory bank doesn't exist yet, say so and offer to create it from these templates.
+- **When memory conflicts with the code,** the code wins for *what is*; memory wins for *why*.
+  Surface the conflict and reconcile deliberately — don't silently rewrite either side to match.
+
+## Session start
+
+1. Run the tiered read (above), silently.
+2. Scan `tech-debt.md` for HIGH items.
+3. Confirm: "🧠 Memory loaded. Focus: [from activeContext]. Open debt: [N] ([X] high)."
+4. If files are missing or stale, flag it before proceeding.

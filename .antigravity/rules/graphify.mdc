@@ -1,0 +1,36 @@
+---
+description: OPTIONAL — bridges the memory bank with the graphify code knowledge graph. Delete this file if you don't use graphify.
+alwaysApply: true
+---
+
+# Graphify Bridge (optional)
+<!-- Only relevant if graphify is installed (https://github.com/safishamsi/graphify). -->
+<!-- `graphify <tool> install` also writes its own query-first rule; this harmonizes it. -->
+<!-- If you don't use graphify, delete this file. -->
+
+## Two layers, no overlap
+- **Memory bank** (`.antigravity/memory/`) = curated *why / intent / state*. Hand-maintained.
+- **Graphify** (`graphify-out/`) = generated *what-is / structure*. Derived from code; queried, never hand-edited.
+- Same split as the conflict rule in @memory-bank.mdc: code (and its graph) is truth for *what is*; memory for *why*.
+
+## Wire the graph into planning
+For "what is / how is this wired / what depends on this" questions, query the graph before
+grepping: `graphify query "..."`, `graphify path "A" "B"`, `graphify explain "X"`. Use it to
+work out impact / blast-radius before risky changes. Memory files are exempt — always read them
+per @memory-bank.mdc; query-first applies to source code, not the curated layer.
+
+## Keep the layers clean
+- Don't record in memory the structural facts the graph already maps (call paths, dependency lists) —
+  memory holds the *decision*, the graph holds the *wiring*.
+- During memory updates, scan graphify's surfaced `# HACK:` / `# TODO:` / `# WHY:` markers —
+  anything not yet captured is a candidate for `tech-debt.md` / `decisions.md`.
+- After a structural change, refresh the graph (`graphify . --update`) so impact reads stay accurate.
+
+## Confidence vocabularies are separate
+- Your change-safety judgment vs. graphify's EXTRACTED / INFERRED / AMBIGUOUS edge tags.
+- If a plan leans on an INFERRED or AMBIGUOUS edge, verify it directly before relying on it.
+
+## Freshness & conflicts
+- Graph disagrees with current code -> the graph is stale; rebuild it (`--update`, or `--force` after a refactor). Code wins.
+- Memory disagrees with current code -> real conflict; surface and ask per @memory-bank.mdc.
+- Never auto-load `graph.json` or the full `GRAPH_REPORT.md` into context — query them.

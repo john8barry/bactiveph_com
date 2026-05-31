@@ -1,3 +1,4 @@
+
 <footer class="bactive-custom-footer" style="background-color: var(--bactive-ivory); padding: 60px 0 20px; border-top: 1px solid var(--bactive-greige); color: var(--bactive-charcoal); font-family: var(--bactive-font-body);">
     <div class="ct-container">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 60px;">

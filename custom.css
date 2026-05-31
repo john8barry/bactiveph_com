@@ -1,0 +1,96 @@
+/* B Active Custom CSS - Specificity overrides */
+
+:root {
+  --bactive-ivory: #FAF8F4;
+  --bactive-white: #FFFFFF;
+  --bactive-charcoal: #2B2A28;
+  --bactive-ink: #1C1B19;
+  --bactive-sage: #9CAE92;
+  --bactive-sage-deep: #5E6E54;
+  --bactive-rose: #D8A7A0;
+  --bactive-rose-deep: #A96E66;
+  --bactive-greige: #E6DFD5;
+  --bactive-stone: #6E675F;
+  --bactive-font-head: 'Fraunces', Georgia, serif;
+  --bactive-font-body: 'Inter', system-ui, sans-serif;
+  --bactive-radius-btn: 2px;
+  --bactive-ease: 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+/* Base Component Styles - High Specificity */
+body, html, #main, .site-main, .site-content, .ct-container {
+    background-color: var(--bactive-ivory) !important;
+    background: var(--bactive-ivory) !important;
+    color: var(--bactive-charcoal);
+    font-family: var(--bactive-font-body);
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--bactive-font-head) !important;
+    color: var(--bactive-ink) !important;
+}
+
+a {
+    color: var(--bactive-sage-deep);
+    transition: color var(--bactive-ease);
+}
+
+a:hover, a:focus {
+    color: var(--bactive-sage);
+}
+
+/* Primary Button High Specificity */
+.woocommerce a.button, 
+.woocommerce button.button, 
+.woocommerce input.button, 
+.woocommerce #respond input#submit,
+.woocommerce a.button.alt, 
+.woocommerce button.button.alt, 
+.woocommerce input.button.alt, 
+.woocommerce #respond input#submit.alt,
+button, 
+input[type="submit"], 
+.wp-block-button__link, 
+.add_to_cart_button, 
+.single_add_to_cart_button, 
+.added_to_cart,
+.ct-button {
+    background-color: var(--bactive-charcoal) !important;
+    color: var(--bactive-ivory) !important;
+    border: 1px solid var(--bactive-charcoal) !important;
+    font-family: var(--bactive-font-body) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    font-weight: 500 !important;
+    border-radius: var(--bactive-radius-btn) !important;
+    transition: all var(--bactive-ease) !important;
+    cursor: pointer !important;
+}
+
+.woocommerce a.button:hover, 
+.woocommerce button.button:hover, 
+.woocommerce input.button:hover, 
+.woocommerce #respond input#submit:hover,
+.woocommerce a.button.alt:hover, 
+.woocommerce button.button.alt:hover, 
+.woocommerce input.button.alt:hover, 
+.woocommerce #respond input#submit.alt:hover,
+button:hover, 
+input[type="submit"]:hover, 
+.wp-block-button__link:hover, 
+.add_to_cart_button:hover, 
+.single_add_to_cart_button:hover, 
+.added_to_cart:hover,
+.ct-button:hover {
+    background-color: var(--bactive-sage-deep) !important;
+    border-color: var(--bactive-sage-deep) !important;
+    color: var(--bactive-white) !important;
+}
+
+/* Footer Copyright Removal & Layout adjustments if necessary */
+/* copyright visible */
+
+/* Footer widget spacing fixes */
+.ct-footer-sidebar-1, .ct-footer-sidebar-2, .ct-footer-sidebar-3, .ct-footer-sidebar-4 {
+    margin-bottom: 2rem;
+}

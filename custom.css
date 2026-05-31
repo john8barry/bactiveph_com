@@ -18,7 +18,7 @@
 }
 
 /* Base Component Styles - High Specificity */
-body, html, #main, .site-main, .site-content, .ct-container {
+body, html, #main, .site-main, .site-content {
     background-color: var(--bactive-ivory) !important;
     background: var(--bactive-ivory) !important;
     color: var(--bactive-charcoal);

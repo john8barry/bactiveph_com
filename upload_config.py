@@ -1,21 +1,13 @@
 import os
-import env_loader  # auto-loads .env into os.environ
 import ftplib
+from dotenv import load_dotenv
 
+load_dotenv()
 ftp = ftplib.FTP()
-try:
-    ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login(os.environ.get('FTP_USER','bactive@bactiveph.com'), os.environ['FTP_PASSWORD'])
-    
-    with open('.user.ini', 'rb') as f:
-        ftp.storbinary('STOR .user.ini', f)
-        print("Uploaded .user.ini")
-        
-    with open('.htaccess', 'rb') as f:
-        ftp.storbinary('STOR .htaccess', f)
-        print("Uploaded .htaccess")
-        
-except Exception as e:
-    print("Error:", e)
-finally:
-    ftp.quit()
+ftp.connect(os.getenv('FTP_HOST', 'ftp.bactiveph.com'), int(os.getenv('FTP_PORT', 21)))
+ftp.login(os.environ['CPANEL_USER'], os.environ['CPANEL_PASSWORD'])
+ftp.cwd('staging.bactiveph.com')
+with open('config_shipping_zones.php', 'rb') as f:
+    ftp.storbinary('STOR config_shipping_zones.php', f)
+ftp.quit()
+print("Uploaded config_shipping_zones.php")

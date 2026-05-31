@@ -59,7 +59,7 @@
         <!-- Bottom Bar -->
         <div style="border-top: 1px solid var(--bactive-greige); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 0.875rem; color: var(--bactive-stone); gap: 20px;">
             <div>
-                <span>Ships nationwide via J&T & Ninja Van</span>
+                <span>Ships nationwide via <a href="https://www.jtexpress.ph/" target="_blank" rel="noopener noreferrer" style="color: var(--bactive-stone); text-decoration: underline;">J&T</a> & <a href="https://www.ninjavan.co/en-ph/" target="_blank" rel="noopener noreferrer" style="color: var(--bactive-stone); text-decoration: underline;">Ninja Van</a></span>
             </div>
             <div>
                 <strong style="color: var(--bactive-charcoal);">GCash | Maya | Visa | Mastercard | COD</strong>

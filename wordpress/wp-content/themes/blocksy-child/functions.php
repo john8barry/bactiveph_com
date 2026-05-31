@@ -178,7 +178,7 @@ function bactive_add_cod_fee( $cart ) {
     $chosen_gateway = WC()->session->get( 'chosen_payment_method' );
     if ( 'cod' === $chosen_gateway ) {
         $fee = 50;
-        $cart->add_fee( 'COD Fee', $fee, true, 'standard' );
+        $cart->add_fee( 'COD Fee', $fee, false, '' );
     }
 }
 // Force checkout update on payment method change to apply fee

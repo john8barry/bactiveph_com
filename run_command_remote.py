@@ -22,11 +22,12 @@ with open(script_name, 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect(os.getenv('FTP_HOST', 'ftp.bactiveph.com'), int(os.getenv('FTP_PORT', 21)))
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login(os.environ['CPANEL_USER'], os.environ['CPANEL_PASSWORD'])
+    ftp.cwd('staging.bactiveph.com')
     with open(script_name, 'rb') as f:
         ftp.storbinary(f'STOR {script_name}', f)
     
-    response = requests.get(f'https://bactiveph.com/{script_name}?nocache=1', verify=False)
+    response = requests.get(f'https://staging.bactiveph.com/{script_name}?nocache=1', verify=False, auth=('bactive_team', 'BActive_Stg_2026!'))
     print(response.text)
     
     ftp.delete(script_name)

@@ -1,3 +1,10 @@
+
+# STAGING AUTH
+AuthType Basic
+AuthName "Restricted Staging Area"
+AuthUserFile /home/waypmvhk/bactiveph.com/staging/.htpasswd
+Require valid-user
+# END STAGING AUTH
 # BEGIN LSCACHE
 ## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
 <IfModule mod_rewrite.c>
@@ -37,11 +44,11 @@ CacheKeyModify -qs:_ga
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-RewriteBase /
-RewriteRule ^index\.php$ - [L]\nRewriteCond %{REQUEST_URI} !^/staging/
+RewriteBase /staging/
+RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
+RewriteRule . /staging/index.php [L]
 </IfModule>
 
 # END WordPress

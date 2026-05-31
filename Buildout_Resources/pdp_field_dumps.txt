@@ -1,0 +1,46 @@
+--- Data for pdp_the_court_dress ---
+Name: The Court Dress
+Price: ₱1,950.00
+Colors: Court Ivory, Stone, Wisteria
+
+Tabs:
+- Description:
+Move freely, look effortless. Our signature pleated pickleball dress pairs a flattering silhouette with serious performance.CourtSoft™ four-way stretchSweat-wicking, buttery-softBuilt-in shorts (4" inseam) with ball pocketBuilt-in light-support bra with removable padsPleated skirt that holds its shapeFit & Sizing: True to size (Asian fit), S–XL. Model is 165 cm, wears M.
+
+- Features & Fit:
+Ball pocket, Built-in bra, Built-in shorts, Pockets
+
+- Shipping & Returns: Free shipping on orders over $100... (static tab from functions)
+- Fabric & Care: (static tab from functions)
+
+
+--- Data for pdp_the_pleated_skort ---
+Name: The Pleated Skort
+Price: ₱1,090.00
+Colors: Onyx
+
+Tabs:
+- Description:
+Swing freely, stay covered. A high-waist pleated skort with secure built-in shorts.CourtSoft™ four-way stretchBuilt-in shorts (no ride-up) with pocketHigh, flattering waistbandFit & Sizing: True to size (Asian fit), S–XL. Model is 165 cm, wears M.
+
+- Features & Fit:
+Ball pocket, Built-in shorts, Pockets
+
+- Shipping & Returns: Free shipping on orders over $100... (static tab from functions)
+- Fabric & Care: (static tab from functions)
+
+
+--- Data for pdp_the_halter_set ---
+Name: The Halter Set
+Price: ₱2,490.00
+Colors: Almond, Bloom, Court Ivory, Onyx, Powder, Sakura
+
+Tabs:
+- Description:
+One decision, head-to-toe. A flattering halter bra and high-waist leggings that move as one.CourtSoft™ four-way stretch, squat-proofHalter bra with removable padsHigh-waist leggings with side pocketsMix-and-match with The Court EditFit & Sizing: True to size (Asian fit), S–XL. Model is 166 cm, wears M.
+
+- Features & Fit:
+Pockets, Squat-proof
+
+- Shipping & Returns: Free shipping on orders over $100... (static tab from functions)
+- Fabric & Care: (static tab from functions)

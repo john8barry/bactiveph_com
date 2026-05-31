@@ -1,3 +1,3 @@
 <?php
-echo shell_exec('cd staging && php wp-cli.phar post list --post_type=product --format=json 2>&1');
+echo shell_exec('cd staging && php get_products_internal.php 2>&1');
 ?>

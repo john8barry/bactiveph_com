@@ -1,0 +1,1 @@
+<?php echo shell_exec('wp core verify-checksums 2>&1'); ?>

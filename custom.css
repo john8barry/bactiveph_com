@@ -94,3 +94,14 @@ input[type="submit"]:hover,
 .ct-footer-sidebar-1, .ct-footer-sidebar-2, .ct-footer-sidebar-3, .ct-footer-sidebar-4 {
     margin-bottom: 2rem;
 }
+
+/* Suppress Home page title */
+.home .hero-section, .page-id-14 .hero-section { display: none !important; }
+
+/* Fix strange rectangles in desktop view corners */
+body, html, .ct-site-frame, .ct-container, .ct-container-full, #main, .site-main, .site-content, .hero-section, .wp-block-cover, .wp-block-group {
+    border-radius: 0 !important;
+}
+.ct-site-frame {
+    display: none !important;
+}

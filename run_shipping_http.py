@@ -1,0 +1,148 @@
+import os
+import ftplib
+import requests
+import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
+
+php_script = """<?php
+require 'wp-load.php';
+
+try {
+    // Ensure WooCommerce is fully loaded
+    if ( ! function_exists( 'WC' ) ) {
+        throw new Exception("WooCommerce not loaded.");
+    }
+    
+    // Load shipping classes
+    WC()->shipping();
+
+    // Clear existing shipping zones (except Rest of the World)
+    $zones = WC_Shipping_Zones::get_zones();
+    foreach ($zones as $zone_data) {
+        $zone = new WC_Shipping_Zone($zone_data['zone_id']);
+        $zone->delete();
+    }
+
+    // 1. Davao City Zone
+    $zone_davao = new WC_Shipping_Zone();
+    $zone_davao->set_zone_name('Davao City');
+    $zone_davao->add_location('8000', 'postcode');
+    $zone_davao->save();
+
+    // Add Flat Rate for Davao
+    $instance_id = $zone_davao->add_shipping_method('flat_rate');
+    $flat_rate = new WC_Shipping_Flat_Rate($instance_id);
+    $flat_rate->instance_settings = array(
+        'title' => 'Standard Delivery (Davao City)',
+        'cost' => '80',
+        'tax_status' => 'none'
+    );
+    update_option($flat_rate->get_instance_option_key(), $flat_rate->instance_settings);
+    
+    // Add Local Pickup
+    $pickup_id = $zone_davao->add_shipping_method('local_pickup');
+    $pickup = new WC_Shipping_Local_Pickup($pickup_id);
+    $pickup->instance_settings = array(
+        'title' => 'Local Pickup',
+        'cost' => '0',
+        'tax_status' => 'none'
+    );
+    update_option($pickup->get_instance_option_key(), $pickup->instance_settings);
+
+    // Free shipping >= 2000
+    $free_id = $zone_davao->add_shipping_method('free_shipping');
+    $free_shipping = new WC_Shipping_Free_Shipping($free_id);
+    $free_shipping->instance_settings = array(
+        'title' => 'Free Shipping',
+        'requires' => 'min_amount',
+        'min_amount' => '2000'
+    );
+    update_option($free_shipping->get_instance_option_key(), $free_shipping->instance_settings);
+
+
+    // 2. Mindanao Zone
+    $zone_mindanao = new WC_Shipping_Zone();
+    $zone_mindanao->set_zone_name('Mindanao (excl. Davao)');
+    $mindanao_states = ['PH02', 'PH03', 'PH85', 'PH13', 'PH46', 'PH86', 'PH48', 'PH87', 'PH88', 'PH49', 'PH51', 'PH52', 'PH89', 'PH90', 'PH59', 'PH60', 'PH62', 'PH65', 'PH66', 'PH67', 'PH97', 'PH68', 'PH70', 'PH72', 'PH73', 'PH74', 'PH96', 'PH75', 'PH76'];
+    foreach ($mindanao_states as $state) {
+        $zone_mindanao->add_location($state, 'state');
+    }
+    $zone_mindanao->save();
+
+    $instance_id = $zone_mindanao->add_shipping_method('flat_rate');
+    $flat_rate = new WC_Shipping_Flat_Rate($instance_id);
+    $flat_rate->instance_settings = array(
+        'title' => 'Standard Delivery (Mindanao)',
+        'cost' => '150',
+        'tax_status' => 'none'
+    );
+    update_option($flat_rate->get_instance_option_key(), $flat_rate->instance_settings);
+
+    $free_id = $zone_mindanao->add_shipping_method('free_shipping');
+    $free_shipping = new WC_Shipping_Free_Shipping($free_id);
+    $free_shipping->instance_settings = array(
+        'title' => 'Free Shipping',
+        'requires' => 'min_amount',
+        'min_amount' => '2000'
+    );
+    update_option($free_shipping->get_instance_option_key(), $free_shipping->instance_settings);
+
+    // 3. Luzon & Visayas
+    $zone_lz = new WC_Shipping_Zone();
+    $zone_lz->set_zone_name('Luzon & Visayas');
+    $zone_lz->add_location('PH', 'country');
+    $zone_lz->save();
+
+    $instance_id = $zone_lz->add_shipping_method('flat_rate');
+    $flat_rate = new WC_Shipping_Flat_Rate($instance_id);
+    $flat_rate->instance_settings = array(
+        'title' => 'Standard Delivery (Luzon & Visayas)',
+        'cost' => '180',
+        'tax_status' => 'none'
+    );
+    update_option($flat_rate->get_instance_option_key(), $flat_rate->instance_settings);
+
+    $free_id = $zone_lz->add_shipping_method('free_shipping');
+    $free_shipping = new WC_Shipping_Free_Shipping($free_id);
+    $free_shipping->instance_settings = array(
+        'title' => 'Free Shipping',
+        'requires' => 'min_amount',
+        'min_amount' => '2000'
+    );
+    update_option($free_shipping->get_instance_option_key(), $free_shipping->instance_settings);
+
+    echo "Shipping zones configured successfully.\\n";
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "\\n";
+} catch (Error $e) {
+    echo "Fatal Error: " . $e->getMessage() . "\\n";
+}
+?>"""
+
+script_name = f"setup_{uuid.uuid4().hex[:8]}.php"
+
+with open(script_name, 'w') as f:
+    f.write(php_script)
+
+ftp = ftplib.FTP()
+try:
+    ftp.connect(os.getenv('FTP_HOST', 'ftp.bactiveph.com'), int(os.getenv('FTP_PORT', 21)))
+    ftp.login(os.environ['CPANEL_USER'], os.environ['CPANEL_PASSWORD'])
+    ftp.cwd('staging.bactiveph.com')
+    with open(script_name, 'rb') as f:
+        ftp.storbinary(f'STOR {script_name}', f)
+    
+    response = requests.get(f'https://staging.bactiveph.com/{script_name}?nocache=1', verify=False, auth=('bactive_team', 'BActive_Stg_2026!'))
+    print(response.text)
+    
+    ftp.delete(script_name)
+except Exception as e:
+    print("Error:", e)
+finally:
+    try:
+        ftp.quit()
+    except:
+        pass
+    os.remove(script_name)

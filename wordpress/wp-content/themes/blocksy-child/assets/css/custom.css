@@ -1,0 +1,116 @@
+:root {
+  /* Colour */
+  --bactive-ivory: #FAF8F4;
+  --bactive-white: #FFFFFF;
+  --bactive-charcoal: #2B2A28;
+  --bactive-ink: #1C1B19;
+  --bactive-sage: #9CAE92;
+  --bactive-sage-deep: #5E6E54;
+  --bactive-rose: #D8A7A0;
+  --bactive-rose-deep: #A96E66;
+  --bactive-greige: #E6DFD5;
+  --bactive-stone: #6E675F;
+  --bactive-sale: #A9544A;
+
+  /* Type */
+  --bactive-font-head: 'Fraunces', Georgia, serif;
+  --bactive-font-body: 'Inter', system-ui, sans-serif;
+  --bactive-fs-base: 16px;
+
+  /* Space (8pt grid) */
+  --bactive-space-1: 8px;
+  --bactive-space-2: 16px;
+  --bactive-space-3: 24px;
+  --bactive-space-4: 32px;
+  --bactive-space-6: 48px;
+  --bactive-space-8: 64px;
+  --bactive-space-12: 96px;
+
+  /* Radius / shadow / motion */
+  --bactive-radius-btn: 2px;
+  --bactive-radius-card: 6px;
+  --bactive-shadow-card: 0 1px 3px rgba(28,27,25,.06), 0 8px 24px rgba(28,27,25,.05);
+  --bactive-ease: 0.25s cubic-bezier(.4,0,.2,1);
+
+  /* Container */
+  --bactive-container: 1280px;
+  --bactive-gutter: clamp(16px, 4vw, 48px);
+}
+
+/* Base Component Styles */
+body {
+  background-color: var(--bactive-ivory);
+  color: var(--bactive-charcoal);
+  font-family: var(--bactive-font-body);
+  font-size: var(--bactive-fs-base);
+}
+
+h1, h2, h3, h4, h5, h6, .entry-title {
+  color: var(--bactive-ink);
+  font-family: var(--bactive-font-head);
+  font-weight: 600;
+}
+
+a {
+  color: var(--bactive-sage-deep);
+  transition: color var(--bactive-ease);
+}
+a:hover {
+  color: var(--bactive-charcoal);
+}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--bactive-sage-deep);
+  outline-offset: 2px;
+}
+
+/* Buttons */
+.button, button, input[type="button"], input[type="reset"], input[type="submit"], .wp-block-button__link {
+  background-color: var(--bactive-charcoal);
+  color: var(--bactive-ivory);
+  border-radius: var(--bactive-radius-btn);
+  padding: 14px 28px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--bactive-font-body);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--bactive-ease), color var(--bactive-ease);
+}
+.button:hover, button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover, .wp-block-button__link:hover {
+  background-color: var(--bactive-sage-deep);
+  color: var(--bactive-ivory);
+}
+
+.button.secondary, .btn-secondary {
+  background-color: transparent;
+  color: var(--bactive-charcoal);
+  border: 1px solid var(--bactive-charcoal);
+}
+.button.secondary:hover, .btn-secondary:hover {
+  background-color: rgba(156, 174, 146, 0.1); /* Sagewood 10% */
+}
+
+/* Product Cards */
+.products .product {
+  background-color: var(--bactive-white);
+  border: 1px solid var(--bactive-greige);
+  border-radius: var(--bactive-radius-card);
+  overflow: hidden;
+  box-shadow: var(--bactive-shadow-card);
+  transition: transform var(--bactive-ease), box-shadow var(--bactive-ease);
+}
+.products .product:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(28,27,25,.08);
+}
+.products .product .woocommerce-loop-product__title {
+  font-family: var(--bactive-font-head);
+  font-size: 1.125rem;
+  color: var(--bactive-ink);
+  margin-top: var(--bactive-space-2);
+}
+.products .product .price {
+  color: var(--bactive-charcoal);
+  font-weight: 500;
+}

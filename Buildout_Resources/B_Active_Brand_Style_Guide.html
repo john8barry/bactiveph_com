@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B Active — Brand Style Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FAF8F4; --white:#FFFFFF; --charcoal:#2B2A28; --ink:#1C1B19;
+    --sage:#9CAE92; --sage-deep:#5E6E54; --rose:#D8A7A0; --rose-deep:#A96E66;
+    --greige:#E6DFD5; --stone:#6E675F; --sale:#A9544A;
+    --head:'Fraunces',Georgia,serif; --body:'Inter',system-ui,sans-serif;
+    --max:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--charcoal);background:var(--ivory);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+  h1,h2,h3,h4{font-family:var(--head);color:var(--ink);font-weight:600;line-height:1.12;letter-spacing:-.01em}
+  h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:.3em}
+  h3{font-size:1.35rem;margin:1.6em 0 .5em}
+  p{margin-bottom:1em;max-width:64ch}
+  .eyebrow{font-family:var(--body);font-weight:500;text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;color:var(--sage-deep)}
+  section{padding:clamp(48px,8vw,96px) 0;border-top:1px solid var(--greige)}
+  .lead{font-size:1.15rem;color:var(--stone);max-width:60ch}
+  .muted{color:var(--stone);font-size:.9rem}
+
+  /* COVER */
+  .cover{background:var(--ivory);text-align:center;border-top:none;padding-top:clamp(56px,10vw,120px)}
+  .cover .lock{max-width:480px;width:78%;margin:0 auto 28px}
+  .cover h1{font-size:clamp(2.4rem,6vw,3.8rem);font-weight:500}
+  .cover .tag{font-family:var(--head);font-style:italic;font-size:1.4rem;color:var(--sage-deep);margin-top:.2em}
+  .cover .meta{margin-top:24px;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
+
+  /* generic grid */
+  .grid{display:grid;gap:20px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--white);border:1px solid var(--greige);border-radius:6px;padding:22px}
+
+  /* logo */
+  .logobox{background:var(--white);border:1px solid var(--greige);border-radius:6px;display:flex;align-items:center;justify-content:center;padding:32px;min-height:150px}
+  .logobox.dark{background:var(--charcoal)} .logobox.sage{background:var(--sage)}
+  .logobox svg{max-width:78%;height:auto;max-height:110px}
+  .clearspace{position:relative;background:var(--white);border:1px dashed var(--sage);border-radius:6px;padding:40px;display:flex;justify-content:center}
+  .donts li{margin:.3em 0}
+
+  /* swatches */
+  .swatch{border:1px solid var(--greige);border-radius:6px;overflow:hidden;background:var(--white)}
+  .swatch .chip{height:96px}
+  .swatch .info{padding:12px 14px}
+  .swatch .nm{font-family:var(--head);font-weight:600;font-size:1.02rem}
+  .swatch .hex{font-size:.82rem;color:var(--stone);letter-spacing:.02em}
+  .swatch .use{font-size:.78rem;color:var(--stone);margin-top:6px}
+
+  /* type */
+  .specimen{background:var(--white);border:1px solid var(--greige);border-radius:6px;padding:28px 30px;margin-bottom:18px}
+  .specimen .big{font-family:var(--head);font-weight:600;font-size:clamp(2.4rem,7vw,4.4rem);line-height:1;color:var(--ink)}
+  .specimen .alpha{font-family:var(--head);font-size:1.5rem;color:var(--charcoal);margin-top:.4em;letter-spacing:.02em}
+  .specimen.sans .big,.specimen.sans .alpha{font-family:var(--body)}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--white);border:1px solid var(--greige);border-radius:6px;overflow:hidden}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--greige)}
+  th{background:var(--sage);color:var(--ink);font-family:var(--body);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+  tr:last-child td{border-bottom:none}
+
+  /* voice */
+  .vt{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:600px){.vt{grid-template-columns:1fr}}
+  .say{border-left:3px solid var(--sage);background:var(--white);padding:16px 18px;border-radius:0 6px 6px 0}
+  .dont{border-left:3px solid var(--rose);background:var(--white);padding:16px 18px;border-radius:0 6px 6px 0}
+  .pill{display:inline-block;background:var(--white);border:1px solid var(--greige);border-radius:999px;padding:6px 14px;margin:0 6px 8px 0;font-size:.85rem}
+  .pill.sage{background:var(--sage);color:var(--ink);border-color:var(--sage)}
+
+  /* components demo */
+  .btn{display:inline-block;font-family:var(--body);font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem;padding:14px 28px;border-radius:2px;cursor:pointer;border:1px solid var(--charcoal);text-decoration:none}
+  .btn-primary{background:var(--charcoal);color:var(--ivory)}
+  .btn-secondary{background:transparent;color:var(--charcoal)}
+  .badge{display:inline-block;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:2px;background:var(--sage);color:var(--ink);font-weight:600}
+  .badge.rose{background:var(--rose)}
+  .pcard{background:var(--white);border:1px solid var(--greige);border-radius:6px;overflow:hidden;max-width:260px}
+  .pcard .img{aspect-ratio:3/4;background:linear-gradient(135deg,#EFE9E0,#E3D9CC);position:relative}
+  .pcard .img .badge{position:absolute;top:10px;left:10px}
+  .pcard .pb{padding:14px 16px}
+  .pcard .pn{font-family:var(--head);font-weight:600;font-size:1.05rem}
+  .pcard .pp{color:var(--charcoal);margin-top:2px}
+  .pcard .sw{display:flex;gap:6px;margin-top:10px}
+  .dot{width:16px;height:16px;border-radius:50%;border:1px solid var(--greige)}
+  .annbar{background:var(--ivory);border:1px solid var(--greige);text-align:center;padding:10px;font-size:.82rem;letter-spacing:.04em;color:var(--charcoal);border-radius:4px}
+
+  /* applications */
+  .hangtag{width:200px;background:var(--white);border:1px solid var(--greige);border-radius:10px;padding:26px 20px;text-align:center}
+  .hangtag .hole{width:14px;height:14px;border:2px solid var(--stone);border-radius:50%;margin:0 auto 18px}
+  .igpost{width:260px;aspect-ratio:1;background:linear-gradient(135deg,#E7DFD4,#CBBDAA);border-radius:6px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+  .igpost .ov{background:linear-gradient(transparent,rgba(28,27,25,.55));color:var(--ivory);padding:18px;width:100%}
+  .sig{background:var(--white);border:1px solid var(--greige);border-radius:6px;padding:18px 20px;font-size:.85rem}
+  .sig .nm{font-family:var(--head);font-weight:600;color:var(--ink);font-size:1.05rem}
+
+  footer{padding:48px 0 80px;border-top:1px solid var(--greige);text-align:center;color:var(--stone);font-size:.82rem}
+  .reversed .wm-fill{fill:var(--ivory)!important}
+  @media print{section{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<header class="cover">
+  <div class="wrap">
+    <svg class="lock" viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" aria-label="B Active lockup">
+      <circle cx="100" cy="100" r="84" fill="#2B2A28"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="#9CAE92" stroke-width="1.4" opacity="0.75"/>
+      <text x="100" y="135" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="104" fill="#FAF8F4">B</text>
+      <text x="220" y="96" font-family="Fraunces,serif" font-weight="600" font-size="76" fill="#2B2A28">B Active</text>
+      <text x="223" y="134" font-family="Inter,sans-serif" font-weight="500" font-size="16" letter-spacing="4.5" fill="#5E6E54">PREMIUM PICKLEBALL · ACTIVEWEAR</text>
+    </svg>
+    <h1>Brand Style Guide</h1>
+    <div class="tag">Sportswear for every move.</div>
+    <div class="meta">Version 1.0 · Davao City, Philippines · bactiveph.com</div>
+  </div>
+</header>
+
+<!-- ESSENCE -->
+<section><div class="wrap">
+  <div class="eyebrow">01 — Brand essence</div>
+  <h2>Who we are</h2>
+  <p class="lead">B Active is the Philippines' first premium women's pickleball brand — beautifully designed dresses, skorts, tops, bras, sets and paddles, cut for an Asian fit, performance-tested for the court, and priced so quality doesn't cost a fortune. Born in Davao, made for the women who actually play.</p>
+  <h3>Personality</h3>
+  <div>
+    <span class="pill sage">Premium</span><span class="pill">Performance-ready</span><span class="pill">Stylish</span><span class="pill">Confident</span><span class="pill">Encouraging</span><span class="pill">A knowledgeable friend who plays</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><div class="eyebrow">Mission</div><p style="margin:0">Make life easier for active women and pickleball players — stylish, high-quality outfits they can count on.</p></div>
+    <div class="card"><div class="eyebrow">Vision</div><p style="margin:0">Become the #1 destination for pickleball outfits, and the activewear brand Filipinas reach for first.</p></div>
+    <div class="card"><div class="eyebrow">Who we're for</div><p style="margin:0">Women ~20–50 who play pickleball, and active women more broadly — who want performance, style, fit and value.</p></div>
+  </div>
+  <h3>Values</h3>
+  <p style="max-width:none"><strong>Quality first</strong> · <strong>Accessible premium</strong> · <strong>Made to move</strong> · <strong>Made for us (Asian fit)</strong> · <strong>Community</strong></p>
+</div></section>
+
+<!-- LOGO -->
+<section><div class="wrap">
+  <div class="eyebrow">02 — Logo</div>
+  <h2>The mark</h2>
+  <p>Our logo system has three forms: the <strong>lockup</strong> (primary), the <strong>wordmark</strong>, and the <strong>monogram</strong> (for avatars, favicons, hangtags). The wordmark is set in Fraunces; the soft sage ring on the monogram is our signature accent. <span class="muted">These are concept files — approve or refine with a designer; convert text to outlines for print.</span></p>
+
+  <div class="grid g2" style="margin:24px 0">
+    <div>
+      <div class="logobox">
+        <svg viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg" aria-label="wordmark">
+          <text x="320" y="118" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="118" letter-spacing="1" fill="#2B2A28">B Active</text>
+        </svg>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:8px">Wordmark</p>
+    </div>
+    <div>
+      <div class="logobox">
+        <svg viewBox="0 0 240 240" width="150" height="150" xmlns="http://www.w3.org/2000/svg" aria-label="monogram">
+          <circle cx="120" cy="120" r="116" fill="#2B2A28"/>
+          <circle cx="120" cy="120" r="105" fill="none" stroke="#9CAE92" stroke-width="1.5" opacity="0.75"/>
+          <text x="120" y="166" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="142" fill="#FAF8F4">B</text>
+        </svg>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:8px">Monogram</p>
+    </div>
+  </div>
+
+  <h3>Colourways</h3>
+  <div class="grid g3">
+    <div><div class="logobox"><svg viewBox="0 0 640 130" xmlns="http://www.w3.org/2000/svg"><text x="320" y="95" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="100" fill="#2B2A28">B Active</text></svg></div><p class="muted" style="text-align:center">Charcoal on Ivory (default)</p></div>
+    <div><div class="logobox dark"><svg viewBox="0 0 640 130" xmlns="http://www.w3.org/2000/svg"><text x="320" y="95" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="100" fill="#FAF8F4">B Active</text></svg></div><p class="muted" style="text-align:center">Ivory on Charcoal (reversed)</p></div>
+    <div><div class="logobox sage"><svg viewBox="0 0 640 130" xmlns="http://www.w3.org/2000/svg"><text x="320" y="95" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="100" fill="#1C1B19">B Active</text></svg></div><p class="muted" style="text-align:center">Ink on Sage</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:26px">
+    <div>
+      <h3>Clear space &amp; minimum size</h3>
+      <div class="clearspace"><svg viewBox="0 0 460 110" width="320" xmlns="http://www.w3.org/2000/svg"><text x="230" y="80" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="78" fill="#2B2A28">B Active</text></svg></div>
+      <p class="muted" style="margin-top:8px">Keep clear space of at least the height of the “B” on all sides. Minimum width: 90px digital / 22mm print for the wordmark; 24px for the monogram.</p>
+    </div>
+    <div>
+      <h3>Don'ts</h3>
+      <ul class="donts muted" style="padding-left:18px">
+        <li>Don't stretch, condense or rotate the mark.</li>
+        <li>Don't recolour outside the approved palette.</li>
+        <li>Don't add shadows, gradients, outlines or effects.</li>
+        <li>Don't place on busy photos without a scrim or clear-space panel.</li>
+        <li>Don't recreate the wordmark in a different font.</li>
+        <li>Don't crowd it — respect the clear space.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- COLOUR -->
+<section><div class="wrap">
+  <div class="eyebrow">03 — Colour</div>
+  <h2>Palette</h2>
+  <p>Calm, warm and feminine: an off-white and charcoal foundation, with <strong>sage</strong> and <strong>dusty rose</strong> used sparingly as accents — never loud. Body text is always charcoal on ivory/white. Sage and rose are decorative; for accent <em>text</em> or links use the darker Deep Sage / Rose Clay (both pass WCAG AA).</p>
+
+  <h3>Foundation</h3>
+  <div class="grid g4">
+    <div class="swatch"><div class="chip" style="background:#FAF8F4;border-bottom:1px solid #E6DFD5"></div><div class="info"><div class="nm">Court Ivory</div><div class="hex">#FAF8F4 · rgb(250,248,244)</div><div class="use">Page background</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#FFFFFF;border-bottom:1px solid #E6DFD5"></div><div class="info"><div class="nm">Cloud White</div><div class="hex">#FFFFFF</div><div class="use">Cards, surfaces</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#2B2A28"></div><div class="info"><div class="nm">Charcoal</div><div class="hex">#2B2A28</div><div class="use">Body text · primary button</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#1C1B19"></div><div class="info"><div class="nm">Ink</div><div class="hex">#1C1B19</div><div class="use">Headings</div></div></div>
+  </div>
+
+  <h3>Accents</h3>
+  <div class="grid g4">
+    <div class="swatch"><div class="chip" style="background:#9CAE92"></div><div class="info"><div class="nm">Sagewood</div><div class="hex">#9CAE92</div><div class="use">Primary accent, icons, badges</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#5E6E54"></div><div class="info"><div class="nm">Deep Sage</div><div class="hex">#5E6E54</div><div class="use">Accent text · links (AA)</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#D8A7A0"></div><div class="info"><div class="nm">Dusty Rose</div><div class="hex">#D8A7A0</div><div class="use">Secondary accent, decorative</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#A96E66"></div><div class="info"><div class="nm">Rose Clay</div><div class="hex">#A96E66</div><div class="use">Rose accent text (AA)</div></div></div>
+  </div>
+
+  <h3>Support</h3>
+  <div class="grid g4">
+    <div class="swatch"><div class="chip" style="background:#E6DFD5"></div><div class="info"><div class="nm">Greige</div><div class="hex">#E6DFD5</div><div class="use">Borders, dividers</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#6E675F"></div><div class="info"><div class="nm">Stone</div><div class="hex">#6E675F</div><div class="use">Secondary text, captions</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#A9544A"></div><div class="info"><div class="nm">Clay Red</div><div class="hex">#A9544A</div><div class="use">Sale only — use rarely</div></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#9CAE92,#D8A7A0)"></div><div class="info"><div class="nm">Accent pairing</div><div class="hex">Sage + Rose</div><div class="use">Soft gradients, art</div></div></div>
+  </div>
+  <p class="muted" style="margin-top:18px"><strong>Contrast rule:</strong> minimum 4.5:1 for text. Never set body copy in Sage or Rose; never use pure black (#000) — use Ink/Charcoal.</p>
+</div></section>
+
+<!-- TYPOGRAPHY -->
+<section><div class="wrap">
+  <div class="eyebrow">04 — Typography</div>
+  <h2>Type</h2>
+  <p>A warm serif for display, a clean sans for everything else. Two families only; self-host on the live site for speed.</p>
+
+  <div class="specimen">
+    <div class="eyebrow">Display &amp; headings</div>
+    <div class="big">Fraunces</div>
+    <div class="alpha">Aa Bb Cc · Look good. Play good.</div>
+    <p class="muted" style="margin:.6em 0 0">Weights 400 / 500 / 600 · soft, fashionable, feminine. Use for H1–H4, product names, pull quotes.</p>
+  </div>
+  <div class="specimen sans">
+    <div class="eyebrow">Body &amp; UI</div>
+    <div class="big">Inter</div>
+    <div class="alpha">Aa Bb Cc · The premium feel, without the premium price.</div>
+    <p class="muted" style="margin:.6em 0 0">Weights 400 / 500 / 600 · highly legible. Use for body, navigation, buttons, labels.</p>
+  </div>
+
+  <h3>Scale &amp; rules</h3>
+  <table>
+    <tr><th>Style</th><th>Font</th><th>Size</th><th>Notes</th></tr>
+    <tr><td>H1 / Display</td><td>Fraunces 600</td><td>3.0rem</td><td>line-height 1.12</td></tr>
+    <tr><td>H2</td><td>Fraunces 600</td><td>2.25rem</td><td>section titles</td></tr>
+    <tr><td>H3</td><td>Fraunces 600</td><td>1.5rem</td><td>sub-sections</td></tr>
+    <tr><td>Body</td><td>Inter 400</td><td>1.0rem (16px)</td><td>line-height 1.6 · max ~68ch</td></tr>
+    <tr><td>Eyebrow / label</td><td>Inter 500</td><td>0.72rem</td><td>UPPERCASE · letter-spacing .18em · Deep Sage</td></tr>
+    <tr><td>Button</td><td>Inter 500</td><td>0.8rem</td><td>UPPERCASE · letter-spacing .08em</td></tr>
+  </table>
+</div></section>
+
+<!-- VOICE -->
+<section><div class="wrap">
+  <div class="eyebrow">05 — Voice &amp; tone</div>
+  <h2>How we sound</h2>
+  <p>Friendly and motivating; expert and no-nonsense; confident but never boastful. Specific and a little playful about the sport. We sound like a knowledgeable friend who plays — not a faceless store, and never a hype machine.</p>
+  <div class="vt" style="margin-top:8px">
+    <div class="say"><strong>We say</strong><p class="muted" style="margin:.4em 0 0">premium · quality · accessible · fair · value · made to move · Asian fit · court-ready · buttery-soft · designed for you</p></div>
+    <div class="dont"><strong>We don't say</strong><p class="muted" style="margin:.4em 0 0">cheap · sale!! · hurry · limited time · lowest price · #1 best · generic hype, ALL CAPS shouting, exclamation spam</p></div>
+  </div>
+  <h3>On-brand vs off-brand</h3>
+  <div class="vt">
+    <div class="dont"><div class="eyebrow" style="color:var(--rose-deep)">Off-brand</div><p style="margin:.3em 0 0">“🔥 MEGA SALE!! Cheapest pickleball dress online — BUY NOW before it's gone!!! ⏰”</p></div>
+    <div class="say"><div class="eyebrow">On-brand</div><p style="margin:.3em 0 0">“Move freely, look effortless. The Court Dress pairs a flattering silhouette with serious performance — built-in shorts, a ball pocket, and buttery-soft CourtSoft™ fabric.”</p></div>
+  </div>
+</div></section>
+
+<!-- NAMING -->
+<section><div class="wrap">
+  <div class="eyebrow">06 — Naming systems</div>
+  <h2>How we name things</h2>
+  <p>Proprietary names signal craft and R&amp;D — at near-zero cost. Use them consistently across the site, hangtags and social.</p>
+  <div class="grid g3">
+    <div class="card"><div class="eyebrow">Fabrics</div><p style="margin:.4em 0 0"><strong>CourtSoft™</strong> — buttery-soft, 4-way stretch, squat-proof.<br><strong>BreezeKnit™</strong> — lightweight, breathable, moisture-wicking.<br><strong>SecondSkin™</strong> — seamless, no-dig.</p></div>
+    <div class="card"><div class="eyebrow">Collections</div><p style="margin:.4em 0 0"><strong>The Court Edit</strong> — hero pickleball dresses.<br><strong>The Rally Set</strong> — matching sets.<br><strong>Everyday Active</strong> — tanks, bras, leggings, skorts.</p></div>
+    <div class="card"><div class="eyebrow">Colour vocabulary</div><p style="margin:.4em 0 0">Court Ivory · Midnight · Onyx · Sakura · Powder · Sagewood · Wisteria · Stone · Apricot · Almond · Bloom · Clay Red <span class="muted">(never “green”, “pink”, “white”)</span></p></div>
+  </div>
+</div></section>
+
+<!-- PHOTOGRAPHY -->
+<section><div class="wrap">
+  <div class="eyebrow">07 — Photography &amp; art direction</div>
+  <h2>How we look</h2>
+  <p>Photography is our biggest premium signal. Soft, warm, natural light; consistent grade; real Filipina models across body types (this <em>is</em> the Asian-fit story). Two modes: clean studio on warm off-white, and on-court lifestyle in Davao.</p>
+  <div class="vt">
+    <div class="say"><strong>Do</strong><p class="muted" style="margin:.4em 0 0">Natural light · soft warm tones · mid-motion (serve, dink, reach) + at-rest · 5–9 images per style incl. a Features &amp; Details shot · court-to-café lifestyle · generous negative space.</p></div>
+    <div class="dont"><strong>Don't</strong><p class="muted" style="margin:.4em 0 0">Neon or over-sharpened edits · harsh studio flash only · busy/cluttered backgrounds · exclusively Western/idealised casting · body-over-sport posing · 1–2 images per product.</p></div>
+  </div>
+  <p class="muted" style="margin-top:14px"><strong>Per-product shot list:</strong> front · back · side (on-model) · fabric/seam detail · pocket/built-in-shorts detail · in-motion action · lifestyle · flat-lay.</p>
+</div></section>
+
+<!-- COMPONENTS -->
+<section><div class="wrap">
+  <div class="eyebrow">08 — Components</div>
+  <h2>Digital building blocks</h2>
+  <div class="annbar">Complimentary shipping on orders over ₱2,000 — nationwide.</div>
+  <div style="margin:22px 0">
+    <a class="btn btn-primary" href="#">Shop the collection</a>
+    <a class="btn btn-secondary" href="#">Our story</a>
+    &nbsp; <span class="badge">New</span> <span class="badge rose">Best Seller</span>
+  </div>
+  <div class="grid g3">
+    <div class="pcard">
+      <div class="img"><span class="badge">New</span></div>
+      <div class="pb"><div class="pn">The Court Dress</div><div class="pp">₱1,950</div>
+        <div class="sw"><span class="dot" style="background:#FAF8F4"></span><span class="dot" style="background:#B9A7C9"></span><span class="dot" style="background:#9A958C"></span></div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="eyebrow">Buttons</div>
+      <p class="muted" style="margin:.4em 0 0">Primary = Charcoal fill, Ivory text, 2px radius, uppercase. Hover → Deep Sage. Secondary = Charcoal outline.</p>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="eyebrow">Cards &amp; badges</div>
+      <p class="muted" style="margin:.4em 0 0">3:4 portrait imagery · 6px radius · hairline Greige border · sparing Sage/Rose badges. Generous whitespace, 2-up on mobile.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- APPLICATIONS -->
+<section><div class="wrap">
+  <div class="eyebrow">09 — Applications</div>
+  <h2>In the wild</h2>
+  <div class="grid g3">
+    <div>
+      <div class="hangtag">
+        <div class="hole"></div>
+        <svg viewBox="0 0 240 240" width="62" height="62" style="margin-bottom:14px" xmlns="http://www.w3.org/2000/svg"><circle cx="120" cy="120" r="116" fill="#2B2A28"/><circle cx="120" cy="120" r="105" fill="none" stroke="#9CAE92" stroke-width="2" opacity=".75"/><text x="120" y="166" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="142" fill="#FAF8F4">B</text></svg>
+        <div style="font-family:var(--head);font-weight:600;font-size:1.2rem">B Active</div>
+        <div class="muted" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-top:4px">Quality you can feel</div>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:8px">Hangtag</p>
+    </div>
+    <div>
+      <div class="igpost">
+        <div class="ov"><div class="eyebrow" style="color:#9CAE92">The Court Edit</div><div style="font-family:var(--head);font-weight:600;font-size:1.5rem">Made to move with you.</div></div>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:8px">Social post</p>
+    </div>
+    <div>
+      <div class="sig">
+        <div class="nm">Marnie · B Active</div>
+        <div class="muted">Premium Pickleball &amp; Activewear · Davao City</div>
+        <div style="margin-top:6px"><span style="color:var(--sage-deep)">bactiveph.com</span> · hello@bactiveph.com</div>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:8px">Email signature</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- GUARDRAILS -->
+<section><div class="wrap">
+  <div class="eyebrow">10 — Premium guardrails</div>
+  <h2>Premium vs. fast-fashion</h2>
+  <table>
+    <tr><th>Area</th><th>Do (premium)</th><th>Don't (fast-fashion)</th></tr>
+    <tr><td>Sale language</td><td>Name it (“Court Closings”); discounts rare</td><td>“FLASH SALE”, countdown timers, strike-throughs everywhere</td></tr>
+    <tr><td>Colour names</td><td>Court Ivory, Sagewood, Sakura</td><td>“Green”, “Pink”, “White”</td></tr>
+    <tr><td>Imagery</td><td>5–9 per product, lifestyle + detail</td><td>1–2 studio-only, inconsistent</td></tr>
+    <tr><td>Urgency</td><td>None (or honest low-stock)</td><td>“X viewing”, “sold in last 24h”</td></tr>
+    <tr><td>Voice</td><td>Calm, specific, playful</td><td>Exclamatory, hyperbolic, ALL CAPS</td></tr>
+    <tr><td>Membership</td><td>Optional rewards, no gating</td><td>Pay-to-unlock VIP wall</td></tr>
+  </table>
+  <h3 style="margin-top:1.4em">Tagline &amp; key messages</h3>
+  <p style="font-family:var(--head);font-style:italic;font-size:1.4rem;color:var(--sage-deep)">“Sportswear for every move.”</p>
+  <p class="muted">Premium quality, comparable to the brands you love · Designed for pickleball and the active everyday · Looks great, performs better (moisture-wicking, four-way stretch, pockets) · Fair, accessible prices · Designed with an Asian fit.</p>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    B Active · Brand Style Guide v1.0 · Davao City, Philippines · bactiveph.com<br>
+    <span class="muted">Logo is a concept for approval. Companion files: B_Active_Brand_Style_Guide.md · B_Active_Master_Build_Guide.md · brand/ SVGs. Tip: print this page to PDF to share.</span>
+  </div>
+</footer>
+
+</body>
+</html>

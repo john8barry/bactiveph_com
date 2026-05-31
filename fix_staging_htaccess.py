@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import re
 import requests
@@ -5,7 +7,7 @@ import requests
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('staging_htaccess', 'wb') as f:
         ftp.retrbinary('RETR staging/.htaccess', f.write)
         
@@ -52,6 +54,6 @@ print(res.text)
 
 ftp = ftplib.FTP()
 ftp.connect('ftp.bactiveph.com', 21)
-ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
 ftp.delete('staging/prove_staging_cli.php')
 ftp.quit()

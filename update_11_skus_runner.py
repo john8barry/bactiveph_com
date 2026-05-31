@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import json
 import base64
 import ftplib
@@ -93,7 +95,7 @@ with open('run_update_11_skus.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('update_11_skus.php', 'rb') as f:
         ftp.storbinary('STOR staging/update_11_skus.php', f)
     with open('run_update_11_skus.php', 'rb') as f:
@@ -112,7 +114,7 @@ print("Output:", response.text)
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     ftp.delete('staging/update_11_skus.php')
     ftp.delete('run_update_11_skus.php')
     print("Cleanup done.")

@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import requests
 
@@ -21,7 +23,7 @@ with open('do_everything.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('do_everything.php', 'rb') as f:
         ftp.storbinary('STOR do_everything.php', f)
         

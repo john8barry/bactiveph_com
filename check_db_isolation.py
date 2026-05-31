@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import re
 
@@ -17,7 +19,7 @@ def get_db_name(ftp, filename):
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     
     prod_db = get_db_name(ftp, 'wp-config.php')
     print(f"Production DB Name: {prod_db}")

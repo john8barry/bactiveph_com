@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import requests
 
@@ -63,7 +65,7 @@ with open('run_swatches_root.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('run_swatches_internal.php', 'rb') as f:
         ftp.storbinary('STOR staging/run_swatches_internal.php', f)
     with open('run_swatches_root.php', 'rb') as f:

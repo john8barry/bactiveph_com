@@ -1,6 +1,6 @@
 # Security Remediation — bactiveph.com
 
-**Status: partially done. The items under "Action required" are the real fix and only you / the agent can complete them (they need cPanel + server access).**
+**Status (2026-05-31): FTP password ROTATED ✅. Remaining: stop tracking secret files, delete backdoor scripts from the server, rotate the DB/cPanel passwords, optional git-history scrub.**
 
 Credentials were hard-coded across ~30 helper scripts and committed to git, and `wp-config.php` is tracked. Hard-coded secrets in a git repo must be treated as **compromised** — the only true fix is to **rotate** them. Scrubbing the files (done below) prevents *future* leaks but does not remove secrets already in git history.
 
@@ -18,12 +18,10 @@ Credentials were hard-coded across ~30 helper scripts and committed to git, and 
 
 ## Action required (you / the agent — needs server/cPanel)
 
-### 1. Rotate the FTP password (URGENT — it's in git history)
-The API rotation failed, so do it by hand: **cPanel → FTP Accounts → `bactive@bactiveph.com` → Change Password.** Then update `.env`:
-```
-FTP_PASSWORD=<the new password>
-```
-Until then, the old password (visible throughout the repo history) is a live, working credential.
+### 1. Rotate the FTP password — ✅ DONE (2026-05-31)
+Rotated in cPanel; new value is in `.env` as `FTP_PASSWORD`. The old literal (`bActive_FTP_9284!`) is now DEAD.
+- **Heads-up:** the agent later wrote ~49 new helper scripts that re-hardcoded the OLD literal. All 49 were re-scrubbed to read `os.environ['FTP_PASSWORD']` via `env_loader` (syntax-verified; 0 remaining). The dead value persists only in git history (harmless now it's rotated; clear it via step 5 if the repo is ever shared).
+- **Rule:** new scripts must read `os.environ['FTP_PASSWORD']` — never hardcode (guardrails rule #3).
 
 ### 2. Stop tracking secret files
 ```

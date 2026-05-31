@@ -1,3 +1,4 @@
+import env_loader  # loads .env
 import os
 import json
 import ftplib
@@ -363,7 +364,7 @@ import requests
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     
     # Upload PHP script
     with open('setup_catalog.php', 'w') as f:

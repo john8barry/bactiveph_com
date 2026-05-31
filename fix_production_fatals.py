@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import re
 import requests
@@ -6,7 +8,7 @@ def fix_production():
     print("Fixing production Wordfence WAF...")
     ftp = ftplib.FTP()
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
 
     # Clean .user.ini
     try:
@@ -51,7 +53,7 @@ def fix_production():
     print("Fetching error_log...")
     ftp = ftplib.FTP()
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     try:
         with open('error_log', 'wb') as f:
             ftp.retrbinary('RETR error_log', f.write)
@@ -79,7 +81,7 @@ def fix_production():
     # cleanup
     ftp = ftplib.FTP()
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     ftp.delete('verify_checksums.php')
     ftp.quit()
 

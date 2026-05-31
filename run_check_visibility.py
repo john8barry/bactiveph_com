@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import requests
 
@@ -12,7 +14,7 @@ with open('check_visibility.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('check_visibility.php', 'rb') as f:
         ftp.storbinary('STOR check_visibility.php', f)
         

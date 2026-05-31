@@ -1,3 +1,4 @@
+import env_loader  # loads .env
 import os
 import ftplib
 import requests
@@ -34,7 +35,7 @@ with open('fix_docroot_remote.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('fix_docroot_remote.php', 'rb') as f:
         ftp.storbinary('STOR fix_docroot_remote.php', f)
     

@@ -1,10 +1,12 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import re
 
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     
     ftp.cwd('staging')
     content = []

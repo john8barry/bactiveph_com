@@ -1,3 +1,5 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import requests
 
@@ -11,7 +13,7 @@ with open('get_pdp_data_root.php', 'w') as f:
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     with open('get_pdp_data_root.php', 'rb') as f:
         ftp.storbinary('STOR get_pdp_data_root.php', f)
         
@@ -27,7 +29,7 @@ print("PHP Output:\n", response.text)
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     ftp.delete('get_pdp_data_root.php')
 except Exception as e:
     pass

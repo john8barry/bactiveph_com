@@ -1,10 +1,12 @@
+import os
+import env_loader  # loads .env
 import ftplib
 import requests
 
 ftp = ftplib.FTP()
 try:
     ftp.connect('ftp.bactiveph.com', 21)
-    ftp.login('bactive@bactiveph.com', 'bActive_FTP_9284!')
+    ftp.login('bactive@bactiveph.com', os.environ['FTP_PASSWORD'])
     try:
         with open('staging_htaccess', 'wb') as f:
             ftp.retrbinary('RETR staging/.htaccess', f.write)

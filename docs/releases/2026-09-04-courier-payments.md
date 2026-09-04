@@ -55,6 +55,14 @@ Restore only this release's changed footer/functions/courier fragments from its 
 
 Payment activation must purge page and edge caches, then verify the live five-mark footer and working checkout. Availability-based markup can otherwise remain cached. The gateway lane owns that transition.
 
-No core/parent-theme modifications, dependency updates or secrets are included. Security alert API access is unavailable (403/404), not a clean-security claim. Private backups and sanitized local receipts stay outside Git. No memory files were updated.
+No core/parent-theme modifications, dependency updates or secrets are included. An initial security API request was unavailable, but the authenticated retry succeeded: GitHub reports 13 pre-existing open alerts (7 high, 5 medium, 1 low), across Blocksy npm dependencies, TwentyTwentyFive build dependencies and the sodium_compat PHPUnit development dependency. This release does not introduce or remediate those dependencies; follow-up dependency triage remains separate. Private backups and sanitized local receipts stay outside Git. No memory files were updated.
 
-Status at commit: staging passed; production deployment and live readback pending. The work record contains subsequent deployment receipts and acceptance status.
+## Production outcome
+
+Deployed and independently read back on 2026-09-04 after staging passed. All 11 production file hashes match the reviewed package; the root footer is unchanged. FAQ and shipping-copy writes match their intended content hashes. The fresh production restore set has six off-server verified components totaling 329168641 bytes.
+
+WordPress/LiteSpeed and the verified `bactiveph.com` Cloudflare zone were purged. The public sitemap scan checked 61 pages: all HTTP200, all using the new footer, no retired courier/payment marks in the footer, and all retaining the BIR link and B Active identity. All eight image URLs return the reviewed bytes with image content types.
+
+Unparameterized production desktop/mobile browser checks pass with no overflow, logo distortion or page-generated errors. COD is selected at live checkout with the unchanged PHP50 fee; no order was placed and the test cart was cleared. Production error-log bytes, modification time and SHA256 are unchanged across deployment and public testing. Site URL, database, theme and indexability are unchanged.
+
+The five PayMongo marks/processor are installed and tested, but intentionally hidden while the new gateway is not ready. #2 owns the remaining provider activation, removal of BACS/legacy payment copy, cache invalidation and actual ready-state public verification. #5 remains open for that final dependent acceptance; no payment-processor activation is claimed by this release.

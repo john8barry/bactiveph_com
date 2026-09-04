@@ -71,7 +71,21 @@ function bootstrap(): void
         Webhook::handle(true);
     });
 
+    add_action('wp', __NAMESPACE__ . '\replace_legacy_checkout_reassurance');
     add_action('admin_notices', __NAMESPACE__ . '\review_required_notice');
+}
+
+function replace_legacy_checkout_reassurance(): void
+{
+    remove_action('woocommerce_review_order_after_submit', 'bactive_checkout_reassurance', 10);
+    add_action('woocommerce_review_order_after_submit', __NAMESPACE__ . '\checkout_reassurance', 10);
+}
+
+function checkout_reassurance(): void
+{
+    echo '<div style="text-align:center; font-size:13px; margin-top:20px; color:#2B2A28;">'
+        . esc_html__('Secure checkout · PayMongo: QRPh, Maya, ShopeePay, BPI & UBP · COD · 7-day size-exchange guarantee', 'bactive-paymongo')
+        . '</div>';
 }
 
 function woocommerce_required_notice(): void

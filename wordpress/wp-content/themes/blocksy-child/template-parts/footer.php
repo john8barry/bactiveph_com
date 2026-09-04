@@ -62,7 +62,7 @@
                 <span>Ships nationwide via <a href="https://www.jtexpress.ph/" target="_blank" rel="noopener noreferrer" style="color: var(--bactive-stone); text-decoration: underline;">J&T</a> & <a href="https://www.ninjavan.co/en-ph/" target="_blank" rel="noopener noreferrer" style="color: var(--bactive-stone); text-decoration: underline;">Ninja Van</a></span>
             </div>
             <div>
-                <strong style="color: var(--bactive-charcoal);">QRPh | Maya | ShopeePay | BPI | UBP | COD</strong>
+                <strong style="color: var(--bactive-charcoal);">GCash | Maya | Visa | Mastercard | COD</strong>
             </div>
             <div>
                 &copy; 2026 B Active | <a href="/privacy" style="color: var(--bactive-stone); text-decoration: none;">Privacy</a> &middot; <a href="/terms" style="color: var(--bactive-stone); text-decoration: none;">Terms</a>

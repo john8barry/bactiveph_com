@@ -16,7 +16,7 @@ $faq_content = '
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><strong>What payment methods do you accept?</strong><br>Pay online through PayMongo using QRPh, Maya, ShopeePay, BPI Online, or UnionBank Online. Cash on Delivery is also available for eligible orders.</p>
+<p><strong>What payment methods do you accept?</strong><br>GCash, Maya, credit/debit cards, and Cash on Delivery.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->

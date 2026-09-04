@@ -210,7 +210,7 @@ function bactive_hide_cod_over_cap( $available_gateways ) {
 // Reassurance Row
 add_action( 'woocommerce_review_order_after_submit', 'bactive_checkout_reassurance', 10 );
 function bactive_checkout_reassurance() {
-    echo '<div style="text-align:center; font-size:13px; margin-top:20px; color:#2B2A28;">Secure checkout &middot; GCash &middot; Maya &middot; Cards &middot; COD &middot; 7-day size-exchange guarantee</div>';
+    echo '<div style="text-align:center; font-size:13px; margin-top:20px; color:#2B2A28;">Secure checkout &middot; PayMongo: QRPh, Maya, ShopeePay, BPI &amp; UBP &middot; COD &middot; 7-day size-exchange guarantee</div>';
 }
 
 // Slide-out Cart Drawer Text

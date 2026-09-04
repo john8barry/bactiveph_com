@@ -36,6 +36,7 @@
                     <li><a href="/about" style="color: var(--bactive-sage-deep); text-decoration: none;">About</a></li>
                     <li><a href="/journal" style="color: var(--bactive-sage-deep); text-decoration: none;">Journal</a></li>
                     <li><a href="/our-store" style="color: var(--bactive-sage-deep); text-decoration: none;">Our Store</a></li>
+                    <li><a href="/bir-registration/" style="color: var(--bactive-sage-deep); text-decoration: none;">BIR Registration</a></li>
                 </ul>
             </div>
 
@@ -47,26 +48,25 @@
                     <input type="email" placeholder="Email address" style="padding: 12px; border: 1px solid var(--bactive-greige); border-radius: 2px; width: 100%;" />
                     <button type="submit" style="padding: 12px; background: var(--bactive-charcoal); color: var(--bactive-ivory); border: none; border-radius: 2px; text-transform: uppercase; font-weight: 500; letter-spacing: 0.08em; cursor: pointer;">Join</button>
                 </form>
-                <div style="margin-top: 20px; display: flex; gap: 15px;">
-                    <a href="#" style="color: var(--bactive-charcoal); text-decoration: none; font-weight: 500;">IG</a>
-                    <a href="#" style="color: var(--bactive-charcoal); text-decoration: none; font-weight: 500;">FB</a>
-                    <a href="#" style="color: var(--bactive-charcoal); text-decoration: none; font-weight: 500;">TikTok</a>
+                <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px;">
+                    <a href="https://www.instagram.com/bactiveph/" aria-label="Instagram" style="text-decoration: none; display: flex; align-items: center; transition: opacity 0.2s ease;">
+                        <img src="/wp-content/themes/blocksy-child/assets/images/ig_logo.png" alt="Instagram" style="height: 24px; width: auto;" />
+                    </a>
+                    <a href="https://www.facebook.com/BarryActive/" aria-label="Facebook" style="text-decoration: none; display: flex; align-items: center; transition: opacity 0.2s ease;">
+                        <img src="/wp-content/themes/blocksy-child/assets/images/fb_logo.png" alt="Facebook" style="height: 24px; width: auto;" />
+                    </a>
                 </div>
             </div>
 
         </div>
 
-        <!-- Bottom Bar -->
-        <div style="border-top: 1px solid var(--bactive-greige); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 0.875rem; color: var(--bactive-stone); gap: 20px;">
-            <div>
-                <span>Ships nationwide via J&T & Ninja Van</span>
-            </div>
-            <div>
-                <strong style="color: var(--bactive-charcoal);">GCash | Maya | Visa | Mastercard | COD</strong>
-            </div>
-            <div>
-                &copy; 2026 B Active | <a href="/privacy" style="color: var(--bactive-stone); text-decoration: none;">Privacy</a> &middot; <a href="/terms" style="color: var(--bactive-stone); text-decoration: none;">Terms</a>
-            </div>
+        <?php get_template_part('template-parts/trust-bar'); ?>
+
+        <!-- Corporate Info & Copyright -->
+        <div style="border-top: 1px solid var(--bactive-greige); padding-top: 20px; font-size: 11px; line-height: 1.6; color: var(--bactive-stone); text-align: center;">
+            <p style="margin: 0 0 5px;"><strong>B Active</strong> &middot; Registered address: Unit No. C07, Lombardy Bldg., Palmetto Place, Purok 16, Gem Village, Ma-a, Talomo District, 8000 City of Davao, Davao del Sur, Philippines</p>
+            <p style="margin: 0 0 10px;"><a href="mailto:hello@bactiveph.com" style="color: var(--bactive-stone); text-decoration: none;">hello@bactiveph.com</a> &middot; 0968 689 9110</p>
+            <p style="margin: 0;">&copy; 2026 B Active. All rights reserved. | <a href="/privacy" style="color: var(--bactive-stone); text-decoration: none;">Privacy</a> &middot; <a href="/terms" style="color: var(--bactive-stone); text-decoration: none;">Terms</a></p>
         </div>
     </div>
 </footer>

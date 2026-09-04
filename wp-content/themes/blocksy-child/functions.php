@@ -91,7 +91,7 @@ function bactive_features_fit_tab_content() {
 
 function bactive_shipping_returns_tab_content() {
 	echo '<h2>Shipping & Returns</h2>';
-	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and Ninja Van. Complimentary shipping on orders over ₱2,000.</p>';
+	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and LBC Express. Complimentary shipping on orders over ₱2,000.</p>';
 	echo '<p><strong>Returns & Exchanges</strong><br>We want you in the right size. If your fit isn\'t perfect, we accept size exchanges within 7 days of delivery for unworn items with tags attached and original packaging.</p>';
 }
 
@@ -178,7 +178,7 @@ function bactive_add_cod_fee( $cart ) {
     $chosen_gateway = WC()->session->get( 'chosen_payment_method' );
     if ( 'cod' === $chosen_gateway ) {
         $fee = 50;
-        $cart->add_fee( 'COD Fee', $fee, true, 'standard' );
+        $cart->add_fee( 'COD Fee', $fee, false, '' );
     }
 }
 // Force checkout update on payment method change to apply fee
@@ -210,7 +210,7 @@ function bactive_hide_cod_over_cap( $available_gateways ) {
 // Reassurance Row
 add_action( 'woocommerce_review_order_after_submit', 'bactive_checkout_reassurance', 10 );
 function bactive_checkout_reassurance() {
-    echo '<div style="text-align:center; font-size:13px; margin-top:20px; color:#2B2A28;">Secure checkout &middot; GCash &middot; Maya &middot; Cards &middot; COD &middot; 7-day size-exchange guarantee</div>';
+    echo '<div style="text-align:center; font-size:13px; margin-top:20px; color:#2B2A28;">Secure checkout &middot; Cash on Delivery available &middot; 7-day size-exchange guarantee</div>';
 }
 
 // Slide-out Cart Drawer Text

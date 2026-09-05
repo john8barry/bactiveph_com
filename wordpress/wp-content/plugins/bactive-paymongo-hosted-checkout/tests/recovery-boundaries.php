@@ -158,7 +158,24 @@ $fake_option_update_handler = null;
 
 $blocked_secret_order = new WC_Order();
 $fake_orders = array(42 => $blocked_secret_order);
+$fake_order_query_ids = array(42);
 same(false, Secrets::store_webhook_secret(false, 'whsk_changed_while_session_active'), 'secret rotation fails closed while an order has an outstanding session');
 same('whsk_verified_sandbox_boundary', Secrets::webhook_secret(false), 'blocked secret rotation retains the old signing secret');
 $fake_orders = array();
+$fake_order_query_ids = array();
 $fake_options = array();
+
+// The single-process test CAS must model whole-value equality, including
+// tokenless operational records, rather than accidentally requiring a lock.
+$fixture_record = array('order_id' => 42, 'code' => 'fixture-incident', 'mode' => 'test');
+$fake_options['bactive_paymongo_fixture_cas'] = $fixture_record;
+check(Order_Lock::delete_option_if_exact('bactive_paymongo_fixture_cas', $fixture_record), 'test CAS deletes an exact tokenless incident record');
+same(null, get_option('bactive_paymongo_fixture_cas', null), 'exact tokenless deletion is read back');
+$stale_lock = array('token' => 'same-fixture-token', 'acquired_at' => 1);
+$renewed_lock = array('token' => 'same-fixture-token', 'acquired_at' => 2);
+$fake_options['bactive_paymongo_fixture_cas'] = $renewed_lock;
+$fixture_delete = new ReflectionMethod(Order_Lock::class, 'compare_and_delete');
+$fixture_delete->setAccessible(true);
+same(false, $fixture_delete->invoke(null, 'bactive_paymongo_fixture_cas', serialize($stale_lock)), 'test CAS rejects changed bytes even when the lock token matches');
+same($renewed_lock, get_option('bactive_paymongo_fixture_cas', null), 'test CAS preserves the renewed record');
+check(Order_Lock::delete_option_if_exact('bactive_paymongo_fixture_cas', $renewed_lock), 'test CAS permits deletion after fresh exact readback');

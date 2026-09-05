@@ -36,6 +36,35 @@ Requirements:
 - HTTPS with cart, checkout, order-pay, order-received, and every `wc-api`
   callback excluded from LiteSpeed, host/CDN, and Cloudflare page caching
 
+## Verified administrative access
+
+Production WordPress REST authentication was verified on 2026-09-05 using
+the canonical project's ignored `.env`, not the isolated checkout's
+`.env.example`. Use `WORDPRESS_URL`, `WORDPRESS_USERNAME`, and
+`WORDPRESS_APPLICATION_PASSWORD`; never copy the password into a command,
+URL, issue, chat, screenshot, or release artifact. Keep HTTPS certificate
+verification enabled and reject redirects when sending authentication.
+
+The read-only preflight is `GET /wp-json/wp/v2/users/me?context=edit` with
+HTTP Basic authentication. Check the exact site/account and the
+`install_plugins`, `activate_plugins`, and `manage_options` capabilities.
+The production dashboard login is `https://bactiveph.com/login/`. An
+application password authenticates REST calls; it is not a dashboard
+password.
+
+Do not mistake working REST access for a deployment capability: WordPress's
+native plugin installer accepts WordPress.org slugs, not custom ZIP uploads,
+and the currently installed backup plugin exposes no REST backup route.
+Use an authenticated dashboard or an explicitly permitted hosting route
+for the fresh backup and exact custom artifact. Do not add public PHP
+helpers, weaken security controls, or tunnel around denied network routes.
+
+For GitHub operations, select the already-saved `john8barry` account for
+this repository in the command's environment. Verify its exact repository
+and push permission first. Do not change the shared global active account:
+other projects use `johnbarry-tpg`. Both branch remote readback and the
+successful CI matrix remain mandatory before deployment.
+
 ## Secret handling
 
 Never store `sk_*` or `whsk_*` values in Git, shell history, screenshots, issue

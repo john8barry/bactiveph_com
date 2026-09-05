@@ -476,14 +476,16 @@ final class Order_Lock
             || !isset($wpdb->options)
             || !is_callable(array($wpdb, 'prepare'))
             || !is_callable(array($wpdb, 'query'))) {
+            // Only the single-process fixture runtime may emulate database
+            // CAS. Production must never replace atomic SQL with two calls.
+            if (!defined('BACTIVE_PAYMONGO_TESTING') || BACTIVE_PAYMONGO_TESTING !== true) {
+                return false;
+            }
             $existing = get_option($option, null);
-            $token = is_array($existing) ? (string) ($existing['token'] ?? '') : '';
             $observed = is_serialized($observed_raw)
                 ? unserialize($observed_raw, array('allowed_classes' => false))
                 : $observed_raw;
-            if (!is_array($observed)
-                || !is_string($observed['token'] ?? null)
-                || !hash_equals((string) $observed['token'], $token)) {
+            if ($existing === null || $existing !== $observed) {
                 return false;
             }
             return delete_option($option);

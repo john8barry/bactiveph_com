@@ -69,6 +69,12 @@ function test_processing_incident_option(string $identity, string $mode = 'test'
         . hash('sha256', $mode . '|' . $identity);
 }
 
+function test_operator_disposition_option(string $payment_id, string $mode = 'test'): string
+{
+    return 'bactive_paymongo_operator_disposition_' . $mode . '_'
+        . hash('sha256', $mode . '|' . $payment_id);
+}
+
 /** @return array<string,mixed> */
 function test_options_with_prefix(array $options, string $prefix): array
 {
@@ -3378,6 +3384,7 @@ $coherent_history->transaction_id = 'pay_coherent_history_123';
 $coherent_history->date_paid = new DateTimeImmutable('@1788559200');
 $coherent_history->meta['_bactive_paymongo_paid_event_id'] = 'evt_coherent_history_123';
 $coherent_history->meta['_bactive_paymongo_paid_session_id'] = 'cs_test_session_123';
+$coherent_history->meta['_bactive_paymongo_paid_mode'] = 'test';
 $coherent_history->meta['_bactive_paymongo_source_method'] = 'qrph';
 $coherent_history->meta['_bactive_paymongo_source_provider'] = '';
 $coherent_history->meta['_bactive_paymongo_attempts'][0]['payment_id'] = 'pay_coherent_history_123';
@@ -4125,6 +4132,7 @@ $same_payment_retry['event_id'] = 'evt_same_payment_retry_456';
 $same_payment_order = new WC_Order();
 $same_payment_order->meta['_bactive_paymongo_paid_event_id'] = $same_payment_first_event;
 $same_payment_order->meta['_bactive_paymongo_paid_session_id'] = 'cs_test_session_123';
+$same_payment_order->meta['_bactive_paymongo_paid_mode'] = 'test';
 $same_payment_order->meta['_bactive_paymongo_source_method'] = 'qrph';
 $same_payment_order->meta['_bactive_paymongo_source_provider'] = '';
 $same_payment_order->meta['_bactive_paymongo_attempts'][0]['payment_id'] = $same_payment_id;
@@ -4385,7 +4393,13 @@ $cancel_paid_order = new WC_Order();
 $cancel_paid_order->payment_method = 'cod';
 $cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['generation'] = 1;
 $cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['created_at'] = time();
+$cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['fingerprint'] = hash('sha256', 'cancel-paid-order-42');
+$cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['idempotency_key'] = 'bactive-checkout-test-42-cancel-paid';
+$cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['config_generation'] = 1;
+$cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['request_started_at'] = $cancel_paid_order->meta['_bactive_paymongo_attempts'][0]['created_at'];
 $cancel_paid_attempts = Gateway::order_attempts($cancel_paid_order);
+$cancel_paid_fingerprint = $attempt_fingerprint->invoke(null, $cancel_paid_attempts[0]);
+check((bool) preg_match('/^[a-f0-9]{64}$/D', $cancel_paid_fingerprint), 'paid-during-cancel fixture has an exact immutable attempt fingerprint');
 $cancel_paid_session = session();
 $cancel_paid_session['attributes']['payments'][0]['id'] = 'pay_cancel_race_paid_123';
 $fake_orders = array(42 => clone $cancel_paid_order);
@@ -4412,7 +4426,7 @@ $fake_clone_order_reads = true;
 $fake_persist_order_saves = true;
 check(Order_Lock::acquire(42), 'paid-during-cancel regression acquires order fence');
 try {
-    $cancel_paid_args = array($cancel_paid_order, &$cancel_paid_attempts, true, 1);
+    $cancel_paid_args = array($cancel_paid_order, &$cancel_paid_attempts, true, $cancel_paid_fingerprint);
     $cancel_paid_result = $expire_attempts->invokeArgs(new Gateway(false), $cancel_paid_args);
 } finally {
     Order_Lock::release(42);
@@ -4984,7 +4998,7 @@ try {
     $fake_remote_handler = null;
 }
 $disposition_readback = $fake_orders[42];
-$disposition_option = 'bactive_paymongo_operator_disposition_' . hash('sha256', 'pay_quarantine_repair_123');
+$disposition_option = test_operator_disposition_option('pay_quarantine_repair_123');
 same(1, count($disposition_provider_calls), 'operator disposition performs one bounded authenticated provider GET');
 same('processing', $disposition_readback->status, 'operator disposition records exact paid processing status');
 check($disposition_readback->is_paid(), 'operator disposition readback is paid');

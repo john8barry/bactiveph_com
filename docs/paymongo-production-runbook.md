@@ -78,6 +78,16 @@ server-side constants in protected WordPress configuration:
 - `BACTIVE_PAYMONGO_TEST_WEBHOOK_SECRET`
 - `BACTIVE_PAYMONGO_LIVE_WEBHOOK_SECRET`
 
+The obsolete `cpanel_test_auth.py` credential-bearing upload/login probe was
+removed under issue #9. Do not restore or run historical copies. On 2026-09-05,
+an authenticated in-process WordPress hash comparison independently confirmed
+that its known historical dashboard password no longer matched the affected
+account on either production or staging. No login was attempted and no
+password/session was changed. This is evidence of prior invalidation, not
+proof that the account was never misused. Keep administrative/session review
+and backup-restoration safeguards in the incident record; never restore the
+exposed credential from an older database backup.
+
 Values saved through WooCommerce are encrypted with AES-256-GCM using the site's
 WordPress authentication salts. A database copied to a site with different
 salts cannot decrypt them and the gateway fails closed.

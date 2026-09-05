@@ -62,8 +62,41 @@ counts and order, COD fail-closed behavior and both removed-note assertions.
 Five negative fixtures were rejected: missing local label, unsafe courier URL,
 distorted intrinsic dimensions, duplicate courier image and reintroduced note.
 Template and asset mirrors match; the Impeccable source detector returned `[]`;
-`git diff --check` passed. Native staging PHP lint, browser visuals, destination
-readback and production acceptance remain **UNVERIFIED** until recorded below.
+`git diff --check` passed. Independent source/security/accessibility review
+passed against the exact partial and asset hashes above.
+
+### Staging acceptance
+
+The exact two-file overlay from source commit `541bd44` is installed on staging.
+Native PHP lint passed before installation. Authenticated readback at
+2026-09-05 07:48:15 UTC confirmed exactly those two child-theme changes, unchanged
+hashed payment/shipping policy and gateway enablement, unchanged error/debug
+logs, and `Success: WordPress installation verifies against checksums.`
+
+Public checks passed across seven routes (home, shop, shipping/returns, FAQ,
+product, cart and checkout's normal empty-cart redirect) and all ten asset
+responses matched local SHA-256. Both removed notes are absent everywhere
+checked; Davao-only grouping and all existing payment marks are retained.
+
+Main-agent screenshots verified the actual staging footer at desktop 1280px and
+mobile 390px. Browser geometry checks passed at 390, 768 and 1440px: no horizontal
+overflow, all images loaded and every courier link remains 132 by 44px. Grab's
+2868:800 logo renders about 93.20 by 25.99px, without distortion. Keyboard Tab
+from LBC reaches GrabExpress with a visible 2px solid outline. The independent
+footer-copy task also visually accepted desktop 1440px and mobile 390px; both
+notes are absent and business/BIR content is intact. A supplemental tablet
+screenshot could not be captured; its DOM/layout checks passed. Temporary
+browser size overrides were cleared.
+
+The fresh production instruction was independently read in **Remove repetitive
+footer text**, task `01a07062-0209-7a60-9a70-8f21d68533f8`, user turn
+`01a0708c-0d42-7352-95d6-2637cd8d066b`: "get it in production if it looks alright".
+The preceding user-visible response explicitly said the removal was bundled with
+GrabExpress and awaiting combined approval. The combined staging visual
+condition has passed. This records actual same-project user authority, not an
+approval inferred solely from an agent message. The courier coordinator remains
+the single production writer. Production acceptance is **UNVERIFIED** pending
+fresh production backup, exact-file release and independent live readback.
 
 ## Rollback and release control
 
@@ -79,8 +112,8 @@ checking no later writer superseded v4, followed by a page-cache refresh and
 browser/hash readback. The new PNG can remain unused; deleting it is unnecessary
 for functional rollback. No database restore is involved.
 
-Production is unchanged. After combined staging acceptance, obtain John's
-explicit approval for the two-file combined production release, take a fresh
-complete production backup with a verified off-server copy, then deploy and
-independently verify both issues. Keep #10 and #11 open until live acceptance.
+Production is unchanged at this checkpoint. Current combined approval and staging
+acceptance are recorded above. Take a fresh complete production backup with a
+verified off-server copy, then deploy and independently verify both issues.
+Keep #10 and #11 open until live acceptance.
 No global or project memory files were updated.

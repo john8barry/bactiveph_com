@@ -134,8 +134,9 @@ shipping, tax and COD policy were not changed.
 | ShopeePay decline | 374 | PHP 640 | Failed Payment; Payment Intent still processing; Woo remains pending |
 | Anonymous COD checkout | 379 | PHP 590 | Normal browser order; one fee; stock 18 to 17; no online transaction or paid timestamp |
 
-These were backend-issued manager test orders completed using the actual hosted
-provider screens. They establish hosted settlement and payment correlation;
+The online probes were backend-issued manager test orders completed using the
+actual hosted provider screens. They establish hosted settlement and payment
+correlation;
 they do not substitute for a normal signed-in manager browser checkout.
 Maya's product did not manage stock, so its stock flag is not a numerical stock
 test. QRPh and ShopeePay each reduced the managed staging fixture by one.
@@ -258,6 +259,10 @@ controls changed to two using keyboard input. The normal cart update POST
 returned HTTP 200 and the server cart displayed PHP 4,500. Desktop reload
 retained quantity two. The test item was then removed and the cart verified
 empty, matching its initial state. No production order or payment was submitted.
+The final narrow readback, 33.1 minutes after the baseline, still showed identical
+protected files, settings, active plugins, database identity, order and stock
+state, and error log. This monitoring covers the two theme fixes; public PayMongo
+activation and its separate 30-minute payment monitoring have not occurred.
 An earlier in-app browser attempt did not send an observed add-to-cart request;
 the successful independent Chrome path resolves that verification ambiguity
 without another source change.
@@ -297,8 +302,40 @@ same-order scheduling and both initial/retry zero-return fallbacks. All 1,075
 contract checks pass under PHP 8.1, 8.2 and 8.3. Independent review approved
 reconciler SHA-256
 `a3bd0b713482e3bf234e3b28fa718bb462b5de2b70f31d73f92399020a18b63e`.
-The current CI run and staging replacement/readback are the next gates;
-production gateway activation remains held.
+Runtime commit `cf891ca7a31d86ad19f8ac2d68dd270a96645448` passed all four jobs in
+[CI run 33966994518](https://github.com/john8barry/bactiveph_com/actions/runs/33966994518).
+The current 89,136-byte, 11-file artifact has SHA-256
+`a759d31c5b475d14d498a879a8d561e9b7ea2952d1b7aa43b8171e131640681e`.
+It supersedes the `76a2036` artifact for future production deployment.
+
+A fresh six-component staging backup, 122,510,116 bytes, passed off-server
+checksums and archive integrity before the update. Only the reconciler and
+plugin readme differed; their old bytes remain privately recoverable. Independent
+transport and runtime readback verified all 11 package files, eight unchanged
+protected files, unchanged encrypted settings/key bindings, unchanged paid-order
+transactions/notes/effects and fixture stock 17. A second independent audit at
+13:02:19 UTC confirmed the same artifact, manager-only test issuance, absent
+maintenance state and HTTP 401/no-store/no-challenge unsigned callback rejection.
+The new gateway remains absent from production.
+
+The existing scheduler subsequently completed recovery actions 663 and 664 for
+paid orders 377 and 378 before the bounded acceptance helper began. No manual
+action execution was needed. Both reconciliation markers cleared. Fresh independent transport
+readback at 13:04:18 UTC confirmed unchanged transaction IDs, totals, paid times,
+event IDs, note IDs, effect hashes and fixture stock. The explicit source backfill
+then preserved one pending job each for unpaid orders 374 and 376, with no
+failed actions for either paid order. This verifies actual queue execution and
+cleanup while site traffic was present. A separate 13:08 UTC readback matched
+the exact action identities and logs: actions 662, 663 and 664 completed through
+WP-Cron at 13:01:55-13:01:57 UTC. It also independently rechecked paid-order
+invariants and stock. Timing on a quiet site and the incoming request that
+triggered cron remain unproven.
+
+Order 374 remains a known provider test hold: authenticated readback at 13:01 UTC
+still returned a failed Payment inside a processing intent and active session.
+Order 376 has an active unused session and no Payment Intent or payment. Both
+WooCommerce orders remain pending and unpaid, with no stock reduction. Their
+recovery jobs are retained; no further expiry or replacement was attempted.
 
 Staging customer and merchant notification routing was aligned to the store's
 public inbox, with exact prior option values retained privately. This is routing
@@ -318,6 +355,18 @@ reconciliation follow-up come only after these gates pass.
 The next control point is merchant account access to resolve the two bank
 denials, normal staging manager sign-in, and email transport approval. Continue
 the existing isolated payment branch and preserve the canonical dirty workspace.
+
+PayMongo's current [capability guidance](https://docs.paymongo.com/docs/account-settings-account-capabilities)
+requires manual support requests for BPI and UBP, with an estimated 1-3 business
+days subject to review. John should inspect Settings > Payment Methods in live
+mode and confirm any existing requests before submitting another. The observed
+test-mode authorization denials need explicit test/live clarification; a live
+status alone does not resolve the sandbox discrepancy. A private support draft
+also identifies the stuck ShopeePay test records. No support message was sent.
+
+The current payment task owns the next-day reconciliation follow-up, due 24 hours
+after independently verified public activation. Its scheduled time and the
+30-minute activation monitor remain unset until that activation actually occurs.
 
 ## Recovery controls
 

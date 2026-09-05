@@ -23,7 +23,9 @@ Source tests had passed, but the new gateway had never been installed or
 configured. The canonical workspace was dirty and behind remote; its contents
 are preserved. The isolated payment checkout incorporates remote main
 `f5f6c043a96b35df331a7c004f59fd0da29bc625`, including the accepted footer release.
-Both active design tasks confirmed they have no server writer scope.
+Both active design tasks initially confirmed they had no server writer scope.
+The subsequently authorized homepage staging change receives a separate,
+serialized writer window before the payment repair is installed.
 
 ## Completed containment
 
@@ -41,15 +43,61 @@ close the wider historical security investigation.
 
 ## Validation and release status
 
-- Reconciled source: PHP 8.1, 8.2, and 8.3 each pass 1,064 contract checks.
-- All 13 plugin/test PHP files pass PHP 8.2 lint.
+- Initial reconciled source: PHP 8.1, 8.2, and 8.3 each passed 1,064 contract
+  checks, with all 13 plugin/test PHP files passing PHP 8.2 lint. Repair
+  validation below supersedes these counts.
 - Runtime package contains exactly 11 files, excluding tests and credentials;
   current secret-value and credential-pattern scans pass.
-- Fresh, separately verified production and staging backups are required before
-  plugin installation. No staging database will be imported into production.
+- Fresh production and staging backups are separately verified off-server.
+  No staging database will be imported into production.
 - Sandbox transaction matrix, live credentials/capabilities, signed delivery,
   live payments, email receipt, refund verification, public issuance, and
   production monitoring remain pending until recorded below.
+
+## Staging integration finding
+
+The initial 11-file artifact (SHA-256
+`5fa083451fa096091e0b8d4853d763a6c18d44e9416a34f2d5242e7538179ca4`)
+was installed on staging after a fresh six-component, 122,400,017-byte backup
+passed off-server checksums and archive integrity. Runtime hashes, manager-only
+defaults, recovery scheduling, and preserved configuration/theme files were
+independently read back.
+
+The first normal WooCommerce settings save exposed a High-severity launch
+blocker before settings storage or provider provisioning: recovery discovery
+generated 17 HPOS metadata joins. Authenticated database inspection found that
+query still running after 331 seconds; a scheduled scan repeated it. The exact
+stalled settings process and two identified staging query connections were
+stopped. No new webhook or Checkout Session was issued; production payment
+settings were not changed.
+
+The repair preserves all 17 discovery keys in one key-IN/EXISTS clause. It also
+translates the scan through WooCommerce's supported CPT query hook because that
+datastore ignores the original top-level meta_query. Database errors now fail
+the recovery scan instead of being interpreted as an empty queue. Existing
+incident discovery, pagination, payment locks, signed validation, and controlled
+drains remain intact. Independent review approved the query repair; a disposable
+real WordPress/WooCommerce regression checks both datastores before promotion.
+
+The initial artifact is superseded and must not be deployed to production.
+Local regression evidence for the repair:
+
+- PHP 8.1, 8.2, and 8.3 each pass 1,075 contract checks. All 14 PHP files pass
+  lint; the payment workflow passes actionlint.
+- Disposable real WordPress/WooCommerce/MariaDB: HPOS passes 62 checks, first
+  settings save 0.077 seconds, maximum one metadata join; CPT passes 35 checks,
+  first save 0.069 seconds. Both discover the exact 70 payment candidates over
+  two pages, preserve every marker, and reject a real database query failure.
+  The runner names and removes all disposable containers, sanitizes timeouts,
+  and reports overall success only after independent resource cleanup.
+- Both environment backups are now verified off-server: staging 122,400,017
+  bytes and production 329,690,615 bytes, six components each. Every checksum
+  and gzip/ZIP integrity check passed. Backups contain private data and are
+  excluded from the repository.
+
+The next control point is a successful bounded first settings save and provider
+callback readback using a newly checksummed repair artifact, followed by the
+five-method sandbox matrix.
 
 ## Recovery controls
 

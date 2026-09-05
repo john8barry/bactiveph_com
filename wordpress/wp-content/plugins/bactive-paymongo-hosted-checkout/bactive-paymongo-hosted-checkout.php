@@ -64,6 +64,13 @@ function bootstrap(): void
 
     require_once __DIR__ . '/includes/class-gateway.php';
 
+    add_filter(
+        'woocommerce_order_data_store_cpt_get_orders_query',
+        array(Reconciler::class, 'filter_cpt_source_query'),
+        PHP_INT_MAX,
+        2
+    );
+
     add_filter('woocommerce_payment_gateways', static function (array $gateways): array {
         $gateways[] = Gateway::class;
         return $gateways;

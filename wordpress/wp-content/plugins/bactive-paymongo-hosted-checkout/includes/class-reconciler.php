@@ -26,6 +26,56 @@ final class Reconciler
     private const DRAIN_MAX_BATCHES = 100;
     private static string $deactivation_fingerprint = '';
 
+    /** @return array<int,array<string,mixed>> */
+    private static function source_meta_query(): array
+    {
+        // Separate OR/EXISTS clauses create one HPOS metadata join per key.
+        // A single key-IN clause preserves discovery without multiplying rows.
+        return array(array(
+            'key' => array(
+                self::REQUIRED_META,
+                self::UNRESOLVED_META,
+                '_bactive_paymongo_review_required',
+                '_bactive_paymongo_settlement_pending',
+                '_bactive_paymongo_settlement_pending_mode',
+                '_bactive_paymongo_resolved_payment_pending',
+                '_bactive_paymongo_unexpected_payment_id',
+                '_bactive_paymongo_unexpected_payment_mode',
+                '_bactive_paymongo_paid_event_id',
+                '_bactive_paymongo_paid_session_id',
+                '_bactive_paymongo_source_method',
+                '_bactive_paymongo_source_provider',
+                '_bactive_paymongo_paid_mode',
+                '_bactive_paymongo_processing_incident_mode',
+                '_bactive_paymongo_review_effect_mode',
+                '_bactive_paymongo_review_mode',
+                '_bactive_paymongo_attempts',
+            ),
+            'compare_key' => 'IN',
+            'compare' => 'EXISTS',
+        ));
+    }
+
+    /**
+     * WooCommerce's CPT datastore ignores top-level meta_query arguments.
+     * Translate only our internal scan marker at its supported WP_Query hook.
+     *
+     * @param array<string,mixed> $wp_args
+     * @param array<string,mixed> $query_vars
+     * @return array<string,mixed>
+     */
+    public static function filter_cpt_source_query(array $wp_args, array $query_vars): array
+    {
+        if (($query_vars['bactive_paymongo_source_scan'] ?? false) !== true) {
+            return $wp_args;
+        }
+        $source_query = self::source_meta_query();
+        $wp_args['meta_query'] = empty($wp_args['meta_query'])
+            ? $source_query
+            : array('relation' => 'AND', $wp_args['meta_query'], $source_query);
+        return $wp_args;
+    }
+
     /** @param array<string,array<string,int|string>> $schedules */
     public static function cron_schedules(array $schedules): array
     {
@@ -867,38 +917,29 @@ final class Reconciler
         if (is_wp_error($pending_ids)) {
             return $pending_ids;
         }
-        $meta_query = array(
-            'relation' => 'OR',
-            array('key' => self::REQUIRED_META, 'compare' => 'EXISTS'),
-            array('key' => self::UNRESOLVED_META, 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_review_required', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_settlement_pending', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_settlement_pending_mode', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_resolved_payment_pending', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_unexpected_payment_id', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_unexpected_payment_mode', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_paid_event_id', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_paid_session_id', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_source_method', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_source_provider', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_paid_mode', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_processing_incident_mode', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_review_effect_mode', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_review_mode', 'compare' => 'EXISTS'),
-            array('key' => '_bactive_paymongo_attempts', 'compare' => 'EXISTS'),
-        );
-        $query = static function (int $query_limit, int $query_page) use ($meta_query) {
+        $query = static function (int $query_limit, int $query_page) {
+            global $wpdb;
             try {
-                $ids = wc_get_orders(
-                    array(
-                        'limit' => $query_limit,
-                        'page' => $query_page,
-                        'return' => 'ids',
-                        'orderby' => 'ID',
-                        'order' => 'ASC',
-                        'meta_query' => $meta_query,
-                    )
+                $args = array(
+                    'limit' => $query_limit,
+                    'page' => $query_page,
+                    'return' => 'ids',
+                    'orderby' => 'ID',
+                    'order' => 'ASC',
                 );
+                if (class_exists(\Automattic\WooCommerce\Utilities\OrderUtil::class)
+                    && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()) {
+                    $args['meta_query'] = self::source_meta_query();
+                } else {
+                    $args['bactive_paymongo_source_scan'] = true;
+                }
+                // Woo can return [] after a database failure. Never interpret
+                // a failed scan as proof that no payment needs recovery.
+                $wpdb->last_error = '';
+                $ids = wc_get_orders($args);
+                if ((string) ($wpdb->last_error ?? '') !== '') {
+                    return new \WP_Error('paymongo_order_scan_failed', 'WooCommerce PayMongo order scan failed safely.');
+                }
             } catch (\Throwable $error) {
                 return new \WP_Error('paymongo_order_scan_failed', 'WooCommerce PayMongo order scan failed safely.');
             }

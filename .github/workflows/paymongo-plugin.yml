@@ -45,3 +45,20 @@ jobs:
 
       - name: Run contract tests
         run: php wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout/tests/run.php
+
+  datastore-integration:
+    name: Real WooCommerce datastores
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull pinned disposable database
+        run: docker pull mariadb:11.4@sha256:611a2fcc5fa7c6ceb8644c6f74b25ede004ff6c3a6b38c8f8c23d3bbf6c26430
+
+      - name: Pull pinned WordPress CLI runtime
+        run: docker pull wordpress:cli-php8.2@sha256:837d55d02196b5f4c92d236317c6d089ab1471348b31d1708888d444a0390979
+
+      - name: Test first settings save and recovery discovery in HPOS and CPT
+        run: python3 wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout/tests/run-datastore-integration.py

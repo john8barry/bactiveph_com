@@ -9,6 +9,17 @@ define('BActive\\PayMongo\\GATEWAY_ID', 'bactive_paymongo');
 define('BActive\\PayMongo\\VERSION', 'test');
 define('BActive\\PayMongo\\PLUGIN_FILE', dirname(__DIR__) . '/bactive-paymongo-hosted-checkout.php');
 
+class Test_Order_Util
+{
+    public static bool $hpos = true;
+    public static function custom_orders_table_usage_is_enabled(): bool
+    {
+        return self::$hpos;
+    }
+}
+class_alias(Test_Order_Util::class, 'Automattic\\WooCommerce\\Utilities\\OrderUtil');
+$wpdb = (object) array('last_error' => '');
+
 require_once dirname(__DIR__) . '/includes/class-integrity.php';
 require_once dirname(__DIR__) . '/includes/class-secrets.php';
 require_once dirname(__DIR__) . '/includes/class-api-client.php';
@@ -3410,13 +3421,31 @@ $fake_order_query_handler = static function (array $args) use (&$scan_args): arr
     return array();
 };
 check(!Reconciler::has_tracked_orders(), 'empty provider-fact source scan completes');
-$scan_keys = array_map(
-    static fn(array $clause): string => (string) ($clause['key'] ?? ''),
-    array_filter((array) ($scan_args['meta_query'] ?? array()), 'is_array')
-);
+$scan_keys = $scan_args['meta_query'][0]['key'] ?? array();
+same(1, count($scan_args['meta_query'] ?? array()), 'HPOS recovery discovery uses one metadata clause');
+same('IN', $scan_args['meta_query'][0]['compare_key'] ?? '', 'HPOS recovery matches its complete key allowlist in one join');
 check(in_array('_bactive_paymongo_paid_event_id', $scan_keys, true), 'recovery discovery scans zero-attempt paid-event facts');
 check(in_array('_bactive_paymongo_paid_session_id', $scan_keys, true), 'recovery discovery scans zero-attempt paid-session facts');
 check(in_array('_bactive_paymongo_attempts', $scan_keys, true), 'active drain discovery retains attempt-only source coverage');
+same(17, count($scan_keys), 'recovery discovery retains every existing payment-state key');
+Test_Order_Util::$hpos = false;
+check(!Reconciler::has_tracked_orders(), 'empty CPT provider-fact source scan completes');
+check(!isset($scan_args['meta_query']), 'CPT does not receive the unsupported top-level metadata argument');
+same(true, $scan_args['bactive_paymongo_source_scan'] ?? false, 'CPT source scan sets its internal translation marker');
+$ordinary_args = array('post_type' => 'shop_order', 'meta_query' => array(array('key' => 'other_extension_key', 'value' => 'kept')));
+same($ordinary_args, Reconciler::filter_cpt_source_query($ordinary_args, array()), 'CPT adapter leaves ordinary order queries untouched');
+$translated = Reconciler::filter_cpt_source_query($ordinary_args, $scan_args);
+same('AND', $translated['meta_query']['relation'] ?? '', 'CPT preserves existing metadata restrictions');
+same($ordinary_args['meta_query'], $translated['meta_query'][0] ?? null, 'CPT keeps other extension metadata predicates intact');
+same($scan_keys, $translated['meta_query'][1][0]['key'] ?? array(), 'CPT and HPOS discover the same payment-state keys');
+Test_Order_Util::$hpos = true;
+$fake_order_query_handler = static function (array $args): array {
+    global $wpdb;
+    $wpdb->last_error = 'synthetic database query failure';
+    return array();
+};
+check(Reconciler::has_tracked_orders(), 'a database failure cannot clear the outstanding-payment gate');
+$wpdb->last_error = '';
 $fake_order_query_handler = null;
 
 // Active-order discovery queries retained audit history, then excludes only a

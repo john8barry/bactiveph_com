@@ -50,9 +50,16 @@ From the plugin directory, run:
 
 php tests/run.php
 
+The repository also runs a disposable real WooCommerce datastore regression:
+python3 tests/run-datastore-integration.py
+Pull the two pinned Docker images listed in the payment CI workflow first.
+The fixture uses no real credentials, customer records, or provider payments.
+
 == Changelog ==
 
 = 1.0.0 =
+* Keep payment recovery discovery to one HPOS metadata join, translate CPT
+  queries through its supported datastore hook, and reject database scan errors.
 * Default PayMongo issuance to manager-only verification, including direct
   payment and order-pay calls; fence rollout changes with the settings drain.
 * Add hardened PayMongo Hosted Checkout for the five approved active rails.

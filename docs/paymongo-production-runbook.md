@@ -127,6 +127,13 @@ never retry an uncertain webhook creation or credential mutation blindly.
    and current PayMongo live/test webhook inventory.
 2. Take and read back a fresh database backup and a `wp-content` backup.
 3. Run `php tests/run.php` under PHP 8.1, 8.2, and 8.3; lint every PHP file.
+   Also run `python3 tests/run-datastore-integration.py` from the plugin directory
+   after pulling the two digest-pinned images listed in the payment CI workflow.
+   This uses a disposable local database with synthetic orders, no published
+   ports, and an internal Docker network. It verifies first settings save,
+   every recovery marker, single-join HPOS discovery, CPT translation,
+   pagination, and database-error handling. Its provider responses are fixtures;
+   it does not replace the actual sandbox transaction matrix below.
 4. Scan the complete diff and package for secrets, unexpected binaries,
    generated artifacts, and dependencies. This plugin has no third-party runtime
    dependencies.

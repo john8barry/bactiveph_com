@@ -3,6 +3,8 @@
 Work record: [issue #5](https://github.com/john8barry/bactiveph_com/issues/5).
 Dependencies: payment activation [#2](https://github.com/john8barry/bactiveph_com/issues/2), business identity [#3](https://github.com/john8barry/bactiveph_com/issues/3).
 
+The availability-based logo visibility below describes the historical v1 release. The user's subsequent request supersedes that display rule; see the [v2 payment-mark follow-up](2026-09-04-payment-marks-visible.md), deployed and independently verified on 2026-09-05 UTC. All five approved online marks now remain visible, with a setup notice while the gateway is unavailable; COD uses a matching SVG badge.
+
 ## Customer behavior
 
 - Shipping partners are J&T Express and LBC Express. FAQ and product shipping-tab copy match.

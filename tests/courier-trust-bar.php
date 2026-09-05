@@ -35,6 +35,8 @@ namespace {
     function esc_attr($value) { return htmlspecialchars($value, ENT_QUOTES); }
     $template = $argv[1];
     $checks = array();
+    $render_scenario = ($argv[2] ?? '') === 'render' ? ($argv[3] ?? 'ready') : null;
+    $render_html = null;
     foreach (array('ready','not-ready','missing-gateway','gateway-error','manager-error','all-disabled','no-commerce') as $scenario) {
         $GLOBALS['scenario'] = $scenario;
         ob_start();
@@ -42,21 +44,29 @@ namespace {
         $html = ob_get_clean();
         $ready = $scenario === 'ready';
         foreach (array('QR Ph','Maya','ShopeePay','BPI Online','UnionBank Online','PayMongo') as $name) {
-            if (str_contains($html, 'alt="'.$name.'"') !== $ready) {
+            if (!str_contains($html, 'alt="'.$name.'"')) {
                 throw new \RuntimeException($scenario . ': wrong payment mark ' . $name);
             }
         }
         $cod = !in_array($scenario, array('manager-error','all-disabled','no-commerce'), true);
-        if (str_contains($html, '>COD</span>') !== $cod) { throw new \RuntimeException($scenario . ': wrong COD availability'); }
+        if (str_contains($html, 'alt="Cash on Delivery"') !== $cod) { throw new \RuntimeException($scenario . ': wrong COD availability'); }
+        preg_match_all('/alt="(QR Ph|Maya|ShopeePay|BPI Online|UnionBank Online|Cash on Delivery|PayMongo)"/', $html, $marks);
+        $expected_marks = array('QR Ph', 'Maya', 'ShopeePay', 'BPI Online', 'UnionBank Online');
+        if ($cod) { $expected_marks[] = 'Cash on Delivery'; }
+        $expected_marks[] = 'PayMongo';
+        if ($marks[1] !== $expected_marks) { throw new \RuntimeException($scenario . ': wrong payment count or order'); }
+        if (str_contains($html, 'Online payments are being set up.') === $ready) { throw new \RuntimeException($scenario . ': wrong readiness status'); }
         foreach (array('Visa','Mastercard','GCash','Ninja Van','Bank transfer') as $forbidden) {
             if (stripos($html, $forbidden) !== false) { throw new \RuntimeException('Forbidden mark ' . $forbidden); }
         }
         if (!str_contains($html, 'LBC Express') || !str_contains($html, 'J&T Express')) { throw new \RuntimeException('Courier missing'); }
         $checks[] = $scenario;
-        if ($ready && ($argv[2] ?? '') === 'render') {
-            echo '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment branding verification</title><style>body{margin:0;background:#f9f7f2;font-family:Arial,sans-serif;color:#2b2a28}.bactive-custom-footer{max-width:1180px;margin:64px auto;padding:24px}h1{font-size:24px;font-weight:500}p{line-height:1.5}</style><body><footer class="bactive-custom-footer"><h1>Shipping & payment options</h1><p>B Active · ready-state visual verification</p>' . $html . '</footer></body></html>';
-            exit;
-        }
+        if ($scenario === $render_scenario) { $render_html = $html; }
+    }
+    if ($render_scenario !== null) {
+        if ($render_html === null) { throw new \InvalidArgumentException('Unknown render scenario'); }
+        echo '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment branding verification</title><style>body{margin:0;background:#faf8f4;font-family:Arial,sans-serif;color:#2b2a28}.bactive-custom-footer{max-width:1180px;margin:64px auto;padding:24px}h1{font-size:24px;font-weight:500}p{line-height:1.5}</style><body><footer class="bactive-custom-footer"><h1>Shipping & payment options</h1><p>B Active · ' . esc_attr($render_scenario) . ' visual verification</p>' . $render_html . '</footer></body></html>';
+        exit;
     }
     echo json_encode(array('passed'=>$checks, 'count'=>count($checks))) . PHP_EOL;
 }

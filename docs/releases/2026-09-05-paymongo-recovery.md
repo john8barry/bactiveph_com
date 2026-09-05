@@ -183,12 +183,37 @@ to Metro Manila displayed PHP 790 with PHP 180 delivery and the same single fee.
 A product-restricted PHP 100 staging coupon reduced that total to PHP 690 and
 included VAT from PHP 60 to PHP 49.29. No production coupon was created.
 
-At a verified 390-pixel viewport, changing cart quantity from one to five and
-pressing Update cart twice independently returned quantity one. The visible
-mobile and hidden desktop quantity inputs share one form name and remained
-enabled with different values. The hidden final value overwrites the customer's
-selection. This checkout defect must be corrected and rechecked on both screen
-sizes before cart acceptance can pass.
+Mobile testing exposed two additional checkout defects, now fixed on staging:
+
+- Blocksy renders mobile and desktop quantity inputs with the same form name.
+  Keyboard entry into the mobile control left the later hidden desktop control
+  unchanged, and Update cart returned quantity one instead of five. The child
+  script now synchronizes only exact-name peers in the same row and form before
+  WooCommerce serializes them. Capture listeners survive AJAX replacement and
+  preserve native quantity/stock validation. Parent theme files are untouched.
+- A stale COD selection kept a PHP 50 fee in the cart above the existing cap
+  until checkout removed it. The fee now uses the same discounted, tax-exclusive
+  product-net limit as gateway availability: PHP 2,500 inclusive. Shipping and
+  tax do not change that existing eligibility rule.
+
+Independent review approved child `custom.js` SHA-256
+`d503b720a567fda83fbf8f72b89de3efa82c8b431483fa75f048030e4c3984f1`
+and the single-condition change to `functions.php`. Node syntax, PHP 8.2 lint,
+six actual theme-function boundary cases (including PHP 2,500.01) and the
+interface detector pass. Staging browser verification passed mobile keyboard
+quantity one to five, another update to six after AJAX replacement, desktop
+six to one, and refresh persistence. At width 390, checkout's scroll width is
+390 and its submit button remains within the viewport.
+
+With the fee guard installed, six PHP 560 items (PHP 3,000 product net) plus
+PHP 80 Davao delivery immediately total PHP 3,440, without a COD fee. Returning
+to five items (PHP 2,500 product net, PHP 2,800 displayed product subtotal) gives
+PHP 2,930 with delivery and exactly one PHP 50 fee. The independent staging
+PHP readback is SHA-256
+`5c0f7e0c6dcaf9759b8044ab60d1abf499bb48c731bf5f15dfa56c2100fabf95`;
+this supersedes the earlier fee-tax correction's hash. Both exact prior files
+have private server and off-server recovery copies. These theme fixes do not
+change the gateway package or complete payment acceptance.
 
 Staging customer and merchant notification routing was aligned to the store's
 public inbox, with exact prior option values retained privately. This is routing

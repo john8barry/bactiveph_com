@@ -176,7 +176,7 @@ add_action( 'woocommerce_cart_calculate_fees', 'bactive_add_cod_fee', 20, 1 );
 function bactive_add_cod_fee( $cart ) {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
     $chosen_gateway = WC()->session->get( 'chosen_payment_method' );
-    if ( 'cod' === $chosen_gateway ) {
+    if ( 'cod' === $chosen_gateway && $cart->get_cart_contents_total() <= 2500 ) {
         $fee = 50;
         $cart->add_fee( 'COD Fee', $fee, false, '' );
     }

@@ -1,5 +1,9 @@
 # Footer payment marks: visible inventory and matching COD tile
 
+The later [footer copy cleanup](2026-09-05-footer-copy-cleanup.md) removes the two
+status notes at John's request. This document records the historical v2 release;
+consult the follow-on record for its deployment status.
+
 Work record: [issue #5](https://github.com/john8barry/bactiveph_com/issues/5). Severity: medium, missing customer-facing payment branding. Owner: footer-branding task. Gateway activation remains owned by [#2](https://github.com/john8barry/bactiveph_com/issues/2) / [PR #4](https://github.com/john8barry/bactiveph_com/pull/4).
 
 ## User correction and scope

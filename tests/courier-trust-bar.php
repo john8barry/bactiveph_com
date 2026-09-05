@@ -42,7 +42,6 @@ namespace {
         ob_start();
         include $template;
         $html = ob_get_clean();
-        $ready = $scenario === 'ready';
         foreach (array('QR Ph','Maya','ShopeePay','BPI Online','UnionBank Online','PayMongo') as $name) {
             if (!str_contains($html, 'alt="'.$name.'"')) {
                 throw new \RuntimeException($scenario . ': wrong payment mark ' . $name);
@@ -55,7 +54,9 @@ namespace {
         if ($cod) { $expected_marks[] = 'Cash on Delivery'; }
         $expected_marks[] = 'PayMongo';
         if ($marks[1] !== $expected_marks) { throw new \RuntimeException($scenario . ': wrong payment count or order'); }
-        if (str_contains($html, 'Online payments are being set up.') === $ready) { throw new \RuntimeException($scenario . ': wrong readiness status'); }
+        foreach (array('Online payments are being set up.', 'Eligibility and fees shown at checkout.') as $removed_note) {
+            if (str_contains($html, $removed_note)) { throw new \RuntimeException($scenario . ': redundant footer note'); }
+        }
         foreach (array('Visa','Mastercard','GCash','Ninja Van','Bank transfer') as $forbidden) {
             if (stripos($html, $forbidden) !== false) { throw new \RuntimeException('Forbidden mark ' . $forbidden); }
         }

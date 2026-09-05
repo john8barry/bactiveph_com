@@ -5622,10 +5622,11 @@ if ($failures !== array()) {
     // Synthetic fixtures only. Surface failures in the check API as well as
     // downloadable logs so a failed release gate is independently diagnosable.
     if (getenv('GITHUB_ACTIONS') === 'true') {
-        foreach ($failures as $failure) {
-            $annotation = str_replace(array('%', "\r", "\n"), array('%25', '%0D', '%0A'), $failure);
-            fwrite(STDERR, "::error title=PayMongo contract assertion::{$annotation}\n");
-        }
+        // GitHub limits per-step annotations; keep the complete failure list
+        // together instead of silently losing assertions after the first ten.
+        $report = count($failures) . " failures in {$tests} checks:\n- " . implode("\n- ", $failures);
+        $annotation = str_replace(array('%', "\r", "\n"), array('%25', '%0D', '%0A'), $report);
+        fwrite(STDERR, "::error title=PayMongo contract assertions::{$annotation}\n");
     }
     fwrite(STDERR, "FAILED {$tests} checks:\n- " . implode("\n- ", $failures) . "\n");
     exit(1);

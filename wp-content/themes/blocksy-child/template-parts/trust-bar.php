@@ -1,5 +1,5 @@
 <?php
-/** Shipping partners and payment methods that are available in this store. */
+/** Shipping partners and the store's approved payment-method branding. */
 defined('ABSPATH') || exit;
 
 $bactive_paymongo_ready = false;
@@ -15,7 +15,7 @@ if (function_exists('WC')) {
         $bactive_paymongo_ready = $bactive_paymongo instanceof \BActive\PayMongo\Gateway
             && $bactive_paymongo->is_available();
     } catch (\Throwable $bactive_gateway_error) {
-        // Do not advertise a payment service when its availability cannot be verified.
+        // Readiness controls the status note, never the approved brand inventory.
         $bactive_paymongo_ready = false;
     }
 }
@@ -122,16 +122,6 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         line-height: 1;
         white-space: nowrap;
     }
-    .bactive-custom-footer .bactive-trust__badge--text {
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: #1d1e1f;
-        color: #fff;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.2;
-        text-align: center;
-    }
     .bactive-custom-footer .bactive-trust__processor {
         display: flex;
         align-items: center;
@@ -148,6 +138,7 @@ $bactive_theme_url = get_stylesheet_directory_uri();
     }
     .bactive-custom-footer .bactive-trust__note {
         margin: 0;
+        max-width: 340px;
         font-size: 11px;
         line-height: 1.5;
         text-align: center;
@@ -162,7 +153,7 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         .bactive-custom-footer .bactive-trust__group--payments { align-items: flex-end; }
     }
 </style>
-<div class="bactive-trust" data-bactive-trust-version="2026-09-04">
+<div class="bactive-trust" data-bactive-trust-version="2026-09-04-v2">
     <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
         <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>
         <ul class="bactive-trust__list" role="list">
@@ -179,32 +170,34 @@ $bactive_theme_url = get_stylesheet_directory_uri();
             </li>
         </ul>
     </div>
-    <?php if ($bactive_paymongo_ready || $bactive_cod_enabled) : ?>
     <div class="bactive-trust__group bactive-trust__group--payments" role="group" aria-labelledby="bactive-payments-label">
         <span class="bactive-trust__label" id="bactive-payments-label">Payment options</span>
-        <ul class="bactive-trust__list<?php echo $bactive_paymongo_ready ? ' bactive-trust__list--payments' : ''; ?>" role="list">
-            <?php if ($bactive_paymongo_ready) : ?>
-                <?php foreach ($bactive_payment_marks as $bactive_mark => $bactive_label) : ?>
+        <ul class="bactive-trust__list bactive-trust__list--payments" role="list">
+            <?php // Keep the five user-approved logos visible independently of checkout readiness. ?>
+            <?php foreach ($bactive_payment_marks as $bactive_mark => $bactive_label) : ?>
                 <li>
                     <span class="bactive-trust__badge">
                         <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/payments/' . $bactive_mark . '.svg'); ?>" width="121" height="49" alt="<?php echo esc_attr($bactive_label); ?>" loading="lazy" decoding="async" />
                     </span>
                 </li>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <?php endforeach; ?>
             <?php if ($bactive_cod_enabled) : ?>
-                <li><span class="bactive-trust__badge bactive-trust__badge--text" role="img" aria-label="Cash on Delivery available">COD</span></li>
+                <li>
+                    <span class="bactive-trust__badge">
+                        <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/payments/cod.svg'); ?>" width="121" height="49" alt="Cash on Delivery" loading="lazy" decoding="async" />
+                    </span>
+                </li>
             <?php endif; ?>
         </ul>
-        <?php if ($bactive_paymongo_ready) : ?>
         <div class="bactive-trust__processor">
-            <span>Secure payments by</span>
+            <span>Online payments via</span>
             <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/payments/paymongo.png'); ?>" width="6122" height="1050" alt="PayMongo" loading="lazy" decoding="async" />
         </div>
+        <?php if (!$bactive_paymongo_ready) : ?>
+        <p class="bactive-trust__note">Online payments are being set up. Check available options at checkout.</p>
         <?php endif; ?>
         <?php if ($bactive_cod_enabled) : ?>
         <p class="bactive-trust__note">Cash on Delivery available. Eligibility and fees shown at checkout.</p>
         <?php endif; ?>
     </div>
-    <?php endif; ?>
 </div>

@@ -42,7 +42,6 @@ namespace {
         ob_start();
         include $template;
         $html = ob_get_clean();
-        $ready = $scenario === 'ready';
         foreach (array('QR Ph','Maya','ShopeePay','BPI Online','UnionBank Online','PayMongo') as $name) {
             if (!str_contains($html, 'alt="'.$name.'"')) {
                 throw new \RuntimeException($scenario . ': wrong payment mark ' . $name);
@@ -55,11 +54,31 @@ namespace {
         if ($cod) { $expected_marks[] = 'Cash on Delivery'; }
         $expected_marks[] = 'PayMongo';
         if ($marks[1] !== $expected_marks) { throw new \RuntimeException($scenario . ': wrong payment count or order'); }
-        if (str_contains($html, 'Online payments are being set up.') === $ready) { throw new \RuntimeException($scenario . ': wrong readiness status'); }
+        foreach (array('Online payments are being set up.', 'Eligibility and fees shown at checkout.') as $removed_note) {
+            if (str_contains($html, $removed_note)) { throw new \RuntimeException($scenario . ': redundant footer note'); }
+        }
         foreach (array('Visa','Mastercard','GCash','Ninja Van','Bank transfer') as $forbidden) {
             if (stripos($html, $forbidden) !== false) { throw new \RuntimeException('Forbidden mark ' . $forbidden); }
         }
         if (!str_contains($html, 'LBC Express') || !str_contains($html, 'J&T Express')) { throw new \RuntimeException('Courier missing'); }
+        preg_match_all('/<a class="bactive-trust__badge bactive-trust__badge--carrier[^"]*" href="([^"]+)"/', $html, $couriers);
+        if ($couriers[1] !== array('https://www.jtexpress.ph/track-and-trace', 'https://www.lbcexpress.com/ph/track', 'https://www.grab.com/ph/express/')) {
+            throw new \RuntimeException($scenario . ': wrong courier count, order or destination');
+        }
+        preg_match('/aria-labelledby="bactive-shipping-label">(.*?)<\/div>/s', $html, $nationwide);
+        preg_match('/aria-labelledby="bactive-local-shipping-label">(.*?)<\/div>/s', $html, $local);
+        if (!isset($nationwide[1], $local[1]) || str_contains($nationwide[1], 'grabexpress')
+            || substr_count($nationwide[1], '<li>') !== 2
+            || !str_contains($local[1], '>Davao City only</span>')
+            || !str_contains($local[1], 'aria-label="GrabExpress delivery within Davao City only (opens in a new tab)"')
+            || substr_count($local[1], '<li>') !== 1
+            || !str_contains($local[1], '/assets/images/couriers/grabexpress.png')
+            || !str_contains($local[1], 'width="2868" height="800" alt=""')
+            || !str_contains($local[1], 'target="_blank" rel="noopener noreferrer"')) {
+            throw new \RuntimeException($scenario . ': GrabExpress must be explicitly local, accessible and unstretched');
+        }
+        if (substr_count($html, '<img ') !== ($cod ? 10 : 9)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
+        if (!str_contains($html, 'data-bactive-trust-version="2026-09-05-v4"')) { throw new \RuntimeException('Wrong combined release version'); }
         $checks[] = $scenario;
         if ($scenario === $render_scenario) { $render_html = $html; }
     }

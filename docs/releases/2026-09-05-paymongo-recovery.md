@@ -50,9 +50,9 @@ close the wider historical security investigation.
   current secret-value and credential-pattern scans pass.
 - Fresh production and staging backups are separately verified off-server.
   No staging database will be imported into production.
-- Sandbox transaction matrix, live credentials/capabilities, signed delivery,
-  live payments, email receipt, refund verification, public issuance, and
-  production monitoring remain pending until recorded below.
+- Sandbox acceptance is partial, as recorded below. Live credentials and
+  capabilities, all five real payments, inbox receipt, refund verification,
+  public issuance and production monitoring remain pending.
 
 ## Staging integration finding
 
@@ -95,9 +95,119 @@ Local regression evidence for the repair:
   and gzip/ZIP integrity check passed. Backups contain private data and are
   excluded from the repository.
 
-The next control point is a successful bounded first settings save and provider
-callback readback using a newly checksummed repair artifact, followed by the
-five-method sandbox matrix.
+## Repaired staging deployment
+
+Runtime commit `76a2036579dcc9604840b2a4364ff3b79df8950a` passed all four jobs in
+[CI run 33960248974](https://github.com/john8barry/bactiveph_com/actions/runs/33960248974).
+The repaired 88,924-byte artifact has SHA-256
+`6264ac421f7450264c9dee6515b8252c6ee61c6ac8b191a25eeb09d5fa243fbe`.
+All 11 installed staging runtime files and seven protected files were
+independently verified after replacement; no maintenance file remained.
+
+The normal WooCommerce settings handler then saved successfully. Test issuance
+is enabled for managers and unavailable to guests. Independent provider readback
+verified enabled test webhook `hook_vCuwVTbA8bniSsjqu8LUtL5z`, subscribed only to
+`checkout_session.payment.paid` at
+`https://staging.bactiveph.com/?wc-api=bactive_paymongo_test`. A bounded recovery
+run completed in 0.0925 seconds without a scan failure or failed scheduled action.
+GET requests receive 405; missing, incorrect and wrong-mode signatures receive
+401. Callback responses are private/no-store, reach the origin and receive no
+authentication challenge.
+
+A separate staging policy mismatch made the existing PHP 50 COD fee taxable.
+Only that fee's taxable flag was changed to match the existing production and
+source policy. The prior file is recoverable privately; independent readback
+verified staging `functions.php` SHA-256
+`50714a89863d97af81e2ffa573b6dfbde8685de686e97bf7f677c9f56410a2dd`.
+This deliberate change supersedes that one protected-file baseline. Production
+shipping, tax and COD policy were not changed.
+
+## Actual sandbox results
+
+| Method/case | Staging order | Total | Verified outcome |
+| --- | --- | --- | --- |
+| Maya success | 371 | PHP 975 | Provider paid; matching Woo transaction; Processing; effects complete |
+| QRPh success | 377 | PHP 640 | Provider paid; matching Woo transaction; Processing; fixture stock 20 to 19 |
+| ShopeePay success | 378 | PHP 640 | Provider paid; matching Woo transaction; Processing; fixture stock 19 to 18 |
+| BPI authorization | 375 | PHP 640 | Provider rejected the account before payment initiation |
+| UBP authorization | 376 | PHP 640 | Provider rejected the account before payment initiation |
+| ShopeePay decline | 374 | PHP 640 | Failed Payment; Payment Intent still processing; Woo remains pending |
+
+These were backend-issued manager test orders completed using the actual hosted
+provider screens. They establish hosted settlement and payment correlation;
+they do not substitute for a normal signed-in manager browser checkout.
+Maya's product did not manage stock, so its stock flag is not a numerical stock
+test. QRPh and ShopeePay each reduced the managed staging fixture by one.
+All three paid orders have matching provider payment IDs, genuine provider event
+identities, completed effects and no pending settlement or review markers.
+The canonical Apache log contains successful callback POSTs at 10:56:38,
+11:14:00 and 11:22:01 UTC, aligned with the three orders' stored effects times.
+The access log has no event identifier, so per-order attribution combines
+timing with the stored provider event and processed claims. At 11:39 UTC there
+were zero failed recovery jobs; orders 377 and 378 still had reconciliation
+queue markers, so this does not establish a fully drained recovery queue.
+
+QRPh used the official sandbox simulation control after the original customer
+QR checkout tab was closed. A reconstructed signed duplicate, using the exact
+stored provider event identity and authenticated payment facts, returned HTTP
+200 `duplicate`; transaction, status, paid time, event, stock, note IDs and
+effects hash stayed unchanged. This was not dashboard webhook redelivery.
+
+The configured-method API lists all five identifiers, but hosted BPI and UBP
+authorization returned respectively `Dob payment method on bpi is not allowed
+for your account` and the equivalent `ubp` message. No successful bank-source
+payload exists yet. Account enablement or provider clarification and successful
+bank transactions are required; the identifier list is not proof of usable
+bank authorization. BPI's signed Cancel/back action was independently verified
+to expire its session while leaving the Woo order unpaid and stock untouched.
+That backend-order cancellation is not full PayMongo-to-COD browser acceptance.
+
+For ShopeePay decline order 374, a single checkpointed test expiry request
+returned HTTP 400 `resource_invalid_state`. Fresh readback at 11:36 UTC still
+showed an active session, processing intent, failed Payment, pending unpaid
+Woo order and no stock effect. The attempt remains unexpired and available to
+recovery. No replacement session was issued for that order. This did not
+reproduce the conditional concern about expiry of an in-flight intent; it is
+an unresolved provider test state, not an asserted runtime defect.
+
+Independent pure-runtime validation of the real QRPh payment accepted its
+matching facts and rejected wrong amount, currency, order metadata, event mode,
+session mode and session identity. Stored order, stock and effects stayed
+unchanged. These checks do not claim full HTTP quarantine/failure-path acceptance.
+
+## Checkout and operational gates still open
+
+Anonymous desktop checkout showed the correct Davao total of PHP 690 for the
+PHP 560 fixture, PHP 80 delivery and one PHP 50 COD fee. Changing the destination
+to Metro Manila displayed PHP 790 with PHP 180 delivery and the same single fee.
+A product-restricted PHP 100 staging coupon reduced that total to PHP 690 and
+included VAT from PHP 60 to PHP 49.29. No production coupon was created.
+
+At a verified 390-pixel viewport, changing cart quantity from one to five and
+pressing Update cart twice independently returned quantity one. The visible
+mobile and hidden desktop quantity inputs share one form name and remained
+enabled with different values. The hidden final value overwrites the customer's
+selection. This checkout defect must be corrected and rechecked on both screen
+sizes before cart acceptance can pass.
+
+Staging customer and merchant notification routing was aligned to the store's
+public inbox, with exact prior option values retained privately. This is routing
+evidence only. SMTP2GO activation and inbox delivery remain unverified and belong
+to the coordinated email task; ordinary host mail can still be attempted while
+the SMTP2GO plugin is disabled.
+
+Remaining launch gates include normal manager browser checkout and PayMongo/COD
+switching, complete failure/race/recovery acceptance, both bank sandbox flows
+and source mapping, merchant login and live capabilities/key, actual inbox
+receipt, all five John-authorized real payments and eligible provider refund.
+Legacy callback/runtime remains installed while historical test intents are
+not proven terminal. Production has not received the new gateway or live key.
+Public issuance, customer payment claims, 30-minute monitoring and the next-day
+reconciliation follow-up come only after these gates pass.
+
+The next control point is merchant account access to resolve the two bank
+denials, normal staging manager sign-in, and email transport approval. Continue
+the existing isolated payment branch and preserve the canonical dirty workspace.
 
 ## Recovery controls
 

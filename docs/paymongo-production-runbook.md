@@ -16,8 +16,9 @@ WooCommerce owns the catalog, cart, customer details, shipping, taxes, coupons,
 and order. Clicking **Checkout securely** creates a pending WooCommerce order
 and redirects the customer to `https://checkout.paymongo.com`. PayMongo owns
 only the hosted payment-method selection and authorization screen. A browser
-return is never treated as payment proof; the order is paid only after a valid
-signed `checkout_session.payment.paid` webhook.
+return is never treated as payment proof. Payment is confirmed by a valid signed
+`checkout_session.payment.paid` webhook or authenticated, mode-correct recovery
+readback that passes the same order, session, payment, currency and amount checks.
 
 ## Release artifact
 
@@ -138,6 +139,10 @@ never retry an uncertain webhook creation or credential mutation blindly.
    generated artifacts, and dependencies. This plugin has no third-party runtime
    dependencies.
 5. Confirm PayMongo displays all five approved live capabilities as Active.
+   A capabilities response identifies configured methods; it does not replace
+   successful hosted authorization. Confirm each required bank through the
+   actual sandbox flow and separately verify live activation. An account-denied
+   response remains a launch blocker even when the identifier is listed.
 6. Confirm WP-Cron is enabled or a real server cron invokes `wp-cron.php`, and
    Action Scheduler has no failed `bactive-paymongo` actions. Run one due
    reconciliation action and read back its completion before issuing a session.
@@ -176,12 +181,16 @@ never retry an uncertain webhook creation or credential mutation blindly.
    Confirm exact products, coupon, shipping, tax and total; one stock reduction;
    one Woo transaction ID; the expected private order note; and no secrets or
    customer data in WooCommerce logs.
-7. Run the session-switch regression: create a PayMongo session, use Cancel/back,
-   select COD on the same order, and read the original Checkout Session back
-   through PayMongo's test API. It must be `expired`. Deliver a correctly signed
-   test fixture for that original session and prove the order stays `on-hold`,
-   `payment_complete()` is not called, no fulfillment/stock/email side effect is
-   repeated, and the event is quarantined for manual reconciliation.
+7. Test Cancel/back and COD using a populated classic cart in the same
+   authenticated browser session. Record the original order and any replacement
+   WooCommerce order created after cart changes. Read the previous session back
+   through PayMongo: it must be safely expired before COD proceeds, with no
+   competing payable session. Check the recalculated COD fee and eligibility.
+   Test unchanged-cart reuse and changed-cart replacement separately. A
+   backend-issued order's redirect to checkout does not establish browser
+   cart/session continuity. Deliver a correctly signed fixture for the expired
+   original session; it must be held for review without another paid transition,
+   stock reduction, fulfillment or email effect.
 8. Exercise races and recovery: delayed paid webhook before and after Cancel;
    browser Back with cart changes and the previous `order_awaiting_payment`;
    replay of an old Cancel URL while a newer session exists; order-pay bypass;
@@ -192,10 +201,11 @@ never retry an uncertain webhook creation or credential mutation blindly.
 9. Verify the COD boundary with product totals on both sides of the configured
    cap and with coupon, shipping, and tax changes. Exactly one `COD Fee` must be
    present only when COD is eligible.
-10. Capture the exact sandbox source payload for BPI Direct Debit and UBP Direct
-    Debit. Accept bare `dob` as BPI only if the authenticated fixture proves
-    PayMongo omits its bank/provider code; otherwise keep the integration
-    fail-closed and correct the mapping before production.
+10. Capture authenticated successful BPI and UBP payment-source fields before
+    declaring bank mapping accepted. Current code recognizes `bpi`/`ubp`
+    provider or bank codes; bare `dob` is rejected, while `dob_ubp` identifies
+    UBP. It does not learn mappings or activate bank capabilities. Unexpected
+    payloads require a reviewed implementation change and regression coverage.
 
 PayMongo's sandbox controls:
 
@@ -310,22 +320,27 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
 8. With PayMongo issuance still manager-only, confirm production checkout creates a pending order and redirects only to an
    HTTPS `checkout.paymongo.com` URL. Stop before authorizing real money until
    the named operator approves the exact canary amount and order.
-9. After that separate exact-amount approval, pay one small real order, then independently verify
-   the PayMongo payment ID/method/amount/status, webhook delivery, WooCommerce
-   transaction ID/status/order note, stock change, customer email, and absence
-   of new critical PHP/Woo/Cloudflare errors.
+9. John authorizes one small real order for each of the five approved methods,
+   after seeing each exact order and total. Independently verify every PayMongo
+   payment ID/method/amount/status, callback delivery, WooCommerce transaction
+   ID/status/order note, stock change, customer confirmation and merchant
+   notification. Verify an eligible provider-side refund using the procedure
+   below, and confirm no new critical PHP/Woo/Cloudflare errors.
 10. Read back all legacy-issued sessions. Only after every one is paid,
     authenticated-expired, or explicitly reconciled may the legacy plugin be
     deactivated. Keep both new mode-specific webhooks active.
-11. After the live canary and the credential-containment hold in issue #9 are
-    independently cleared, disable Private verification through the ordinary
+11. After all five live methods, the full checkout matrix, email delivery,
+    refund verification and the exact containment hold in issue #9 pass, and
+    no unexplained payment remains outstanding, disable Private verification through the ordinary
     WooCommerce settings flow (REST: `settings.restricted_rollout="no"`). This
     runs the serialized drain and invalidates stale issuance. Verify a fresh anonymous populated
-    checkout exposes `bactive_paymongo` and eligible `cod` only, and monitor the
-    first production window. Record the deployed plugin hash and live evidence
-    in issue #2.
+    checkout exposes `bactive_paymongo` and eligible `cod` only. Align checkout,
+    FAQ, policy and footer claims with the methods actually verified. Monitor
+    payment failures, callback delivery, recovery backlog and critical errors
+    for the first 30 minutes, then assign a next-day reconciliation follow-up.
+    Record the deployed plugin hash and sanitized live evidence in issue #2.
 
-Do not mark the GitHub issue complete until the exact live canary is proven.
+Do not mark the GitHub issue complete until all acceptance criteria are proven.
 
 ## Monitoring and reconciliation
 
@@ -336,6 +351,11 @@ Do not mark the GitHub issue complete until the exact live canary is proven.
   PayMongo payment and Checkout Session with the WooCommerce order before a
   human changes order state.
 - Never ask a customer to pay again while an earlier session is ambiguous.
+- A failed Payment does not by itself resolve a processing Payment Intent.
+  Keep the exact order/session outstanding and inspect authenticated provider
+  state. An expiry rejection is not cancellation. Never clear recovery markers,
+  switch to COD, replace credentials or issue another payment merely to bypass
+  that state.
 - Verify Action Scheduler and WP-Cron continue running. The five-minute source
   scan and per-order retry queue are the recovery path for missed webhooks.
 - Resolve the WooCommerce `PayMongo reconciliation review` action only after an

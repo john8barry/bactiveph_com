@@ -23,8 +23,9 @@ signed `checkout_session.payment.paid` webhook.
 
 The production plugin is
 `wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout`. Package that
-directory without repository metadata, tests are allowed but not required in
-the deployed zip, and record the zip SHA-256 in GitHub issue #2 before upload.
+directory without repository metadata or the entire `tests/` directory. The
+CLI test harness is not a web endpoint and must never be uploaded into a public
+WordPress installation. Record the zip SHA-256 in GitHub issue #2 before upload.
 Use the identical tested artifact on staging and production.
 
 Requirements:

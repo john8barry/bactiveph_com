@@ -2,6 +2,8 @@
 
 Work records: [#11](https://github.com/john8barry/bactiveph_com/issues/11) and the
 combined [footer-copy cleanup #10](https://github.com/john8barry/bactiveph_com/issues/10).
+Delivery record: [PR #12](https://github.com/john8barry/bactiveph_com/pull/12).
+Status: **LIVE VERIFIED**, combined footer `2026-09-05-v4`.
 Severity: low, customer-facing shipping information. Owner: **Update courier and
 COD options**, task `01a06d82-576d-76f3-bffb-6f9142e371a9`.
 
@@ -95,8 +97,56 @@ The preceding user-visible response explicitly said the removal was bundled with
 GrabExpress and awaiting combined approval. The combined staging visual
 condition has passed. This records actual same-project user authority, not an
 approval inferred solely from an agent message. The courier coordinator remains
-the single production writer. Production acceptance is **UNVERIFIED** pending
-fresh production backup, exact-file release and independent live readback.
+the single production writer. This was the staging checkpoint; production
+acceptance is recorded below.
+
+### Production acceptance
+
+Fresh production Updraft backup timestamp `1788594862`: PASS, all six
+components, 329,610,949 bytes. Every archive was copied off-server and verified
+against its size and SHA-256, then passed ZIP/gzip integrity checks. The
+independent footer-copy task also checked all six off-server hashes and sizes.
+No existing backup was pruned.
+
+Production deployment completed at 2026-09-05 07:58:44 UTC. Native PHP lint and
+hash checks passed in a private directory outside the web root. Only the two
+allowlisted files above were atomically installed, asset first, followed by
+the page-cache refresh. The deployed source is the reviewed `541bd44` overlay,
+unchanged in published head `e2eb041bd38ec564c817d4bf7424f214feb989f8`.
+The server is verified by exact file hashes, not an assumed Git checkout.
+
+Authenticated production readbacks at 08:03:13 and 08:05:44 UTC both passed:
+
+- Exactly the GrabExpress PNG and trust-bar partial changed; all other
+  child-theme bytes match the pre-release snapshot.
+- Hashed shipping/payment policy and gateway enablement are unchanged.
+- Error/debug-log hashes are unchanged; WordPress core checksum verification
+  passed. No new browser console errors were observed.
+- Normal anonymous checks passed twice across all seven routes and all ten
+  assets. Both removed notes are absent, local/nationwide groups are distinct,
+  all payment marks and the BIR link remain, and checkout retains its normal
+  empty-cart redirect. No order or payment was submitted.
+
+Main-agent production screenshots passed at 1440px desktop, 390px mobile and
+the normal 736px browser panel. Every courier tile is 132 by 44px, all ten images
+load, and there is no horizontal overflow. Native logo proportions are intact.
+The independent footer-copy task separately accepted desktop 1440px and mobile
+390px, exact origin hashes/logs, and four normal anonymous public routes at
+08:02:24 UTC. A single earlier anonymous request returned HTTP 525; its bounded
+recheck returned 200 at 08:01:45 UTC, and subsequent full checks passed. No TLS,
+DNS or security control was altered. All temporary browser size overrides were
+cleared.
+
+The final origin observation is nearly seven minutes after deployment, with
+no new critical errors or configuration drift. Sanitized receipts are retained
+in the private release directory; secret-bearing backup contents are not
+published. PR #12 holds the exact source, tests and evidence. The canonical
+dirty checkout remains deliberately untouched and must not be described as
+synchronized with this isolated release.
+
+**UNVERIFIED / out of scope:** this presentation release does not activate or
+prove PayMongo rails, create a GrabExpress checkout method, or clear #2, #7 or
+#9. Those existing owners and holds remain unchanged.
 
 ## Rollback and release control
 
@@ -112,8 +162,7 @@ checking no later writer superseded v4, followed by a page-cache refresh and
 browser/hash readback. The new PNG can remain unused; deleting it is unnecessary
 for functional rollback. No database restore is involved.
 
-Production is unchanged at this checkpoint. Current combined approval and staging
-acceptance are recorded above. Take a fresh complete production backup with a
-verified off-server copy, then deploy and independently verify both issues.
-Keep #10 and #11 open until live acceptance.
+Production acceptance and recovery readiness are complete. Close #10 and #11
+only after the reviewed PR is merged and the resulting main tree is verified
+against these deployed hashes; record that exact merge/ref in the work items.
 No global or project memory files were updated.

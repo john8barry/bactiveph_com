@@ -4,6 +4,12 @@ Work record: [#10](https://github.com/john8barry/bactiveph_com/issues/10).
 Owner: footer-copy task `01a07062-0209-7a60-9a70-8f21d68533f8`.
 Severity: low, redundant customer-facing copy.
 
+**Current status: LIVE VERIFIED in combined footer v4.** The copy-only v3
+artifact below was never deployed separately. Its staging/approval language is
+historical; the combined backup, approval, deployment and independent live
+acceptance are recorded in the [GrabExpress v4 release](2026-09-05-grabexpress-davao.md)
+and [PR #12](https://github.com/john8barry/bactiveph_com/pull/12).
+
 John requested removing the online-setup and COD-eligibility paragraphs. They
 were presentation notes introduced by v2, not payment controls. Both paragraphs,
 their unused CSS, and the unused PayMongo readiness calculation are removed.
@@ -11,7 +17,7 @@ The five approved online marks, separate PayMongo branding, enabled-only COD
 badge, courier links, and business/BIR content are preserved. Checkout remains
 responsible for payment availability and COD fee/eligibility disclosure.
 
-## Evidence and release boundary
+## Historical copy-only v3 evidence and release boundary
 
 - Base: `c8a922f8b73bb133fb01017c4c14b50b15c8f299`. Initial authenticated
   production and staging reads independently matched the v2 partial hash
@@ -53,6 +59,8 @@ GrabExpress release needs its own complete current rollback receipt; do not
 restore v2 over a newer approved courier change without coordination. No
 database restore is part of this change.
 
-Next control point: combined staging acceptance and the single production
-approval in **Update courier and COD options**. Keep #10 open until both removed
-notes are independently verified absent from the live site.
+The historical next control point was combined staging acceptance and the
+single production approval in **Update courier and COD options**. Both are now
+satisfied by v4, and both removed notes were independently verified absent from
+the live site. Final issue closure follows the PR #12 main/ref reconciliation
+in the combined release record.

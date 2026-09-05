@@ -470,6 +470,15 @@ if (!class_exists('WC_Payment_Gateway')) {
 
         public function get_option($key, $empty_value = null)
         {
+            global $fake_mutating_settings_getter;
+            if ($fake_mutating_settings_getter ?? false) {
+                if (!isset($this->settings[$key])) {
+                    $this->settings[$key] = $this->form_fields[$key]['default'] ?? '';
+                }
+                if ($empty_value !== null && $this->settings[$key] === '') {
+                    $this->settings[$key] = $empty_value;
+                }
+            }
             return $this->settings[$key] ?? $empty_value;
         }
 
@@ -1055,7 +1064,10 @@ if (!function_exists('WC')) {
     }
 }
 if (!function_exists('current_user_can')) {
-    function current_user_can($capability): bool { return true; }
+    function current_user_can($capability): bool {
+        global $fake_current_user_caps;
+        return $fake_current_user_caps === null || in_array($capability, $fake_current_user_caps, true);
+    }
 }
 if (!function_exists('get_current_user_id')) {
     function get_current_user_id(): int { return 77; }
@@ -5631,6 +5643,7 @@ same(0, $fake_hook_calls['woocommerce_order_status_on-hold'] ?? 0, 'cancel opera
 same(0, $fake_hook_calls['woocommerce_order_status_changed'] ?? 0, 'cancel operator acknowledgement emits no status-changed hook');
 
 require __DIR__ . '/recovery-boundaries.php';
+require __DIR__ . '/rollout-restriction.php';
 
 if ($failures !== array()) {
     // Synthetic fixtures only. Surface failures in the check API as well as

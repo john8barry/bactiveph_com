@@ -66,6 +66,13 @@ final class Gateway extends \WC_Payment_Gateway
                 'label' => __('Use PayMongo test credentials (no real money)', 'bactive-paymongo'),
                 'default' => 'yes',
             ),
+            'restricted_rollout' => array(
+                'title' => __('Private verification', 'bactive-paymongo'),
+                'type' => 'checkbox',
+                'label' => __('Restrict PayMongo checkout to store managers', 'bactive-paymongo'),
+                'description' => __('Keep enabled until sandbox tests and the approved live payment are verified. The store and Cash on Delivery remain public.', 'bactive-paymongo'),
+                'default' => 'yes',
+            ),
             'title' => array(
                 'title' => __('Checkout title', 'bactive-paymongo'),
                 'type' => 'text',
@@ -221,7 +228,8 @@ final class Gateway extends \WC_Payment_Gateway
         $test_key_changed = ($old_value['test_secret_key'] ?? '') !== ($value['test_secret_key'] ?? '');
         $live_key_changed = ($old_value['live_secret_key'] ?? '') !== ($value['live_secret_key'] ?? '');
         $sensitive_change = $mode_changed || $test_key_changed || $live_key_changed;
-        $availability_changed = $old_enabled !== $new_enabled;
+        $rollout_changed = ($old_value['restricted_rollout'] ?? 'yes') !== ($value['restricted_rollout'] ?? 'yes');
+        $availability_changed = $old_enabled !== $new_enabled || $rollout_changed;
 
         // This monotonically invalidates every in-flight issuance, even if a
         // settings request finishes and reopens the draining flag before the
@@ -558,7 +566,8 @@ final class Gateway extends \WC_Payment_Gateway
 
     public function is_available(): bool
     {
-        if (Reconciler::is_draining()
+        if (!$this->rollout_allows_issuance()
+            || Reconciler::is_draining()
             || Order_Lock::settings_write_active()
             || $this->loaded_config_generation !== Reconciler::config_generation()
             || !$this->loaded_payment_config_is_current()
@@ -568,6 +577,16 @@ final class Gateway extends \WC_Payment_Gateway
         }
 
         return Readiness::is_ready($this, !$this->is_test_mode());
+    }
+
+    /** Only an explicit opt-out opens issuance to the public; callbacks stay independent. */
+    private function rollout_allows_issuance(): bool
+    {
+        // WC_Settings_API::get_option() fills missing defaults into settings.
+        // Do not mutate this snapshot: currentness compares it with storage.
+        return ($this->settings['restricted_rollout'] ?? 'yes') === 'no'
+            || current_user_can('manage_woocommerce')
+            || current_user_can('manage_options');
     }
 
     /**
@@ -611,6 +630,13 @@ final class Gateway extends \WC_Payment_Gateway
     {
         $checkout_request_fenced = Order_Lock::checkout_held_by_request();
         try {
+            // Recheck at the payment boundary, not only while rendering the
+            // checkout list: stale forms, order-pay and direct calls must deny
+            // before touching an order or issuing a provider request.
+            if ($this->enabled !== 'yes' || !$this->rollout_allows_issuance()) {
+                wc_add_notice(__('Online payments are not yet available. Please choose another payment method.', 'bactive-paymongo'), 'error');
+                return array('result' => 'fail');
+            }
             if (Order_Lock::checkout_held_by_request() && !Order_Lock::renew_checkout()) {
                 wc_add_notice(__('Checkout lost its session fence. Reload before trying again.', 'bactive-paymongo'), 'error');
                 return array('result' => 'fail');
@@ -2788,7 +2814,7 @@ final class Gateway extends \WC_Payment_Gateway
         if (!is_array($current)) {
             return false;
         }
-        foreach (array('enabled', 'test_mode', 'test_secret_key', 'live_secret_key') as $key) {
+        foreach (array('enabled', 'test_mode', 'restricted_rollout', 'test_secret_key', 'live_secret_key') as $key) {
             if ((string) ($current[$key] ?? '') !== (string) ($this->settings[$key] ?? '')) {
                 return false;
             }

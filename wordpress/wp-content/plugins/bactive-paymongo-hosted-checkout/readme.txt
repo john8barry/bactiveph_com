@@ -20,6 +20,11 @@ Debit, and UBP Direct Debit. Cash on Delivery remains a separate WooCommerce gat
 Manual bank transfer and legacy PayMongo gateways are removed from customer
 checkout while this plugin is active.
 
+Private verification is enabled by default: only store managers and
+administrators can issue PayMongo payments until the operator explicitly
+opens the gateway after acceptance. Cash on Delivery remains public.
+Callbacks, cancellation and recovery stay reachable during verification.
+
 Security controls include encrypted stored secrets, strict webhook signature
 and timestamp verification, exact amount/currency/order/session/mode checks,
 idempotent Checkout Session creation, duplicate payment claims, two-phase paid
@@ -48,6 +53,8 @@ php tests/run.php
 == Changelog ==
 
 = 1.0.0 =
+* Default PayMongo issuance to manager-only verification, including direct
+  payment and order-pay calls; fence rollout changes with the settings drain.
 * Add hardened PayMongo Hosted Checkout for the five approved active rails.
 * Add signed webhook validation, replay protection, payment deduplication, and
   mode-specific endpoint isolation.

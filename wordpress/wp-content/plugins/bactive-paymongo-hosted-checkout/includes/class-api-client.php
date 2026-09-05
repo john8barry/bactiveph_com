@@ -54,7 +54,7 @@ final class Api_Client
         return $this->request(
             'POST',
             '/v1/checkout_sessions/' . rawurlencode($session_id) . '/expire',
-            array(),
+            null,
             $idempotency_key
         );
     }

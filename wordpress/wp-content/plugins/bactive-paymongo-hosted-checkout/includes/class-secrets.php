@@ -7,6 +7,8 @@ defined('ABSPATH') || defined('BACTIVE_PAYMONGO_TESTING') || exit;
 final class Secrets
 {
     private const PREFIX = 'enc:v1:';
+    /** @var array{option:string,value:string}|null */
+    private static ?array $write_intent = null;
 
     public static function encrypt(string $plaintext): string
     {
@@ -73,7 +75,7 @@ final class Secrets
             return trim((string) constant($constant));
         }
 
-        $gateway = $gateway ?? new Gateway();
+        $gateway = $gateway ?? new Gateway(false);
         $field = $live ? 'live_secret_key' : 'test_secret_key';
         return self::decrypt((string) $gateway->get_option($field, ''));
     }
@@ -96,8 +98,66 @@ final class Secrets
         }
 
         $option = $live ? 'bactive_paymongo_live_webhook_secret' : 'bactive_paymongo_test_webhook_secret';
-        update_option($option, self::encrypt($secret), false);
-        return self::webhook_secret($live) === $secret;
+        if (self::webhook_secret($live) === $secret) {
+            return true;
+        }
+        $held = Order_Lock::settings_held_by_request();
+        $fingerprint = hash('sha256', 'webhook-secret|' . $option . '|' . self::fingerprint($secret));
+        if (($held && !Order_Lock::renew_current_settings())
+            || (!$held && !Order_Lock::acquire_settings($fingerprint))) {
+            return false;
+        }
+        try {
+            Reconciler::set_draining(true);
+            if (Reconciler::has_tracked_orders()
+                || Reconciler::has_unresolved_external_incidents()
+                || !Order_Lock::renew_current_settings()) {
+                return false;
+            }
+            $encrypted = self::encrypt($secret);
+            self::$write_intent = array('option' => $option, 'value' => $encrypted);
+            update_option($option, $encrypted, false);
+            return Order_Lock::renew_current_settings()
+                && get_option($option, null) === $encrypted
+                && self::webhook_secret($live) === $secret;
+        } finally {
+            self::$write_intent = null;
+            if (!$held) {
+                Order_Lock::release_settings();
+            }
+        }
+    }
+
+    /** Last pre-SQL gate for direct add/update and late filter substitution. */
+    public static function guard_webhook_secret_write($option, $value): void
+    {
+        if (!in_array($option, array('bactive_paymongo_test_webhook_secret', 'bactive_paymongo_live_webhook_secret'), true)) {
+            return;
+        }
+        if (self::$write_intent !== null
+            && self::$write_intent['option'] === $option
+            && is_string($value)
+            && hash_equals(self::$write_intent['value'], $value)
+            && Order_Lock::renew_current_settings()) {
+            return;
+        }
+        Reconciler::set_draining(true);
+        throw new \Error('PayMongo webhook secrets must be stored by verified webhook provisioning.');
+    }
+
+    public static function guard_webhook_secret_update($option, $old_value, $value): void
+    {
+        self::guard_webhook_secret_write($option, $value);
+    }
+
+    /** Signing secrets remain available for all outstanding deliveries. */
+    public static function guard_webhook_secret_delete($option): void
+    {
+        if (!in_array($option, array('bactive_paymongo_test_webhook_secret', 'bactive_paymongo_live_webhook_secret'), true)) {
+            return;
+        }
+        Reconciler::set_draining(true);
+        throw new \Error('PayMongo signing secrets cannot be deleted directly; replace them through verified provisioning after a complete drain.');
     }
 
     public static function fingerprint(string $secret): string

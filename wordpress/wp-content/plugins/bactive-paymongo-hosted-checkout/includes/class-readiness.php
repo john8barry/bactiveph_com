@@ -23,7 +23,7 @@ final class Readiness
             self::clear($live);
             return $capabilities;
         }
-        if (!self::has_required_capabilities($capabilities['methods'])) {
+        if ($live && !self::has_required_capabilities($capabilities['methods'])) {
             self::clear($live);
             return new \WP_Error(
                 'paymongo_methods_inactive',
@@ -74,7 +74,10 @@ final class Readiness
             );
         }
 
-        self::store_state($live, $key, $capabilities['methods'], $webhook);
+        if (!self::store_state($live, $key, $capabilities['methods'], $webhook)) {
+            self::clear($live);
+            return new \WP_Error('paymongo_readiness_persist_failed', 'PayMongo readiness could not be persisted and read back exactly.');
+        }
         return true;
     }
 
@@ -121,7 +124,8 @@ final class Readiness
 
         $client = new Api_Client($key);
         $capabilities = $client->capabilities();
-        if (is_wp_error($capabilities) || !self::has_required_capabilities($capabilities['methods'])) {
+        if (is_wp_error($capabilities)
+            || ($live && !self::has_required_capabilities($capabilities['methods']))) {
             self::clear($live);
             return false;
         }
@@ -136,8 +140,7 @@ final class Readiness
             return false;
         }
 
-        self::store_state($live, $key, $capabilities['methods'], $webhook);
-        return true;
+        return self::store_state($live, $key, $capabilities['methods'], $webhook);
     }
 
     /** @return array<string,mixed>|null|\WP_Error */
@@ -167,7 +170,8 @@ final class Readiness
         }
 
         $webhook = $matches[0];
-        if ($webhook['status'] !== 'enabled' || !in_array('checkout_session.payment.paid', $webhook['events'], true)) {
+        if ($webhook['status'] !== 'enabled'
+            || $webhook['events'] !== array('checkout_session.payment.paid')) {
             return new \WP_Error('paymongo_webhook_not_ready', 'The PayMongo webhook is disabled or missing the required event.');
         }
 
@@ -207,9 +211,14 @@ final class Readiness
     private static function store_webhook_secret_if_present(array $webhook, bool $live): bool
     {
         if ($webhook['secret_key'] === '') {
-            return Secrets::webhook_secret($live) !== '';
+            $secret = Secrets::webhook_secret($live);
+            return $secret !== '' && self::secret_is_bound_to_webhook($webhook['id'], $secret, $live);
         }
-        return Secrets::store_webhook_secret($live, $webhook['secret_key']);
+        if (!Secrets::store_webhook_secret($live, $webhook['secret_key'])
+            || !hash_equals($webhook['secret_key'], Secrets::webhook_secret($live))) {
+            return false;
+        }
+        return self::store_secret_binding($webhook['id'], $webhook['secret_key'], $live);
     }
 
     /** @param array<int,string> $methods */
@@ -233,30 +242,98 @@ final class Readiness
     }
 
     /** @param array<int,string> $methods */
-    private static function store_state(bool $live, string $key, array $methods, array $webhook): void
+    private static function store_state(bool $live, string $key, array $methods, array $webhook): bool
     {
+        $previous = get_option(self::state_option($live), array());
+        $webhook_secret = Secrets::webhook_secret($live);
+        if ($webhook_secret === ''
+            || !self::secret_is_bound_to_webhook($webhook['id'], $webhook_secret, $live)) {
+            return false;
+        }
+        $next = array(
+            'verified_at' => time(),
+            'key_fingerprint' => Secrets::fingerprint($key),
+            'webhook_secret_fingerprint' => Secrets::fingerprint($webhook_secret),
+            'capabilities' => array_values($methods),
+            'webhook_id' => $webhook['id'],
+            'endpoint_url' => $webhook['url'],
+            'webhook_status' => $webhook['status'],
+            'webhook_events' => $webhook['events'],
+            'livemode' => $live,
+        );
         update_option(
             self::state_option($live),
-            array(
-                'verified_at' => time(),
-                'key_fingerprint' => Secrets::fingerprint($key),
-                'capabilities' => array_values($methods),
-                'webhook_id' => $webhook['id'],
-                'endpoint_url' => $webhook['url'],
-                'webhook_status' => $webhook['status'],
-                'livemode' => $live,
-            ),
+            $next,
             false
         );
+        $readback = get_option(self::state_option($live), array());
+        if (!is_array($readback) || $readback !== $next) {
+            return false;
+        }
+        if ((!is_array($previous)
+                || !self::state_is_valid($previous, $live)
+                || ($previous['key_fingerprint'] ?? '') !== $next['key_fingerprint']
+                || ($previous['webhook_id'] ?? '') !== $next['webhook_id'])
+            && function_exists('do_action')) {
+            do_action('bactive_paymongo_availability_changed');
+        }
+        return true;
     }
 
     private static function state_is_valid(array $state, bool $live): bool
     {
+        $secret = Secrets::webhook_secret($live);
         return ($state['livemode'] ?? null) === $live
             && ($state['webhook_status'] ?? '') === 'enabled'
+            && ($state['webhook_events'] ?? null) === array('checkout_session.payment.paid')
             && hash_equals(self::endpoint_url($live), (string) ($state['endpoint_url'] ?? ''))
+            && $secret !== ''
+            && hash_equals(
+                (string) ($state['webhook_secret_fingerprint'] ?? ''),
+                Secrets::fingerprint($secret)
+            )
+            && self::secret_is_bound_to_webhook((string) ($state['webhook_id'] ?? ''), $secret, $live)
             && is_array($state['capabilities'] ?? null)
-            && self::has_required_capabilities($state['capabilities']);
+            && (!$live || self::has_required_capabilities($state['capabilities']));
+    }
+
+    private static function store_secret_binding(string $webhook_id, string $secret, bool $live): bool
+    {
+        if (!preg_match('/^hook_[A-Za-z0-9_-]+$/D', $webhook_id) || $secret === '') {
+            return false;
+        }
+        $record = array(
+            'webhook_id' => $webhook_id,
+            'secret_fingerprint' => Secrets::fingerprint($secret),
+            'livemode' => $live,
+            'recorded_at' => time(),
+        );
+        update_option(self::binding_option($live), $record, false);
+        $readback = get_option(self::binding_option($live), array());
+        return is_array($readback)
+            && (string) ($readback['webhook_id'] ?? '') === $record['webhook_id']
+            && (string) ($readback['secret_fingerprint'] ?? '') === $record['secret_fingerprint']
+            && ($readback['livemode'] ?? null) === $live
+            && (int) ($readback['recorded_at'] ?? 0) === $record['recorded_at'];
+    }
+
+    private static function secret_is_bound_to_webhook(string $webhook_id, string $secret, bool $live): bool
+    {
+        $binding = get_option(self::binding_option($live), array());
+        return preg_match('/^hook_[A-Za-z0-9_-]+$/D', $webhook_id) === 1
+            && $secret !== ''
+            && is_array($binding)
+            && ($binding['livemode'] ?? null) === $live
+            && hash_equals($webhook_id, (string) ($binding['webhook_id'] ?? ''))
+            && hash_equals(
+                Secrets::fingerprint($secret),
+                (string) ($binding['secret_fingerprint'] ?? '')
+            );
+    }
+
+    private static function binding_option(bool $live): string
+    {
+        return 'bactive_paymongo_' . ($live ? 'live' : 'test') . '_webhook_secret_binding';
     }
 
     private static function webhook_idempotency_key(bool $live): string
@@ -273,7 +350,12 @@ final class Readiness
 
     private static function clear(bool $live): void
     {
-        delete_option(self::state_option($live));
+        $option = self::state_option($live);
+        $had_state = get_option($option, false) !== false;
+        delete_option($option);
+        if ($had_state && function_exists('do_action')) {
+            do_action('bactive_paymongo_availability_changed');
+        }
     }
 
     private static function state_option(bool $live): string

@@ -15,16 +15,24 @@ Creates PayMongo v2 Checkout Sessions and redirects the customer to PayMongo's
 hosted payment page. The WooCommerce cart remains on B Active; an order is
 created before redirect and is fulfilled only after a verified paid event.
 
-The payment-method allowlist is fixed to QRPh, Maya, ShopeePay, BPI Online, and
-UnionBank Online. Cash on Delivery remains a separate WooCommerce gateway.
+The payment-method allowlist is fixed to QRPh, Maya, ShopeePay, BPI Direct
+Debit, and UBP Direct Debit. Cash on Delivery remains a separate WooCommerce gateway.
 Manual bank transfer and legacy PayMongo gateways are removed from customer
 checkout while this plugin is active.
 
 Security controls include encrypted stored secrets, strict webhook signature
 and timestamp verification, exact amount/currency/order/session/mode checks,
-idempotent Checkout Session creation, duplicate payment claims, and fail-closed
-capability and webhook readiness checks. Automated refunds are intentionally
-not supported in version 1.0.0.
+idempotent Checkout Session creation, duplicate payment claims, two-phase paid
+state persistence, at-most-once WooCommerce effects, durable quarantine, and
+fail-closed capability and webhook readiness checks. Ambiguous effects are
+acknowledged by an operator without automatic replay. A resolved paid
+quarantine has a separate, authenticated provider-readback action that records
+the exact paid state without re-emitting stock, email, fulfillment, status, or
+payment hooks. Its external armed/processing/done intent recovers either CPT or
+HPOS torn-write layout and blocks credential or mode rotation until exact
+readback completes. PayMongo refund creation in WooCommerce is intentionally
+blocked before side effects in version 1.0.0; verified provider refunds are
+recorded as private order notes only.
 
 == Installation ==
 
@@ -43,5 +51,13 @@ php tests/run.php
 * Add hardened PayMongo Hosted Checkout for the five approved active rails.
 * Add signed webhook validation, replay protection, payment deduplication, and
   mode-specific endpoint isolation.
+* Add two-phase settlement and at-most-once payment/review effect recovery.
+* Add explicit no-effects disposition for independently verified paid
+  quarantines, durable CPT/HPOS torn-write convergence, and pre-SQL settings
+  create/delete guards.
+* Isolate test/live incident identities, bind cancel links to exact attempts,
+  retain immutable operator receipts, and recover queued incidents independently
+  of order metadata. Guard signing-secret writes and deactivation with the
+  serialized settings drain.
 * Retain Cash on Delivery and suppress manual bank transfer and legacy PayMongo
   gateways at customer checkout.

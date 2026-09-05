@@ -90,6 +90,164 @@ final class Integrity
     }
 
     /**
+     * Confirm an API response is the exact expired Checkout Session expected.
+     *
+     * @param array<string,mixed> $response
+     */
+    public static function checkout_session_is_expired(array $response, string $session_id, bool $live): bool
+    {
+        return self::checkout_session_status($response, $session_id, $live) === 'expired';
+    }
+
+    /** @param array<string,mixed> $response */
+    public static function checkout_session_status(array $response, string $session_id, bool $live): ?string
+    {
+        $data = $response['data'] ?? null;
+        $attributes = is_array($data) ? ($data['attributes'] ?? null) : null;
+        if (!is_array($data)
+            || !is_array($attributes)
+            || ($data['type'] ?? '') !== 'checkout_session'
+            || !self::valid_id($session_id, 'cs_')
+            || !hash_equals($session_id, (string) ($data['id'] ?? ''))
+            || !is_bool($attributes['livemode'] ?? null)) {
+            return null;
+        }
+
+        $status = (string) ($attributes['status'] ?? '');
+        if ($attributes['livemode'] !== $live || !in_array($status, array('active', 'expired'), true)) {
+            return null;
+        }
+
+        return $status;
+    }
+
+    /**
+     * Return the strictly identified paid payments on an authenticated
+     * Checkout Session readback. A null result means the response is not safe
+     * to use for a payment or expiration decision.
+     *
+     * @param array<string,mixed> $response
+     * @return array<int,string>|null
+     */
+    public static function checkout_session_paid_payment_ids(
+        array $response,
+        string $session_id,
+        bool $live
+    ): ?array {
+        $state = self::checkout_session_payment_state($response, $session_id, $live);
+        return is_array($state) ? $state['paid'] : null;
+    }
+
+    /**
+     * Validate every Payment identity, status, and mode before any caller can
+     * classify a Checkout Session as safely unpaid.
+     *
+     * @param array<string,mixed> $response
+     * @return array{paid:array<int,string>,pending:array<int,string>,failed:array<int,string>}|null
+     */
+    public static function checkout_session_payment_state(
+        array $response,
+        string $session_id,
+        bool $live
+    ): ?array {
+        if (self::checkout_session_status($response, $session_id, $live) === null) {
+            return null;
+        }
+
+        $data = $response['data'] ?? null;
+        $attributes = is_array($data) ? ($data['attributes'] ?? null) : null;
+        $payments = is_array($attributes) ? ($attributes['payments'] ?? null) : null;
+        if (!is_array($payments) || !array_is_list($payments)) {
+            return null;
+        }
+
+        $state = array('paid' => array(), 'pending' => array(), 'failed' => array());
+        $seen = array();
+        foreach ($payments as $payment) {
+            if (!is_array($payment)) {
+                return null;
+            }
+            $payment_attributes = $payment['attributes'] ?? null;
+            if (!is_array($payment_attributes)) {
+                return null;
+            }
+
+            $payment_id = (string) ($payment['id'] ?? '');
+            $status = $payment_attributes['status'] ?? null;
+            if (($payment['type'] ?? '') !== 'payment'
+                || !self::valid_id($payment_id, 'pay_')
+                || isset($seen[$payment_id])
+                || !is_string($status)
+                || !in_array($status, array('pending', 'failed', 'paid'), true)
+                || !is_bool($payment_attributes['livemode'] ?? null)
+                || $payment_attributes['livemode'] !== $live) {
+                return null;
+            }
+            $seen[$payment_id] = true;
+            $state[$status][] = $payment_id;
+        }
+
+        return $state;
+    }
+
+    /**
+     * Decide whether a verified paid event may change the WooCommerce order.
+     */
+    public static function paid_event_disposition(
+        string $current_gateway,
+        string $expected_gateway,
+        bool $is_paid,
+        bool $needs_payment,
+        bool $closed_status,
+        string $existing_transaction,
+        string $incoming_transaction,
+        bool $attempt_expired
+    ): string {
+        if ($current_gateway === $expected_gateway
+            && $is_paid
+            && $existing_transaction !== ''
+            && hash_equals($incoming_transaction, $existing_transaction)) {
+            return 'duplicate';
+        }
+
+        if ($current_gateway !== $expected_gateway
+            || ($existing_transaction !== '' && !hash_equals($incoming_transaction, $existing_transaction))
+            || $is_paid
+            || !$needs_payment
+            || $closed_status
+            || $attempt_expired) {
+            return 'quarantine';
+        }
+
+        return 'apply';
+    }
+
+    /**
+     * Require both WooCommerce's return value and a persisted exact readback.
+     */
+    public static function payment_completion_verified(
+        $completion_result,
+        bool $is_paid,
+        string $expected_transaction,
+        string $actual_transaction
+    ): bool {
+        return $completion_result === true
+            && $is_paid
+            && $expected_transaction !== ''
+            && hash_equals($expected_transaction, $actual_transaction);
+    }
+
+    /**
+     * Preserve B Active's existing COD policy when restarting a PayMongo order.
+     */
+    public static function cod_transition_is_valid(int $product_total, int $cod_fee): bool
+    {
+        return $product_total >= 0
+            && $product_total <= 250000
+            && $cod_fee === 5000;
+    }
+
+    /**
      * Validate a PayMongo signature and reject stale/future replays.
      *
      * @return array{ok:bool,code:string,timestamp?:int}
@@ -193,49 +351,45 @@ final class Integrity
             return self::failure('metadata_mismatch');
         }
 
-        $payments = $session_attributes['payments'] ?? null;
-        if (!is_array($payments)) {
-            return self::failure('payments_missing');
+        $payment_state = self::checkout_session_payment_state(
+            array('data' => $session),
+            $session_id,
+            (bool) $context['live']
+        );
+        if ($payment_state === null) {
+            return self::failure('payment_collection_invalid');
         }
-
-        $qualifying = array();
-        foreach ($payments as $payment) {
-            if (!is_array($payment) || ($payment['type'] ?? 'payment') !== 'payment') {
-                continue;
-            }
-
-            $payment_id = (string) ($payment['id'] ?? '');
-            $attributes = $payment['attributes'] ?? null;
-            if (!self::valid_id($payment_id, 'pay_') || !is_array($attributes) || ($attributes['status'] ?? '') !== 'paid') {
-                continue;
-            }
-            if (($attributes['currency'] ?? '') !== 'PHP' || !is_int($attributes['amount'] ?? null)) {
-                continue;
-            }
-            if (array_key_exists('livemode', $attributes)
-                && (!is_bool($attributes['livemode']) || $attributes['livemode'] !== $context['live'])) {
-                continue;
-            }
-
-            $method = self::payment_method($attributes['source'] ?? null);
-            if ($method === null) {
-                continue;
-            }
-
-            $qualifying[] = array(
-                'payment_id' => $payment_id,
-                'amount' => $attributes['amount'],
-                'method' => $method['method'],
-                'provider' => $method['provider'],
-            );
+        if ($payment_state['pending'] !== array()) {
+            return self::failure('payment_pending_conflict');
         }
-
-        if (count($qualifying) !== 1) {
+        if (count($payment_state['paid']) !== 1) {
             return self::failure('paid_payment_count_invalid');
         }
 
-        $payment = $qualifying[0];
-        if ($payment['amount'] !== $context['amount']) {
+        $payment_id = $payment_state['paid'][0];
+        $payment = null;
+        foreach ((array) ($session_attributes['payments'] ?? array()) as $candidate) {
+            if (is_array($candidate) && (string) ($candidate['id'] ?? '') === $payment_id) {
+                $payment = $candidate;
+                break;
+            }
+        }
+        $attributes = is_array($payment) ? ($payment['attributes'] ?? null) : null;
+        if (!is_array($attributes)) {
+            return self::failure('payment_shape_invalid');
+        }
+        if (($attributes['currency'] ?? '') !== 'PHP' || !is_int($attributes['amount'] ?? null)) {
+            return self::failure('payment_amount_invalid');
+        }
+        if (!is_bool($attributes['livemode'] ?? null)
+            || $attributes['livemode'] !== $context['live']) {
+            return self::failure('payment_mode_mismatch');
+        }
+        $method = self::payment_method($attributes['source'] ?? null);
+        if ($method === null) {
+            return self::failure('payment_method_invalid');
+        }
+        if ($attributes['amount'] !== $context['amount']) {
             return self::failure('amount_mismatch');
         }
 
@@ -244,10 +398,10 @@ final class Integrity
             'code' => 'ok',
             'event_id' => $event_id,
             'session_id' => $session_id,
-            'payment_id' => $payment['payment_id'],
-            'method' => $payment['method'],
-            'provider' => $payment['provider'],
-            'amount' => $payment['amount'],
+            'payment_id' => $payment_id,
+            'method' => $method['method'],
+            'provider' => $method['provider'],
+            'amount' => $attributes['amount'],
         );
     }
 
@@ -304,9 +458,6 @@ final class Integrity
             $candidate = strtolower((string) $candidate);
             if (in_array($candidate, array('bpi', 'ubp'), true)) {
                 return $candidate;
-            }
-            if (str_contains($candidate, 'union')) {
-                return 'ubp';
             }
         }
 

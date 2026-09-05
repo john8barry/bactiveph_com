@@ -3,6 +3,8 @@
 Work record: [issue #5](https://github.com/john8barry/bactiveph_com/issues/5).
 Dependencies: payment activation [#2](https://github.com/john8barry/bactiveph_com/issues/2), business identity [#3](https://github.com/john8barry/bactiveph_com/issues/3).
 
+The availability-based logo visibility below describes the original v1 release. The user's subsequent request supersedes that display rule; see the [v2 payment-mark follow-up](2026-09-04-payment-marks-visible.md). V2 is not deployed yet.
+
 ## Customer behavior
 
 - Shipping partners are J&T Express and LBC Express. FAQ and product shipping-tab copy match.

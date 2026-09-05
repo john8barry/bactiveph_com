@@ -5619,6 +5619,14 @@ same(0, $fake_hook_calls['woocommerce_order_status_changed'] ?? 0, 'cancel opera
 require __DIR__ . '/recovery-boundaries.php';
 
 if ($failures !== array()) {
+    // Synthetic fixtures only. Surface failures in the check API as well as
+    // downloadable logs so a failed release gate is independently diagnosable.
+    if (getenv('GITHUB_ACTIONS') === 'true') {
+        foreach ($failures as $failure) {
+            $annotation = str_replace(array('%', "\r", "\n"), array('%25', '%0D', '%0A'), $failure);
+            fwrite(STDERR, "::error title=PayMongo contract assertion::{$annotation}\n");
+        }
+    }
     fwrite(STDERR, "FAILED {$tests} checks:\n- " . implode("\n- ", $failures) . "\n");
     exit(1);
 }

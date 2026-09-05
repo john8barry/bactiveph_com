@@ -132,6 +132,7 @@ shipping, tax and COD policy were not changed.
 | BPI authorization | 375 | PHP 640 | Provider rejected the account before payment initiation |
 | UBP authorization | 376 | PHP 640 | Provider rejected the account before payment initiation |
 | ShopeePay decline | 374 | PHP 640 | Failed Payment; Payment Intent still processing; Woo remains pending |
+| Anonymous COD checkout | 379 | PHP 590 | Normal browser order; one fee; stock 18 to 17; no online transaction or paid timestamp |
 
 These were backend-issued manager test orders completed using the actual hosted
 provider screens. They establish hosted settlement and payment correlation;
@@ -183,7 +184,8 @@ to Metro Manila displayed PHP 790 with PHP 180 delivery and the same single fee.
 A product-restricted PHP 100 staging coupon reduced that total to PHP 690 and
 included VAT from PHP 60 to PHP 49.29. No production coupon was created.
 
-Mobile testing exposed two additional checkout defects, now fixed on staging:
+Mobile testing exposed two additional checkout defects, validated on staging
+and subsequently deployed as a narrow production theme update:
 
 - Blocksy renders mobile and desktop quantity inputs with the same form name.
   Keyboard entry into the mobile control left the later hidden desktop control
@@ -214,6 +216,89 @@ PHP readback is SHA-256
 this supersedes the earlier fee-tax correction's hash. Both exact prior files
 have private server and off-server recovery copies. These theme fixes do not
 change the gateway package or complete payment acceptance.
+
+The normal anonymous staging checkout then created COD order 379 for PHP 590:
+PHP 560 product, PHP 100 gross coupon discount, PHP 80 Davao delivery, one
+nontaxable PHP 50 fee and PHP 49.29 included VAT. Independent WooCommerce
+readback confirmed `created_via=checkout`, guest customer ID zero, Processing,
+empty transaction ID, no paid timestamp, stock 18 to 17 and coupon usage zero
+to one. The synthetic order is explicitly marked DO NOT FULFILL. This proves
+ordinary guest COD ordering, not inbox delivery or an online payment.
+
+## Narrow production theme release
+
+Commit `405f925340f7588e0610e6ec9ed3b4bbb345f79a` passed all four checks in
+[CI run 33965083789](https://github.com/john8barry/bactiveph_com/actions/runs/33965083789).
+Only these two runtime files were deployed, using the staged and independently
+reviewed changes:
+
+| Production file | Deployed SHA-256 |
+| --- | --- |
+| Child theme `assets/js/custom.js` | `d503b720a567fda83fbf8f72b89de3efa82c8b431483fa75f048030e4c3984f1` |
+| Child theme `functions.php` | `949a12f435e8ce6efec5b8301465f80017143e3cb410ef920eedb5d893383b56` |
+
+Each upload checked its exact old hash immediately before atomic replacement.
+Original bytes are verified off-server and in a private server recovery
+directory outside the webroot. A new SFTP connection verified each new hash;
+the versioned JavaScript URL returned the same bytes with HTTP 200. PHP lint
+and an independent WordPress reflection check verified the fee guard and
+preserved nontaxable fee. No cache-wide purge was needed.
+
+Before/after readback confirms unchanged WordPress configuration, `.htaccess`,
+child stylesheet and footer, active-plugin list, shipping/tax/COD settings,
+database identity, latest production order 520 and variation 52 stock of two.
+The production error log is unchanged; no debug log appeared. The new gateway
+directory and settings remain absent. This is a two-file deployment from PR
+#4, not deployment of the whole branch or gateway. Main remains
+`f5f6c043a96b35df331a7c004f59fd0da29bc625`.
+
+Anonymous Chrome verification passed: ordinary selection of The Rally Dress,
+large/mocha, added variation 52 at quantity one. At width 390 both quantity
+controls changed to two using keyboard input. The normal cart update POST
+returned HTTP 200 and the server cart displayed PHP 4,500. Desktop reload
+retained quantity two. The test item was then removed and the cart verified
+empty, matching its initial state. No production order or payment was submitted.
+An earlier in-app browser attempt did not send an observed add-to-cart request;
+the successful independent Chrome path resolves that verification ambiguity
+without another source change.
+
+To roll back this narrow release, first verify the two deployed hashes above,
+then restore only the corresponding private pre-change files by atomic SFTP
+replacement. Verify old JavaScript hash
+`fa339b4ca6691e841a29744dc4fa8beebcdd3f51d9d86cf39cc7010693b39f81`
+and old PHP hash
+`9841e5b63cf6fd67028d306faa839000716345334390ab9ee0d2c9b16053e6ab`,
+PHP lint, the versioned public asset and storefront health. This rollback does
+not change payment runtime, configuration, orders, stock or the database.
+
+## Remaining launch controls
+
+### Recovery scheduling repair
+
+Read-only staging inspection found that one pending job for order 374 prevented
+orders 376, 377 and 378 from receiving recovery jobs. Discovery itself returned
+all six tracked payment orders in 0.0029 seconds. Paid orders 377/378 had completed
+effects and no unresolved condition, but their cleanup markers remained because
+they had not received a recovery action.
+
+The runtime requested `unique=true` for a shared Action Scheduler hook/group.
+The deployed database store applies that uniqueness across all order arguments.
+The repair keeps the existing exact-order check, creates jobs without the
+cross-order uniqueness flag, and falls back to per-order WP-Cron when an enqueue
+returns zero. Existing order locks and effect idempotency remain in force.
+
+The first expanded local test exposed another evidence gap: a fresh WooCommerce
+fixture was still using its transitional queue store, whose uniqueness rule
+differs. The runner now completes the supported migration only in its disposable
+database and asserts the actual `ActionScheduler_DBStore`. Against that store,
+the old code failed when scheduling a second order. The repaired code passes
+75 HPOS and 48 CPT checks, including three independent queued orders, repeated
+same-order scheduling and both initial/retry zero-return fallbacks. All 1,075
+contract checks pass under PHP 8.1, 8.2 and 8.3. Independent review approved
+reconciler SHA-256
+`a3bd0b713482e3bf234e3b28fa718bb462b5de2b70f31d73f92399020a18b63e`.
+The current CI run and staging replacement/readback are the next gates;
+production gateway activation remains held.
 
 Staging customer and merchant notification routing was aligned to the store's
 public inbox, with exact prior option values retained privately. This is routing

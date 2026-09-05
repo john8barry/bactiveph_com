@@ -133,7 +133,10 @@ never retry an uncertain webhook creation or credential mutation blindly.
    This uses a disposable local database with synthetic orders, no published
    ports, and an internal Docker network. It verifies first settings save,
    every recovery marker, single-join HPOS discovery, CPT translation,
-   pagination, and database-error handling. Its provider responses are fixtures;
+   pagination, database-error handling, and independent per-order recovery
+   jobs in the actual Action Scheduler database store. The disposable runner
+   completes its own queue-store migration before testing; do not run that
+   fixture or its migration against either real site. Its provider responses are fixtures;
    it does not replace the actual sandbox transaction matrix below.
 4. Scan the complete diff and package for secrets, unexpected binaries,
    generated artifacts, and dependencies. This plugin has no third-party runtime
@@ -146,6 +149,11 @@ never retry an uncertain webhook creation or credential mutation blindly.
 6. Confirm WP-Cron is enabled or a real server cron invokes `wp-cron.php`, and
    Action Scheduler has no failed `bactive-paymongo` actions. Run one due
    reconciliation action and read back its completion before issuing a session.
+   Verify that different outstanding orders each have a queued recovery job;
+   one successful action or an empty failed-action count is insufficient.
+   A completed payment's reconciliation marker must clear without repeating
+   stock, fulfillment, email or payment effects. Page-triggered WP-Cron alone
+   does not prove unattended timing on a quiet or cached site.
 7. Keep **Private verification / Restrict PayMongo checkout to store managers**
    enabled (the default). Only `manage_woocommerce` or `manage_options` users
    may issue payments until the live canary passes. This restriction is checked

@@ -106,6 +106,9 @@ try:
         wp('core', 'install', '--url=https://bactive-payment-integration.invalid', '--title=Disposable payment fixture',
            '--admin_user=fixture', '--admin_password=' + root_password, '--admin_email=fixture@example.invalid', '--skip-email')
         wp('plugin', 'activate', 'woocommerce')
+        # Match the deployed Action Scheduler database store. A fresh install's
+        # hybrid migration store uses different action-uniqueness semantics.
+        wp('action-scheduler', 'migrate', '--batch-size=100')
         wp('option', 'update', 'woocommerce_currency', 'PHP')
         wp('option', 'update', 'woocommerce_custom_orders_table_enabled', 'yes' if store == 'hpos' else 'no')
         wp('plugin', 'activate', 'bactive-paymongo-hosted-checkout')

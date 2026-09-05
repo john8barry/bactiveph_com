@@ -60,5 +60,5 @@ jobs:
       - name: Pull pinned WordPress CLI runtime
         run: docker pull wordpress:cli-php8.2@sha256:837d55d02196b5f4c92d236317c6d089ab1471348b31d1708888d444a0390979
 
-      - name: Test first settings save and recovery discovery in HPOS and CPT
+      - name: Test settings, discovery and recovery scheduling in HPOS and CPT
         run: python3 wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout/tests/run-datastore-integration.py

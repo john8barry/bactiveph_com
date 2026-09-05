@@ -58,6 +58,8 @@ The fixture uses no real credentials, customer records, or provider payments.
 == Changelog ==
 
 = 1.0.0 =
+* Queue recovery independently for every order, with exact-order deduplication
+  and WP-Cron fallback when Action Scheduler cannot store a job.
 * Keep payment recovery discovery to one HPOS metadata join, translate CPT
   queries through its supported datastore hook, and reject database scan errors.
 * Default PayMongo issuance to manager-only verification, including direct

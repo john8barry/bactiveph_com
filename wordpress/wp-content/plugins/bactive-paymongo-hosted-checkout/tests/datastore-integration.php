@@ -109,6 +109,61 @@ Reconciler::run();
 $assert(wp_next_scheduled(Reconciler::CRON_HOOK) !== false, 'Recurring recovery schedule missing.');
 $assert(get_option('bactive_paymongo_reconcile_scan_failed', false) === false, 'Empty recovery scan failed.');
 
+// Use WooCommerce's real Action Scheduler store: its database uniqueness rule
+// can cover a shared hook/group even when the order arguments differ.
+$assert(function_exists('as_has_scheduled_action') && function_exists('as_schedule_single_action'),
+    'Real Action Scheduler APIs must be available.');
+$assert(get_class(ActionScheduler::store()) === ActionScheduler_DBStore::class,
+    'Recovery scheduling must exercise the deployed Action Scheduler database store.');
+$scheduled_orders = array();
+for ($i = 0; $i < 3; ++$i) {
+    $scheduled = wc_create_order(array('created_via' => 'disposable-paymongo-integration'));
+    $scheduled_orders[] = $scheduled->get_id();
+    Reconciler::schedule_order($scheduled->get_id());
+    $assert(as_has_scheduled_action(Reconciler::ORDER_HOOK, array($scheduled->get_id()), 'bactive-paymongo'),
+        'A pending recovery action for another order suppressed this order.');
+}
+foreach ($scheduled_orders as $scheduled_id) {
+    Reconciler::schedule_order($scheduled_id);
+    $actions = as_get_scheduled_actions(array('hook' => Reconciler::ORDER_HOOK,
+        'args' => array($scheduled_id), 'group' => 'bactive-paymongo',
+        'status' => ActionScheduler_Store::STATUS_PENDING, 'per_page' => 10), 'ids');
+    $assert(count($actions) === 1, 'Sequential scheduling duplicated the same order.');
+}
+$assert(count(as_get_scheduled_actions(array('hook' => Reconciler::ORDER_HOOK,
+    'group' => 'bactive-paymongo', 'status' => ActionScheduler_Store::STATUS_PENDING,
+    'per_page' => 10), 'ids')) === 3, 'Recovery did not retain one action per order.');
+foreach ($scheduled_orders as $scheduled_id) {
+    as_unschedule_all_actions(Reconciler::ORDER_HOOK, array($scheduled_id), 'bactive-paymongo');
+}
+
+// A zero action ID is a failed enqueue, not evidence that recovery is queued.
+$failed_enqueue = static fn() => 0;
+add_filter('pre_as_schedule_single_action', $failed_enqueue);
+try {
+    $fallback_order = wc_create_order(array('created_via' => 'disposable-paymongo-integration'));
+    $fallback_args = array($fallback_order->get_id());
+    Reconciler::schedule_order($fallback_order->get_id());
+    $fallback_time = wp_next_scheduled(Reconciler::ORDER_HOOK, $fallback_args);
+    $assert(is_int($fallback_time) && $fallback_time >= time() + 290,
+        'Failed initial enqueue lost per-order WP-Cron recovery.');
+    Reconciler::schedule_order($fallback_order->get_id());
+    $assert(wp_next_scheduled(Reconciler::ORDER_HOOK, $fallback_args) === $fallback_time,
+        'Repeated enqueue failure replaced the existing fallback.');
+    wp_clear_scheduled_hook(Reconciler::ORDER_HOOK, $fallback_args);
+    $next_order = new ReflectionMethod(Reconciler::class, 'schedule_next_order');
+    $next_order->setAccessible(true);
+    $next_order->invoke(null, $fallback_order->get_id(), 900);
+    $fallback_time = wp_next_scheduled(Reconciler::ORDER_HOOK, $fallback_args);
+    $assert(is_int($fallback_time) && $fallback_time >= time() + 890,
+        'Failed retry enqueue lost its bounded WP-Cron delay.');
+    $assert(!as_has_scheduled_action(Reconciler::ORDER_HOOK, $fallback_args, 'bactive-paymongo'),
+        'Failed enqueue fixture unexpectedly stored an Action Scheduler job.');
+    wp_clear_scheduled_hook(Reconciler::ORDER_HOOK, $fallback_args);
+} finally {
+    remove_filter('pre_as_schedule_single_action', $failed_enqueue);
+}
+
 $meta = new ReflectionMethod(Reconciler::class, 'source_meta_query');
 $meta->setAccessible(true);
 $keys = $meta->invoke(null)[0]['key'];
@@ -154,5 +209,6 @@ try {
     $wpdb->suppress_errors($previous_suppression);
 }
 echo wp_json_encode(array('datastore' => $expected_hpos ? 'hpos' : 'cpt', 'checks' => $checks,
+    'action_scheduler_store' => get_class(ActionScheduler::store()),
     'first_settings_save_seconds' => round($elapsed, 3), 'payment_candidates' => count($actual),
     'max_hpos_metadata_joins' => $max_metadata_joins, 'unsupported_query_notices' => count($unsupported_notices))) . "\n";

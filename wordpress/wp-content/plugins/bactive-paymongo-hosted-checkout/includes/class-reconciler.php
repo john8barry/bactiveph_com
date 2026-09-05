@@ -121,16 +121,23 @@ final class Reconciler
         $args = array($order_id);
         if (function_exists('as_has_scheduled_action')
             && function_exists('as_schedule_single_action')) {
-            if (!as_has_scheduled_action(self::ORDER_HOOK, $args, self::ACTION_GROUP)) {
-                as_schedule_single_action(
-                    time() + 300,
-                    self::ORDER_HOOK,
-                    $args,
-                    self::ACTION_GROUP,
-                    true
-                );
+            if (as_has_scheduled_action(self::ORDER_HOOK, $args, self::ACTION_GROUP)) {
+                return;
             }
-            return;
+            // Action Scheduler's database uniqueness covers the shared hook
+            // and group, not these order arguments. Keep the exact-order
+            // precheck above; order locks make concurrent duplicate jobs safe.
+            $action_id = as_schedule_single_action(
+                time() + 300,
+                self::ORDER_HOOK,
+                $args,
+                self::ACTION_GROUP,
+                false
+            );
+            if ($action_id > 0) {
+                return;
+            }
+            // A failed enqueue must retain the per-order WP-Cron fallback.
         }
 
         if (!wp_next_scheduled(self::ORDER_HOOK, $args)) {
@@ -1005,14 +1012,16 @@ final class Reconciler
         $args = array($order_id);
         $delay = max(300, min(3600, $delay));
         if (function_exists('as_schedule_single_action')) {
-            as_schedule_single_action(
+            $action_id = as_schedule_single_action(
                 time() + $delay,
                 self::ORDER_HOOK,
                 $args,
                 self::ACTION_GROUP,
                 false
             );
-            return;
+            if ($action_id > 0) {
+                return;
+            }
         }
         wp_schedule_single_event(time() + $delay, self::ORDER_HOOK, $args);
     }

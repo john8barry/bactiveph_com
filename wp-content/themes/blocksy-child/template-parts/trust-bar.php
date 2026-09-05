@@ -32,6 +32,14 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         border-top: 1px solid var(--bactive-greige, #e5e5e5);
         color: var(--bactive-stone, #686a63);
     }
+    .bactive-custom-footer .bactive-trust__shipping {
+        display: flex;
+        min-width: 0;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
     .bactive-custom-footer .bactive-trust__group {
         display: flex;
         min-width: 0;
@@ -107,6 +115,10 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         max-width: 88px;
         max-height: 24px;
     }
+    .bactive-custom-footer .bactive-trust__badge--grab img {
+        max-width: 104px;
+        max-height: 26px;
+    }
     .bactive-custom-footer .bactive-trust__badge--lbc img {
         max-width: 24px;
         max-height: 24px;
@@ -137,26 +149,39 @@ $bactive_theme_url = get_stylesheet_directory_uri();
             align-items: start;
             column-gap: 64px;
         }
+        .bactive-custom-footer .bactive-trust__shipping { justify-content: flex-start; }
         .bactive-custom-footer .bactive-trust__group--shipping { align-items: flex-start; }
         .bactive-custom-footer .bactive-trust__group--payments { align-items: flex-end; }
     }
 </style>
-<div class="bactive-trust" data-bactive-trust-version="2026-09-05-v3">
-    <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
-        <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>
-        <ul class="bactive-trust__list" role="list">
-            <li>
-                <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--jt" href="https://www.jtexpress.ph/track-and-trace" target="_blank" rel="noopener noreferrer" aria-label="Track a shipment with J&T Express (opens in a new tab)">
-                    <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/jtexpress.svg'); ?>" width="124" height="39" alt="" loading="lazy" decoding="async" />
-                </a>
-            </li>
-            <li>
-                <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--lbc" href="https://www.lbcexpress.com/ph/track" target="_blank" rel="noopener noreferrer" aria-label="Track a shipment with LBC Express (opens in a new tab)">
-                    <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/lbc-express.png'); ?>" width="250" height="224" alt="" loading="lazy" decoding="async" />
-                    <span>LBC Express</span>
-                </a>
-            </li>
-        </ul>
+<div class="bactive-trust" data-bactive-trust-version="2026-09-05-v4">
+    <div class="bactive-trust__shipping">
+        <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
+            <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>
+            <ul class="bactive-trust__list" role="list">
+                <li>
+                    <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--jt" href="https://www.jtexpress.ph/track-and-trace" target="_blank" rel="noopener noreferrer" aria-label="Track a shipment with J&T Express (opens in a new tab)">
+                        <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/jtexpress.svg'); ?>" width="124" height="39" alt="" loading="lazy" decoding="async" />
+                    </a>
+                </li>
+                <li>
+                    <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--lbc" href="https://www.lbcexpress.com/ph/track" target="_blank" rel="noopener noreferrer" aria-label="Track a shipment with LBC Express (opens in a new tab)">
+                        <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/lbc-express.png'); ?>" width="250" height="224" alt="" loading="lazy" decoding="async" />
+                        <span>LBC Express</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-local-shipping-label">
+            <span class="bactive-trust__label" id="bactive-local-shipping-label">Davao City only</span>
+            <ul class="bactive-trust__list" role="list">
+                <li>
+                    <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--grab" href="https://www.grab.com/ph/express/" target="_blank" rel="noopener noreferrer" aria-label="GrabExpress delivery within Davao City only (opens in a new tab)">
+                        <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/grabexpress.png'); ?>" width="2868" height="800" alt="" loading="lazy" decoding="async" />
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="bactive-trust__group bactive-trust__group--payments" role="group" aria-labelledby="bactive-payments-label">
         <span class="bactive-trust__label" id="bactive-payments-label">Payment options</span>

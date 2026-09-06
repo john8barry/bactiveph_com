@@ -116,7 +116,7 @@ function bactive_fabric_care_tab_content() {
 	echo '<h2>Fabric & Care</h2>';
 	echo '<p><strong>CourtSoft™</strong><br>Our signature four-way-stretch knit: buttery-soft, squat-proof, sweat-wicking and built to hold its shape.</p>';
 	echo '<p><strong>BreezeKnit™</strong><br>Lightweight and breathable for hot-court days. It moves air, moves sweat, and keeps you cool.</p>';
-	echo '<p><strong>Care basics</strong><br>Machine wash cold on gentle with like colours. Skip the fabric softener (it coats performance fibres). Hang dry or tumble low. Don\'t bleach or iron print.</p>';
+	echo '<p><strong>Care basics</strong><br>Gentle hand wash only. Wash in cold water with like colours, then hang to dry. Do not machine wash, tumble dry, use fabric softener, bleach, or iron.</p>';
 }
 
 /**

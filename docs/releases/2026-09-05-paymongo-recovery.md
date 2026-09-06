@@ -578,3 +578,43 @@ with the temporary QA account revoked and recovery processing retained. The
 fresh staging full backup was independently verified off-server. Production
 PayMongo activation, bank acceptance, the five approved live payments, refund,
 intended-inbox confirmation and public checkout acceptance remain incomplete.
+
+
+## September 6 verified staging candidate installation
+
+Staging now runs the reviewed eleven-file package from
+`16c456b53ef9a955e1a1eedbddff2b74211e32bd`, SHA256
+`31e6c460a99d9f2f504be1bbc16185556c3fec06a18efd445f40d078e4577498`.
+All five GitHub checks and the independent source/package checks passed before
+installation. Production payment activation remains pending.
+
+The deployment watchdog stopped after the seven changed PHP files had verified
+readback. Staging remained in owned maintenance. A temporary CLI verification
+hook was corrected to use an inline closure during early WordPress bootstrap.
+Independent readback established the precise partial state before a separate
+one-shot completion installed the remaining README and verified all eleven files.
+The deployment was not blindly replayed.
+
+During the released worker interval, held order 374 advanced its recovery poll
+count from 17 to 18 and its modification time. Reconstructing the original
+full-table fingerprints proved that every other order and metadata field was
+preserved. Settings, credentials, payment/effect records, stock, notes, account
+access and protected source files matched their expected fingerprints. The
+verified completion removed maintenance and released all deployment connections.
+
+Anonymous staging cart and production homepage requests returned HTTP 200.
+An unsigned staging callback returned HTTP 401 with `signature_rejected`.
+Staging cart and callback responses were dynamic and uncached without an
+authentication challenge. The existing staging payment worker completed its
+14:08 and 14:09 UTC cycles successfully after release. This does not prove a new
+provider payment or public production checkout acceptance.
+
+Private recovery records retain the full backup, exact previous runtime copies,
+source/package checksums, deployment journals, fingerprint reconciliation proof,
+and a reviewed code-only rollback entry point. The rollback preserves all current
+order data and credentials. Never rerun a spent deployment or continuation intent.
+
+The remaining gates are merchant sign-in/MFA, actual BPI/UBP authorization,
+resolution of held provider state, active/changed-cart integration acceptance,
+intended-inbox confirmation, five approved small live payments, a verified
+eligible provider refund, public checkout activation and its monitoring period.

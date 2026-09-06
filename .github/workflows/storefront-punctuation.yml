@@ -1,0 +1,43 @@
+name: Storefront punctuation
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/storefront-punctuation.yml'
+      - '**/blocksy-child/functions.php'
+      - '**/blocksy-child/inc/storefront-punctuation.php'
+      - 'tools/*storefront*'
+      - 'tests/*storefront*'
+      - 'content/storefront-punctuation-changes.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/storefront-punctuation.yml'
+      - '**/blocksy-child/functions.php'
+      - '**/blocksy-child/inc/storefront-punctuation.php'
+      - 'tools/*storefront*'
+      - 'tests/*storefront*'
+      - 'content/storefront-punctuation-changes.json'
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: PHP syntax and formatting regressions
+        run: |
+          php --version
+          php -l wp-content/themes/blocksy-child/functions.php
+          php -l wp-content/themes/blocksy-child/inc/storefront-punctuation.php
+          php -l tools/apply_storefront_punctuation.php
+          php tests/storefront-punctuation.php
+          php tests/storefront-punctuation-manifest.php
+      - name: Anonymous audit safety and detection
+        run: python3 -m unittest discover -s tests -p 'test_audit_storefront_dashes.py'
+      - name: Source mirrors
+        run: |
+          cmp wp-content/themes/blocksy-child/functions.php wordpress/wp-content/themes/blocksy-child/functions.php
+          cmp wp-content/themes/blocksy-child/inc/storefront-punctuation.php wordpress/wp-content/themes/blocksy-child/inc/storefront-punctuation.php

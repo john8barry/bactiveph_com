@@ -5,9 +5,15 @@ if ( ! defined('WP_CLI') || ! WP_CLI ) { exit(1); }
 function bactive_punctuation_record( $item ) {
     if ( $item['kind'] === 'post' ) {
         $post = get_post($item['id']);
-        if ( ! $post || $post->post_status !== 'publish' || ! in_array($post->post_type, array('post', 'page', 'product'), true)
+        if ( ! $post || $post->post_status !== 'publish' || ! in_array($post->post_type, array('post', 'page', 'product', 'product_variation'), true)
             || $post->post_name !== $item['slug'] || ! current_user_can('edit_post', $post->ID) ) {
             throw new RuntimeException('Post identity or authorization changed');
+        }
+        if ( $post->post_type === 'product_variation' ) {
+            $parent = $post->post_parent > 0 ? get_post($post->post_parent) : null;
+            if ( ! $parent || $parent->post_type !== 'product' || $parent->post_status !== 'publish' ) {
+                throw new RuntimeException('Variation parent is not a published product');
+            }
         }
         $out = array();
         foreach ( $item['fields'] as $key => $change ) {

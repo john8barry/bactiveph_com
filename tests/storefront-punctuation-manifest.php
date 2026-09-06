@@ -12,6 +12,10 @@ function get_stylesheet() { return $GLOBALS['state']['stylesheet']; }
 function get_post($id) {
     return isset($GLOBALS['state']['posts'][$id]) ? (object) $GLOBALS['state']['posts'][$id] : null;
 }
+function get_post_status($id) {
+    $post = get_post($id);
+    return $post ? $post->post_status : false;
+}
 function get_taxonomies($args) { return array('category' => 'category'); }
 function get_taxonomy($name) { return (object) array('cap' => (object) array('edit_terms' => 'manage_categories')); }
 function get_term($id, $taxonomy) {
@@ -105,6 +109,34 @@ check($GLOBALS['state']['writes'][0]['args']['post_content'] === wp_slash($after
 check($GLOBALS['state']['posts'][10]['post_title'] === $original['post_title'], 'Unselected post field changed');
 $result = bactive_apply_punctuation_manifest($plan, 'rollback');
 check($result['complete'] && $GLOBALS['state']['posts'][10] === $original, 'Post rollback did not restore exact bytes');
+
+// Only published variations of published parents qualify as public copy.
+fresh_state();
+seed_post(10, 'Parent content', 'Unused parent replacement');
+$GLOBALS['state']['posts'][10]['post_type'] = 'product';
+$variation = seed_post(11, 'Unchanged variation content', 'Unused variation replacement');
+$GLOBALS['state']['posts'][11]['post_type'] = 'product_variation';
+$GLOBALS['state']['posts'][11]['post_parent'] = 10;
+$GLOBALS['state']['posts'][11]['post_excerpt'] = 'Waist 62–66 cm';
+$variation['fields'] = array('post_excerpt' => field_change('Waist 62–66 cm', 'Waist 62 to 66 cm'));
+$plan = manifest(array($variation));
+$original = $GLOBALS['state']['posts'][11];
+foreach (array('draft', 'private', 'trash') as $parent_status) {
+    $GLOBALS['state']['posts'][10]['post_status'] = $parent_status;
+    rejects_without_writes($plan, 'Non-public variation parent allowed a write: ' . $parent_status);
+}
+$GLOBALS['state']['posts'][10]['post_status'] = 'publish';
+$GLOBALS['state']['posts'][11]['post_parent'] = 999;
+rejects_without_writes($plan, 'Missing variation parent allowed a write');
+$GLOBALS['state']['posts'][11]['post_parent'] = 10;
+$GLOBALS['state']['posts'][11]['post_status'] = 'private';
+rejects_without_writes($plan, 'Non-public variation allowed a write');
+$GLOBALS['state']['posts'][11]['post_status'] = 'publish';
+$result = bactive_apply_punctuation_manifest($plan, 'apply');
+check($result['complete'] && $GLOBALS['state']['posts'][11]['post_excerpt'] === 'Waist 62 to 66 cm', 'Public variation description failed to update');
+check($GLOBALS['state']['posts'][11]['post_content'] === $original['post_content'], 'Variation edit changed an unselected field');
+$result = bactive_apply_punctuation_manifest($plan, 'rollback');
+check($result['complete'] && $GLOBALS['state']['posts'][11] === $original, 'Variation rollback failed to restore exact bytes');
 
 // Term writes also require slashed input; the stub explicitly unslashes like WordPress.
 fresh_state();

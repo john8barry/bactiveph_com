@@ -13,6 +13,12 @@ SPEC.loader.exec_module(audit)
 
 
 class DetectionTests(unittest.TestCase):
+    def test_variation_descriptions_and_json_escapes(self):
+        page = audit.PageParser()
+        page.feed('''<form data-product_variations='[{"variation_description":"Light \\u2014 breathable","price_html":"10 &amp;ndash; 20"}]'></form>''')
+        self.assertEqual(sum(hit["count"] for hit in page.hits), 2)
+        self.assertFalse(page.errors)
+
     def test_entities_attributes_hidden_and_json(self):
         page = audit.PageParser()
         page.feed('''<title>Shop &ndash; B Active</title><meta name="description" content="fit &#8212; fun">

@@ -41,3 +41,13 @@ Restore functions.php first, then remove the include only if no newer code refer
 ## Evidence
 
 Initial planning crawl: 61 URL fetches, 509 occurrences including repeated shared text. Source/hook review passed; ten audit unit tests passed. Production release and full acceptance pending coordinated window.
+
+## Reviewed content and release candidate
+
+Fresh authenticated inventory covered 225 published pages/posts/products/variations and 26 terms. The explicit manifest changes 27 objects with 103 reviewed replacements: privacy3, home14, shipping20, FAQ21, terms24, fabric304, posts309/311/317, 17 product excerpts and blogdescription. No variation or term required a write. Every replacement preserves digits, HTML tags, ordinary hyphens and exact inverse transformation. Independent review corrections were applied before dryrun.
+
+Typography source merged to main7305f76 before its separate runtime release. Production functions still matched949a12f435e8ce6efec5b8301465f80017143e3cb410ef920eedb5d893383b56. This runtime patch applies only punctuation changes to those live bytes, producing0f35633e699ff2868d27f490a0f48a1216d68841dfc8f92fa88fbb435e3051cb. The later typography/header writer must preserve that patch when installing its separately authorized enqueue/assets. Source mirrors include the merged typography enqueue; do not mistake the full merged source file for this bounded runtime payload.
+
+Private PHP8.2 lint and both CLI harnesses passed using the deployed WordPress formatting source. GitHub PHP8.3 checks passed at3483155; final candidate checks follow. Root's production-only window expires2026-09-06T08:13:47Z. Full backup manifest b1552c3fb29b2f31698a3e6402b0c109845fd96fd47a47e03fc192903dd93b80 independently verified locally. Exact snapshots and runtime evidence remain private under canonical tmp/site-dashes-20260906.
+
+Existing published privacy copy still references HitPay and Mailchimp; this punctuation-only pass preserves those substantive claims and routes their reconciliation separately to the payment/marketing owners.

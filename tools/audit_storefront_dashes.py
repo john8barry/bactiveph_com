@@ -139,6 +139,11 @@ class PageParser(HTMLParser):
             self.record("meta@" + attrs.get("name", attrs.get("property", "content")), attrs["content"])
         if tag == "input" and attrs.get("type", "").lower() in {"submit", "button", "reset"}:
             self.record("input@value", attrs.get("value", ""))
+        if attrs.get("data-product_variations"):
+            try:
+                self.hits.extend(json_findings(json.loads(attrs["data-product_variations"]), "product_variations"))
+            except (ValueError, RecursionError):
+                self.errors.append("Malformed product variation JSON; dynamic copy coverage incomplete")
         if attrs.get("style"):
             self.hits.extend(css_findings(attrs["style"], f"{tag}@style:content"))
         if tag in {"script", "style"}:

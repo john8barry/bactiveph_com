@@ -27,10 +27,9 @@
         let point = null;
         let x = 0.18;
         let y = 0.08;
-        let inView = true;
         let disposed = false;
 
-        const enabled = () => !disposed && !document.hidden && inView &&
+        const enabled = () => !disposed && !document.hidden &&
             queries[0].matches && !queries.slice(1).some(query => query.matches);
 
         function reset() {
@@ -83,8 +82,9 @@
         }
 
         const observer = "IntersectionObserver" in window ? new IntersectionObserver(entries => {
-            inView = entries[0].isIntersecting;
-            if (!inView) reset();
+            // Observer notifications can lag pointer input; use them only to stop work.
+            const latest = entries[entries.length - 1];
+            if (latest && !latest.isIntersecting) reset();
         }) : null;
 
         function dispose() {

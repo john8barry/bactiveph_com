@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-06T02:10:29.561611+00:00",
+  "title": "Design System: B Active Sage footer",
+  "extensions": {
+    "colorMeta": {
+      "sage": {
+        "displayName": "Sage",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0433 135.14)",
+          "oklch(26.4% 0.0433 135.14)",
+          "oklch(37.9% 0.0433 135.14)",
+          "oklch(49.3% 0.0433 135.14)",
+          "oklch(60.7% 0.0433 135.14)",
+          "oklch(72.1% 0.0433 135.14)",
+          "oklch(83.6% 0.0433 135.14)",
+          "oklch(95% 0.0433 135.14)"
+        ]
+      },
+      "ivory": {
+        "displayName": "Warm ivory",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0045 78.30)",
+          "oklch(26.4% 0.0045 78.30)",
+          "oklch(37.9% 0.0045 78.30)",
+          "oklch(49.3% 0.0045 78.30)",
+          "oklch(60.7% 0.0045 78.30)",
+          "oklch(72.1% 0.0045 78.30)",
+          "oklch(83.6% 0.0045 78.30)",
+          "oklch(95% 0.0045 78.30)"
+        ]
+      },
+      "ink": {
+        "displayName": "Charcoal ink",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0030 17.35)",
+          "oklch(26.4% 0.0030 17.35)",
+          "oklch(37.9% 0.0030 17.35)",
+          "oklch(49.3% 0.0030 17.35)",
+          "oklch(60.7% 0.0030 17.35)",
+          "oklch(72.1% 0.0030 17.35)",
+          "oklch(83.6% 0.0030 17.35)",
+          "oklch(95% 0.0030 17.35)"
+        ]
+      },
+      "rule": {
+        "displayName": "Warm rule",
+        "role": "neutral",
+        "tonalRamp": [
+          "oklch(15% 0.0161 73.67)",
+          "oklch(26.4% 0.0161 73.67)",
+          "oklch(37.9% 0.0161 73.67)",
+          "oklch(49.3% 0.0161 73.67)",
+          "oklch(60.7% 0.0161 73.67)",
+          "oklch(72.1% 0.0161 73.67)",
+          "oklch(83.6% 0.0161 73.67)",
+          "oklch(95% 0.0161 73.67)"
+        ]
+      },
+      "focus": {
+        "displayName": "Deep green focus",
+        "role": "primary",
+        "tonalRamp": [
+          "oklch(15% 0.0461 140.38)",
+          "oklch(26.4% 0.0461 140.38)",
+          "oklch(37.9% 0.0461 140.38)",
+          "oklch(49.3% 0.0461 140.38)",
+          "oklch(60.7% 0.0461 140.38)",
+          "oklch(72.1% 0.0461 140.38)",
+          "oklch(83.6% 0.0461 140.38)",
+          "oklch(95% 0.0461 140.38)"
+        ]
+      }
+    },
+    "motion": [
+      {
+        "name": "color-state",
+        "value": "160ms ease-out",
+        "purpose": "Link and Join hover; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-desktop",
+        "value": "1439px"
+      },
+      {
+        "name": "stacked-trust",
+        "value": "1279px"
+      },
+      {
+        "name": "tablet",
+        "value": "899px"
+      },
+      {
+        "name": "phone",
+        "value": "599px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Join button",
+      "kind": "button",
+      "refersTo": "join-button",
+      "description": "The dark action segment of the approved signup.",
+      "html": "<button class=\"ds-join\" type=\"button\">Join</button>",
+      "css": ".ds-join{box-sizing:border-box}.ds-join{min-width:104px;min-height:72px;margin:0;padding:18px 24px;border:1px solid #242222;border-radius:0 3px 3px 0;background:#242222;color:#f9f7f4;box-shadow:none;font:500 clamp(16px,1.2vw,20px)/1.3 Inter,sans-serif;letter-spacing:.01em;transform:none;transition:background-color 160ms ease-out}.ds-join:hover{background:#40543c;border-color:#40543c;transform:none}.ds-join:focus-visible{outline:2px solid #40543c;outline-offset:4px}@media(max-width:899px){.ds-join{min-height:60px}}@media(max-width:599px){.ds-join{min-width:92px;min-height:56px;padding:14px 18px}}@media(prefers-reduced-motion:reduce){.ds-join{transition:none}}"
+    },
+    {
+      "name": "Email field",
+      "kind": "input",
+      "refersTo": "email-input",
+      "description": "The ivory input segment of the joined signup, with a visible focus outline.",
+      "html": "<input class=\"ds-email\" type=\"email\" aria-label=\"Email address\" placeholder=\"Email address\" autocomplete=\"email\">",
+      "css": ".ds-email{box-sizing:border-box}.ds-email{height:72px;min-width:0;margin:0;padding:20px 24px;border:1px solid #242222;border-right:0;border-radius:3px 0 0 3px;background:#f9f7f4;color:#242222;box-shadow:none;font:clamp(16px,1.2vw,20px)/1.5 Inter,sans-serif;caret-color:#40543c}.ds-email::placeholder{color:#5d5b58;opacity:1}.ds-email:focus-visible{outline:2px solid #40543c;outline-offset:4px}@media(max-width:899px){.ds-email{height:60px}}@media(max-width:599px){.ds-email{height:56px;padding-inline:16px}}"
+    },
+    {
+      "name": "Footer navigation",
+      "kind": "nav",
+      "description": "Serif section heading with readable list links.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Help\"><h3>Help</h3><ul><li><a href=\"/shipping-returns\">Shipping &amp; Returns</a></li><li><a href=\"/size-guide\">Size Guide</a></li></ul></nav>",
+      "css": ".ds-nav a{box-sizing:border-box}.ds-nav{color:#242222;font:clamp(16px,1.2vw,20px)/1.5 Inter,sans-serif}.ds-nav h3{margin:0 0 12px;color:#242222;font:400 clamp(23px,1.7vw,28px)/1.35 Fraunces,Georgia,serif;letter-spacing:-.02em;text-transform:uppercase;text-wrap:balance}.ds-nav ul{margin:0;padding:0;list-style:none}.ds-nav li{margin:0;padding:0}.ds-nav a{display:block;width:fit-content;max-width:100%;min-height:40px;padding:5px 0;color:#242222;text-decoration:none;text-underline-offset:.22em;transition:color 160ms ease-out}.ds-nav a:hover{color:#40543c;text-decoration:underline}.ds-nav a:focus-visible{outline:2px solid #40543c;outline-offset:4px}@media(max-width:899px){.ds-nav a{min-height:44px;padding-block:10px}}@media(prefers-reduced-motion:reduce){.ds-nav a{transition:none}}"
+    },
+    {
+      "name": "Contact link",
+      "kind": "custom",
+      "description": "Decorative outline icon beside the existing public contact.",
+      "html": "<a class=\"ds-contact\" href=\"mailto:hello@bactiveph.com\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2.5\" y=\"4.5\" width=\"19\" height=\"15\" rx=\"2\"/><path d=\"m3 5 9 7 9-7\"/></svg><span>hello@bactiveph.com</span></a>",
+      "css": ".ds-contact{display:flex;align-items:center;gap:14px;min-height:44px;width:fit-content;max-width:100%;color:#242222;font:clamp(16px,1.2vw,20px)/1.5 Inter,sans-serif;text-decoration:none;text-underline-offset:.22em;overflow-wrap:anywhere;transition:color 160ms ease-out}.ds-contact svg{width:24px;height:24px;flex:0 0 24px}.ds-contact:hover{color:#40543c;text-decoration:underline}.ds-contact:focus-visible{outline:2px solid #40543c;outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-contact{transition:none}}"
+    },
+    {
+      "name": "Joined email control",
+      "kind": "custom",
+      "description": "The contiguous email field and Join segment; this specimen does not submit.",
+      "html": "<div class=\"ds-form\"><input class=\"ds-email\" type=\"email\" aria-label=\"Email address\" placeholder=\"Email address\"><button class=\"ds-join\" type=\"button\">Join</button></div>",
+      "css": ".ds-form .ds-email,.ds-form .ds-join{box-sizing:border-box}.ds-join{min-width:104px;min-height:72px;margin:0;padding:18px 24px;border:1px solid #242222;border-radius:0 3px 3px 0;background:#242222;color:#f9f7f4;box-shadow:none;font:500 clamp(16px,1.2vw,20px)/1.3 Inter,sans-serif;letter-spacing:.01em;transform:none;transition:background-color 160ms ease-out}.ds-join:hover{background:#40543c;border-color:#40543c;transform:none}.ds-join:focus-visible{outline:2px solid #40543c;outline-offset:4px}@media(max-width:899px){.ds-join{min-height:60px}}@media(max-width:599px){.ds-join{min-width:92px;min-height:56px;padding:14px 18px}}@media(prefers-reduced-motion:reduce){.ds-join{transition:none}}.ds-email{height:72px;min-width:0;margin:0;padding:20px 24px;border:1px solid #242222;border-right:0;border-radius:3px 0 0 3px;background:#f9f7f4;color:#242222;box-shadow:none;font:clamp(16px,1.2vw,20px)/1.5 Inter,sans-serif;caret-color:#40543c}.ds-email::placeholder{color:#5d5b58;opacity:1}.ds-email:focus-visible{outline:2px solid #40543c;outline-offset:4px}@media(max-width:899px){.ds-email{height:60px}}@media(max-width:599px){.ds-email{height:56px;padding-inline:16px}}.ds-form{display:flex;width:100%;min-width:0;margin:0;align-items:stretch}.ds-form .ds-email{flex:1 1 0;width:0}.ds-form .ds-join{flex:0 0 25%}@media(max-width:899px){.ds-form{max-width:610px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Sage welcome",
+    "overview": "The user-approved footer has a welcoming sage invitation above a warm ivory body. Generous space and serif headings separate the signup, store information, delivery, payments, and legal text without enclosing every group in a card.\n\nThis guide records the implemented footer only. It is not a replacement for the storefront's other visual decisions. Source of truth is `template-parts/footer-sage.php`; the existing trust template supplies courier and payment content. These implementation records do not establish that the candidate has been deployed.",
+    "keyCharacteristics": [
+      "A broad sage signup field and warm ivory information area.",
+      "Fraunces headings paired with Inter text and controls.",
+      "Original brand, courier, social, and payment artwork.",
+      "Open columns and fine rules, with readable mobile reflow."
+    ],
+    "rules": [
+      {
+        "name": "The Footer Boundary Rule",
+        "body": "Keep these values scoped to the Sage footer; do not replace the site's global color variables to reproduce this surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Content Continuity Rule",
+        "body": "Responsive changes reflow the existing content; they do not remove destinations, shorten the registered address, or merge nationwide and Davao-only delivery labels.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "**Do** preserve the approved sage/ivory composition and heading/body contrast.",
+      "**Do** keep original logos, their colors, complete geometry, and intrinsic proportions.",
+      "**Do** keep the trust template's payment conditions and delivery distinctions.",
+      "**Do** verify the complete footer at wide and narrow widths after integration changes."
+    ],
+    "donts": [
+      "**Don't** replace global theme styles to reproduce this footer.",
+      "**Don't** use the mockup as a flattened production image or as a source for redrawing logos.",
+      "**Don't** document the disconnected form as a working subscription system.",
+      "**Don't** treat this footer guide as a new visual mandate for unrelated pages."
+    ]
+  }
+}

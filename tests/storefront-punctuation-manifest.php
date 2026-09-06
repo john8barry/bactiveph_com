@@ -1,6 +1,6 @@
 <?php
 /** Standalone PHP CLI regression harness. Never load through WordPress or deploy publicly. */
-if ( PHP_SAPI !== 'cli' || defined('ABSPATH') || function_exists('get_post') ) { exit(1); }
+if ( PHP_SAPI !== 'cli' || defined('ABSPATH') ) { exit(1); }
 define('WP_CLI', true);
 define('DB_NAME', 'waypmvhk_bactwp');
 

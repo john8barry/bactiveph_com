@@ -454,12 +454,17 @@ Footer and hero releases are complete on production, independently accepted,
 and their writers have returned control. Issues #14 and #13 are closed. Exact
 approved files, protected payment settings/orders/stock/logs, cached delivery and
 bounded monitoring were verified. The payment branch incorporates main through
-main `4a3611f68ce52322a2c8bd571c2806209b9248c1`, including typography PR #28,
-compact hero PR #33 and storefront punctuation PR #29. All 11 gateway runtime
+main `ff9eb2a40810e3edc253fab0fbcde3561c11b5a7`, including typography PR #28,
+compact hero PR #33, storefront punctuation PR #29/#36 and header PR #35. All 11 gateway runtime
 files remain the identical `cf891ca` package. Canonical dirty work is preserved. CI run 34015874850 passed PHP 8.1–8.3 and real Woo datastores before the
 subsequent documentation, typography and compact-hero source reconciliation.
 Those deployments remain with their separately authorized writers. An eventual payment
 deployment requires fresh exact snapshots and verified backup freshness.
+
+The new punctuation workflow exposed one stale mirror: the top-level child
+theme functions copy lacked the COD fee cap already present in the deployed
+WordPress copy. The mirror now contains the identical tested guard. This changes
+no production file or policy; both source copies must compare byte-for-byte.
 
 The inherited active Graphify rule and provider configuration were removed in
 this isolated branch under the retirement instruction. No Graphify command or

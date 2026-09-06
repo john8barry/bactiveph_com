@@ -390,14 +390,22 @@ independently verified. Sending and logging were off at the last completed
 readback; no inbox receipt was established. John subsequently approved two
 labeled staging seller/buyer tests to the store inbox and, only if staging
 passes, production SMTP2GO activation and one final check. Its separate task
-owns that approval and the next serialized host window. This is pending email
-acceptance, not evidence that payment notification delivery works.
+owns that approval. The coordinator allocated its September 6 writer window
+from 02:41:32 to 03:26:32 UTC; the email task acknowledged it at 02:46 UTC.
+Execution and inbox acceptance remain unverified at this checkpoint. The
+handoff does not establish that payment notification delivery works.
 
 John reported that he lacks staging login credentials. Authenticated read-only
 inspection confirmed an existing administrator on the distinct staging database;
 the stored application password cannot log into the browser dashboard. Approval
 for a normal staging-only WordPress reset link is pending. No password, account,
 or reset key has been changed. Production access is outside that proposed reset.
+
+The inherited always-on Graphify rule and provider configuration were removed
+from this isolated source branch under the project retirement instruction. The
+three project references now state retirement and direct source verification.
+No Graphify command, provider call, global installation, or server file was used
+or changed; historical output remains excluded from Git.
 
 All production payment acceptance gates above remain open. The new production
 gateway and its settings remain absent; the visual and email work does not

@@ -9,6 +9,8 @@ define('BActive\\PayMongo\\GATEWAY_ID', 'bactive_paymongo');
 define('BActive\\PayMongo\\VERSION', 'test');
 define('BActive\\PayMongo\\PLUGIN_FILE', dirname(__DIR__) . '/bactive-paymongo-hosted-checkout.php');
 
+require_once __DIR__ . '/abandoned-session-recovery.php';
+
 class Test_Order_Util
 {
     public static bool $hpos = true;
@@ -5673,6 +5675,7 @@ same(0, $fake_hook_calls['woocommerce_order_status_changed'] ?? 0, 'cancel opera
 
 require __DIR__ . '/recovery-boundaries.php';
 require __DIR__ . '/rollout-restriction.php';
+abandoned_session_recovery_tests();
 
 if ($failures !== array()) {
     // Synthetic fixtures only. Surface failures in the check API as well as

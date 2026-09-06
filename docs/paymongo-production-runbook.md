@@ -196,16 +196,22 @@ never retry an uncertain webhook creation or credential mutation blindly.
    competing payable session. Check the recalculated COD fee and eligibility.
    Test unchanged-cart reuse and changed-cart replacement separately. A
    backend-issued order's redirect to checkout does not establish browser
-   cart/session continuity. Deliver a correctly signed fixture for the expired
-   original session; it must be held for review without another paid transition,
-   stock reduction, fulfillment or email effect.
+   cart/session continuity. Verify the expired-original late-payment review
+   path in deterministic fixtures: retain the payment correlation without
+   another paid transition, stock reduction, fulfillment or email effect.
+   Record fixture evidence separately from actual browser and authenticated
+   provider evidence. A reconstructed signed HTTP probe against an active
+   unpaid session proves refusal and no payment effects; it does not prove
+   expired-original review or a genuine paid event.
 8. Exercise races and recovery: delayed paid webhook before and after Cancel;
    browser Back with cart changes and the previous `order_awaiting_payment`;
    replay of an old Cancel URL while a newer session exists; order-pay bypass;
    settings disable/mode/key changes through the normal form and Woo AJAX/REST;
    order trash/delete; failure immediately after `payment_complete()`; missed
    webhook recovery; a 51-order rotating scan; and 23-hour abandoned-session
-   expiry/backoff. A second charge or loss of payment correlation is a stop.
+   expiry/backoff. Use clock/provider fixtures for the 23-hour boundary,
+   independent expiry readback and bounded retry delays; record actual worker
+   liveness separately. A second charge or loss of payment correlation is a stop.
 9. Verify the COD boundary with product totals on both sides of the configured
    cap and with coupon, shipping, and tax changes. Exactly one `COD Fee` must be
    present only when COD is eligible.

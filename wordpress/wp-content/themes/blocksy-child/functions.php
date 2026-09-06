@@ -46,6 +46,23 @@ function blocksy_child_enqueue_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'blocksy_child_enqueue_styles' );
 
+/** Load the logo-aligned display face after the existing theme styles. */
+function bactive_enqueue_brand_typography() {
+    $relative = '/assets/css/brand-typography.css';
+    $path = get_stylesheet_directory() . $relative;
+    if ( ! is_readable( $path ) ) {
+        return;
+    }
+    wp_enqueue_style(
+        'bactive-brand-typography',
+        get_stylesheet_directory_uri() . $relative,
+        array( 'blocksy-child-custom', 'bactive-inter-font' ),
+        filemtime( $path )
+    );
+}
+add_action( 'wp_enqueue_scripts', 'bactive_enqueue_brand_typography', 30 );
+
+
 /**
  * Phase 4: Custom Product Tabs
  */

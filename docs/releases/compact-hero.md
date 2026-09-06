@@ -48,4 +48,6 @@ The initial native frontpage-tag and exact-URL purge attempts did not refresh th
 
 The final authenticated monitor readback at 08:26:10 UTC, 70 seconds after successful public asset verification, found no new critical log entries and unchanged protected state. Both purge queues were drained. Connections closed and the production writer lane returned to the host coordinator.
 
+At 10:23 UTC, the host coordinator independently accepted the production release. Its fresh readback confirmed the exact new CSS and loader, unchanged protected files, configuration, plugins, payment settings, order identities, transactions, stock and logs. The private acceptance receipt is `coordination/compact-hero-root-acceptance.json` in the payment-recovery evidence directory.
+
 Private local receipts are in `tmp/compact-hero-release-20260906/`: release manifest, fresh target snapshots, backup verification, install/readback receipts, browser purge intent/response, public asset hashes, live checks and screenshots. Keep these local; full backup contents are not publication artifacts. Existing security/dependency/payment work is not certified by this visual change.

@@ -1,5 +1,7 @@
 """Disposable real WordPress/WooCommerce datastore regression, with no host ports."""
 import json
+import itertools
+from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
 import secrets
@@ -22,7 +24,7 @@ cli_image = os.environ.get('BACTIVE_TEST_CLI_IMAGE', 'wordpress:cli-php8.2@sha25
 created_network = False
 created_db = False
 cli_containers = set()
-cli_sequence = 0
+cli_sequence = itertools.count(1)
 
 def command(args, timeout=120, stdin=None):
     try:
@@ -81,17 +83,18 @@ try:
         for slug in ('woocommerce', 'bactive-paymongo-hosted-checkout'):
             (plugins / slug).symlink_to('/reference/wp-content/plugins/' + slug, target_is_directory=True)
 
-        def wp(*args, stdin=None):
-            global cli_sequence
-            cli_sequence += 1
-            container = 'bactive-payment-cli-' + suffix + '-' + str(cli_sequence)
+        def wp(*args, stdin=None, fixture_env=None):
+            container = 'bactive-payment-cli-' + suffix + '-' + str(next(cli_sequence))
+            environment = []
+            for key, value in (fixture_env or {}).items():
+                environment.extend(['--env', key + '=' + value])
             cli_containers.add(container)
             try:
                 return command(['docker', 'run', '--rm', '--name', container, '--pull=never',
                                 '--network', network, '--user=' + str(os.getuid()) + ':' + str(os.getgid()),
                                 '--env', 'WP_CLI_ALLOW_ROOT=1', '--env', 'BACTIVE_INTEGRATION_STORE=' + store,
                                 '--volume', str(source) + ':/reference:ro', '--volume', str(site) + ':/var/www/html',
-                                '--workdir', '/var/www/html', '--entrypoint', 'wp', '-i', cli_image,
+                                '--workdir', '/var/www/html', '--entrypoint', 'wp', *environment, '-i', cli_image,
                                 *args], stdin=stdin)
             finally:
                 # Killing an attached Docker client does not stop its container.
@@ -114,6 +117,19 @@ try:
         wp('plugin', 'activate', 'bactive-paymongo-hosted-checkout')
         output = wp('eval-file', '/reference/wp-content/plugins/bactive-paymongo-hosted-checkout/tests/datastore-integration.php')
         result = json.loads(output.splitlines()[-1])
+        atomic_test = '/reference/wp-content/plugins/bactive-paymongo-hosted-checkout/tests/atomic-options-datastore.php'
+        atomic_result = json.loads(wp('eval-file', atomic_test,
+            fixture_env={'BACTIVE_ATOMIC_ACTOR': 'self'}).splitlines()[-1])
+        result['atomic_insert_checks'] = atomic_result['checks']
+        result['atomic_contenders'] = []
+        for family in ('order', 'checkout', 'settings', 'event', 'payment', 'effects'):
+            (site / 'atomic-proof' / family).mkdir(parents=True)
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                futures = [pool.submit(wp, 'eval-file', atomic_test, fixture_env={
+                    'BACTIVE_ATOMIC_ACTOR': actor, 'BACTIVE_ATOMIC_FAMILY': family})
+                    for actor in ('A', 'B')]
+                actors = [json.loads(future.result().splitlines()[-1]) for future in futures]
+            result['atomic_contenders'].append({'family': family, 'actors': actors})
         results.append(result)
         print(json.dumps(result), flush=True)
 finally:

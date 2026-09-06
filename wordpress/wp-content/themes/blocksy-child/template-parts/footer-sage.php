@@ -338,7 +338,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <div class="bactive-footer__inner bactive-footer__signup-layout">
             <div>
                 <h2 id="bactive-footer-signup-title">Stay in the loop</h2>
-                <p id="bactive-footer-signup-description">Join the club for 5% off your first order, new drops, and Davao court days.</p>
+                <p id="bactive-footer-signup-description">Join the club for 5% off your first order and new drops.</p>
             </div>
             <?php // Preserve the existing form behavior; do not invent a mailing-list connection. ?>
             <form class="bactive-footer__form" action="#" aria-labelledby="bactive-footer-signup-title">

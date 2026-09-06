@@ -766,6 +766,11 @@ final class Reconciler
             if (!self::write_drain_value('unrecorded-incident')) {
                 throw new \RuntimeException('PayMongo incident fence could not be persisted.');
             }
+            // This exceptional close can bypass ordinary drain publication.
+            // Purge claims even if a concurrent writer changed the prior value.
+            if (function_exists('do_action')) {
+                do_action('bactive_paymongo_availability_changed');
+            }
             return;
         }
         self::set_draining(true);
@@ -784,7 +789,13 @@ final class Reconciler
         }
         $previous = self::read_drain_value();
         if ($previous === 'no' || ($explicit_recovery && $previous === 'yes')) {
-            return self::write_drain_value($fence, $previous) ? $fence : '';
+            if (!self::write_drain_value($fence, $previous)) {
+                return '';
+            }
+            if ($previous === 'no' && function_exists('do_action')) {
+                do_action('bactive_paymongo_availability_changed');
+            }
+            return $fence;
         }
         // Initial setup may insert only an actually absent option, never
         // overwrite a concurrent closure or an unreadable existing value.

@@ -378,8 +378,10 @@ Do not mark the GitHub issue complete until all acceptance criteria are proven.
 - A title or description edit never reopens a gate that was already closed.
   After resolving every incident and confirming terminal sessions, explicitly
   disable and then enable the gateway through its settings to run the complete
-  verified drain and readiness flow. A temporary `verifying:` value is closed
-  and belongs to one settings writer; a newer incident invalidates it.
+  verified drain and readiness flow. The original verification closure and a
+  missing-evidence latch invalidate cached payment claims even when the settings
+  save fails. A temporary `verifying:` value is closed and belongs to one settings
+  writer; a newer incident invalidates it.
 - `unrecorded-incident` means an incident could not be durably recorded. It is
   deliberately closed even after ordinary settings changes. Preserve the
   provider/order evidence and repair the exact missing incident under independent

@@ -84,9 +84,15 @@ foreach (array('generic review', 'order-only review', 'orphan ledger', 'stale-op
         $fake_options['bactive_paymongo_draining'] = 'no';
     }
     $before = $settings_order_snapshot();
+    $was_open = !Reconciler::is_draining();
+    $availability_before = (int) ($fake_hook_calls['bactive_paymongo_availability_changed'] ?? 0);
     $before_settings = $fake_options['woocommerce_bactive_paymongo_settings'];
     $settings_review_save($case === 'orphan ledger' ? 'description' : 'title');
     same(true, Reconciler::is_draining(), $case . ' cannot reopen through a copy edit');
+    if ($was_open) {
+        check(($fake_hook_calls['bactive_paymongo_availability_changed'] ?? 0) > $availability_before,
+            $case . ' invalidates cached payment claims on the original closure');
+    }
     same('yes', $fake_options['bactive_paymongo_draining'], $case . ' returns to an explicit closed flag');
     check(in_array($fake_options['bactive_paymongo_settings_write_error']['code'] ?? '',
         array('settings_final_verification_failed', 'paymongo_reopen_fence_unavailable'), true), $case . ' records failed reopening');
@@ -146,6 +152,7 @@ $fake_order_query_handler = null;
 foreach (array('swallowed alarm', 'throwing alarm', 'failed inbox and alarm') as $case) {
     $settings_review_prepare();
     $fake_orders[42]->meta['_bactive_paymongo_attempts'] = array();
+    $availability_before = (int) ($fake_hook_calls['bactive_paymongo_availability_changed'] ?? 0);
     $fake_option_update_swallow = array('bactive_paymongo_disable_drain_error');
     if ($case === 'throwing alarm') {
         $fake_option_update_handler = static function (string $key): void {
@@ -162,6 +169,8 @@ foreach (array('swallowed alarm', 'throwing alarm', 'failed inbox and alarm') as
     } else {
         Reconciler::record_global_drain_error(array('recorded_at' => time(), 'code' => 'fixture_alarm_failure'));
     }
+    check(($fake_hook_calls['bactive_paymongo_availability_changed'] ?? 0) > $availability_before,
+        $case . ' invalidates cached claims when the missing-evidence latch closes issuance');
     $fake_option_update_handler = null;
     $fake_option_update_swallow = array();
     Reconciler::set_draining(true);

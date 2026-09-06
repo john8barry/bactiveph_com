@@ -65,10 +65,13 @@ $close_during_readiness = static function ($pre) use (&$during_readiness) {
     }
     return $pre;
 };
+$availability_before = did_action('bactive_paymongo_availability_changed');
 add_filter('pre_http_request', $close_during_readiness, PHP_INT_MAX);
 $save_fixture_copy();
 remove_filter('pre_http_request', $close_during_readiness, PHP_INT_MAX);
 $assert($during_readiness && Reconciler::is_draining(), 'Readiness rearmed a fence after an incident closure.');
+$assert(did_action('bactive_paymongo_availability_changed') > $availability_before,
+    'Readiness incident left cached public claims after the original closure.');
 $save_fixture_copy();
 $assert(Reconciler::is_draining(), 'A copy-only edit acknowledged a preexisting closure.');
 $recover_fixture_settings();
@@ -158,7 +161,10 @@ $recover_fixture_settings();
 // Alarm write failure retains a stronger closure that all ordinary closes preserve.
 $swallow_alarm = static fn($value, $old) => $old;
 add_filter('pre_update_option_bactive_paymongo_disable_drain_error', $swallow_alarm, PHP_INT_MAX, 2);
+$availability_before = did_action('bactive_paymongo_availability_changed');
 Reconciler::record_global_drain_error(array('recorded_at' => time(), 'code' => 'fixture_alarm_write_failed'));
+$assert(did_action('bactive_paymongo_availability_changed') > $availability_before,
+    'Missing-evidence latch did not invalidate cached public payment claims.');
 remove_filter('pre_update_option_bactive_paymongo_disable_drain_error', $swallow_alarm, PHP_INT_MAX);
 Reconciler::set_draining(true);
 $recover_fixture_settings();

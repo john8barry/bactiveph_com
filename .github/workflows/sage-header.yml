@@ -1,0 +1,36 @@
+name: Sage header
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/sage-header.yml'
+      - '**/bactiveph-sage-header.php'
+      - '**/header-sage.*'
+      - 'tests/sage-header-contract.php'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sage-header.yml'
+      - '**/bactiveph-sage-header.php'
+      - '**/header-sage.*'
+      - 'tests/sage-header-contract.php'
+permissions:
+  contents: read
+jobs:
+  header-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Header syntax and fallback contract
+        run: |
+          php -l wordpress/wp-content/mu-plugins/bactiveph-sage-header.php
+          php -l wordpress/wp-content/themes/blocksy-child/template-parts/header-sage.php
+          php tests/sage-header-contract.php
+          node --check wordpress/wp-content/themes/blocksy-child/assets/js/header-sage.js
+      - name: Source mirrors
+        run: |
+          cmp wordpress/wp-content/themes/blocksy-child/template-parts/header-sage.php wp-content/themes/blocksy-child/template-parts/header-sage.php
+          cmp wordpress/wp-content/themes/blocksy-child/assets/css/header-sage.css wp-content/themes/blocksy-child/assets/css/header-sage.css
+          cmp wordpress/wp-content/themes/blocksy-child/assets/js/header-sage.js wp-content/themes/blocksy-child/assets/js/header-sage.js

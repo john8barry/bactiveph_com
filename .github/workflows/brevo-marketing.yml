@@ -5,11 +5,21 @@ on:
     paths:
       - '.github/workflows/brevo-marketing.yml'
       - 'wordpress/wp-content/plugins/bactive-brevo-marketing/**'
+      - 'scripts/brevo-newsletter-page.php'
+      - 'wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php'
+      - 'wp-content/themes/blocksy-child/template-parts/footer-sage.php'
+      - 'docs/operations/brevo-**'
+      - 'docs/releases/brevo-marketing.md'
   push:
     branches: [main]
     paths:
       - '.github/workflows/brevo-marketing.yml'
       - 'wordpress/wp-content/plugins/bactive-brevo-marketing/**'
+      - 'scripts/brevo-newsletter-page.php'
+      - 'wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php'
+      - 'wp-content/themes/blocksy-child/template-parts/footer-sage.php'
+      - 'docs/operations/brevo-**'
+      - 'docs/releases/brevo-marketing.md'
 
 permissions:
   contents: read
@@ -32,6 +42,9 @@ jobs:
       - name: PHP syntax and isolated contract tests
         run: |
           find wordpress/wp-content/plugins/bactive-brevo-marketing -name '*.php' -print0 | xargs -0 -n1 php -l
+          php -l scripts/brevo-newsletter-page.php
+          php -l wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php
+          php -l wp-content/themes/blocksy-child/template-parts/footer-sage.php
           for test in wordpress/wp-content/plugins/bactive-brevo-marketing/tests/*-test.php wordpress/wp-content/plugins/bactive-brevo-marketing/tests/*-unit.php; do php "$test"; done
       - name: Signup JavaScript syntax
         run: |

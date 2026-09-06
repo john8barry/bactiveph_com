@@ -2,7 +2,7 @@
 
 Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16). Priority: normal requested feature; production email continuity is a release requirement.
 
-Status: local implementation. No Brevo account, live marketing activation, test send, or MailPoet removal has been completed by this task.
+Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. No Brevo account, live marketing activation, test send, or MailPoet removal has been completed by this task. See the [acceptance receipt](../releases/brevo-marketing.md).
 
 ## Scope and decisions
 

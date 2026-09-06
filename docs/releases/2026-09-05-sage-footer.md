@@ -24,7 +24,7 @@ The user confirmed MailPoet is being replaced by Brevo. This release preserves t
 - Independent visual review accepted the approved composition and responsive adaptations. Its sole persistence finding was missing product documentation, supplied in this change. The exact final verdict is recorded in issue #14.
 - The one-pass Impeccable detector returned three generic font warnings for the approved existing Fraunces/Inter pairing; those fonts are intentionally retained.
 
-Evidence captures and detailed local receipts remain in the task's private evidence directory. They are preview evidence, not certification of live deployment. The scoped [design guide](../design/footer/DESIGN.md) and [asset record](../design/footer/ASSETS.md) describe the implementation.
+Preview captures, actual staging/production captures, and detailed receipts remain separately identified in the task's private evidence directory. The scoped [design guide](../design/footer/DESIGN.md) and [asset record](../design/footer/ASSETS.md) describe the implementation.
 
 ## Rollout
 
@@ -44,4 +44,20 @@ First compare current target hashes with this release and stop if another writer
 
 ## Status
 
-The reviewed source and design documentation merged in [PR #17](https://github.com/john8barry/bactiveph_com/pull/17), main revision `cf6a7fb923c7329ab03514e9f8aaa2bdd7a1d6ce`. Staging and production release remain pending the serialized writer window and their separate backup and live-verification gates. This document does not claim payment, email, security-maintenance, or broader repository/production drift is resolved.
+The reviewed source and design documentation merged in [PR #17](https://github.com/john8barry/bactiveph_com/pull/17), main revision `cf6a7fb923c7329ab03514e9f8aaa2bdd7a1d6ce`; release documentation followed in [PR #19](https://github.com/john8barry/bactiveph_com/pull/19).
+
+Staging was deployed and visually accepted on September 6, 2026 at 04:58 UTC. Both installed hashes match the table above. Home, shop, BIR registration, and a product page each returned HTTP 200 with one Sage footer and no new PHP warnings, fatal errors, or error-log bytes. Protected theme/MU files and the coordinator's commerce baseline matched after deployment. The user-requested staging Wordfence deactivation was preserved. The staging writer lane was returned at 05:21 UTC.
+
+Actual 1280px desktop and 390px phone captures passed direct and independent visual review. All 13 original image assets loaded, no horizontal overflow was found, and mobile navigation targets measured at least 44px. Two overlapping phone captures cover the complete footer. The staging page-cache queue was consumed. Repeated ordinary cart, configured checkout, and test-callback GETs retained private/no-store exclusions with no cache HIT or challenge; the callback rejected GET with the expected HTTP 405. Empty-cart redirects establish cache and route behavior only.
+
+The full staging backup (six components, 122,512,020 bytes) is verified off-server. After the coordinator's separate Wordfence change, a fresh state snapshot was captured and the existing backup retained under its explicit four-hour freshness authorization.
+
+Production installed the exact two approved templates at 05:55 UTC on September 6, 2026, after its own full six-component backup was verified off-server and independently cleared. That backup totals 330,433,030 bytes; every component passed size, SHA-256, and full ZIP/gzip integrity checks. Original wrapper bytes are retained for the narrow rollback above.
+
+Normal anonymous requests to the home, shop, BIR registration, and Court Dress product pages returned HTTP 200 with exactly one Sage footer. Authenticated production browser captures at 1280px desktop and 390px phone passed direct and independent visual inspection. All 13 original images loaded, neither viewport overflowed horizontally, phone navigation targets measured at least 44px, and the Join button retained a visible 2px keyboard-focus outline. Two phone captures overlap by 417.5px and cover the entire footer.
+
+The production page-cache queue was consumed. Repeated ordinary cart and empty-checkout GETs retained no-store exclusions, with no cache HIT or challenge; the checkout redirected to the cart as expected for an empty session. The separate payment callback is not installed on production and was not probed. Post-deployment protected-file and commerce readback matched the coordinator's baseline, including production Wordfence remaining active.
+
+Final production verification at 06:02 UTC, approximately 400 seconds after installation, again confirmed the exact file hashes, four healthy page responses, one footer per page, preserved files, and zero new PHP error-log bytes, warnings, or fatal errors. Independent visual review returned `ship`. All footer SSH/SFTP connections and remote jobs are terminal, and the production writer lane has been explicitly returned to the payment coordinator.
+
+These receipts do not establish mailing-list integration, populated checkout or provider-payment acceptance, security-maintenance completion, or broader repository/production synchronization. Those remain with their owning tasks.

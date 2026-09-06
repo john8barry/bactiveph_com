@@ -368,53 +368,109 @@ The current payment task owns the next-day reconciliation follow-up, due 24 hour
 after independently verified public activation. Its scheduled time and the
 30-minute activation monitor remain unset until that activation actually occurs.
 
-## September 6 source and deployment coordination
+## September 6 normal browser acceptance and coordination
 
-The payment branch incorporates main
-`9220b6d0c22ae87075a8df0e74c9f102673efb9b`, containing the separately approved
-homepage glass release (PR #15), Sage footer (PR #17), and pointer correction
-(PR #18), plus the footer release-control documentation (PR #19). Independent
-review found no payment-runtime overlap in the visual changes. All 11 gateway runtime files
-remain identical to `cf891ca` and the current package manifest; visual files
-are not added to the payment ZIP. The canonical dirty workspace is preserved.
+This checkpoint supersedes the earlier staging access, visual release and email
+status above. Production PayMongo is still absent; full payment acceptance is
+not complete.
 
-The hero task returned its production writer window, with all writes ended
-at 02:14:25 UTC. Root independently verified the three approved installed hashes,
-all six off-server backup components (329,692,003 bytes), and unchanged protected
-payment configuration, orders, stock and logs. Its reported pointer-lighting
-issue is corrected in source by PR #18 and remains with the hero task for
-staging verification and a new production release window. No further writes
-are authorized in the returned window. Footer
-source is merged, but its staging and production deployments remain pending.
+Normal staging access now works. Wordfence was disabled only on staging at
+John's request. The coordinator created one temporary `shop_manager` through
+supported WordPress core and signed in through the normal login page. Independent
+readback confirmed all existing user/password/metadata records unchanged, no
+administrator capability and no account notification attempts. After testing,
+the coordinator removed its role and revoked every session through supported
+WordPress APIs. Independent readback at 07:59:05 UTC verified zero capabilities
+and sessions, retained user/order ownership, unchanged existing accounts,
+payment/order facts and fixture stock 12. No account email was attempted. The
+user remains solely to preserve the test-order audit trail.
 
-The email task's staging SMTP2GO credential is encrypted, with its send permission
-independently verified. Sending and logging were off at the last completed
-readback; no inbox receipt was established. John subsequently approved two
-labeled staging seller/buyer tests to the store inbox and, only if staging
-passes, production SMTP2GO activation and one final check. Its separate task
-owns that approval. The coordinator allocated its September 6 writer window
-from 02:41:32 to 03:26:32 UTC; the email task acknowledged it at 02:46 UTC.
-The task subsequently reported both staging test messages as Delivered in
-SMTP2GO at 02:51 UTC, with global staging sending still off and protected
-commerce state unchanged. Production transport and final message verification
-remain in that task's active window. Provider delivery status does not establish
-that every checkout-triggered customer and merchant notification is accepted.
+| Normal browser case | Order | Total | Independent result |
+| --- | --- | --- | --- |
+| Maya payment and native email | 381 | PHP 640 | Provider paid, genuine signed callback, matching Woo transaction/Processing, stock 17→16 |
+| Mobile QRPh after cancellation | 382 | PHP 740 | First session expired; two rapid checkout clicks issued one replacement; provider paid, callback/Processing, stock 16→15 |
+| ShopeePay payment | 385 | PHP 740 | Provider paid, genuine signed callback, matching transaction/Processing, stock 14→13 |
+| PayMongo to COD | 383→384 | PHP 740→790 | Both old online sessions expired and remained unpaid; COD Processing with exactly one PHP 50 fee, no online transaction/paid date, stock 15→14 |
+| Scheduled recovery with callback delivery held | 386 | PHP 740 | Provider paid while Woo remained Pending; native action 747 completed, matching transaction/Processing and stock 13→12 |
 
-John reported that he lacks staging login credentials. Authenticated read-only
-inspection confirmed an existing administrator on the distinct staging database;
-the stored application password cannot log into the browser dashboard. Approval
-for a normal staging-only WordPress reset link is pending. No password, account,
-or reset key has been changed. Production access is outside that proposed reset.
+Order 382 used the official QRPh simulation link. The checkout tab navigated away
+before authorization and the simulator remained on PayMongo; genuine callback
+settlement completed without a merchant return. This proves return independence,
+not a literal operating-system browser shutdown. At 390px the populated form and
+button fit the viewport with no horizontal overflow. Davao/Manila online totals
+were PHP 640/740; Manila COD PHP 790 contained one PHP 50 fee; returning to online removed it.
+A screenshot scaling artifact prevents claiming complete visual certification
+from that capture alone.
 
-The inherited always-on Graphify rule and provider configuration were removed
-from this isolated source branch under the project retirement instruction. The
-three project references now state retirement and direct source verification.
-No Graphify command, provider call, global installation, or server file was used
-or changed; historical output remains excluded from Git.
+During the COD journey, an early selection made during initial recalculation did
+not persist. One online resubmission therefore created another unused generation,
+with its predecessor independently confirmed expired. The final test waited for
+the stable COD selection and PHP 790 total before submission. The gateway then closed
+the old session and displayed its expected request to submit checkout again.
+Only after independent provider readback did the coordinator complete COD 384.
+No online charge was authorized on order 383.
 
-All production payment acceptance gates above remain open. The new production
-gateway and its settings remain absent; the visual and email work does not
-establish live payment readiness.
+Order 386 exercised actual missed-callback recovery. A reviewed temporary staging
+handler accepted only that fresh order/session, valid test signature and exact
+payment facts, and returned 503 before the normal callback handler. Independent
+provider readback showed paid Maya while Woo remained Pending, without a
+transaction, paid date or stock reduction. The original five-minute scheduled
+action 747 then started through Async Request at 07:22:23 UTC and completed at
+07:22:34 UTC. It recorded the matching payment and completed payment effects;
+stock moved 13→12 once. No manual queue or reconciliation execution was used.
+
+The Apache access log independently records six callback 503 responses followed
+by a 200 after recovery. Later readback retained the same transaction, paid time,
+four notes, effects and stock. The browser did return despite an attempted
+temporary block; it displayed confirmation processing and did not settle the
+order. This case proves scheduled recovery after an unpaid return, while 382
+separately proves callback settlement without a merchant return. The interceptor
+and its private binding were removed, binding first, at 07:30 UTC. Fresh runtime
+readback confirms the normal callback hook only, identical 11-file gateway and
+unchanged protected configuration and all recorded protected orders.
+
+Order 387 tested three separately constructed, correctly signed negative HTTP
+callbacks: amount increased by one centavo, currency changed to USD, and wrong
+order metadata. Each one-shot request returned 503 `retry_later`. Fresh independent
+Woo/provider readbacks before and after each confirmed no payment or Payment
+Intent, unchanged unpaid order, two notes, no transaction/paid date/effects and
+fixture stock 12. These are reconstructed rejection probes, not provider-origin
+events. The native signed Cancel flow then expired the unused session; Woo
+remained pending and unpaid, with no stock change. The customer saw the expected
+safe-cancellation notice. No probe was repeated or payment authorized.
+
+Both native order 381 messages were accepted exactly once through the actual
+callback transition and shown Delivered in authenticated SMTP2GO Activity, with
+distinct New Order and Customer Processing subjects and provider IDs. The
+reviewed temporary exact-order mail adapter was removed and independently verified
+absent. Durable accepted-send claims, the paid order and stock were unchanged.
+[Issue #23](https://github.com/john8barry/bactiveph_com/issues/23) retains the separate
+inbox-acknowledgment gate. Production SMTP2GO is enabled with API logging off;
+staging SMTP2GO remains disabled. Disabled SMTP2GO does not itself suppress
+ordinary host mail. John's earlier production connection-test acknowledgment
+must not be reused as acknowledgment of these checkout messages.
+
+Footer and hero releases are complete on production, independently accepted,
+and their writers have returned control. Issues #14 and #13 are closed. Exact
+approved files, protected payment settings/orders/stock/logs, cached delivery and
+bounded monitoring were verified. The payment branch incorporates main through
+main `4a3611f68ce52322a2c8bd571c2806209b9248c1`, including typography PR #28,
+compact hero PR #33 and storefront punctuation PR #29. All 11 gateway runtime
+files remain the identical `cf891ca` package. Canonical dirty work is preserved. CI run 34015874850 passed PHP 8.1–8.3 and real Woo datastores before the
+subsequent documentation, typography and compact-hero source reconciliation.
+Those deployments remain with their separately authorized writers. An eventual payment
+deployment requires fresh exact snapshots and verified backup freshness.
+
+The inherited active Graphify rule and provider configuration were removed in
+this isolated branch under the retirement instruction. No Graphify command or
+provider call was used; historical output remains excluded from Git.
+
+Remaining work is resolution of the held decline and both bank authorization
+flows and bank-source mapping, merchant login/live capability/key, actual inbox
+acknowledgment, all five John-authorized live payments, eligible provider refund, anonymous activation,
+accurate payment claims and 30 minutes of monitoring. The private bank/stuck-Shopee
+support draft remains unsent. Do not retry held orders 374 or 376 without definitive
+provider state and the controlled continuation.
 
 ## Recovery controls
 

@@ -1,0 +1,28 @@
+{
+  "issue": 26,
+  "approved_by": "John Barry",
+  "approved_on": "2026-09-06",
+  "asset_root": "wordpress/wp-content/themes/blocksy-child",
+  "files": {
+    "assets/css/brand-typography.css": {
+      "sha256": "d0cc26343548854060affd9e408fc9bd851e8a9a3b87c47b2414591bb9dce6eb",
+      "bytes": 1566
+    },
+    "assets/fonts/rajdhani-600-latin.woff2": {
+      "sha256": "35f7e628ec8e7dd3bf434e95ce28289803401f12d8605c56ca83db2b4b301d33",
+      "bytes": 9400
+    },
+    "assets/fonts/rajdhani-600-latin-ext.woff2": {
+      "sha256": "bdf7c1b3c51cfc37d1a0e2b15d86d85f1fa0fdb87678277e11714f9470b734ed",
+      "bytes": 7208
+    },
+    "assets/fonts/rajdhani-OFL.txt": {
+      "sha256": "793bdd8538a0c03afb5bc10906be27ad1dc76f143cfeac8c55cd9075a5b3a55c",
+      "bytes": 4372
+    }
+  },
+  "functions_anchor": "add_action( 'wp_enqueue_scripts', 'blocksy_child_enqueue_styles' );",
+  "functions_addition": "/** Load the logo-aligned display face after the existing theme styles. */\nfunction bactive_enqueue_brand_typography() {\n    $relative = '/assets/css/brand-typography.css';\n    $path = get_stylesheet_directory() . $relative;\n    if ( ! is_readable( $path ) ) {\n        return;\n    }\n    wp_enqueue_style(\n        'bactive-brand-typography',\n        get_stylesheet_directory_uri() . $relative,\n        array( 'blocksy-child-custom', 'bactive-inter-font' ),\n        filemtime( $path )\n    );\n}\nadd_action( 'wp_enqueue_scripts', 'bactive_enqueue_brand_typography', 30 );",
+  "deployment_rule": "Patch the addition into freshly read functions.php after the exact anchor. Reject existing same-named function or missing/duplicate anchor. Do not replace the full file from this repository. Assets first, validated functions last.",
+  "rollback_rule": "Remove only this exact function/hook from latest functions.php after no-later-writer verification. Leave assets inert; no database restore."
+}

@@ -48,6 +48,13 @@ class DetectionTests(unittest.TestCase):
 class URLSafetyTests(unittest.TestCase):
     base = "https://bactiveph.com/"
 
+    def test_anonymous_newsletter_pages_only(self):
+        for value in ("subscriptions", "captcha"):
+            self.assertIsNotNone(audit.safe_url('/?mailpoet_page=' + value, self.base))
+        for url in ('/?mailpoet_page=unsubscribe', '/?mailpoet_page=subscriptions&token=secret',
+                    '/cdn-cgi/l/email-protection'):
+            self.assertIsNone(audit.safe_url(url, self.base))
+
     def test_actions_tracking_credentials_and_external_denied(self):
         for url in ("/?add-to-cart=12", "/cart/?remove_item=abc", "/?_wpnonce=abc", "/?action=delete",
                     "/wp-admin/", "/%77p-admin/", "/wp-json/", "/my-account/customer-logout/", "/checkout/order-pay/12/",

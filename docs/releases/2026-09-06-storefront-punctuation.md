@@ -40,7 +40,7 @@ Restore functions.php first, then remove the include only if no newer code refer
 
 ## Evidence
 
-Initial planning crawl: 61 URL fetches, 509 occurrences including repeated shared text. Source/hook review passed; ten audit unit tests passed. Production release and full acceptance pending coordinated window.
+Initial planning crawl: 61 URL fetches, 509 occurrences including repeated shared text. Source/hook review passed. Production publication and verification completed on 2026-09-06. The exact results and limitations are recorded below.
 
 ## Reviewed content and release candidate
 
@@ -48,6 +48,29 @@ Fresh authenticated inventory covered 225 published pages/posts/products/variati
 
 Typography source merged to main7305f76 before its separate runtime release. Production functions still matched949a12f435e8ce6efec5b8301465f80017143e3cb410ef920eedb5d893383b56. This runtime patch applies only punctuation changes to those live bytes, producing0f35633e699ff2868d27f490a0f48a1216d68841dfc8f92fa88fbb435e3051cb. The later typography/header writer must preserve that patch when installing its separately authorized enqueue/assets. Source mirrors include the merged typography enqueue; do not mistake the full merged source file for this bounded runtime payload.
 
-Private PHP8.2 lint and both CLI harnesses passed using the deployed WordPress formatting source. GitHub PHP8.3 checks passed at3483155; final candidate checks follow. Root's production-only window expires2026-09-06T08:13:47Z. Full backup manifest b1552c3fb29b2f31698a3e6402b0c109845fd96fd47a47e03fc192903dd93b80 independently verified locally. Exact snapshots and runtime evidence remain private under canonical tmp/site-dashes-20260906.
+Private PHP8.2 lint and both CLI harnesses passed using the deployed WordPress formatting source. GitHub PHP8.3 checks passed for final candidate 8b53d6b in run 34020378007. PR 29 merged as 4a3611f68ce52322a2c8bd571c2806209b9248c1. Root's production-only window was returned at 2026-09-06T08:06:54Z, before its 08:13:47Z expiry. All SSH and browser connections were closed and the six private staged files and their empty directories were removed. Full backup manifest b1552c3fb29b2f31698a3e6402b0c109845fd96fd47a47e03fc192903dd93b80 independently verified locally. Exact snapshots and runtime evidence remain private under canonical tmp/site-dashes-20260906.
 
 Existing published privacy copy still references HitPay and Mailchimp; this punctuation-only pass preserves those substantive claims and routes their reconciliation separately to the payment/marketing owners.
+
+
+## Production acceptance
+
+All 27 changed objects independently matched their expected after hashes. A second authenticated inventory found zero decoded en/em dashes in titles, content and excerpts across 225 published records or site name/description. The retained homepage has neither removed section and hashes to `1f0a120db564934c968b6f61334188d000cb8c0cf2bee8c7630129bd7d22c7e0`.
+
+The recursive public crawl followed eight sitemap files and all discovered safe public links, checking 86 HTML pages and 24 stylesheets. Its result was `complete_static_public`, zero dash hits and zero errors. The repeatable audit now includes the two anonymous newsletter utility pages while rejecting unsubscribe/token/action URLs and excluding Cloudflare infrastructure. Twelve audit unit tests pass. HTML entities, accessible and hidden text, metadata, structured JSON and variation data, and generated CSS content were included.
+
+Desktop (1440px) and mobile (390px) browser checks covered homepage, shop, pagination, search, product tabs, logged-out account, cart and checkout. No new JavaScript errors, dash hits or horizontal overflow were found. A single available variation was added to a temporary anonymous cart; populated cart and real checkout passed at both widths. The cart was cleared afterward and no order was submitted.
+
+The existing size-guide trigger did not open its dialog. The size table was inspected at both widths by opening the existing dialog in the test browser only; its ranges and layout passed. The trigger and existing escaped apostrophe are tracked separately in [issue 34](https://github.com/john8barry/bactiveph_com/issues/34). This release does not claim that the normal size-guide click flow passed. Customer-authenticated account screens and private customer content were not inspected.
+
+Independent post-deployment readback at approximately 08:03Z confirmed unchanged gateway settings, active plugins, protected configuration/files, order state and IDs, stock, theme settings, BIR artwork, footer, trust bar and custom CSS. Error-log size remained 27,499 bytes during the bounded deployment and browser-verification period. Current-site LiteSpeed page caches were purged. No staging or payment/email/provider settings changed.
+
+Runtime file SHA-256 values:
+
+| File | SHA-256 |
+| --- | --- |
+| functions.php before | 949a12f435e8ce6efec5b8301465f80017143e3cb410ef920eedb5d893383b56 |
+| functions.php after | 0f35633e699ff2868d27f490a0f48a1216d68841dfc8f92fa88fbb435e3051cb |
+| inc/storefront-punctuation.php | fe0da11b6245ed3046d7e79bdd5a0d920a0e7f3c2ba7102dfe22b4db852061e7 |
+
+Private evidence is retained under `tmp/site-dashes-20260906`: `backup-reference.json`, `content-publish.json`, `file-publish.json`, `independent-verify.json`, `audit-final.json`, `browser-report.json`, `cart-report.json`, `final-readback.json` and `terminal-release.json`. Full snapshots and browser artifacts remain outside Git. The payment coordinator received the terminal release for independent acceptance before the next host writer.

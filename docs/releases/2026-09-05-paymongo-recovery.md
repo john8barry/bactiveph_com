@@ -21,8 +21,8 @@ staging webhook. Production uses classic checkout and PHP currency.
 
 Source tests had passed, but the new gateway had never been installed or
 configured. The canonical workspace was dirty and behind remote; its contents
-are preserved. The isolated payment checkout incorporates remote main
-`f5f6c043a96b35df331a7c004f59fd0da29bc625`, including the accepted footer release.
+are preserved. The initial isolated payment checkout incorporated remote main
+`f5f6c043a96b35df331a7c004f59fd0da29bc625`, including the then-current footer release.
 Both active design tasks initially confirmed they had no server writer scope.
 The subsequently authorized homepage staging change receives a separate,
 serialized writer window before the payment repair is installed.
@@ -250,7 +250,7 @@ child stylesheet and footer, active-plugin list, shipping/tax/COD settings,
 database identity, latest production order 520 and variation 52 stock of two.
 The production error log is unchanged; no debug log appeared. The new gateway
 directory and settings remain absent. This is a two-file deployment from PR
-#4, not deployment of the whole branch or gateway. Main remains
+#4, not deployment of the whole branch or gateway. Main at that checkpoint was
 `f5f6c043a96b35df331a7c004f59fd0da29bc625`.
 
 Anonymous Chrome verification passed: ordinary selection of The Rally Dress,
@@ -353,7 +353,7 @@ Public issuance, customer payment claims, 30-minute monitoring and the next-day
 reconciliation follow-up come only after these gates pass.
 
 The next control point is merchant account access to resolve the two bank
-denials, normal staging manager sign-in, and email transport approval. Continue
+denials, normal staging manager sign-in, and verified email delivery. Continue
 the existing isolated payment branch and preserve the canonical dirty workspace.
 
 PayMongo's current [capability guidance](https://docs.paymongo.com/docs/account-settings-account-capabilities)
@@ -367,6 +367,41 @@ also identifies the stuck ShopeePay test records. No support message was sent.
 The current payment task owns the next-day reconciliation follow-up, due 24 hours
 after independently verified public activation. Its scheduled time and the
 30-minute activation monitor remain unset until that activation actually occurs.
+
+## September 6 source and deployment coordination
+
+The payment branch incorporates main
+`cf6a7fb923c7329ab03514e9f8aaa2bdd7a1d6ce`, containing the separately approved
+homepage glass release (PR #15) and Sage footer (PR #17). Independent review
+found no path overlap with the payment changes. All 11 gateway runtime files
+remain identical to `cf891ca` and the current package manifest; visual files
+are not added to the payment ZIP. The canonical dirty workspace is preserved.
+
+The hero task returned its production writer window, with all writes ended
+at 02:14:25 UTC. Root independently verified the three approved installed hashes,
+all six off-server backup components (329,692,003 bytes), and unchanged protected
+payment configuration, orders, stock and logs. Its reported pointer-lighting
+issue remains with the hero task for a separate local fix and new release
+window; it does not authorize further writes in the returned window. Footer
+source is merged, but its staging and production deployments remain pending.
+
+The email task's staging SMTP2GO credential is encrypted, with its send permission
+independently verified. Sending and logging were off at the last completed
+readback; no inbox receipt was established. John subsequently approved two
+labeled staging seller/buyer tests to the store inbox and, only if staging
+passes, production SMTP2GO activation and one final check. Its separate task
+owns that approval and the next serialized host window. This is pending email
+acceptance, not evidence that payment notification delivery works.
+
+John reported that he lacks staging login credentials. Authenticated read-only
+inspection confirmed an existing administrator on the distinct staging database;
+the stored application password cannot log into the browser dashboard. Approval
+for a normal staging-only WordPress reset link is pending. No password, account,
+or reset key has been changed. Production access is outside that proposed reset.
+
+All production payment acceptance gates above remain open. The new production
+gateway and its settings remain absent; the visual and email work does not
+establish live payment readiness.
 
 ## Recovery controls
 

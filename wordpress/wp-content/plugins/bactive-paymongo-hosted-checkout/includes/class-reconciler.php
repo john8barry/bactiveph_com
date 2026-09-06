@@ -332,8 +332,8 @@ final class Reconciler
                     break;
                 }
                 if ($result === 'payment_pending') {
-                    // Session expiry is not terminal while a Payment itself is
-                    // pending. Leave the attempt unexpired and in the durable
+                    // Session expiry is not terminal while a Payment is pending
+                    // or its Intent is still processing. Leave the attempt unexpired and in the durable
                     // retry queue so a later paid/failed readback is observed.
                     break;
                 }
@@ -361,6 +361,15 @@ final class Reconciler
                     break;
                 }
                 if ((time() - $created_at) >= 82800) {
+                    // Age-based expiry affects every outstanding attempt. An
+                    // existing order-level hold requires provider readback and
+                    // review, not another automatic expiry request. Keep reading
+                    // other attempts, and retain the scheduled recovery job.
+                    if ((string) $order->get_meta(self::UNRESOLVED_META, true) !== ''
+                        || (string) $order->get_meta('_bactive_paymongo_review_required', true) !== ''
+                        || Webhook::has_pending_reviews($order_id)) {
+                        continue;
+                    }
                     if (!(new Gateway(false))->expire_all_for_order($order)) {
                         if (!Order_Lock::held_by_request($order_id)
                             || !Order_Lock::renew($order_id)) {

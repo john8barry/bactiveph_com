@@ -518,7 +518,9 @@ final class Webhook
             return 'invalid';
         }
 
-        if ($payment_state['paid'] === array() && $payment_state['pending'] !== array()) {
+        if ($payment_state['paid'] === array()
+            && ($payment_state['pending'] !== array()
+                || Integrity::checkout_session_has_processing_intent($session_response))) {
             return 'payment_pending';
         }
         if ($payment_state['paid'] === array()) {

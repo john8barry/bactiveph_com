@@ -191,6 +191,22 @@ final class Integrity
     }
 
     /**
+     * A processing Intent can outlive a failed Payment. This predicate only
+     * retains an outstanding attempt; it never establishes payment or expiry.
+     * Callers separately validate the authenticated Session and Payment facts.
+     *
+     * @param array<string,mixed> $response
+     */
+    public static function checkout_session_has_processing_intent(array $response): bool
+    {
+        $data = $response['data'] ?? null;
+        $attributes = is_array($data) ? ($data['attributes'] ?? null) : null;
+        $intent = is_array($attributes) ? ($attributes['payment_intent'] ?? null) : null;
+        $intent_attributes = is_array($intent) ? ($intent['attributes'] ?? null) : null;
+        return is_array($intent_attributes) && ($intent_attributes['status'] ?? null) === 'processing';
+    }
+
+    /**
      * Decide whether a verified paid event may change the WooCommerce order.
      */
     public static function paid_event_disposition(

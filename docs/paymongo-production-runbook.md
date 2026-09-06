@@ -365,6 +365,10 @@ Do not mark the GitHub issue complete until all acceptance criteria are proven.
   PayMongo payment and Checkout Session with the WooCommerce order before a
   human changes order state.
 - Never ask a customer to pay again while an earlier session is ambiguous.
+- Scheduled recovery continues authenticated GET readbacks for held attempts,
+  but does not repeat age-based expiry POSTs while an order-level review remains
+  active. It observes later paid or terminal expiry evidence through the existing
+  reconciliation path; it never clears the review merely because a poll ran.
 - A failed Payment does not by itself resolve a processing Payment Intent.
   Keep the exact order/session outstanding and inspect authenticated provider
   state. An expiry rejection is not cancellation. Never clear recovery markers,

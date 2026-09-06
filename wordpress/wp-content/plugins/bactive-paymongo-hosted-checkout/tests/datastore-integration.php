@@ -209,6 +209,7 @@ try {
     remove_filter($failure_hook, $broken_sql, PHP_INT_MAX);
     $wpdb->suppress_errors($previous_suppression);
 }
+require __DIR__ . '/abandoned-session-datastore.php';
 echo wp_json_encode(array('datastore' => $expected_hpos ? 'hpos' : 'cpt', 'checks' => $checks,
     'action_scheduler_store' => get_class(ActionScheduler::store()),
     'first_settings_save_seconds' => round($elapsed, 3), 'payment_candidates' => count($actual),

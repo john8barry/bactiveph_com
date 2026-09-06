@@ -2018,9 +2018,10 @@ final class Gateway extends \WC_Payment_Gateway
                 return array('verified' => false, 'settlement' => true, 'lock_lost' => false);
             }
 
-            if ($payment_state['pending'] !== array()) {
+            if ($payment_state['pending'] !== array()
+                || Integrity::checkout_session_has_processing_intent($readback)) {
                 // Expiring a Checkout Session does not prove an already-
-                // created pending Payment failed. Keep the attempt outstanding
+                // created pending Payment or processing Intent failed. Keep the attempt outstanding
                 // so authenticated recovery can observe a later paid/failed
                 // transition before COD or another session is permitted.
                 $all_verified = false;

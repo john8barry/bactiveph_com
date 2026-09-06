@@ -40,7 +40,7 @@ final class Order_Lock
 
         $option = self::option_name($order_id);
         $record = array('token' => $token, 'acquired_at' => time());
-        if (!add_option($option, $record, '', false)) {
+        if (!Order_Lock::insert_option($option, $record)) {
             $observed = self::read_database_record($option);
             $existing = is_array($observed) ? $observed['record'] : null;
             $acquired_at = is_array($existing) ? (int) ($existing['acquired_at'] ?? 0) : 0;
@@ -144,7 +144,7 @@ final class Order_Lock
         }
 
         $record = array('token' => $token, 'acquired_at' => time());
-        if (!add_option($option, $record, '', false)) {
+        if (!Order_Lock::insert_option($option, $record)) {
             $observed = self::read_database_record($option);
             $existing = is_array($observed) ? $observed['record'] : null;
             $acquired_at = is_array($existing) ? (int) ($existing['acquired_at'] ?? 0) : 0;
@@ -238,7 +238,7 @@ final class Order_Lock
             'acquired_at' => time(),
             'fingerprint' => $fingerprint,
         );
-        if (!add_option(self::SETTINGS_OPTION, $record, '', false)) {
+        if (!Order_Lock::insert_option(self::SETTINGS_OPTION, $record)) {
             $observed = self::read_database_record(self::SETTINGS_OPTION);
             $existing = is_array($observed) ? $observed['record'] : null;
             $acquired_at = is_array($existing) ? (int) ($existing['acquired_at'] ?? 0) : 0;
@@ -360,6 +360,49 @@ final class Order_Lock
         self::$settings_fingerprint = '';
     }
 
+    /**
+     * Insert an internal non-autoloaded record without replacing another
+     * request's winner. WordPress add_option uses an upsert after a cached
+     * absence check, so it cannot provide this concurrency guarantee.
+     *
+     * @param mixed $value
+     */
+    public static function insert_option(string $option, $value): bool
+    {
+        global $wpdb;
+        if (!str_starts_with($option, 'bactive_paymongo_') || strlen($option) > 191) {
+            return false;
+        }
+        if (!is_object($wpdb) || !isset($wpdb->options)
+            || !is_callable(array($wpdb, 'prepare')) || !is_callable(array($wpdb, 'query'))
+            || !is_callable(array($wpdb, 'get_row'))) {
+            return defined('BACTIVE_PAYMONGO_TESTING') && BACTIVE_PAYMONGO_TESTING === true
+                && add_option($option, $value, '', false);
+        }
+        $raw = (string) maybe_serialize($value);
+        try {
+            $affected = $wpdb->query($wpdb->prepare(
+                "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')",
+                $option,
+                $raw
+            ));
+            $failed = $wpdb->last_error !== '';
+            if ($affected !== 1 || $failed) {
+                return false;
+            }
+            $observed = self::read_database_record($option);
+            return is_array($observed) && hash_equals($raw, $observed['raw']);
+        } catch (\Throwable $error) {
+            return false;
+        } finally {
+            // A losing contender may still have cached absence or an old row.
+            // Invalidate even after an exception before callers inspect it.
+            wp_cache_delete($option, 'options');
+            wp_cache_delete('notoptions', 'options');
+            wp_cache_delete('alloptions', 'options');
+        }
+    }
+
     /** @param mixed $expected */
     public static function delete_option_if_exact(string $option, $expected): bool
     {
@@ -390,31 +433,49 @@ final class Order_Lock
         return self::CHECKOUT_PREFIX . hash_hmac('sha256', $identity, wp_salt('auth'));
     }
 
-    /** @return array{raw:string,record:mixed}|null */
-    private static function read_database_record(string $option): ?array
+    /**
+     * Null means verified absence; a null record means malformed or unreadable.
+     * @return array{raw:string,record:mixed}|null
+     */
+    public static function read_database_record(string $option): ?array
     {
         global $wpdb;
 
         if (!is_object($wpdb)
             || !isset($wpdb->options)
             || !is_callable(array($wpdb, 'prepare'))
-            || !is_callable(array($wpdb, 'get_var'))) {
+            || !is_callable(array($wpdb, 'get_row'))) {
+            if (!defined('BACTIVE_PAYMONGO_TESTING') || BACTIVE_PAYMONGO_TESTING !== true) {
+                return array('raw' => '', 'record' => null);
+            }
             $record = get_option($option, null);
             return $record === null
                 ? null
                 : array('raw' => function_exists('maybe_serialize') ? maybe_serialize($record) : serialize($record), 'record' => $record);
         }
 
-        $raw = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
-                $option
-            )
-        );
-        if (!is_string($raw)) {
+        try {
+            $row = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
+                    $option
+                ),
+                ARRAY_A
+            );
+        } catch (\Throwable $error) {
+            return array('raw' => '', 'record' => null);
+        }
+        // A failed read is malformed/held, never proof that the lock is absent.
+        if ($wpdb->last_error !== '') {
+            return array('raw' => '', 'record' => null);
+        }
+        if ($row === null) {
             return null;
         }
-
+        if (!is_array($row) || !is_string($row['option_value'] ?? null)) {
+            return array('raw' => '', 'record' => null);
+        }
+        $raw = $row['option_value'];
         $record = is_serialized($raw)
             ? unserialize($raw, array('allowed_classes' => false))
             : $raw;

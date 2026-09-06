@@ -1241,7 +1241,7 @@ final class Reconciler
             self::schedule_order($order->get_id());
             return;
         }
-        $new_incident = add_option($identity, $claim, '', false);
+        $new_incident = Order_Lock::insert_option($identity, $claim);
         $stored_claim = get_option($identity, null);
         $incident_exists = is_array($stored_claim)
             && (int) ($stored_claim['order_id'] ?? 0) === $order->get_id()

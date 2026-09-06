@@ -246,13 +246,13 @@ final class Webhook
             return false;
         }
         $ledger = self::pending_review_ledger_option($kind, $record);
-        add_option($ledger, $record, '', false);
+        Order_Lock::insert_option($ledger, $record);
         if (get_option($ledger, null) !== $record) {
             return false;
         }
         if ($kind === 'processing') {
             $review_option = self::processing_review_option(self::processing_identity_from_record($record), $record['code'], $record['mode']);
-            add_option($review_option, $record, '', false);
+            Order_Lock::insert_option($review_option, $record);
             if (get_option($review_option, null) !== $record) {
                 return false;
             }
@@ -949,7 +949,7 @@ final class Webhook
                     ? $existing
                     : null;
         }
-        if (!add_option($option, $record, '', false)) {
+        if (!Order_Lock::insert_option($option, $record)) {
             return null;
         }
         $readback = get_option($option, null);
@@ -1776,7 +1776,7 @@ final class Webhook
                 return null;
             }
         }
-        if (!add_option($option, $record, '', false)) {
+        if (!Order_Lock::insert_option($option, $record)) {
             return null;
         }
         $readback = get_option($option, null);
@@ -2208,7 +2208,7 @@ final class Webhook
         $record['status'] = 'done';
         $record['finished_at'] = time();
         $receipt_option = self::review_resolution_receipt_option($record);
-        if (!add_option($receipt_option, $record, '', false)) {
+        if (!Order_Lock::insert_option($receipt_option, $record)) {
             $receipt = get_option($receipt_option, null);
             if (!is_array($receipt)
                 || !self::review_resolution_record_valid($receipt)
@@ -2612,7 +2612,7 @@ final class Webhook
             (string) $record['payment_id'],
             (string) $record['mode']
         );
-        if (!add_option($option, $record, '', false)) {
+        if (!Order_Lock::insert_option($option, $record)) {
             return null;
         }
         $readback = get_option($option, null);
@@ -3922,7 +3922,7 @@ final class Webhook
                     : sanitize_text_field((string) $context[$key]);
             }
         }
-        if (add_option($option, $record, '', false)) {
+        if (Order_Lock::insert_option($option, $record)) {
             return 'armed';
         }
 
@@ -4222,7 +4222,7 @@ final class Webhook
         $record = $queued;
         $identity = self::processing_identity_from_record($record);
         $incident_option = self::processing_incident_option($identity, $mode);
-        if (!add_option($incident_option, $record, '', false)) {
+        if (!Order_Lock::insert_option($incident_option, $record)) {
             $existing = get_option($incident_option, null);
             $same_identity = is_array($existing);
             foreach (array('code', 'order_id', 'event_id', 'session_id', 'payment_id', 'mode') as $key) {
@@ -4285,7 +4285,7 @@ final class Webhook
                         return;
                     }
                     $review_option = self::processing_review_option($identity, $code, $mode);
-                    $new_incident = add_option($review_option, $record, '', false);
+                    $new_incident = Order_Lock::insert_option($review_option, $record);
                     $stored_review = get_option($review_option, null);
                     $incident_exists = is_array($stored_review) && $stored_review === $record;
                     if (!$incident_exists) {
@@ -4365,7 +4365,7 @@ final class Webhook
                 'durable' => false,
             );
         }
-        if (add_option($option, $record, '', false)) {
+        if (Order_Lock::insert_option($option, $record)) {
             $new_incident = true;
         } else {
             $new_incident = false;
@@ -5224,11 +5224,12 @@ final class Webhook
             'identity' => $id,
             'mode' => $mode,
         );
-        if (add_option($option, $record, '', false)) {
+        if (Order_Lock::insert_option($option, $record)) {
             return 'claimed';
         }
 
-        $existing = get_option($option, array());
+        $observed = Order_Lock::read_database_record($option);
+        $existing = is_array($observed) ? $observed['record'] : null;
         if (!is_array($existing)
             || (string) ($existing['kind'] ?? '') !== $kind
             || (string) ($existing['identity'] ?? '') !== $id
@@ -5242,8 +5243,10 @@ final class Webhook
             return 'busy';
         }
 
-        delete_option($option);
-        return add_option($option, $record, '', false) ? 'claimed' : 'busy';
+        if (!Order_Lock::delete_option_if_exact($option, $existing)) {
+            return 'busy';
+        }
+        return Order_Lock::insert_option($option, $record) ? 'claimed' : 'busy';
     }
 
     private static function finish_claim(string $kind, string $id, string $status, string $mode): void

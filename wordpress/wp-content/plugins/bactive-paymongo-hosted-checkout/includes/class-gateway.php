@@ -268,11 +268,9 @@ final class Gateway extends \WC_Payment_Gateway
         }
         Reconciler::set_draining(true);
 
-        add_option(
+        Order_Lock::insert_option(
             'bactive_paymongo_disable_drain_error',
-            array('recorded_at' => time(), 'code' => sanitize_key($result->get_error_code()), 'owner' => 'settings'),
-            '',
-            false
+            array('recorded_at' => time(), 'code' => sanitize_key($result->get_error_code()), 'owner' => 'settings')
         );
 
         // Hiding the gateway is safe and remains allowed. A mode/key change is
@@ -522,7 +520,7 @@ final class Gateway extends \WC_Payment_Gateway
         );
         if (is_wp_error($result) || Reconciler::has_tracked_orders()
             || Reconciler::has_unresolved_external_incidents()) {
-            add_option(
+            Order_Lock::insert_option(
                 'bactive_paymongo_disable_drain_error',
                 array(
                     'recorded_at' => time(),
@@ -530,9 +528,7 @@ final class Gateway extends \WC_Payment_Gateway
                     'code' => is_wp_error($result)
                         ? sanitize_key($result->get_error_code())
                         : 'settings_delete_active_orders',
-                ),
-                '',
-                false
+                )
             );
             Order_Lock::release_settings();
             throw new \Error('PayMongo settings cannot be deleted while payment state remains active or unresolved.');
@@ -3000,7 +2996,7 @@ final class Gateway extends \WC_Payment_Gateway
             Reconciler::schedule_order($order->get_id());
             return;
         }
-        $new_incident = add_option($review_key, $claim, '', false);
+        $new_incident = Order_Lock::insert_option($review_key, $claim);
         $stored_claim = get_option($review_key, null);
         $incident_exists = is_array($stored_claim)
             && (int) ($stored_claim['order_id'] ?? 0) === $order->get_id()

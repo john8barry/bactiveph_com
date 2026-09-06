@@ -58,6 +58,10 @@ The fixture uses no real credentials, customer records, or provider payments.
 == Changelog ==
 
 = 1.0.0 =
+* Preserve unresolved review holds across settings edits and retain GET recovery
+  without repeated automatic expiry of held sessions or processing intents.
+* Use native insert-only leases and claims, preserving concurrent winners and
+  completed effects even when option caches are stale or database calls fail.
 * Queue recovery independently for every order, with exact-order deduplication
   and WP-Cron fallback when Action Scheduler cannot store a job.
 * Keep payment recovery discovery to one HPOS metadata join, translate CPT

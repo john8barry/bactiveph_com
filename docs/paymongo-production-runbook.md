@@ -406,6 +406,21 @@ Do not mark the GitHub issue complete until all acceptance criteria are proven.
   amount, method, operator, and timestamp. Do not use WooCommerce's refund
   buttons or change the paid order status to Refunded in this release.
 
+## Concurrent request records
+
+Order, checkout and settings leases, webhook/payment claims, effect receipts,
+incident records and the installation identity use database insert-only writes.
+A losing request must read the existing winner; it must never replace that row
+through WordPress's cache-dependent `add_option` upsert. Duplicate and failed
+writes invalidate local option caches, including exception paths. Database read
+failures hold settings issuance closed. Stale event claims are removed only if
+their exact observed value still exists.
+
+Keep the native concurrency regressions in the release checks. Single-process
+contract fixtures cannot establish exclusion between real PHP requests. Preserve
+existing claim and incident rows during deployment and rollback; deleting them
+can erase payment deduplication and recovery evidence.
+
 ## Rollback
 
 1. Hide/disable PayMongo Hosted Checkout in WooCommerce; leave COD enabled, but

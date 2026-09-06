@@ -550,3 +550,31 @@ matrix, protected configuration, manual provider-side refund procedure, and
 exact acceptance gates. Each live method needs provider/order/stock/email
 evidence; a browser return, source test, merge, or successful upload is
 insufficient.
+
+
+## September 6 source repair after the staging review hold
+
+The settings review-hold and cache notification fixes are integrated as
+`b50bbaa` and `0cda693`. Expiry recovery is integrated as `9a96481`: orders already
+held for review retain provider GET reconciliation without repeated automatic
+age-based expiry requests. A processing Payment Intent remains outstanding even
+when its Payment failed or its Checkout Session reports expired. The PHP
+8.1–8.3 contract matrix passes 1,415 checks on the combined source.
+
+A separate native two-process WordPress reproduction found that `add_option`
+can overwrite an active lease after a contender cached the option's absence.
+This affects the order, checkout and settings lock families. The repair routes
+all twenty production create-once option writes through prepared insert-only
+SQL, retains exact-value stale-claim deletion, and requires a durable installation
+UUID before webhook creation. Native HPOS and CPT checks passed, including
+sixty helper checks and ninety separate-process contention assertions per
+datastore. Testing additionally corrected scalar normalization and existing
+empty-row reads. Independent review corrected exception-path cache invalidation;
+the final integration and remote CI remain required before staging deployment.
+
+These source fixes have not yet replaced the staging runtime from `cf891ca`.
+Staging issuance remains closed under the unresolved provider/order review,
+with the temporary QA account revoked and recovery processing retained. The
+fresh staging full backup was independently verified off-server. Production
+PayMongo activation, bank acceptance, the five approved live payments, refund,
+intended-inbox confirmation and public checkout acceptance remain incomplete.

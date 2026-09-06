@@ -39,6 +39,10 @@ final class Readiness
 
         if ($webhook === null) {
             $idempotency_key = self::webhook_idempotency_key($live);
+            if ($idempotency_key === '') {
+                self::clear($live);
+                return new \WP_Error('paymongo_installation_identity_unavailable', 'The PayMongo installation identity could not be verified.');
+            }
             $created = $client->create_webhook(self::endpoint_url($live), $idempotency_key);
             if (is_wp_error($created)) {
                 self::clear($live);
@@ -338,11 +342,16 @@ final class Readiness
 
     private static function webhook_idempotency_key(bool $live): string
     {
-        $installation_id = (string) get_option('bactive_paymongo_installation_id', '');
-        if ($installation_id === '') {
-            $installation_id = wp_generate_uuid4();
-            add_option('bactive_paymongo_installation_id', $installation_id, '', false);
-            $installation_id = (string) get_option('bactive_paymongo_installation_id', $installation_id);
+        $option = 'bactive_paymongo_installation_id';
+        $observed = Order_Lock::read_database_record($option);
+        if ($observed === null) {
+            Order_Lock::insert_option($option, wp_generate_uuid4());
+            $observed = Order_Lock::read_database_record($option);
+        }
+        $installation_id = is_array($observed) ? $observed['record'] : null;
+        if (!is_string($installation_id)
+            || !preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/Di', $installation_id)) {
+            return '';
         }
 
         return 'bactive-webhook-' . ($live ? 'live-' : 'test-') . $installation_id;

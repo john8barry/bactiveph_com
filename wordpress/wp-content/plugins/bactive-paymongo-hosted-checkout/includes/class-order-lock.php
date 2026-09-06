@@ -391,7 +391,8 @@ final class Order_Lock
                 return false;
             }
             $observed = self::read_database_record($option);
-            return is_array($observed) && hash_equals($raw, $observed['raw']);
+            return is_array($observed) && $observed['record'] !== null
+                && hash_equals($raw, $observed['raw']);
         } catch (\Throwable $error) {
             return false;
         } finally {

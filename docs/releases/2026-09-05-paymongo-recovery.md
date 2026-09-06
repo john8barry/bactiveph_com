@@ -567,7 +567,7 @@ This affects the order, checkout and settings lock families. The repair routes
 all twenty production create-once option writes through prepared insert-only
 SQL, retains exact-value stale-claim deletion, and requires a durable installation
 UUID before webhook creation. Native HPOS and CPT checks passed, including
-sixty helper checks and ninety separate-process contention assertions per
+sixty-six helper checks and ninety separate-process contention assertions per
 datastore. Testing additionally corrected scalar normalization and existing
 empty-row reads. Independent review corrected exception-path cache invalidation;
 the final integration and remote CI remain required before staging deployment.

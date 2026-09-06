@@ -477,6 +477,65 @@ accurate payment claims and 30 minutes of monitoring. The private bank/stuck-Sho
 support draft remains unsent. Do not retry held orders 374 or 376 without definitive
 provider state and the controlled continuation.
 
+## September 6 unattended recovery and blocked cart retest
+
+The payment branch incorporated main `91a499a99667ab5d895609e0c6c5104c0ee4dd89`
+at `a245a576da9a82e7b0f468c9fcd0ea3bd431d61b`. Payment CI run 34031986283 and
+punctuation run 34031986334 passed all five checks. The existing-session expiry
+suite now brings the PHP 8.1–8.3 runs to 1,215 checks, including the exact
+23-hour boundary, independent expiry readback and pending-payment protection.
+Three mutation controls failed as intended. All 11 gateway runtime files still
+match the unchanged `cf891ca` artifact.
+
+A private staging-only OS worker now runs the named PayMongo WordPress cron
+hooks and the native Action Scheduler runner restricted to the PayMongo
+hook/group. Existing account crontab bytes were preserved. The installed
+WP-CLI 2.6 and PHP 8.2 contracts, exact private runtime hashes, native housekeeping
+scope, locking and failure behavior were independently reviewed. The 22
+selection/error checks and 15 native cleaner/filter checks passed on PHP 8.1–8.3.
+Qualified deployment manifest SHA-256:
+`31be387cf3e6f7b9e58a0b32305ec8e3aacf53887f4b304013d5d04192a55a5a`.
+
+The first unattended cycle completed at 11:55:37 UTC. The next completed at
+11:56:35 UTC; native action 773 independently records starting at 11:56:32 and
+completing at 11:56:34 through WP-CLI. No manual launcher or queue execution was
+used. MailPoet recorded no action in that interval. Protected payment facts and
+stock 12 were unchanged. This proves unattended execution, not resolution of
+the held provider payment. Production worker deployment remains pending with
+the production gateway.
+
+A fresh normal-browser cart retest found PayMongo hidden despite a valid
+temporary manager login, enabled test gateway and no settings-write lock.
+The stored global drain was `yes`. Order 374's unsuccessful abandonment expiry
+had created `reconciliation_abandoned_expiry_failed` at 10:56:30 UTC. The
+review-inbox path intentionally closes new issuance. The order remained unpaid,
+without a transaction or stock effect. The drain was not overridden, and no
+replacement session, new order or charge was created. Unchanged-active-cart
+reuse and changed-cart replacement therefore remain unproven through this
+browser retest; the earlier rapid-click/COD cases do not substitute for them.
+
+The unused fixture was removed through the normal cart. Independent cleanup
+readback at 12:39:09 UTC confirmed the existing QA user's roles and sessions
+removed, unchanged account/password data and orders 381–387, stock 12 and zero
+account email attempts. A browser reload confirmed an empty anonymous cart.
+Order 387 had already been automatically cancelled at 08:54 UTC; its provider
+session remained expired and unpaid. Wordfence remains disabled only on staging.
+
+Header/typography and care-copy production releases now have independent
+acceptance, including exact target hashes and unchanged protected commerce.
+The care owner's cache invocation had an ambiguous return and was not retried;
+the approved copy was independently reconciled in source and verified in normal
+public responses. Production still lacks the new gateway and its settings.
+Content deployment is not payment acceptance.
+
+A nonsensitive gateway settings save can clear the drain while an unresolved
+payment review remains. The installed `cf891ca` runtime is held from production
+pending the focused fix and regression; no drain override was performed.
+
+The next control point is that guard fix, merchant sign-in/MFA, definitive recovery of held
+sandbox order 374 and separate BPI/UBP test/live authorization. Keep callback,
+credential and recovery processing intact. The support draft remains unsent.
+
 ## Recovery controls
 
 New issuance remains restricted to store managers during verification. Keep

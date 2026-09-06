@@ -90,6 +90,43 @@ if ($actor === 'self') {
         remove_filter('query', $broken_read, PHP_INT_MAX);
         $wpdb->suppress_errors($suppressed);
     }
+    // Complete a stale processing claim in another SQL write at the precise
+    // takeover DELETE boundary. The loser must preserve those newer bytes.
+    $claim = new ReflectionMethod(Webhook::class, 'claim');
+    $claim->setAccessible(true);
+    $claim_name = new ReflectionMethod(Webhook::class, 'claim_option');
+    $claim_name->setAccessible(true);
+    $identity = 'atomic-stale-claim-completion-fixture';
+    $option = $claim_name->invoke(null, 'event', $identity, 'test');
+    $expired = array('status' => 'processing', 'claimed_at' => time() - 3600,
+        'kind' => 'event', 'identity' => $identity, 'mode' => 'test');
+    $processed = $expired;
+    $processed['status'] = 'processed';
+    $processed['claimed_at'] = time();
+    $assert(Order_Lock::insert_option($option, $expired), 'Stale claim fixture insertion failed.');
+    $completed_during_delete = false;
+    $complete_before_delete = static function (string $sql) use ($wpdb, $option, $processed, &$completed_during_delete): string {
+        if (!$completed_during_delete && preg_match('/^DELETE\s/i', $sql) && str_contains($sql, $option)) {
+            if (!str_contains($sql, 'AND option_value =')) {
+                throw new RuntimeException('Stale claim deletion omitted its exact value predicate.');
+            }
+            $completed_during_delete = true;
+            $wpdb->query($wpdb->prepare("UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s",
+                maybe_serialize($processed), $option));
+            if ($wpdb->last_error !== '') { throw new RuntimeException('Concurrent fixture completion failed.'); }
+        }
+        return $sql;
+    };
+    add_filter('query', $complete_before_delete, PHP_INT_MAX);
+    try {
+        $assert($claim->invoke(null, 'event', $identity, 'test') === 'busy', 'Stale claimant acquired ownership after a concurrent completion.');
+        $assert($completed_during_delete, 'Stale claim regression did not exercise the exact DELETE boundary.');
+        $assert($read($option) === maybe_serialize($processed), 'Stale takeover deleted or replaced the completed claim bytes.');
+    } finally {
+        remove_filter('query', $complete_before_delete, PHP_INT_MAX);
+        delete_option($option);
+    }
+
     // A completed effect must not become armed again when INSERT throws and
     // the process cache still holds the old armed record.
     $arm = new ReflectionMethod(Webhook::class, 'arm_effects');

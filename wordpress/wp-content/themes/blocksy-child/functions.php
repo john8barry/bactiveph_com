@@ -115,7 +115,7 @@ function bactive_shipping_returns_tab_content() {
 function bactive_fabric_care_tab_content() {
 	echo '<h2>Fabric & Care</h2>';
 	echo '<p><strong>CourtSoft™</strong><br>Our signature four-way-stretch knit: buttery-soft, squat-proof, sweat-wicking and built to hold its shape.</p>';
-	echo '<p><strong>BreezeKnit™</strong><br>Lightweight and breathable for hot-court days — moves air, moves sweat, keeps you cool.</p>';
+	echo '<p><strong>BreezeKnit™</strong><br>Lightweight and breathable for hot-court days. It moves air, moves sweat, and keeps you cool.</p>';
 	echo '<p><strong>Care basics</strong><br>Machine wash cold on gentle with like colours. Skip the fabric softener (it coats performance fibres). Hang dry or tumble low. Don\'t bleach or iron print.</p>';
 }
 
@@ -140,16 +140,16 @@ function bactive_size_guide_modal() {
 			<h2>Find your fit</h2>
 			<p>B Active is designed with an Asian fit and runs true to size. If you\'re between sizes, size up for a relaxed feel or stay true for a closer fit.</p>
 			<h3>How to measure</h3>
-			<p><strong>Bust</strong> — around the fullest part.<br><strong>Waist</strong> — the narrowest part of your torso.<br><strong>Hips</strong> — the fullest part.</p>
+			<p><strong>Bust</strong>: around the fullest part.<br><strong>Waist</strong>: the narrowest part of your torso.<br><strong>Hips</strong>: the fullest part.</p>
 			<table class="bactive-size-table">
 				<thead>
 					<tr><th>Size</th><th>Bust (cm)</th><th>Waist (cm)</th><th>Hips (cm)</th></tr>
 				</thead>
 				<tbody>
-					<tr><td>S</td><td>80–84</td><td>62–66</td><td>86–90</td></tr>
-					<tr><td>M</td><td>85–89</td><td>67–71</td><td>91–95</td></tr>
-					<tr><td>L</td><td>90–95</td><td>72–77</td><td>96–101</td></tr>
-					<tr><td>XL</td><td>96–101</td><td>78–83</td><td>102–107</td></tr>
+					<tr><td>S</td><td>80 to 84</td><td>62 to 66</td><td>86 to 90</td></tr>
+					<tr><td>M</td><td>85 to 89</td><td>67 to 71</td><td>91 to 95</td></tr>
+					<tr><td>L</td><td>90 to 95</td><td>72 to 77</td><td>96 to 101</td></tr>
+					<tr><td>XL</td><td>96 to 101</td><td>78 to 83</td><td>102 to 107</td></tr>
 				</tbody>
 			</table>
 		</div>
@@ -258,3 +258,6 @@ function bactive_free_shipping_progress_bar() {
     }
 }
 // END PHASE 6 SNIPPETS
+
+// Storefront punctuation policy and generated WooCommerce ranges.
+require_once __DIR__ . '/inc/storefront-punctuation.php';

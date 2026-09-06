@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "target": "sage-header-typography",
+  "typography_manifest_sha256": "a361edd826f08111acf6253bf4010301e57f592089f73b15465bfe8dab20593e",
+  "files": {
+    "wp-content/themes/blocksy-child/assets/css/header-sage.css": {
+      "sha256": "e1522a21b278d2ec40ffe5add60e825d698de5ef0f17c534b970cc83bf37d097",
+      "bytes": 8492
+    },
+    "wp-content/themes/blocksy-child/assets/js/header-sage.js": {
+      "sha256": "dca5f273be322a0e631e4ebd799731ab0812f725b084c2db88f38b269475df94",
+      "bytes": 2039
+    },
+    "wp-content/themes/blocksy-child/template-parts/header-sage.php": {
+      "sha256": "48c53d38926c9eb6fcaef00538850b7afb0ae62d752f8ba1936453c9a1c8862f",
+      "bytes": 3732
+    },
+    "wp-content/themes/blocksy-child/assets/css/brand-typography.css": {
+      "sha256": "d0cc26343548854060affd9e408fc9bd851e8a9a3b87c47b2414591bb9dce6eb",
+      "bytes": 1566
+    },
+    "wp-content/themes/blocksy-child/assets/fonts/rajdhani-600-latin.woff2": {
+      "sha256": "35f7e628ec8e7dd3bf434e95ce28289803401f12d8605c56ca83db2b4b301d33",
+      "bytes": 9400
+    },
+    "wp-content/themes/blocksy-child/assets/fonts/rajdhani-600-latin-ext.woff2": {
+      "sha256": "bdf7c1b3c51cfc37d1a0e2b15d86d85f1fa0fdb87678277e11714f9470b734ed",
+      "bytes": 7208
+    },
+    "wp-content/themes/blocksy-child/assets/fonts/rajdhani-OFL.txt": {
+      "sha256": "793bdd8538a0c03afb5bc10906be27ad1dc76f143cfeac8c55cd9075a5b3a55c",
+      "bytes": 4372
+    },
+    "wp-content/mu-plugins/bactiveph-sage-header.php": {
+      "sha256": "71288ff2dbe14f4a16560027e3c47f2fe2a7bc23763ed5451d55d34af27eae3d",
+      "bytes": 5139
+    }
+  }
+}

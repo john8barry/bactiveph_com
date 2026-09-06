@@ -393,7 +393,6 @@ final class Reconciler
                 && !Webhook::operator_disposition_recovery_pending($order)
                 && Gateway::has_inconsistent_provider_payment_state($order)
                 && (string) $order->get_meta(self::UNRESOLVED_META, true) === '') {
-                self::set_draining(true);
                 self::flag_failure($order, 'provider_payment_state_inconsistent');
                 $readback = wc_get_order($order_id);
                 if (!$readback instanceof \WC_Order
@@ -620,6 +619,9 @@ final class Reconciler
                 if (!$order instanceof \WC_Order || !self::refresh_order($order)) {
                     return true;
                 }
+                if (is_callable(array($order, 'read_meta_data'))) {
+                    $order->read_meta_data(true);
+                }
                 if ((string) $order->get_meta(self::UNRESOLVED_META, true) !== ''
                     || (string) $order->get_meta('_bactive_paymongo_review_required', true) !== ''
                     || (string) $order->get_meta('_bactive_paymongo_processing_incident_code', true) !== ''
@@ -639,7 +641,7 @@ final class Reconciler
     public static function has_unresolved_external_incidents(): bool
     {
         global $wpdb;
-        $global_incident = get_option('bactive_paymongo_disable_drain_error', null);
+        $global_incident = self::read_incident_option('bactive_paymongo_disable_drain_error', null);
         if ($global_incident !== null
             && (!is_array($global_incident) || ($global_incident['owner'] ?? '') !== 'settings')) {
             return true;
@@ -683,7 +685,7 @@ final class Reconciler
             return true;
         }
         foreach ($names as $name) {
-            $record = get_option($name, null);
+            $record = self::read_incident_option($name, null);
             if (!is_array($record)) {
                 return true;
             }
@@ -729,17 +731,165 @@ final class Reconciler
 
     public static function is_draining(): bool
     {
-        return get_option('bactive_paymongo_draining', 'yes') === 'yes';
+        // This is an issuance fence. A request-local option cache must not hide
+        // a newer webhook hold, and missing/malformed/read-error states close it.
+        return self::read_drain_value() !== 'no';
     }
 
     public static function set_draining(bool $draining): void
     {
-        $next = $draining ? 'yes' : 'no';
-        $previous = (string) get_option('bactive_paymongo_draining', 'yes');
-        update_option('bactive_paymongo_draining', $next, false);
-        if ($previous !== $next && function_exists('do_action')) {
+        if (!$draining) {
+            throw new \LogicException('PayMongo reopening requires a verified drain fence.');
+        }
+        $previous = self::read_drain_value();
+        // Always write through to the database: cached `yes` may conceal the
+        // settings writer's newer verification token. Closing invalidates it.
+        if (!self::write_drain_value('yes')) {
+            throw new \RuntimeException('PayMongo drain fence could not be persisted.');
+        }
+        if ($previous === 'no' && function_exists('do_action')) {
             do_action('bactive_paymongo_availability_changed');
         }
+    }
+
+    /** Publish the alarm before closing; an unrecorded failure cannot be reopened by settings. */
+    public static function record_global_drain_error(array $record): void
+    {
+        $option = 'bactive_paymongo_disable_drain_error';
+        try {
+            update_option($option, $record, false);
+            $recorded = self::read_incident_option($option, null) === $record;
+        } catch (\Throwable $error) {
+            $recorded = false;
+        }
+        if (!$recorded) {
+            if (!self::write_drain_value('unrecorded-incident')) {
+                throw new \RuntimeException('PayMongo incident fence could not be persisted.');
+            }
+            return;
+        }
+        self::set_draining(true);
+    }
+
+    /** Start before readiness and review scans; later closures invalidate this token. */
+    public static function begin_reopen_verification(bool $explicit_recovery = false): string
+    {
+        if (!Order_Lock::renew_current_settings()) {
+            return '';
+        }
+        try {
+            $fence = 'verifying:' . bin2hex(random_bytes(16));
+        } catch (\Throwable $error) {
+            return '';
+        }
+        $previous = self::read_drain_value();
+        if ($previous === 'no' || ($explicit_recovery && $previous === 'yes')) {
+            return self::write_drain_value($fence, $previous) ? $fence : '';
+        }
+        // Initial setup may insert only an actually absent option, never
+        // overwrite a concurrent closure or an unreadable existing value.
+        return $explicit_recovery && $previous === null && self::write_drain_value($fence, null, true)
+            && self::read_drain_value() === $fence ? $fence : '';
+    }
+
+    /** The only reopening lane; a concurrent incident wins over the final CAS. */
+    public static function reopen_after_verification(string $fence): bool
+    {
+        try {
+            if (!preg_match('/^verifying:[a-f0-9]{32}$/D', $fence)
+                || self::has_review_state()
+                || self::has_unresolved_external_incidents()
+                || !Order_Lock::renew_current_settings()
+                || !self::write_drain_value('no', $fence)) {
+                return false;
+            }
+        } catch (\Throwable $error) {
+            return false;
+        }
+        if (function_exists('do_action')) {
+            do_action('bactive_paymongo_availability_changed');
+        }
+        return true;
+    }
+
+    private static function read_drain_value(): string|\WP_Error|null
+    {
+        $value = self::read_incident_option('bactive_paymongo_draining', null, true);
+        return is_string($value) || is_wp_error($value) || $value === null
+            ? $value : new \WP_Error('paymongo_drain_shape_invalid', 'PayMongo drain value is invalid.');
+    }
+
+    /** Read recovery evidence from its source of truth, bypassing cached absent/done values. */
+    public static function read_incident_option(string $option, $default = null, bool $raw = false)
+    {
+        global $wpdb;
+        if (is_object($wpdb) && isset($wpdb->options)
+            && is_callable(array($wpdb, 'prepare')) && is_callable(array($wpdb, 'get_var'))) {
+            $value = $wpdb->get_var($wpdb->prepare(
+                "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
+                $option
+            ));
+            if ($wpdb->last_error !== '') {
+                return new \WP_Error('paymongo_incident_read_failed', 'PayMongo incident read failed safely.');
+            }
+            if ($value === null) {
+                return $default;
+            }
+            return !$raw && is_string($value) && is_serialized($value)
+                ? unserialize($value, array('allowed_classes' => false)) : $value;
+        }
+        if (defined('BACTIVE_PAYMONGO_TESTING') && BACTIVE_PAYMONGO_TESTING === true) {
+            return get_option($option, $default);
+        }
+        return new \WP_Error('paymongo_incident_read_unavailable', 'PayMongo incident storage is unavailable.');
+    }
+
+    /** Null expectation closes unconditionally; reopening requires exact atomic replacement. */
+    private static function write_drain_value(string $value, ?string $expected = null, bool $insert_only = false): bool
+    {
+        global $wpdb;
+        $option = 'bactive_paymongo_draining';
+        if (is_object($wpdb) && isset($wpdb->options)
+            && is_callable(array($wpdb, 'prepare')) && is_callable(array($wpdb, 'query'))) {
+            $query = $insert_only
+                ? $wpdb->prepare("INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $option, $value)
+                : ($expected === null
+                ? $wpdb->prepare(
+                    "INSERT INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')"
+                        . " ON DUPLICATE KEY UPDATE option_value = CASE WHEN option_value = 'unrecorded-incident'"
+                        . " THEN option_value ELSE VALUES(option_value) END, autoload = 'no'",
+                    $option,
+                    $value
+                )
+                : $wpdb->prepare(
+                    "UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND BINARY option_value = BINARY %s",
+                    $value,
+                    $option,
+                    $expected
+                ));
+            $affected = $wpdb->query($query);
+            if ($affected === false || $wpdb->last_error !== ''
+                || (($expected !== null || $insert_only) && $affected !== 1)) {
+                return false;
+            }
+            wp_cache_delete($option, 'options');
+            wp_cache_delete('alloptions', 'options');
+            wp_cache_delete('notoptions', 'options');
+            return true;
+        }
+        // Only single-process synthetic fixtures may emulate an atomic write.
+        if (!defined('BACTIVE_PAYMONGO_TESTING') || BACTIVE_PAYMONGO_TESTING !== true
+            || ($expected !== null && self::read_drain_value() !== $expected)) {
+            return false;
+        }
+        if ($expected === null && self::read_drain_value() === 'unrecorded-incident') {
+            return true;
+        }
+        if ($insert_only) {
+            return add_option($option, $value, '', false) && self::read_drain_value() === $value;
+        }
+        update_option($option, $value, false);
+        return self::read_drain_value() === $value;
     }
 
     public static function config_generation(): int
@@ -1066,7 +1216,8 @@ final class Reconciler
         );
         $claim = Webhook::queue_review_incident($order, 'generic', $claim);
         if ($claim === null) {
-            self::set_draining(true);
+            self::record_global_drain_error(array('recorded_at' => time(),
+                'code' => 'review_inbox_persist_failed', 'order_id' => $order->get_id(), 'mode' => $mode));
             self::schedule_order($order->get_id());
             return;
         }

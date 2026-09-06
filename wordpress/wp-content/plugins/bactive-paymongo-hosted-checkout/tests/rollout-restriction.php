@@ -149,7 +149,7 @@ foreach (array(array('yes', 'no'), array('no', 'yes')) as $transition) {
     same($transition[1], $filtered_rollout['restricted_rollout'], 'empty drain accepts exact rollout transition');
     same(10, Reconciler::config_generation(), 'rollout transition invalidates in-flight issuance generation');
     check(Order_Lock::settings_write_active(), 'rollout transition keeps lease until persisted readback');
-    same('yes', $fake_options['bactive_paymongo_draining'], 'rollout transition fences issuance before commit');
+    same(true, Reconciler::is_draining(), 'rollout transition fences issuance before commit');
     Order_Lock::release_settings();
 }
 

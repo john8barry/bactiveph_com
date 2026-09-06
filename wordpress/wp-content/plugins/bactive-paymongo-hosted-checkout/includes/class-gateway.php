@@ -22,6 +22,8 @@ final class Gateway extends \WC_Payment_Gateway
     private array $delete_locks = array();
 
     private int $loaded_config_generation = 0;
+    private static string $settings_reopen_fence = '';
+    private static string $settings_reopen_fingerprint = '';
 
     public function __construct(bool $register_hooks = true)
     {
@@ -217,11 +219,6 @@ final class Gateway extends \WC_Payment_Gateway
             return $old_value;
         }
 
-        // Every real settings mutation briefly fences issuance. Even a title-
-        // only update could otherwise complete after a different writer and
-        // reopen checkout using a configuration it did not verify.
-        Reconciler::set_draining(true);
-
         $old_enabled = ($old_value['enabled'] ?? 'no') === 'yes';
         $new_enabled = ($value['enabled'] ?? 'no') === 'yes';
         $mode_changed = ($old_value['test_mode'] ?? 'yes') !== ($value['test_mode'] ?? 'yes');
@@ -230,6 +227,17 @@ final class Gateway extends \WC_Payment_Gateway
         $sensitive_change = $mode_changed || $test_key_changed || $live_key_changed;
         $rollout_changed = ($old_value['restricted_rollout'] ?? 'yes') !== ($value['restricted_rollout'] ?? 'yes');
         $availability_changed = $old_enabled !== $new_enabled || $rollout_changed;
+        $needs_drain = $availability_changed || $sensitive_change;
+
+        // Bind the original closure to this exact writer before any provider
+        // work. A copy edit cannot acknowledge a gate that was already closed.
+        self::$settings_reopen_fingerprint = $intended_fingerprint;
+        self::$settings_reopen_fence = $new_enabled
+            ? Reconciler::begin_reopen_verification($needs_drain)
+            : '';
+        if (self::$settings_reopen_fence === '') {
+            Reconciler::set_draining(true);
+        }
 
         // This monotonically invalidates every in-flight issuance, even if a
         // settings request finishes and reopens the draining flag before the
@@ -238,7 +246,6 @@ final class Gateway extends \WC_Payment_Gateway
             Reconciler::bump_config_generation();
         }
 
-        $needs_drain = $availability_changed || $sensitive_change;
         if (!$needs_drain) {
             return $value;
         }
@@ -246,7 +253,6 @@ final class Gateway extends \WC_Payment_Gateway
         // Set this first: even if the synchronous drain times out, no new
         // checkout can issue a URL and the plugin/webhooks remain available to
         // finish background recovery.
-        Reconciler::set_draining(true);
         $result = Reconciler::expire_all_tracked(
             new self(false),
             static fn(): bool => Order_Lock::renew_settings($intended_fingerprint)
@@ -260,6 +266,7 @@ final class Gateway extends \WC_Payment_Gateway
         if (!is_wp_error($result)) {
             $result = new \WP_Error('paymongo_external_incidents_remain', 'PayMongo event recovery is still pending.');
         }
+        Reconciler::set_draining(true);
 
         add_option(
             'bactive_paymongo_disable_drain_error',
@@ -368,8 +375,12 @@ final class Gateway extends \WC_Payment_Gateway
 
             $gateway = new self(false);
             $live = !$gateway->is_test_mode();
+            $reopen_fence = hash_equals(self::$settings_reopen_fingerprint, $fingerprint)
+                ? self::$settings_reopen_fence : '';
             try {
-                $ready = Readiness::verify_and_provision($gateway, $live);
+                $ready = $reopen_fence === ''
+                    ? new \WP_Error('paymongo_reopen_fence_unavailable', 'PayMongo reopening could not be fenced.')
+                    : Readiness::verify_and_provision($gateway, $live);
             } catch (\Throwable $error) {
                 $ready = new \WP_Error('paymongo_setup_failed', 'PayMongo setup failed safely.');
             }
@@ -379,7 +390,8 @@ final class Gateway extends \WC_Payment_Gateway
                 || !Order_Lock::renew_settings($fingerprint)
                 || !is_array($stored)
                 || !hash_equals($fingerprint, self::settings_fingerprint($stored))
-                || get_option('bactive_paymongo_disable_drain_error', false) !== false) {
+                || get_option('bactive_paymongo_disable_drain_error', false) !== false
+                || !Reconciler::reopen_after_verification($reopen_fence)) {
                 Reconciler::set_draining(true);
                 update_option(
                     'bactive_paymongo_settings_write_error',
@@ -396,11 +408,12 @@ final class Gateway extends \WC_Payment_Gateway
 
             delete_option('bactive_paymongo_settings_write_error');
             delete_option('bactive_paymongo_settings_write_rejected');
-            // The active database lease still blocks checkout while this flag
-            // changes. Releasing the exact token is the final cutover step.
-            Reconciler::set_draining(false);
+            // The drain CAS has succeeded. The active database lease still
+            // blocks issuance until its exact token is released below.
         } finally {
             Order_Lock::release_settings();
+            self::$settings_reopen_fence = '';
+            self::$settings_reopen_fingerprint = '';
         }
     }
 
@@ -1621,17 +1634,14 @@ final class Gateway extends \WC_Payment_Gateway
                 array_values(array_unique(array_merge($paid_ids, $pending_ids)))
             );
             if (!$safe_expired || !$correlation_persisted) {
-                Reconciler::set_draining(true);
-                update_option(
-                    'bactive_paymongo_disable_drain_error',
+                Reconciler::record_global_drain_error(
                     array(
                         'recorded_at' => time(),
                         'code' => 'checkout_persistence_failed',
                         'order_id' => $order->get_id(),
                         'session_id' => sanitize_text_field($session_id),
                         'mode' => $live ? 'live' : 'test',
-                    ),
-                    false
+                    )
                 );
             }
             $this->safe_log('critical', 'checkout_persistence_failed', array('order_id' => $order->get_id()));
@@ -1672,11 +1682,8 @@ final class Gateway extends \WC_Payment_Gateway
             }
             $safe = $result['verified'] || $settlement_resolved;
             if (!$safe) {
-                Reconciler::set_draining(true);
-                update_option(
-                    'bactive_paymongo_disable_drain_error',
-                    array('recorded_at' => time(), 'code' => 'config_change_session_unresolved'),
-                    false
+                Reconciler::record_global_drain_error(
+                    array('recorded_at' => time(), 'code' => 'config_change_session_unresolved')
                 );
             }
             wc_add_notice(
@@ -2987,7 +2994,8 @@ final class Gateway extends \WC_Payment_Gateway
         );
         $claim = Webhook::queue_review_incident($order, 'generic', $claim);
         if ($claim === null) {
-            Reconciler::set_draining(true);
+            Reconciler::record_global_drain_error(array('recorded_at' => time(),
+                'code' => 'review_inbox_persist_failed', 'order_id' => $order->get_id(), 'mode' => $mode));
             Reconciler::schedule_order($order->get_id());
             return;
         }

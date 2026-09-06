@@ -105,6 +105,7 @@ $assert(hash_equals($fixture_key, Secrets::api_key(false, $gateway)), 'Encrypted
 $assert(Readiness::is_ready($gateway, false), 'Webhook readiness did not survive the settings save.');
 $assert($webhook_creates === 1, 'First settings save provisioned a duplicate webhook.');
 $assert($gateway->get_option('restricted_rollout') === 'yes', 'First save lost manager-only issuance.');
+require __DIR__ . '/settings-drain-datastore.php';
 Reconciler::run();
 $assert(wp_next_scheduled(Reconciler::CRON_HOOK) !== false, 'Recurring recovery schedule missing.');
 $assert(get_option('bactive_paymongo_reconcile_scan_failed', false) === false, 'Empty recovery scan failed.');

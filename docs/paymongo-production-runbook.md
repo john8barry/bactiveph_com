@@ -375,6 +375,15 @@ Do not mark the GitHub issue complete until all acceptance criteria are proven.
 - Resolve the WooCommerce `PayMongo reconciliation review` action only after an
   operator has compared provider, session, Woo order, fulfillment, and refund
   facts. The action acknowledges review; it does not change payment or status.
+- A title or description edit never reopens a gate that was already closed.
+  After resolving every incident and confirming terminal sessions, explicitly
+  disable and then enable the gateway through its settings to run the complete
+  verified drain and readiness flow. A temporary `verifying:` value is closed
+  and belongs to one settings writer; a newer incident invalidates it.
+- `unrecorded-incident` means an incident could not be durably recorded. It is
+  deliberately closed even after ordinary settings changes. Preserve the
+  provider/order evidence and repair the exact missing incident under independent
+  review before attempting recovery; never replace this value manually with `no`.
 - If that resolved review exposes `Record verified PayMongo payment (no
   effects)`, use it only after the same operator has verified or manually
   handled stock, mail, fulfillment, and downstream effects. Its durable audit

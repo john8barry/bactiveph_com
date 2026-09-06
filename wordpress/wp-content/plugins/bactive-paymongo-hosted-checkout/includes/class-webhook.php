@@ -51,7 +51,7 @@ final class Webhook
             return null;
         }
         $ledger = self::pending_review_ledger_option($kind, $record);
-        $existing = get_option($ledger, null);
+        $existing = Reconciler::read_incident_option($ledger, null);
         if ($existing !== null) {
             if (!is_array($existing)
                 || !self::pending_review_record_valid($kind, $existing, $order->get_id())
@@ -61,7 +61,7 @@ final class Webhook
             $record = $existing;
         }
         $option = self::PENDING_REVIEWS_OPTION_PREFIX . $order->get_id();
-        $pending = get_option($option, array());
+        $pending = Reconciler::read_incident_option($option, array());
         if (!is_array($pending)) {
             return null;
         }
@@ -84,14 +84,20 @@ final class Webhook
         }
         $pending[$identity] = array('kind' => $kind, 'record' => $record);
         update_option($option, $pending, false);
+        if (Reconciler::read_incident_option($option, null) !== $pending) {
+            Reconciler::record_global_drain_error(array('recorded_at' => time(),
+                'code' => 'review_inbox_persist_failed', 'order_id' => $order->get_id(),
+                'mode' => (string) ($record['mode'] ?? 'local')));
+            return null;
+        }
         Reconciler::set_draining(true);
         Reconciler::schedule_order($order->get_id());
-        return get_option($option, null) === $pending ? $record : null;
+        return $record;
     }
 
     public static function has_pending_reviews(int $order_id): bool
     {
-        return get_option(self::PENDING_REVIEWS_OPTION_PREFIX . $order_id, array()) !== array();
+        return Reconciler::read_incident_option(self::PENDING_REVIEWS_OPTION_PREFIX . $order_id, array()) !== array();
     }
 
     /** Remove inbox entries only after the exact incident is attached durably. */
@@ -3349,7 +3355,11 @@ final class Webhook
             self::finish_claim('event', $event_id, 'processed', $mode);
         } catch (\Throwable $error) {
             if ($error instanceof Quarantine_Retry_Exception) {
-                Reconciler::set_draining(true);
+                $alarm = Reconciler::read_incident_option('bactive_paymongo_disable_drain_error', null);
+                Reconciler::record_global_drain_error(is_array($alarm) ? $alarm : array(
+                    'recorded_at' => time(), 'code' => 'quarantine_recovery_pending',
+                    'order_id' => $order->get_id(), 'event_id' => $event_id,
+                    'payment_id' => $payment_id, 'mode' => $mode));
                 Reconciler::schedule_order($order->get_id());
             } elseif (Order_Lock::held_by_request($order->get_id())) {
                 self::ensure_settlement_recovery($order, $validated);
@@ -4202,8 +4212,7 @@ final class Webhook
         );
         $queued = self::queue_review_incident($order, 'processing', $record);
         if ($queued === null) {
-            update_option('bactive_paymongo_disable_drain_error', $record, false);
-            Reconciler::set_draining(true);
+            Reconciler::record_global_drain_error($record);
             Reconciler::schedule_order($order->get_id());
             self::safe_log('critical', 'processing_incident_queue_failed', $record);
             return;
@@ -4234,8 +4243,7 @@ final class Webhook
             self::safe_log('critical', 'processing_incident_readback_failed', $record);
             return;
         }
-        update_option('bactive_paymongo_disable_drain_error', $record, false);
-        Reconciler::set_draining(true);
+        Reconciler::record_global_drain_error($record);
         Reconciler::schedule_order($order->get_id());
         try {
             if (Order_Lock::held_by_request($order->get_id())
@@ -4472,9 +4480,7 @@ final class Webhook
     /** @param array<string,mixed> $record */
     private static function record_quarantine_persistence_failure(array $record): void
     {
-        Reconciler::set_draining(true);
-        update_option(
-            'bactive_paymongo_disable_drain_error',
+        Reconciler::record_global_drain_error(
             array(
                 'recorded_at' => time(),
                 'code' => 'quarantine_record_persist_failed',
@@ -4483,8 +4489,7 @@ final class Webhook
                 'session_id' => sanitize_text_field((string) ($record['session_id'] ?? '')),
                 'payment_id' => sanitize_text_field((string) ($record['payment_id'] ?? '')),
                 'mode' => sanitize_key((string) ($record['mode'] ?? 'invalid')),
-            ),
-            false
+            )
         );
         self::safe_log('critical', 'quarantine_record_persist_failed', $record);
     }
@@ -4511,8 +4516,7 @@ final class Webhook
             (string) $record['order_id'],
         ));
         update_option(self::quarantine_retry_option($identity, $record['mode']), $record, false);
-        update_option('bactive_paymongo_disable_drain_error', $record, false);
-        Reconciler::set_draining(true);
+        Reconciler::record_global_drain_error($record);
         Reconciler::schedule_order($order->get_id());
         self::safe_log('critical', $code, $record);
     }
@@ -5370,9 +5374,7 @@ final class Webhook
                 }
                 if (!$persisted || !self::finish_quarantine_record($quarantine)) {
                     Reconciler::schedule_order($order_id);
-                    Reconciler::set_draining(true);
-                    update_option(
-                        'bactive_paymongo_disable_drain_error',
+                    Reconciler::record_global_drain_error(
                         array(
                             'recorded_at' => time(),
                             'code' => 'quarantine_persist_failed',
@@ -5381,8 +5383,7 @@ final class Webhook
                             'session_id' => sanitize_text_field($session_id),
                             'payment_id' => sanitize_text_field($payment_id),
                             'mode' => sanitize_key($mode),
-                        ),
-                        false
+                        )
                     );
                     self::safe_log('critical', 'quarantine_persist_failed', $record);
                     return false;

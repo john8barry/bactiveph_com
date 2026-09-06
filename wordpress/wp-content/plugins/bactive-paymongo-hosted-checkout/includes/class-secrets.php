@@ -108,7 +108,13 @@ final class Secrets
             return false;
         }
         try {
-            Reconciler::set_draining(true);
+            // Nested provisioning already has the caller's closed settings
+            // fence. Preserve its token so a concurrent incident's separate
+            // closure still prevents that caller from reopening. Independent
+            // provisioning must close issuance itself.
+            if (!$held || !Reconciler::is_draining()) {
+                Reconciler::set_draining(true);
+            }
             if (Reconciler::has_tracked_orders()
                 || Reconciler::has_unresolved_external_incidents()
                 || !Order_Lock::renew_current_settings()) {

@@ -1533,7 +1533,7 @@ $first_settings_write = $old_settings;
 $first_settings_write['title'] = 'Pay with PayMongo';
 $first_settings_write = Gateway::filter_settings_update($first_settings_write, $old_settings);
 check(Order_Lock::settings_write_active(), 'first settings writer retains its database lease before commit');
-same('yes', $fake_options['bactive_paymongo_draining'] ?? '', 'settings lease drains checkout before the option commit');
+same(true, Reconciler::is_draining(), 'settings lease drains checkout before the option commit');
 
 $competing_settings_write = $old_settings;
 $competing_settings_write['description'] = 'Competing description';
@@ -5675,6 +5675,7 @@ same(0, $fake_hook_calls['woocommerce_order_status_changed'] ?? 0, 'cancel opera
 
 require __DIR__ . '/recovery-boundaries.php';
 require __DIR__ . '/rollout-restriction.php';
+require __DIR__ . '/settings-review-drain.php';
 abandoned_session_recovery_tests();
 
 if ($failures !== array()) {

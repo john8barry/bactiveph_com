@@ -40,7 +40,7 @@ add_action( 'wp_enqueue_scripts', static function () {
         'bactiveph-hero-glass',
         $theme_uri . '/assets/css/hero-glass.css',
         array( 'blocksy-child-custom' ),
-        '25697e3e1c73'
+        'c88f46ee2997'
     );
 
     wp_enqueue_script(

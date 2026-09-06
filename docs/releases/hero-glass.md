@@ -1,8 +1,6 @@
 # Homepage glass treatment
 
-Status: approved on staging; production release authorized and being prepared.
-
-Tracking: [issue #13](https://github.com/john8barry/bactiveph_com/issues/13).
+John approved the staging result and authorized production release. Deployment status, backup/rollback evidence, and live verification are tracked in [issue #13](https://github.com/john8barry/bactiveph_com/issues/13).
 
 The homepage hero uses a clearer glass panel with a fine reflective rim and a restrained pointer highlight. A press compresses only the decorative rim; the card and text stay still. The production rollout preserves the approved staging CSS and JavaScript bytes, existing copy/photo/layout, shop destination, and other theme files.
 

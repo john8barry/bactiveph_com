@@ -340,11 +340,11 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
                 <h2 id="bactive-footer-signup-title">Stay in the loop</h2>
                 <p id="bactive-footer-signup-description">Join the club for 5% off your first order, new drops, and Davao court days.</p>
             </div>
-            <?php // Preserve the existing form behavior; do not invent a mailing-list connection. ?>
-            <form class="bactive-footer__form" action="#" aria-labelledby="bactive-footer-signup-title">
-                <input type="email" aria-label="Email address" aria-describedby="bactive-footer-signup-description" placeholder="Email address" autocomplete="email" />
-                <button type="submit">Join</button>
-            </form>
+            <?php if (shortcode_exists('bactive_newsletter_form')) : ?>
+                <?php echo do_shortcode('[bactive_newsletter_form source="footer"]'); ?>
+            <?php else : ?>
+                <p>Newsletter signup is temporarily unavailable. Please check back soon.</p>
+            <?php endif; ?>
         </div>
     </section>
     <div class="bactive-footer__inner">

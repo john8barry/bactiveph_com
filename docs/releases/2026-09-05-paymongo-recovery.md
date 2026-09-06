@@ -371,8 +371,9 @@ after independently verified public activation. Its scheduled time and the
 ## September 6 source and deployment coordination
 
 The payment branch incorporates main
-`cf6a7fb923c7329ab03514e9f8aaa2bdd7a1d6ce`, containing the separately approved
-homepage glass release (PR #15) and Sage footer (PR #17). Independent review
+`5778889ba155c93eb12d0f49d52ee0196f481a53`, containing the separately approved
+homepage glass release (PR #15), Sage footer (PR #17), and pointer correction
+(PR #18). Independent review
 found no path overlap with the payment changes. All 11 gateway runtime files
 remain identical to `cf891ca` and the current package manifest; visual files
 are not added to the payment ZIP. The canonical dirty workspace is preserved.
@@ -381,8 +382,9 @@ The hero task returned its production writer window, with all writes ended
 at 02:14:25 UTC. Root independently verified the three approved installed hashes,
 all six off-server backup components (329,692,003 bytes), and unchanged protected
 payment configuration, orders, stock and logs. Its reported pointer-lighting
-issue remains with the hero task for a separate local fix and new release
-window; it does not authorize further writes in the returned window. Footer
+issue is corrected in source by PR #18 and remains with the hero task for
+staging verification and a new production release window. No further writes
+are authorized in the returned window. Footer
 source is merged, but its staging and production deployments remain pending.
 
 The email task's staging SMTP2GO credential is encrypted, with its send permission
@@ -392,8 +394,11 @@ labeled staging seller/buyer tests to the store inbox and, only if staging
 passes, production SMTP2GO activation and one final check. Its separate task
 owns that approval. The coordinator allocated its September 6 writer window
 from 02:41:32 to 03:26:32 UTC; the email task acknowledged it at 02:46 UTC.
-Execution and inbox acceptance remain unverified at this checkpoint. The
-handoff does not establish that payment notification delivery works.
+The task subsequently reported both staging test messages as Delivered in
+SMTP2GO at 02:51 UTC, with global staging sending still off and protected
+commerce state unchanged. Production transport and final message verification
+remain in that task's active window. Provider delivery status does not establish
+that every checkout-triggered customer and merchant notification is accepted.
 
 John reported that he lacks staging login credentials. Authenticated read-only
 inspection confirmed an existing administrator on the distinct staging database;

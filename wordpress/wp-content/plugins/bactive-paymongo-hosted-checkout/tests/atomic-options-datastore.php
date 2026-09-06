@@ -74,6 +74,23 @@ if ($actor === 'self') {
         $wpdb->suppress_errors($suppressed);
     }
     $assert($read($option) === null, 'Failed insert left a durable row.');
+    // Empty serialized bytes must not equal the failed-read sentinel after a
+    // successful INSERT: durable creation alone is not verified ownership.
+    $option = 'bactive_paymongo_atomic_fixture_empty_read_failure';
+    $reject_empty_readback = static function (string $sql) use ($option): string {
+        return str_contains($sql, $option) && preg_match('/^SELECT\s/i', $sql)
+            ? 'SELECT * FROM bactive_disposable_missing_table' : $sql;
+    };
+    $suppressed = $wpdb->suppress_errors(true);
+    add_filter('query', $reject_empty_readback, PHP_INT_MAX);
+    try {
+        $assert(!Order_Lock::insert_option($option, ''), 'Empty value matched a failed readback sentinel and granted ownership.');
+    } finally {
+        remove_filter('query', $reject_empty_readback, PHP_INT_MAX);
+        $wpdb->suppress_errors($suppressed);
+    }
+    $assert($read($option) === '', 'Readback failure fixture did not exercise an inserted empty value.');
+    delete_option($option);
     $option = 'bactive_paymongo_settings_write_lock';
     $assert(Order_Lock::insert_option($option, ''), 'Could not store malformed empty lock fixture.');
     $assert(Order_Lock::settings_write_active(), 'An existing empty lock was mistaken for absence.');

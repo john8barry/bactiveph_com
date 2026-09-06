@@ -53,3 +53,9 @@ Public homepage returned HTTP 200 at 1440px desktop and 390px mobile. Both passe
 All network/browser processes closed; production writer window returned to the root coordinator. Root independently owns protected payment snapshot and server-log readback; this lane claims only the observed page-content and public browser evidence.
 
 Exact snapshot rollback is available; restore the removed group only if current page hash still matches this release, or rebase the insertion on a fresh page so later edits survive.
+
+## Independent coordinator acceptance
+
+The root coordinator independently accepted the release in `signup-root-acceptance-1788680857.json`. This lane read that receipt: page-14 SHA matches `d1bc7de18e471d32c652d00d1140379802d8341461d8d983abb3c9e105784d4c`, story and signup counts are zero, protected production state is unchanged, and all connections are closed. The protected comparison covers configuration, theme files, payment settings, orders, stock, and the error-log hash. No raw protected payload is included in this public record.
+
+The signup window is closed. Later homepage edits must use their own fresh snapshot and preserve both removals. Source reconciliation: PR #32 alongside story-removal PR #31.

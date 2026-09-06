@@ -47,7 +47,7 @@ add_action( 'wp_enqueue_scripts', static function () {
         'bactiveph-hero-glass',
         $theme_uri . '/assets/js/hero-glass.js',
         array(),
-        '1c64ec3d7439',
+        'ece9a7cb9808',
         array( 'strategy' => 'defer', 'in_footer' => true )
     );
 }, 100 );

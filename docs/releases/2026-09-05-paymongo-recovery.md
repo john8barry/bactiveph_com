@@ -371,10 +371,10 @@ after independently verified public activation. Its scheduled time and the
 ## September 6 source and deployment coordination
 
 The payment branch incorporates main
-`5778889ba155c93eb12d0f49d52ee0196f481a53`, containing the separately approved
+`9220b6d0c22ae87075a8df0e74c9f102673efb9b`, containing the separately approved
 homepage glass release (PR #15), Sage footer (PR #17), and pointer correction
-(PR #18). Independent review
-found no path overlap with the payment changes. All 11 gateway runtime files
+(PR #18), plus the footer release-control documentation (PR #19). Independent
+review found no payment-runtime overlap in the visual changes. All 11 gateway runtime files
 remain identical to `cf891ca` and the current package manifest; visual files
 are not added to the payment ZIP. The canonical dirty workspace is preserved.
 

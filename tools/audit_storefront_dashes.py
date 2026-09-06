@@ -25,9 +25,9 @@ import xml.etree.ElementTree as ET
 
 
 DASHES = re.compile("[\u2013\u2014]")
-SAFE_QUERY = {"s", "paged", "page", "product-page", "orderby", "post_type"}
+SAFE_QUERY = {"s", "paged", "page", "product-page", "orderby", "post_type", "mailpoet_page"}
 BLOCKED_PATH = re.compile(
-    r"/(?:wp-admin|wp-json|wp-login\.php|wp-cron\.php|xmlrpc\.php|"
+    r"/(?:cdn-cgi|wp-admin|wp-json|wp-login\.php|wp-cron\.php|xmlrpc\.php|"
     r"wp-comments-post\.php|logout|customer-logout|order-pay|order-received|"
     r"add-payment-method|delete-payment-method|set-default-payment-method|"
     r"add-to-cart|remove-item|empty-cart|downloads|view-order)(?:/|$)", re.I
@@ -54,6 +54,9 @@ def safe_url(url, base, *, asset=False):
     if any(key not in allowed_query for key, _ in pairs):
         return None
     if any(key == "post_type" and value != "product" for key, value in pairs):
+        return None
+    if any(key == "mailpoet_page" and (value not in {"subscriptions", "captcha"} or parts.path != "/")
+           for key, value in pairs):
         return None
     if not asset and (ASSET_SUFFIX.search(parts.path) or parts.path.endswith(".css")):
         return None

@@ -1,6 +1,6 @@
 # Brevo marketing 1.0.0 — local acceptance receipt
 
-Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16), [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20). Status: implemented, verified in CI, and installed disabled on staging; send-enabled staging acceptance and production release remain pending. This receipt does not authorize an email send.
+Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16), [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20). Status: implemented, verified in CI, and running in staging test mode for the sole approved recipient. One DOI message was accepted and logged delivered; recipient confirmation, remaining staging acceptance and production release remain pending. This receipt authorizes no further email send.
 
 ## Result
 
@@ -30,7 +30,7 @@ The approved Sage footer uses the shortcode in both tracked theme copies. The ho
 
 1. The Brevo Free account, authenticated sender/domain, `move.bactiveph.com` branding, API key, confirmed list ID `3`, DOI template ID `1`, required contact attributes, protected webhook token, and managed Turnstile widget are configured. Cloudflare inbound routing and SMTP2GO records were preserved. Workflow IDs and the authenticated suppression webhook remain pending staging endpoint availability; no send has occurred.
 2. Resolve the payment dependency: PayMongo-marked purchase follow-ups remain `payment_unknown` until the payment integration supplies a complete public settlement classifier. Its current protection predicate is insufficient to authorize purchase marketing.
-3. Exact commit `d452ca48daecab9e1ba918b783e6d572f2a54c47` is installed disabled on staging as deterministic archive SHA-256 `4e27bbf52a3461d2bc39fe16c4a52c4f6962915705053aa08274312d8881b575`. Its fresh six-component, 122,567,295-byte backup passed off-server size, SHA-256 and archive-integrity checks. Plugin 1.0.0 has marketing disabled, test mode true, zero test recipients, zero scheduled actions, five empty InnoDB tables and zero sends. Add one exact approved test recipient and obtain concrete test-send authorization before enabling it.
+3. Exact commit `d452ca48daecab9e1ba918b783e6d572f2a54c47` is installed on staging as deterministic archive SHA-256 `4e27bbf52a3461d2bc39fe16c4a52c4f6962915705053aa08274312d8881b575`. Its fresh six-component, 122,567,295-byte backup passed off-server size, SHA-256 and archive-integrity checks. Plugin 1.0.0 now runs in test mode with `jgbarry@gmail.com` as the sole recipient. Template ID `1` reads active and DOI-classified; one corrected DOI request returned HTTP 201 and Brevo logged it delivered. The contact and confirmed list remain pending/empty until the recipient clicks. Event sends remain blocked and the outbox is empty.
 4. Verify desktop/mobile form rendering, actual Turnstile, cache headers, DOI possession, unsubscribe suppression, cron execution, workflow intake and inbox receipt. The browser could not attach locally, so visual verification is not claimed.
 5. Reconcile source, current MailPoet census, provider settings and host state before final production activation. Deactivate and later remove MailPoet only after replacement acceptance; preserve its suppression/export/settings/tables for rollback.
 

@@ -2,7 +2,7 @@
 
 Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16). Priority: normal requested feature; production email continuity is a release requirement.
 
-Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, DOI template, and Turnstile widget are configured. The exact reviewed plugin package is installed on staging with marketing disabled, test mode retained and no test recipients. No live marketing activation, test send, contact import, footer/homepage integration, workflow activation, webhook registration, coupon publication, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
+Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, DOI template, and Turnstile widget are configured. The exact reviewed plugin package is installed on staging in test mode with `jgbarry@gmail.com` as its sole allowed recipient. Brevo accepted and logged delivery of one DOI email; confirmation is pending. No live marketing activation, contact import, footer/homepage integration, workflow activation, webhook registration, coupon publication, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
 
 ## Scope and decisions
 
@@ -54,6 +54,15 @@ BACTIVE5 must be provisioned explicitly as a draft, bound by ID and campaign mar
 - Independent readback verified all 12 installed runtime files. The plugin is active while marketing remains explicitly disabled; test mode is true, the test-recipient list is empty, launch cutoff is zero, provider workflow verification is false, and no Brevo scheduler action exists. All five InnoDB tables were created and remain empty.
 - The disabled shortcode returns only its unavailable message and checkout renders no newsletter panel. The PayMongo plugin/settings, recent-order fingerprint, child-theme functions and error log were unchanged across deployment. Brevo list ID `3` still has zero subscribers and the Free quota still reports 300. No provider write or email send occurred.
 - Footer, homepage, MailPoet, webhook, workflow, coupon and cron changes were excluded. The next gate is an exact approved test-recipient address and separate authorization for a labeled DOI send.
+
+## Staging DOI canary receipt (2026-09-08)
+
+- John authorized test email only to `jgbarry@gmail.com`. Protected staging constants were installed without writing their values to Git, WordPress options, logs, command arguments, or receipts. Test mode remains true and that address is the sole recipient allowlist entry.
+- Brevo rejected the initial DOI attempt definitively because template ID `1`, while active, was not classified as a DOI template. No ambiguous send occurred. The template retained the documented `{{ doubleoptin }}` link, received Brevo's `optin` tag, and then read back as both active and `doiTemplate=true`.
+- The corrected plugin DOI request returned HTTP 201 exactly once. Brevo quota moved from 300 to 299 and its transactional log recorded requested, opened, and delivered for subject `Confirm your B Active signup`. An automated inbox scanner can produce an open, so it is not treated as consent or human inbox confirmation.
+- Local state is `pending`, outbox rows remain zero, and confirmed list ID `3` remains empty until the recipient clicks the confirmation link. Purchase/event sends remain blocked by `automations_unverified` and `real_cron_unverified`.
+- PayMongo settings/files, recent-order fingerprint, child-theme functions and the error log were unchanged. All host and browser connections were closed and the staging writer lane was released.
+- Next control point: the recipient clicks the DOI link. Then verify the same browser's possession proof, Brevo list membership, local confirmed state, welcome-event queueing, and subsequent workflow delivery separately.
 
 ## Acceptance and release gates
 

@@ -74,7 +74,7 @@ function links($group) {
             'Tops & tanks' => '/collections/tops',
         );
     }
-    return array('About' => '/about-our-story/', 'Contact' => '/contact/', 'Pickleball Looks' => '/pickleball-looks/');
+    return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');
 }
 
 function current_attribute($path) {

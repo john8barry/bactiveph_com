@@ -1,0 +1,53 @@
+name: Catalogue visuals
+on:
+  pull_request:
+    paths:
+      - '**/catalog-visuals.*'
+      - '**/collection-visuals.*'
+      - 'tools/catalog_visuals.py'
+      - 'tools/catalog-recovery/**'
+      - 'tests/test_catalog*.py'
+      - 'tests/catalogue-runtime/**'
+      - '.github/workflows/catalogue-visuals.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**/catalog-visuals.*'
+      - '**/collection-visuals.*'
+      - 'tools/catalog_visuals.py'
+      - 'tools/catalog-recovery/**'
+      - 'tests/test_catalog*.py'
+      - 'tests/catalogue-runtime/**'
+      - '.github/workflows/catalogue-visuals.yml'
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.14.0'
+      - name: Install isolated test dependencies
+        run: npm ci --ignore-scripts --prefix tests/catalogue-runtime
+      - name: Native selector and recovery contracts
+        env:
+          NODE_PATH: ${{ github.workspace }}/tests/catalogue-runtime/node_modules
+        run: |
+          node --test tests/catalog-visuals.test.cjs
+          php tests/catalog-visuals.php
+          php tests/collection-visuals.php
+          python3 -m unittest discover -s tests -p 'test_catalog*.py' -v
+      - name: Syntax and mirrored source
+        run: |
+          for module in catalog-visuals collection-visuals; do
+            php -l "wordpress/wp-content/themes/blocksy-child/inc/$module.php"
+            cmp "wordpress/wp-content/themes/blocksy-child/inc/$module.php" "wp-content/themes/blocksy-child/inc/$module.php"
+            cmp "wordpress/wp-content/themes/blocksy-child/assets/css/$module.css" "wp-content/themes/blocksy-child/assets/css/$module.css"
+          done
+          node --check wordpress/wp-content/themes/blocksy-child/assets/js/catalog-visuals.js
+          cmp wordpress/wp-content/themes/blocksy-child/assets/js/catalog-visuals.js wp-content/themes/blocksy-child/assets/js/catalog-visuals.js

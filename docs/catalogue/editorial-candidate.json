@@ -1,0 +1,11 @@
+{
+  "product_id": 36,
+  "source_attachment_id": 387,
+  "asset": "output/catalogue/editorial-candidate-v1.png",
+  "sha256": "885650e3a2248d4e8bf410d1aff6cc0d799fc8eaad8d235647b61c1a68086943",
+  "status": "EDITORIAL_CANDIDATE_REVIEWED_NOT_RELEASED",
+  "generation_attempt": 1,
+  "source_preservation": "Approximate visual fidelity; regenerated details, not exact pixels or measured fabric colour",
+  "independent_review": "Accept homepage editorial candidate; preserve full person in mobile containment",
+  "production_attachment_id": null
+}

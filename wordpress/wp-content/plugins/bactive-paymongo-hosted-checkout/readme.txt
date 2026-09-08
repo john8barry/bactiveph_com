@@ -16,14 +16,18 @@ hosted payment page. The WooCommerce cart remains on B Active; an order is
 created before redirect and is fulfilled only after a verified paid event.
 
 The payment-method allowlist is fixed to QRPh, Maya, ShopeePay, BPI Direct
-Debit, and UBP Direct Debit. Cash on Delivery remains a separate WooCommerce gateway.
-Manual bank transfer and legacy PayMongo gateways are removed from customer
-checkout while this plugin is active.
+Debit, and UBP Direct Debit. WooCommerce settings select the verified subset
+for new sessions; historical methods continue to reconcile. Cash on Delivery
+remains a separate WooCommerce gateway. Legacy PayMongo gateways are hidden.
+Existing manual bank transfer is preserved during disabled/private/sandbox
+preparation, and hidden when public live issuance is configured. Disable it
+in WooCommerce at public activation so it stays off during a rollback.
 
 Private verification is enabled by default: only store managers and
 administrators can issue PayMongo payments until the operator explicitly
 opens the gateway after acceptance. Cash on Delivery remains public.
-Callbacks, cancellation and recovery stay reachable during verification.
+Sandbox issuance always requires a manager, even if private verification is
+unchecked. Callbacks, cancellation and recovery stay reachable during verification.
 
 Security controls include encrypted stored secrets, strict webhook signature
 and timestamp verification, exact amount/currency/order/session/mode checks,
@@ -58,6 +62,11 @@ The fixture uses no real credentials, customer records, or provider payments.
 == Changelog ==
 
 = 1.0.0 =
+* Select a validated subset for new checkout sessions, with matching customer
+  copy and live capability checks. Fence changes with the settings drain and
+  preserve all historical methods for callbacks and reconciliation.
+* Keep sandbox issuance manager-only and preserve existing manual bank transfer
+  during private preparation until public live issuance is configured.
 * Preserve unresolved review holds across settings edits and retain GET recovery
   without repeated automatic expiry of held sessions or processing intents.
 * Use native insert-only leases and claims, preserving concurrent winners and

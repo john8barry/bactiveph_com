@@ -11,6 +11,10 @@ final class Readiness
     /** @return true|\WP_Error */
     public static function verify_and_provision(Gateway $gateway, bool $live)
     {
+        $required = $gateway->issuance_methods();
+        if ($required === array()) {
+            return new \WP_Error('paymongo_methods_empty', 'Select at least one valid PayMongo payment method.');
+        }
         $key = Secrets::api_key($live, $gateway);
         $prefix = $live ? 'sk_live_' : 'sk_test_';
         if (!str_starts_with($key, $prefix)) {
@@ -23,11 +27,11 @@ final class Readiness
             self::clear($live);
             return $capabilities;
         }
-        if ($live && !self::has_required_capabilities($capabilities['methods'])) {
+        if ($live && !self::has_required_capabilities($capabilities['methods'], $gateway->issuance_methods())) {
             self::clear($live);
             return new \WP_Error(
                 'paymongo_methods_inactive',
-                'PayMongo did not confirm every required payment method as active.'
+                'PayMongo did not confirm every selected payment method as active.'
             );
         }
 
@@ -78,7 +82,7 @@ final class Readiness
             );
         }
 
-        if (!self::store_state($live, $key, $capabilities['methods'], $webhook)) {
+        if (!self::store_state($live, $key, $capabilities['methods'], $webhook, $gateway->issuance_methods())) {
             self::clear($live);
             return new \WP_Error('paymongo_readiness_persist_failed', 'PayMongo readiness could not be persisted and read back exactly.');
         }
@@ -89,7 +93,7 @@ final class Readiness
     {
         $key = Secrets::api_key($live, $gateway);
         $state = get_option(self::state_option($live), array());
-        if ($key === '' || !is_array($state) || Secrets::webhook_secret($live) === '') {
+        if ($gateway->issuance_methods() === array() || $key === '' || !is_array($state) || Secrets::webhook_secret($live) === '') {
             return false;
         }
         if (!hash_equals((string) ($state['key_fingerprint'] ?? ''), Secrets::fingerprint($key))) {
@@ -98,7 +102,7 @@ final class Readiness
 
         $verified_at = (int) ($state['verified_at'] ?? 0);
         if (!$force_refresh && $verified_at > 0 && (time() - $verified_at) <= self::CACHE_SECONDS) {
-            return self::state_is_valid($state, $live);
+            return self::state_is_valid($state, $live, $gateway->issuance_methods());
         }
 
         return self::refresh($gateway, $live);
@@ -129,7 +133,7 @@ final class Readiness
         $client = new Api_Client($key);
         $capabilities = $client->capabilities();
         if (is_wp_error($capabilities)
-            || ($live && !self::has_required_capabilities($capabilities['methods']))) {
+            || ($live && !self::has_required_capabilities($capabilities['methods'], $gateway->issuance_methods()))) {
             self::clear($live);
             return false;
         }
@@ -144,7 +148,7 @@ final class Readiness
             return false;
         }
 
-        return self::store_state($live, $key, $capabilities['methods'], $webhook);
+        return self::store_state($live, $key, $capabilities['methods'], $webhook, $gateway->issuance_methods());
     }
 
     /** @return array<string,mixed>|null|\WP_Error */
@@ -226,27 +230,27 @@ final class Readiness
     }
 
     /** @param array<int,string> $methods */
-    private static function has_required_capabilities(array $methods): bool
+    private static function has_required_capabilities(array $methods, array $required): bool
     {
         $methods = array_map('strtolower', $methods);
         $required_groups = array(
-            array('qrph', 'qr_ph'),
-            array('paymaya', 'maya'),
-            array('shopee_pay', 'shopeepay'),
-            array('dob', 'dob_bpi', 'bpi'),
-            array('dob_ubp', 'ubp', 'unionbank'),
+            'qrph' => array('qrph', 'qr_ph'),
+            'paymaya' => array('paymaya', 'maya'),
+            'shopee_pay' => array('shopee_pay', 'shopeepay'),
+            'dob' => array('dob', 'dob_bpi', 'bpi'),
+            'dob_ubp' => array('dob_ubp', 'ubp', 'unionbank'),
         );
 
-        foreach ($required_groups as $group) {
-            if (array_intersect($group, $methods) === array()) {
+        foreach ($required as $method) {
+            if (!isset($required_groups[$method]) || array_intersect($required_groups[$method], $methods) === array()) {
                 return false;
             }
         }
-        return true;
+        return $required !== array();
     }
 
     /** @param array<int,string> $methods */
-    private static function store_state(bool $live, string $key, array $methods, array $webhook): bool
+    private static function store_state(bool $live, string $key, array $methods, array $webhook, array $required): bool
     {
         $previous = get_option(self::state_option($live), array());
         $webhook_secret = Secrets::webhook_secret($live);
@@ -275,7 +279,7 @@ final class Readiness
             return false;
         }
         if ((!is_array($previous)
-                || !self::state_is_valid($previous, $live)
+                || !self::state_is_valid($previous, $live, $required)
                 || ($previous['key_fingerprint'] ?? '') !== $next['key_fingerprint']
                 || ($previous['webhook_id'] ?? '') !== $next['webhook_id'])
             && function_exists('do_action')) {
@@ -284,7 +288,7 @@ final class Readiness
         return true;
     }
 
-    private static function state_is_valid(array $state, bool $live): bool
+    private static function state_is_valid(array $state, bool $live, array $required = Integrity::CHECKOUT_METHODS): bool
     {
         $secret = Secrets::webhook_secret($live);
         return ($state['livemode'] ?? null) === $live
@@ -298,7 +302,7 @@ final class Readiness
             )
             && self::secret_is_bound_to_webhook((string) ($state['webhook_id'] ?? ''), $secret, $live)
             && is_array($state['capabilities'] ?? null)
-            && (!$live || self::has_required_capabilities($state['capabilities']));
+            && (!$live || self::has_required_capabilities($state['capabilities'], $required));
     }
 
     private static function store_secret_binding(string $webhook_id, string $secret, bool $live): bool

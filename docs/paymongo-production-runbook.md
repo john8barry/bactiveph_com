@@ -9,7 +9,9 @@ notes that mention GCash, cards, GrabPay, Atome, or manual bank transfer.
   Direct Debit only.
 - WooCommerce Cash on Delivery remains available under the existing fee and
   order-value rules.
-- WooCommerce manual bank transfer (`bacs`) is not offered.
+- At public PayMongo activation, disable WooCommerce manual bank transfer
+  (`bacs`) in its own settings. During disabled, private or sandbox preparation,
+  the plugin preserves the existing BACS offering; legacy PayMongo stays hidden.
 - Legacy PayMongo WooCommerce gateways are not offered.
 
 WooCommerce owns the catalog, cart, customer details, shipping, taxes, coupons,
@@ -19,6 +21,35 @@ only the hosted payment-method selection and authorization screen. A browser
 return is never treated as payment proof. Payment is confirmed by a valid signed
 `checkout_session.payment.paid` webhook or authenticated, mode-correct recovery
 readback that passes the same order, session, payment, currency and amount checks.
+
+## Phased activation while provider support is pending
+
+The operator may launch a verified subset of the five approved methods while
+unsupported methods remain deferred. Set **Payment methods for new checkouts**
+(`issuance_methods`) through WooCommerce settings to that exact subset. Missing
+legacy settings retain all five; explicitly empty or malformed selections stop
+issuance. Checkout copy is generated from the selection. Both fresh and cached
+live readiness require only selected capabilities, and each selected method
+still requires an independently reconciled live payment before public release.
+A listed capability alone never proves authorization works.
+
+Changes to the selection serialize with issuance, drain tracked sessions and
+invalidate stale requests. A settings save cannot override review holds or
+unexplained sessions. Historical payments from every approved method continue
+through their existing callbacks and recovery; never narrow the integrity
+allowlist to the current public selection. Record deferred methods and their
+support dependencies in issue #2, leaving the full five-method goal open.
+
+Prefer manager-only small **live** canaries on production: they test the real
+credential, callback, orders, stock and both inboxes. Show John the exact order
+and total before each authorization. Sandbox keys are always restricted to
+store managers, even if Private verification is unchecked. Sandbox on production
+is not a public test checkout: simulated paid events still run ordinary Woo
+stock and mail effects. Use isolated test products and recipient addresses if a
+private production sandbox check is necessary, and drain its sessions before
+switching credentials or mode. Never move the stuck staging order or clear its
+hold to obtain a clean production test. Qualify production's own live state and
+recovery independently; preserve staging callbacks and support evidence.
 
 ## Release artifact
 
@@ -141,12 +172,15 @@ never retry an uncertain webhook creation or credential mutation blindly.
 4. Scan the complete diff and package for secrets, unexpected binaries,
    generated artifacts, and dependencies. This plugin has no third-party runtime
    dependencies.
-5. Confirm PayMongo displays all five approved live capabilities as Active.
+5. Confirm PayMongo displays every method selected for this release as Active.
    A capabilities response identifies configured methods; it does not replace
    successful hosted authorization. Confirm each required bank through the
-   actual sandbox flow and separately verify live activation. An account-denied
-   response remains a launch blocker even when the identifier is listed.
-6. Confirm WP-Cron is enabled or a real server cron invokes `wp-cron.php`, and
+   actual hosted flow and separately verify live activation. An account-denied
+   response blocks that method even when the identifier is listed. Keep it
+   unselected during a partial release; never claim it is verified.
+6. Before production issuance, install and independently qualify the reviewed
+   payment-only OS recovery worker for the exact production site. Do not enable
+   broad WP-Cron dispatch or unrelated housekeeping as a shortcut. Confirm
    Action Scheduler has no failed `bactive-paymongo` actions. Run one due
    reconciliation action and read back its completion before issuing a session.
    Verify that different outstanding orders each have a queued recovery job;
@@ -158,7 +192,7 @@ never retry an uncertain webhook creation or credential mutation blindly.
    enabled (the default). Only `manage_woocommerce` or `manage_options` users
    may issue payments until the live canary passes. This restriction is checked
    at both gateway availability and the actual payment boundary; only an exact
-   stored `restricted_rollout=no` opens issuance. The store and COD remain
+   stored `restricted_rollout=no` with live mode opens public issuance. The store and COD remain
    public. WooCommerce Coming Soon is only visual messaging, not an access
    control for direct checkout AJAX. Callbacks, cancel and recovery are exempt.
 
@@ -180,9 +214,10 @@ never retry an uncertain webhook creation or credential mutation blindly.
    `https://staging.bactiveph.com/?wc-api=bactive_paymongo_test`.
 5. Independently read back registered gateways and populated checkouts. A
    signed-in store manager may see `bactive_paymongo` and eligible `cod`; a
-   guest or ordinary customer must see eligible `cod` only. A forged/stale
-   PayMongo submission must issue no session. `bacs` and every legacy PayMongo
-   ID must be absent. Do not change production fulfilment/email integrations
+   guest or ordinary customer must not see PayMongo. Eligible `cod` and already
+   configured `bacs` remain available unless BACS is separately disabled in
+   staging settings. A forged/stale PayMongo submission must issue no session.
+   Every legacy PayMongo ID must be absent. Do not change production fulfilment/email integrations
    for sandbox orders: sandbox still emits ordinary Woo paid/stock/mail hooks.
 6. Use a populated classic cart and place an independent sandbox order through
    each method. Also execute at least one explicit failure and abandonment path.
@@ -310,23 +345,27 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
    sandbox-tested artifact to production and activate it with the new gateway
    disabled/draining. Keep the legacy plugin and callbacks active, but verify
    its gateway IDs are hidden from all new checkouts.
-3. In PayMongo live mode, reconfirm QRPh, Maya, ShopeePay, BPI Direct Debit, and
-   UBP Direct Debit are Active. Do not infer capabilities from sandbox.
+3. In PayMongo live mode, reconfirm every method selected for this release is
+   Active. Select only approved rollout methods through `issuance_methods`;
+   defer banks or other methods lacking provider-backed evidence. Do not infer
+   live capabilities from sandbox.
 4. At the live-write control point, enter the live secret key, switch Sandbox
-   mode off, enable the gateway, and save. Saving may create an external PayMongo
-   webhook and therefore requires the named operator's current confirmation.
+   mode off, enable the gateway, and save under the current authorized release
+   scope. Saving may create an external PayMongo webhook; establish authority
+   before this step and reuse existing explicit authorization.
    The live webhook must be exactly:
    `https://bactiveph.com/?wc-api=bactive_paymongo_live`, enabled, and subscribed
    only to `checkout_session.payment.paid`.
 5. Update and read back the rendered FAQ, checkout reassurance, Terms, Privacy,
-   and footer. They must list only the five approved PayMongo methods plus COD;
+   and footer. They must list only the methods verified for public launch plus COD;
    remove GCash, cards, GrabPay, manual bank transfer, and HitPay claims. Show
    PayMongo as processor branding, not as a sixth customer payment rail.
 6. Independently read back both registered settings and populated manager and
    guest checkouts. The manager may see `bactive_paymongo` and eligible `cod`;
-   the guest must see eligible `cod` only while verification is restricted;
-   `bacs`, `paymongo`, `paymongo_hcp`, and every other legacy PayMongo gateway
-   must be absent.
+   the guest must not see `bactive_paymongo` while verification is restricted.
+   Existing eligible `cod` and configured `bacs` remain available during private
+   preparation. `paymongo`, `paymongo_hcp`, and other legacy PayMongo gateways
+   must be absent. Disable BACS in its own settings at public activation.
 7. Purge the relevant LiteSpeed/host/CDN/Cloudflare caches. Prove two distinct
    callback probes are never cached and that cart, checkout, order-pay, and
    order-received remain uncached. Confirm the webhook gets an origin response,
@@ -334,7 +373,7 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
 8. With PayMongo issuance still manager-only, confirm production checkout creates a pending order and redirects only to an
    HTTPS `checkout.paymongo.com` URL. Stop before authorizing real money until
    the named operator approves the exact canary amount and order.
-9. John authorizes one small real order for each of the five approved methods,
+9. John authorizes one small real order for each method selected for this release,
    after seeing each exact order and total. Independently verify every PayMongo
    payment ID/method/amount/status, callback delivery, WooCommerce transaction
    ID/status/order note, stock change, customer confirmation and merchant
@@ -343,9 +382,10 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
 10. Read back all legacy-issued sessions. Only after every one is paid,
     authenticated-expired, or explicitly reconciled may the legacy plugin be
     deactivated. Keep both new mode-specific webhooks active.
-11. After all five live methods, the full checkout matrix, email delivery,
+11. After every selected live method, the full checkout matrix, email delivery,
     refund verification and the exact containment hold in issue #9 pass, and
-    no unexplained payment remains outstanding, disable Private verification through the ordinary
+    no unexplained production payment remains outstanding, disable BACS in its
+    own WooCommerce settings and disable Private verification through the ordinary
     WooCommerce settings flow (REST: `settings.restricted_rollout="no"`). This
     runs the serialized drain and invalidates stale issuance. Verify a fresh anonymous populated
     checkout exposes `bactive_paymongo` and eligible `cod` only. Align checkout,
@@ -354,7 +394,8 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
     for the first 30 minutes, then assign a next-day reconciliation follow-up.
     Record the deployed plugin hash and sanitized live evidence in issue #2.
 
-Do not mark the GitHub issue complete until all acceptance criteria are proven.
+A partial launch does not close issue #2: keep deferred methods and the staging
+support case open until all five methods and remaining acceptance criteria are proven.
 
 ## Monitoring and reconciliation
 

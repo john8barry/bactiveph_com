@@ -90,7 +90,7 @@ foreach (array(false, true) as $rollout_live) {
         same(false, $rollout_gateway->is_available(), $capability . ' cannot bypass the drain');
     }
     $rollout_gateway = rollout_test_setup(array('restricted_rollout' => 'no'), $rollout_live);
-    same(true, $rollout_gateway->is_available(), 'explicit unrestricted mode permits an anonymous ready gateway');
+    same($rollout_live, $rollout_gateway->is_available(), 'explicit unrestricted mode permits anonymous issuance only with live credentials');
     unset($fake_options['bactive_paymongo_readiness_' . ($rollout_live ? 'live' : 'test')]);
     same(false, $rollout_gateway->is_available(), 'unrestricted issuance still requires verified readiness');
     $rollout_gateway = rollout_test_setup(array('restricted_rollout' => 'no', 'enabled' => 'no'), $rollout_live);
@@ -156,8 +156,13 @@ foreach (array(array('yes', 'no'), array('no', 'yes')) as $transition) {
 // Model a concurrent writer's committed rollout change during the exact
 // provider POST. The old request must expire its session rather than expose
 // a checkout URL under stale visibility rules.
-foreach (array(array('yes', 'no'), array('no', 'yes')) as $transition) {
-    $rollout_gateway = rollout_test_setup(array('restricted_rollout' => $transition[0]));
+foreach (array(
+    array('restricted_rollout', 'yes', 'no'),
+    array('restricted_rollout', 'no', 'yes'),
+    array('issuance_methods', array('qrph'), array('qrph', 'paymaya')),
+    array('issuance_methods', array('qrph', 'paymaya'), array('qrph')),
+) as $transition) {
+    $rollout_gateway = rollout_test_setup(array($transition[0] => $transition[1]));
     $fake_current_user_caps = array('manage_woocommerce');
     $rollout_race_order = new WC_Order();
     $rollout_race_attempt = array(
@@ -175,8 +180,12 @@ foreach (array(array('yes', 'no'), array('no', 'yes')) as $transition) {
         global $fake_options;
         $rollout_race_calls[] = $url;
         if (str_ends_with($url, '/v2/checkout_sessions')) {
-            $fake_options['woocommerce_bactive_paymongo_settings']['restricted_rollout'] = $transition[1];
-            $fake_options[Reconciler::CONFIG_GENERATION_OPTION] = 10;
+            $fake_options['woocommerce_bactive_paymongo_settings'][$transition[0]] = $transition[2];
+            // Deliberately leave generation unchanged for methods to verify the
+            // loaded-settings fence independently of the generation fence.
+            if ($transition[0] === 'restricted_rollout') {
+                $fake_options[Reconciler::CONFIG_GENERATION_OPTION] = 10;
+            }
             $attributes = array('checkout_url' => 'https://checkout.paymongo.com/rollout-fixture', 'livemode' => false);
         } else {
             $attributes = array('status' => 'expired', 'livemode' => false, 'payments' => array());

@@ -76,8 +76,10 @@ function bootstrap(): void
         return $gateways;
     });
     add_filter('woocommerce_available_payment_gateways', static function (array $gateways): array {
+        if (Gateway::public_live_issuance_configured()) {
+            unset($gateways['bacs']);
+        }
         foreach (array(
-            'bacs',
             'paymongo',
             'paymongo_hcp',
             'paymongo_card',

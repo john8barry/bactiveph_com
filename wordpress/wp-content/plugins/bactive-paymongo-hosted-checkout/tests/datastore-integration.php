@@ -89,7 +89,7 @@ $started = microtime(true);
 $gateway = new Gateway(false);
 $fixture_key = 'sk_test_disposable_integration_fixture_only';
 $fields = array('enabled' => '1', 'test_mode' => '1', 'restricted_rollout' => '1',
-    'title' => $gateway->title, 'description' => $gateway->description,
+    'title' => $gateway->title, 'issuance_methods' => array('qrph', 'paymaya', 'shopee_pay', 'dob', 'dob_ubp'),
     'test_secret_key' => $fixture_key, 'live_secret_key' => '');
 $post = array();
 foreach ($fields as $name => $value) {
@@ -105,6 +105,48 @@ $assert(hash_equals($fixture_key, Secrets::api_key(false, $gateway)), 'Encrypted
 $assert(Readiness::is_ready($gateway, false), 'Webhook readiness did not survive the settings save.');
 $assert($webhook_creates === 1, 'First settings save provisioned a duplicate webhook.');
 $assert($gateway->get_option('restricted_rollout') === 'yes', 'First save lost manager-only issuance.');
+// Exercise WooCommerce's native multiselect validation/persistence, including
+// an entirely absent POST field (how a deselected multiselect is submitted).
+$methods_field = $gateway->get_field_key('issuance_methods');
+foreach (array(array('qrph', 'paymaya'), null, array('qrph', 'card'), array('qrph', 'paymaya', 'shopee_pay', 'dob', 'dob_ubp')) as $selection) {
+    $methods_post = $post;
+    if ($selection === null) {
+        unset($methods_post[$methods_field]);
+    } else {
+        $methods_post[$methods_field] = $selection;
+    }
+    $gateway->set_post_data($methods_post);
+    ob_start();
+    try {
+        $gateway->process_admin_options();
+    } finally {
+        $selection_notice = ob_get_clean();
+    }
+    $gateway = new Gateway(false);
+    $stored_methods = get_option('woocommerce_bactive_paymongo_settings')['issuance_methods'];
+    $expected_methods = $selection === null || in_array('card', $selection, true) ? array() : $selection;
+    $assert($expected_methods !== array() || str_contains($selection_notice, 'PayMongo remains unavailable'), 'Invalid selection did not show an operator error.');
+    $assert($stored_methods === $expected_methods, 'Native multiselect save lost exact selection or fail-closed empty value.');
+    $assert($gateway->issuance_methods() === $expected_methods, 'Native getter expanded explicit empty selection to defaults.');
+    $assert($expected_methods === array() ? !$gateway->is_available() : $gateway->is_available(), 'Native selection availability mismatch.');
+}
+
+// Verify the actual checkout filter, while isolating display settings from
+// payment writes; no fixture changes mode or creates a live webhook.
+foreach (array(
+    array('no', 'no', 'no', true), array('yes', 'yes', 'no', true),
+    array('yes', 'no', 'yes', true), array('yes', 'no', 'no', false),
+) as [$enabled, $test, $private, $has_bacs]) {
+    $display_settings = static fn() => array('enabled' => $enabled, 'test_mode' => $test, 'restricted_rollout' => $private, 'issuance_methods' => array('qrph'));
+    add_filter('pre_option_woocommerce_bactive_paymongo_settings', $display_settings);
+    try {
+        $display_gateways = apply_filters('woocommerce_available_payment_gateways', array('bacs' => new stdClass(), 'cod' => new stdClass(), 'paymongo' => new stdClass()));
+        $assert(isset($display_gateways['bacs']) === $has_bacs, 'Native checkout filter changed BACS before public live issuance.');
+        $assert(isset($display_gateways['cod']) && !isset($display_gateways['paymongo']), 'Native checkout filter lost COD or exposed legacy PayMongo.');
+    } finally {
+        remove_filter('pre_option_woocommerce_bactive_paymongo_settings', $display_settings);
+    }
+}
 require __DIR__ . '/settings-drain-datastore.php';
 Reconciler::run();
 $assert(wp_next_scheduled(Reconciler::CRON_HOOK) !== false, 'Recurring recovery schedule missing.');

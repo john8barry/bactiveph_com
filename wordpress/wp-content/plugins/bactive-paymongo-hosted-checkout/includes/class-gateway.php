@@ -41,9 +41,10 @@ final class Gateway extends \WC_Payment_Gateway
         $this->loaded_config_generation = Reconciler::config_generation();
 
         $this->title = (string) $this->get_option('title', __('Pay online securely', 'bactive-paymongo'));
-        $this->description = (string) $this->get_option(
-            'description',
-            __('Choose QRPh, Maya, ShopeePay, BPI Direct Debit, or UBP Direct Debit on PayMongo.', 'bactive-paymongo')
+        $labels = self::issuance_method_labels();
+        $this->description = sprintf(
+            __('Choose %s on PayMongo.', 'bactive-paymongo'),
+            implode(', ', array_map(static fn(string $method): string => $labels[$method], $this->issuance_methods()))
         );
         $this->enabled = (string) $this->get_option('enabled', 'no');
 
@@ -72,7 +73,7 @@ final class Gateway extends \WC_Payment_Gateway
                 'title' => __('Private verification', 'bactive-paymongo'),
                 'type' => 'checkbox',
                 'label' => __('Restrict PayMongo checkout to store managers', 'bactive-paymongo'),
-                'description' => __('Keep enabled until sandbox tests and the approved live payment are verified. The store and Cash on Delivery remain public.', 'bactive-paymongo'),
+                'description' => __('Keep enabled until each selected method has a verified live payment. Sandbox checkout always requires a store manager. The store and Cash on Delivery remain public.', 'bactive-paymongo'),
                 'default' => 'yes',
             ),
             'title' => array(
@@ -81,10 +82,12 @@ final class Gateway extends \WC_Payment_Gateway
                 'default' => __('Pay online securely', 'bactive-paymongo'),
                 'desc_tip' => true,
             ),
-            'description' => array(
-                'title' => __('Checkout description', 'bactive-paymongo'),
-                'type' => 'textarea',
-                'default' => __('Choose QRPh, Maya, ShopeePay, BPI Direct Debit, or UBP Direct Debit on PayMongo.', 'bactive-paymongo'),
+            'issuance_methods' => array(
+                'title' => __('Payment methods for new checkouts', 'bactive-paymongo'),
+                'type' => 'multiselect',
+                'options' => self::issuance_method_labels(),
+                'default' => Integrity::CHECKOUT_METHODS,
+                'description' => __('Select only methods approved for this rollout. An empty selection disables new payments. Changing the selection drains existing sessions; callbacks remain available for every historical method.', 'bactive-paymongo'),
             ),
             'test_secret_key' => array(
                 'title' => __('Test secret key', 'bactive-paymongo'),
@@ -226,7 +229,8 @@ final class Gateway extends \WC_Payment_Gateway
         $live_key_changed = ($old_value['live_secret_key'] ?? '') !== ($value['live_secret_key'] ?? '');
         $sensitive_change = $mode_changed || $test_key_changed || $live_key_changed;
         $rollout_changed = ($old_value['restricted_rollout'] ?? 'yes') !== ($value['restricted_rollout'] ?? 'yes');
-        $availability_changed = $old_enabled !== $new_enabled || $rollout_changed;
+        $methods_changed = self::methods_from_settings($old_value) !== self::methods_from_settings($value);
+        $availability_changed = $old_enabled !== $new_enabled || $rollout_changed || $methods_changed;
         $needs_drain = $availability_changed || $sensitive_change;
 
         // Bind the original closure to this exact writer before any provider
@@ -573,6 +577,59 @@ final class Gateway extends \WC_Payment_Gateway
         return hash('sha256', serialize($canonicalize($settings)));
     }
 
+    /** @return array<string,string> */
+    private static function issuance_method_labels(): array
+    {
+        return array(
+            'qrph' => 'QRPh',
+            'paymaya' => 'Maya',
+            'shopee_pay' => 'ShopeePay',
+            'dob' => 'BPI Direct Debit',
+            'dob_ubp' => 'UBP Direct Debit',
+        );
+    }
+
+    /** Missing legacy settings preserve all five; malformed or empty selections deny issuance. */
+    private static function methods_from_settings(array $settings): array
+    {
+        if (!array_key_exists('issuance_methods', $settings)) {
+            return Integrity::CHECKOUT_METHODS;
+        }
+        $methods = $settings['issuance_methods'];
+        if (!is_array($methods) || $methods === array() || !array_is_list($methods)) {
+            return array();
+        }
+        foreach ($methods as $method) {
+            if (!is_string($method) || !in_array($method, Integrity::CHECKOUT_METHODS, true)) {
+                return array();
+            }
+        }
+        return array_values(array_intersect(Integrity::CHECKOUT_METHODS, $methods));
+    }
+
+    /** @return array<int,string> */
+    public function issuance_methods(): array
+    {
+        return self::methods_from_settings($this->settings);
+    }
+
+    /** WooCommerce must retain an explicit empty multiselect instead of its migration default. */
+    public function validate_issuance_methods_field($key, $value): array
+    {
+        return self::methods_from_settings(array('issuance_methods' => $value));
+    }
+
+    /** Preserve existing bank transfer during disabled/private installation. */
+    public static function public_live_issuance_configured(): bool
+    {
+        $settings = get_option('woocommerce_' . GATEWAY_ID . '_settings', array());
+        return is_array($settings)
+            && ($settings['enabled'] ?? 'no') === 'yes'
+            && ($settings['test_mode'] ?? 'yes') === 'no'
+            && ($settings['restricted_rollout'] ?? 'yes') === 'no'
+            && self::methods_from_settings($settings) !== array();
+    }
+
     public function is_available(): bool
     {
         if (!$this->rollout_allows_issuance()
@@ -593,9 +650,10 @@ final class Gateway extends \WC_Payment_Gateway
     {
         // WC_Settings_API::get_option() fills missing defaults into settings.
         // Do not mutate this snapshot: currentness compares it with storage.
-        return ($this->settings['restricted_rollout'] ?? 'yes') === 'no'
-            || current_user_can('manage_woocommerce')
-            || current_user_can('manage_options');
+        return $this->issuance_methods() !== array()
+            && ((!$this->is_test_mode() && ($this->settings['restricted_rollout'] ?? 'yes') === 'no')
+                || current_user_can('manage_woocommerce')
+                || current_user_can('manage_options'));
     }
 
     /**
@@ -1821,7 +1879,7 @@ final class Gateway extends \WC_Payment_Gateway
                     'quantity' => 1,
                 ),
             ),
-            'payment_method_types' => Integrity::CHECKOUT_METHODS,
+            'payment_method_types' => $this->issuance_methods(),
             'success_url' => add_query_arg('paymongo_return', '1', $order->get_checkout_order_received_url()),
             'cancel_url' => add_query_arg(
                 array(
@@ -2823,7 +2881,7 @@ final class Gateway extends \WC_Payment_Gateway
                 return false;
             }
         }
-        return true;
+        return self::methods_from_settings($current) === $this->issuance_methods();
     }
 
     /** @return array<string,mixed>|null */

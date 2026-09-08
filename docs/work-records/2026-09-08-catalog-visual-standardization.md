@@ -47,3 +47,9 @@ Tracking issue: https://github.com/john8barry/bactiveph_com/issues/48
 Root independently reviewed the preparation script and containment templates, then applied the prepare-only operation to the existing verified package into a new private local directory. No source backup was changed; no database import, WordPress boot, Docker start or host operation occurred. The result remains PREPARED_RESTORE_BLOCKED. All19 Python tests pass (8 image-plan/reversal,11 preparation/containment). This is explicitly not the required full restore rehearsal.
 
 Catalogue review correction: actual stored term snapshot uses Powder Blue slug powder and Sakura Pink slug sakura; defaults agree. The earlier suspected stale-default finding is withdrawn; no default correction is proposed.
+
+## Complete original-reference review
+
+Two independent read-only lanes inspected all69 unique original attachments across the18 currently returned products (47+22 files). Findings recorded in REFERENCE-EXCEPTIONS.md and REFERENCE-CANARIES.md; root reviewed both and directly confirmed the Bubble image61 and Aria343 findings. Strong original reuse is available across much of the catalogue. Missing rear/interior views are not invented. These reference reviews do not pass product release gates.
+
+Draft PR50 source commit f9c2cb0c2012bb6e9468bd0fd8f70e6e37cb4a76 passed Catalogue visuals and Storefront punctuation CI. No merge/deployment. Product148 remains statusunknown; colour reference basis remains pending.

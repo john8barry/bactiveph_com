@@ -2,7 +2,7 @@
 
 Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16). Priority: normal requested feature; production email continuity is a release requirement.
 
-Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. No Brevo account, live marketing activation, test send, or MailPoet removal has been completed by this task. See the [acceptance receipt](../releases/brevo-marketing.md).
+Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, DOI template, and Turnstile widget are configured. No live marketing activation, test send, host deployment, contact import, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
 
 ## Scope and decisions
 
@@ -35,6 +35,16 @@ The read-only operator command is `wp bactive-brevo status`. During the authoriz
 Due event names: ba_welcome_ready, ba_cart_reminder_ready, ba_post_purchase_ready and ba_winback_ready. Stage distinguishes cart 2h/24h and care/review. Brevo workflows send immediately after these events; delays belong to the local scheduler so eligibility is checked at dispatch. No payment/session keys, addresses, phone numbers or raw provider payloads belong in marketing events. Ambiguous event API responses are quarantined, never blindly retried.
 
 BACTIVE5 must be provisioned explicitly as a draft, bound by ID and campaign marker, and published only during verified activation. Native Woo coupon counters remain authoritative. Separate atomic identity claims prevent concurrent first-order redemptions; historical purchases/refunds and unresolved payment recovery make a customer ineligible. Configuration or activation alone must not create a public coupon.
+
+## Provider setup receipt (2026-09-07)
+
+- Brevo authenticated `bactiveph.com`, verified `B Active <hello@bactiveph.com>`, and branded the domain with `move.bactiveph.com`. Public Cloudflare, Google, and authoritative DNS readback agreed on the branded CNAME, both Brevo DKIM selectors, the Brevo verification TXT, and the single combined DMARC record. The existing Cloudflare MX/SPF and SMTP2GO path were preserved.
+- Brevo Free reported 300 daily sends available. The dedicated API key is stored only in the project-ignored protected environment file; its value is absent from Git, receipts, and provider IDs below.
+- Confirmed-subscriber list: `B Active Confirmed Subscribers`, ID `3`, independently read back empty.
+- Contact attributes: `BA_DOI_TOKEN` and `BA_CONSENT_SOURCE`, both normal TEXT attributes.
+- Native DOI template: `B Active – Confirm your signup`, ID `1`, sender `hello@bactiveph.com`. Creation did not send an email.
+- Cloudflare Turnstile widget: `bactiveph-newsletter`, public site key `0x4AAAAAAEsSyWIvaEIenlIM`, managed mode, limited to `bactiveph.com`, `staging.bactiveph.com`, and `www.bactiveph.com`. Its secret and the generated webhook bearer token are stored only in the protected environment file.
+- No MailPoet contact was imported, no Brevo contact was added, no workflow or campaign was enabled, and no email was sent. The suppression webhook remains uncreated until the exact staging endpoint exists and can be tested.
 
 ## Acceptance and release gates
 

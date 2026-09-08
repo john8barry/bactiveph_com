@@ -28,7 +28,7 @@ The approved Sage footer uses the shortcode in both tracked theme copies. The ho
 
 ## Remaining release requirements
 
-1. John completes the new Brevo Free account sign-in, password and terms. Configure exact sender/domain/list/template/workflow IDs and protected secrets after account access is available. Preserve Cloudflare inbound routing and SMTP2GO records.
+1. The Brevo Free account, authenticated sender/domain, `move.bactiveph.com` branding, API key, confirmed list ID `3`, DOI template ID `1`, required contact attributes, protected webhook token, and managed Turnstile widget are configured. Cloudflare inbound routing and SMTP2GO records were preserved. Workflow IDs and the authenticated suppression webhook remain pending staging endpoint availability; no send has occurred.
 2. Resolve the payment dependency: PayMongo-marked purchase follow-ups remain `payment_unknown` until the payment integration supplies a complete public settlement classifier. Its current protection predicate is insufficient to authorize purchase marketing.
 3. Obtain the serialized host window and verify a fresh complete off-server backup. Test the exact package on staging with the approved recipient allowlist and concrete test-send authorization. Production WordPress was inventoried as 7.1; the repository fixture is 7.0.
 4. Verify desktop/mobile form rendering, actual Turnstile, cache headers, DOI possession, unsubscribe suppression, cron execution, workflow intake and inbox receipt. The browser could not attach locally, so visual verification is not claimed.

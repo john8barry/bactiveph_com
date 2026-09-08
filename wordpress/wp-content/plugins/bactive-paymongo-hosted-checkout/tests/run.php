@@ -315,6 +315,7 @@ same('signature_malformed', Integrity::verify_signature($raw, "t={$now},t={$now}
 same('signature_value_invalid', Integrity::verify_signature($raw, "t={$now},te=not-a-signature,li=", $secret, false, $now)['code'], 'malformed signature value rejected');
 
 foreach (array(
+    array('grab_pay', '', 'grab_pay', ''),
     array('qrph', '', 'qrph', ''),
     array('paymaya', '', 'paymaya', ''),
     array('maya', '', 'paymaya', ''),
@@ -5676,6 +5677,7 @@ same(0, $fake_hook_calls['woocommerce_order_status_changed'] ?? 0, 'cancel opera
 require __DIR__ . '/recovery-boundaries.php';
 require __DIR__ . '/rollout-restriction.php';
 require __DIR__ . '/issuance-methods.php';
+require __DIR__ . '/grabpay.php';
 require __DIR__ . '/settings-review-drain.php';
 abandoned_session_recovery_tests();
 

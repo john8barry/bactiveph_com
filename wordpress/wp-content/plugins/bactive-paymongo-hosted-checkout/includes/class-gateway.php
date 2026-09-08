@@ -86,7 +86,7 @@ final class Gateway extends \WC_Payment_Gateway
                 'title' => __('Payment methods for new checkouts', 'bactive-paymongo'),
                 'type' => 'multiselect',
                 'options' => self::issuance_method_labels(),
-                'default' => Integrity::CHECKOUT_METHODS,
+                'default' => Integrity::DEFAULT_CHECKOUT_METHODS,
                 'description' => __('Select only methods approved for this rollout. An empty selection disables new payments. Changing the selection drains existing sessions; callbacks remain available for every historical method.', 'bactive-paymongo'),
             ),
             'test_secret_key' => array(
@@ -586,6 +586,7 @@ final class Gateway extends \WC_Payment_Gateway
             'shopee_pay' => 'ShopeePay',
             'dob' => 'BPI Direct Debit',
             'dob_ubp' => 'UBP Direct Debit',
+            'grab_pay' => 'GrabPay',
         );
     }
 
@@ -593,7 +594,7 @@ final class Gateway extends \WC_Payment_Gateway
     private static function methods_from_settings(array $settings): array
     {
         if (!array_key_exists('issuance_methods', $settings)) {
-            return Integrity::CHECKOUT_METHODS;
+            return Integrity::DEFAULT_CHECKOUT_METHODS;
         }
         $methods = $settings['issuance_methods'];
         if (!is_array($methods) || $methods === array() || !array_is_list($methods)) {

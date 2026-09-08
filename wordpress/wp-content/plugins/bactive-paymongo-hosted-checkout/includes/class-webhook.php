@@ -2815,7 +2815,7 @@ final class Webhook
 
         $method = (string) ($record['method'] ?? '');
         $provider = (string) ($record['provider'] ?? '');
-        $source_valid = in_array($method, array('qrph', 'paymaya', 'shopee_pay'), true)
+        $source_valid = in_array($method, array('qrph', 'paymaya', 'shopee_pay', 'grab_pay'), true)
             ? $provider === ''
             : ($method === 'dob' && in_array($provider, array('bpi', 'ubp'), true));
         $paid_statuses = function_exists('wc_get_is_paid_statuses')
@@ -3204,7 +3204,7 @@ final class Webhook
         $session_id = (string) $order->get_meta('_bactive_paymongo_paid_session_id', true);
         $method = (string) $order->get_meta('_bactive_paymongo_source_method', true);
         $provider = (string) $order->get_meta('_bactive_paymongo_source_provider', true);
-        $source_valid = in_array($method, array('qrph', 'paymaya', 'shopee_pay'), true)
+        $source_valid = in_array($method, array('qrph', 'paymaya', 'shopee_pay', 'grab_pay'), true)
             ? $provider === ''
             : ($method === 'dob' && in_array($provider, array('bpi', 'ubp'), true));
         if (!preg_match('/^pay_[A-Za-z0-9_-]{3,128}$/D', $payment_id)

@@ -15,8 +15,10 @@ Creates PayMongo v2 Checkout Sessions and redirects the customer to PayMongo's
 hosted payment page. The WooCommerce cart remains on B Active; an order is
 created before redirect and is fulfilled only after a verified paid event.
 
-The payment-method allowlist is fixed to QRPh, Maya, ShopeePay, BPI Direct
-Debit, and UBP Direct Debit. WooCommerce settings select the verified subset
+The supported methods are QRPh, Maya, ShopeePay, BPI Direct Debit, UBP Direct
+Debit, and opt-in GrabPay. Missing legacy settings retain the original five;
+GrabPay requires an explicit selection and a verified live canary before public
+release. WooCommerce settings select the verified subset
 for new sessions; historical methods continue to reconcile. Cash on Delivery
 remains a separate WooCommerce gateway. Legacy PayMongo gateways are hidden.
 Existing manual bank transfer is preserved during disabled/private/sandbox
@@ -62,6 +64,8 @@ The fixture uses no real credentials, customer records, or provider payments.
 == Changelog ==
 
 = 1.0.0 =
+* Add opt-in GrabPay issuance, capability checks, settlement and recovery without
+  changing existing method selections or the original five-method default.
 * Select a validated subset for new checkout sessions, with matching customer
   copy and live capability checks. Fence changes with the settings drain and
   preserve all historical methods for callbacks and reconciliation.

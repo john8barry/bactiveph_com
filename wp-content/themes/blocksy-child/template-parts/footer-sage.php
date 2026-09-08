@@ -379,7 +379,6 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
                     <li><a href="<?php echo esc_url(home_url('/collections/sports-bras')); ?>">Sports Bras</a></li>
                     <li><a href="<?php echo esc_url(home_url('/collections/leggings')); ?>">Leggings</a></li>
                     <li><a href="<?php echo esc_url(home_url('/collections/sets')); ?>">Sets</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/collections/paddles')); ?>">Pickleball Paddles</a></li>
                 </ul>
             </nav>
             <nav class="bactive-footer__links" aria-labelledby="bactive-footer-help-title">

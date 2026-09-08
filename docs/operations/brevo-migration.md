@@ -2,7 +2,7 @@
 
 Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16). Priority: normal requested feature; production email continuity is a release requirement.
 
-Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, DOI template, and Turnstile widget are configured. The exact reviewed plugin package is installed on staging in test mode with `jgbarry@gmail.com` as its sole allowed recipient. Brevo accepted and logged delivery of one DOI email; confirmation is pending. No live marketing activation, contact import, footer/homepage integration, workflow activation, webhook registration, coupon publication, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
+Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, Brand Library, seven templates, and Turnstile widget are configured. The exact reviewed plugin package is installed on staging in test mode with `jgbarry@gmail.com` as its sole allowed recipient. The DOI was confirmed and Brevo list ID `3` contains that confirmed test contact. Seven marketing test messages were delivered to the approved Gmail address, including a final rendered Welcome check after correcting the logo host. No live marketing activation, historical contact import, workflow activation, webhook registration, coupon publication, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
 
 ## Scope and decisions
 
@@ -64,6 +64,14 @@ BACTIVE5 must be provisioned explicitly as a draft, bound by ID and campaign mar
 - PayMongo settings/files, recent-order fingerprint, child-theme functions and the error log were unchanged. All host and browser connections were closed and the staging writer lane was released.
 - Next control point: the recipient clicks the DOI link. Then verify the same browser's possession proof, Brevo list membership, local confirmed state, welcome-event queueing, and subsequent workflow delivery separately.
 
+## Brand and template receipt (2026-09-08)
+
+- Brevo's Brand Library now contains the B Active logo, Instagram and Facebook profiles, the sage `#99AB90`, ivory `#F9F7F4`, and charcoal `#242222` palette, and inbox-safe Arial heading/body fallbacks.
+- Active provider templates are DOI ID `1`, Welcome ID `3`, Cart 2h ID `4`, Cart 24h ID `5`, Care ID `6`, Review ID `7`, and Winback 90d ID `8`. Authenticated API readback matched every provider template to the reviewed local HTML. All use `B Active <hello@bactiveph.com>` for sender and reply-to.
+- Six initial marketing template tests were delivered to the sole authorized recipient. Gmail then exposed that its image proxy could not fetch the storefront-hosted logo through bot protection. All seven templates were updated to the account-owned Brevo content-library copy, with one final Welcome test sent after exact provider readback.
+- The final Welcome test was requested and delivered at `2026-09-08T15:28:29+08:00`; quota moved from 293 to 292. Gmail Inbox visual readback showed the logo and complete branded layout, resolved `BACTIVE5`, branded `move.bactiveph.com` links, consent reason, registered address, privacy link, and unsubscribe link.
+- Templates are ready for workflow wiring, but workflows remain paused. Welcome is held until the coupon is published and guarded; cart reminders need exact event routing and end-to-end staging proof; care, review, and winback remain held on the complete settled-payment classifier. The suppression webhook remains pending exact staging endpoint verification.
+
 ## Acceptance and release gates
 
 1. Focused unit, failure-path and concurrency tests; real Woo classic checkout, order-pay and Store API tests with HPOS and legacy order storage. Demonstrate no wp_mail interception and no nonconsenting events.
@@ -95,6 +103,6 @@ The approved Sage footer now calls the shortcode in both tracked theme copies. T
 
 The public form refreshes its nonce through an uncached same-origin endpoint so LiteSpeed page caching cannot retain an expired token. Exclude DOI callback queries and admin-post/admin-ajax/REST webhook responses from edge caching; verify actual response headers and forwarding of webhook authorization on staging. Signup confirmation requires the one-time emailed return proof, and neither a query parameter nor an unverified Woo account email establishes identity. Cart/order identification requires the possession cookie; purchase hooks retain a signed order-specific proof for later eligibility checks.
 
-Seven unsent [email drafts](brevo-email-drafts/README.md) cover DOI and the six marketing messages. The native Free branding, final field bindings, provider workflow intake/receipts, unsubscribe behavior and inbox delivery remain unverified until the account is ready.
+Seven [email templates](brevo-email-drafts/README.md) cover DOI and the six marketing messages and match their active provider copies. Desktop Gmail visual verification passed for the final Welcome message. Workflow event intake, suppression behavior, mobile rendering, and end-to-end scheduled delivery remain acceptance gates.
 
-The local browser could not attach, and Chrome was unavailable; desktop/mobile visual verification remains pending. Native datastore fixtures use repository WordPress 7.0 and WooCommerce 10.8.1; production was inventoried as WordPress 7.1, so staging remains the runtime parity check. No fixture has outbound network access or mail delivery.
+Native datastore fixtures use repository WordPress 7.0 and WooCommerce 10.8.1; production was inventoried as WordPress 7.1, so staging remains the runtime parity check. No fixture has outbound network access or mail delivery.

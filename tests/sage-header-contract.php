@@ -26,6 +26,20 @@ namespace {
     require dirname(__DIR__) . '/wordpress/wp-content/mu-plugins/bactiveph-sage-header.php';
     function check($ok, $name) { if (!$ok) throw new \RuntimeException($name); echo "PASS $name\n"; }
     check(\BactivePH\SageHeader\ready(), 'complete bundle is eligible');
+    check(\BactivePH\SageHeader\links('primary') === array(
+        'About' => '/about-our-story/',
+        'Contact' => '/contact/',
+        'Pickleball Looks' => '/pickleball-looks/',
+    ), 'primary destinations and URLs are preserved alphabetically');
+    check(\BactivePH\SageHeader\links('collections') === array(
+        'Leggings' => '/collections/leggings',
+        'Pickleball dresses' => '/collections/pickleball-dresses',
+        'Sets' => '/collections/sets',
+        'Shop all' => '/shop/',
+        'Skorts' => '/collections/skorts',
+        'Sports bras' => '/collections/sports-bras',
+        'Tops & tanks' => '/collections/tops',
+    ), 'Shop destinations and URLs are preserved alphabetically');
     foreach (array('/template-parts/header-sage.php', '/assets/css/header-sage.css', '/assets/js/header-sage.js') as $file) {
         $missing = array(get_stylesheet_directory() . $file);
         check(!\BactivePH\SageHeader\ready(), 'missing asset retains original header: ' . $file);
@@ -47,6 +61,29 @@ namespace {
     check($xpath->query('//details[contains(@class,"bactive-header__collections")][@open]')->length === 1, 'mobile categories initially expanded');
     check($xpath->query('//a[@href="https://bactiveph.com/contact/"][@aria-current="page"]')->length === 2, 'current primary page exposed to assistive technology');
     check($xpath->query('//input[@id="bactive-header-search-desktop"]')->length === 1 && $xpath->query('//input[@id="bactive-header-search-mobile"]')->length === 1, 'search labels have distinct device targets');
+    $desktopLabels = array();
+    foreach ($xpath->query('//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__primary ")]/*[self::a or self::details]') as $node) {
+        $desktopLabels[] = trim($node->nodeName === 'details' ? $xpath->query('./summary', $node)->item(0)->textContent : $node->textContent);
+    }
+    check($desktopLabels === array('About', 'Contact', 'Pickleball Looks', 'Shop'), 'desktop top-level navigation is alphabetical');
+    $mobileLabels = array();
+    foreach ($xpath->query('//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-panel ")]/div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-primary ")]/a') as $node) {
+        $mobileLabels[] = trim($node->textContent);
+    }
+    $mobileShop = $xpath->query('//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-panel ")]/details[contains(concat(" ",normalize-space(@class)," ")," bactive-header__collections ")]/summary')->item(0);
+    $mobileLabels[] = trim($mobileShop->textContent);
+    check($mobileLabels === array('About', 'Contact', 'Pickleball Looks', 'Shop'), 'mobile top-level navigation is alphabetical');
+    $expectedCollections = array('Leggings', 'Pickleball dresses', 'Sets', 'Shop all', 'Skorts', 'Sports bras', 'Tops & tanks');
+    foreach (array(
+        'desktop' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__primary ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__dropdown ")]/a',
+        'mobile' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-panel ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__collection-links ")]/a',
+    ) as $deviceName => $query) {
+        $collectionLabels = array();
+        foreach ($xpath->query($query) as $node) {
+            $collectionLabels[] = trim($node->textContent);
+        }
+        check($collectionLabels === $expectedCollections, $deviceName . ' rendered Shop destinations are alphabetical');
+    }
     check(!str_contains($markup, 'role="menu"'), 'ordinary site navigation semantics retained');
     echo "Header guard and markup checks passed.\n";
 }

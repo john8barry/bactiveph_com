@@ -5,14 +5,18 @@ on:
       - '.github/workflows/sage-header.yml'
       - '**/bactiveph-sage-header.php'
       - '**/header-sage.*'
+      - '**/footer-sage.php'
       - 'tests/sage-header-contract.php'
+      - 'tests/footer-navigation-contract.php'
   push:
     branches: [main]
     paths:
       - '.github/workflows/sage-header.yml'
       - '**/bactiveph-sage-header.php'
       - '**/header-sage.*'
+      - '**/footer-sage.php'
       - 'tests/sage-header-contract.php'
+      - 'tests/footer-navigation-contract.php'
 permissions:
   contents: read
 jobs:
@@ -23,14 +27,17 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - name: Header syntax and fallback contract
+      - name: Navigation syntax and contracts
         run: |
           php -l wordpress/wp-content/mu-plugins/bactiveph-sage-header.php
           php -l wordpress/wp-content/themes/blocksy-child/template-parts/header-sage.php
+          php -l wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php
           php tests/sage-header-contract.php
+          php tests/footer-navigation-contract.php
           node --check wordpress/wp-content/themes/blocksy-child/assets/js/header-sage.js
       - name: Source mirrors
         run: |
           cmp wordpress/wp-content/themes/blocksy-child/template-parts/header-sage.php wp-content/themes/blocksy-child/template-parts/header-sage.php
           cmp wordpress/wp-content/themes/blocksy-child/assets/css/header-sage.css wp-content/themes/blocksy-child/assets/css/header-sage.css
           cmp wordpress/wp-content/themes/blocksy-child/assets/js/header-sage.js wp-content/themes/blocksy-child/assets/js/header-sage.js
+          cmp wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php wp-content/themes/blocksy-child/template-parts/footer-sage.php

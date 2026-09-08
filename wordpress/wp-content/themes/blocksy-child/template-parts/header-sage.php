@@ -9,6 +9,9 @@ $account_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink(
 <div class="bactive-header__desktop">
     <div class="bactive-header__brand"><?php echo $logo; /* Blocksy's configured logo renderer. */ ?></div>
     <nav class="bactive-header__primary" aria-label="Primary navigation">
+        <?php foreach (links('primary') as $label => $path) : ?>
+        <a href="<?php echo esc_url(home_url($path)); ?>"<?php echo current_attribute($path); ?>><?php echo esc_html($label); ?></a>
+        <?php endforeach; ?>
         <details class="bactive-header__shop bactive-header__disclosure">
             <summary>Shop <?php icon('chevron'); ?></summary>
             <div class="bactive-header__dropdown">
@@ -17,9 +20,6 @@ $account_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink(
                 <?php endforeach; ?>
             </div>
         </details>
-        <?php foreach (links('primary') as $label => $path) : ?>
-        <a href="<?php echo esc_url(home_url($path)); ?>"<?php echo current_attribute($path); ?>><?php echo esc_html($label); ?></a>
-        <?php endforeach; ?>
     </nav>
     <div class="bactive-header__utilities">
         <details class="bactive-header__search bactive-header__disclosure">
@@ -37,6 +37,11 @@ $account_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink(
     <details class="bactive-header__mobile-menu">
         <summary class="bactive-header__menu-toggle"><span class="bactive-header__menu-open"><?php icon('menu'); ?><span class="bactive-header__sr-only">Open menu</span></span><span class="bactive-header__menu-close"><?php icon('close'); ?><span class="bactive-header__sr-only">Close menu</span></span></summary>
         <nav class="bactive-header__mobile-panel" aria-label="Mobile navigation">
+            <div class="bactive-header__mobile-primary">
+                <?php foreach (links('primary') as $label => $path) : ?>
+                <a href="<?php echo esc_url(home_url($path)); ?>"<?php echo current_attribute($path); ?>><?php echo esc_html($label); ?></a>
+                <?php endforeach; ?>
+            </div>
             <details class="bactive-header__collections" open>
                 <summary>Shop <?php icon('chevron'); ?></summary>
                 <div class="bactive-header__collection-links">
@@ -45,11 +50,6 @@ $account_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink(
                     <?php endforeach; ?>
                 </div>
             </details>
-            <div class="bactive-header__mobile-primary">
-                <?php foreach (links('primary') as $label => $path) : ?>
-                <a href="<?php echo esc_url(home_url($path)); ?>"<?php echo current_attribute($path); ?>><?php echo esc_html($label); ?></a>
-                <?php endforeach; ?>
-            </div>
             <a class="bactive-header__mobile-account" href="<?php echo esc_url($account_url); ?>">My account</a>
             <?php search_form('mobile'); ?>
         </nav>

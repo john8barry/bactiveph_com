@@ -10,7 +10,7 @@ The approved Sage footer uses the shortcode in both tracked theme copies. The ho
 
 ## Source and package
 
-- Feature branch: `codex/brevo-marketing-v1`, reconciled with main `5778889ba155c93eb12d0f49d52ee0196f481a53` before committing.
+- Feature branch: `codex/brevo-marketing-v1`, reconciled with main `5177b31e0a397bde441d3ca1236aceb1cac8918c` before the final verification run.
 - Plugin version: `1.0.0`; PHP requirement: `8.2`.
 - Deterministic runtime ZIP: 12 files; SHA256 `4e27bbf52a3461d2bc39fe16c4a52c4f6962915705053aa08274312d8881b575`.
 - The ZIP contains only the plugin entry point, PHP includes and browser assets. Its contents were compared byte-for-byte with the reviewed source; tests, scripts, email drafts and credentials are excluded.

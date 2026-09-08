@@ -72,7 +72,6 @@ function links($group) {
             'Sports bras' => '/collections/sports-bras',
             'Leggings' => '/collections/leggings',
             'Sets' => '/collections/sets',
-            'Pickleball paddles' => '/collections/paddles',
         );
     }
     return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');

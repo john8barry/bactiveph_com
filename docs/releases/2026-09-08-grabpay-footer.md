@@ -1,8 +1,11 @@
 # GrabPay footer badge
 
 Work item: [#53](https://github.com/john8barry/bactiveph_com/issues/53).
+Source review: [PR #55](https://github.com/john8barry/bactiveph_com/pull/55),
+candidate `56a53bfc2ddba6ed90e342872e363e63da64ec36`.
 Severity: low, display-only. Owner: courier/payment footer task.
-Status: **LOCAL VERIFIED; STAGING PREPARATION IN PROGRESS; NOT PRODUCTION**.
+Status: **LOCAL VERIFIED; DEPLOYMENT BLOCKED BY SHARED BACKUP PREREQUISITE**.
+Neither staging nor production has received this footer update.
 
 ## Scope
 
@@ -71,14 +74,58 @@ subsequently found stable values. Original snapshots are retained and the
 payment coordinator is classifying this drift before a new baseline/backup.
 No deployment has occurred. The stopped guard is not a successful backup.
 
+Independent review subsequently found that the historical helper's ordinary
+`wp eval` bootstrap and gateway construction were not guaranteed read-only.
+Those diagnostic runs therefore cannot prove absence of incidental bootstrap
+effects, and the original aggregate delta remains **UNATTRIBUTED**. The old
+helper is stopped, retained as evidence and not cleared for further use.
+Its ignored stderr, removable Python assertions and incomplete root/core
+recovery coverage were also identified. A distinct read-only collector was
+independently reviewed before its single authorized invocation, with
+pre-bootstrap SQL/mail/HTTP/async guards, plugins/themes skipped, exact dependency
+pins, raw keyed options/order/notes/stock snapshots and separate scheduling
+observations. Backup execution remains
+explicitly held: process-only backup guards may not survive a scheduled Updraft
+resume. No existing backup helper is treated as a qualified drop-in recipe.
+
+### Final guarded staging baseline
+
+At 09:39:24 UTC, the new collector passed with `changed_fields=[]` between its
+two snapshots. Exact staging identity and `blog_public=0` were verified again;
+265 scoped option hashes (active plugins plus literal `woocommerce_` and
+`bactive_` prefixes), 11 protected order/notes/stock groups, the held test-order
+state, scheduling observations, theme/root-file inventory, 11 gateway runtime
+pins, five worker pins and reviewed bootstrap pins remained unchanged.
+All three MU sources were independently inspected; no active drop-ins were
+found and the production-only MailPoet dependency was absent, so its SQL
+exceptions were not carried over. This is an application-guarded read under
+reviewed bootstrap assumptions, not an operating-system sandbox.
+
+The payment coordinator independently read and accepted the new receipt only.
+The original unguarded delta remains unattributed. The staging partial is still
+v4 and GrabPay is absent. All transports were closed before the closure receipt
+was written, and the staging preparation window was explicitly released.
+No more host calls are needed in this lane while the backup gate is held.
+
+Private receipt directory: `guarded-staging-20260908T093807.808801Z` beneath the
+private artifact directory below. Final state receipt SHA-256:
+`87eaa56a073260326a00788ee2aae03e6b2f452f05b2c30f3506e430961a31c7`.
+The source-manifest binding, transport failure tests and optimized-Python
+negative manifest test passed before the single guarded invocation.
+
 Private recovery/diagnostic artifacts are held in
 `/private/tmp/bactiveph-grabpay-20260908-6jE1ip/`, outside the repository. Never
 publish backup contents, option values, credentials or order data.
+A private durable evidence archive is also retained under
+`~/Library/Application Support/BactivePH/footer-releases/grabpay-20260908/`.
+Its SHA-256 is `ed2ea280dbf802a725c3bc902ca967cf941e00d088dd99164d3e229710780ee4`;
+gzip integrity passed. This is a diagnostic/source archive, **not a site backup**.
 
 ## Remaining gates and rollback
 
-The payment coordinator owns staging serialization. A fresh complete supported
-backup, private off-server integrity verification, protected-state consistency,
+The payment coordinator owns staging serialization and the shared qualified
+backup prerequisite. A fresh complete supported backup, private off-server
+integrity verification including missing core/config/root coverage, protected-state consistency,
 exact two-file staging installation and actual staging browser verification
 remain required. Production additionally requires fresh explicit human approval
 for this artifact, a serialized writer window and production-specific backup,
@@ -88,5 +135,12 @@ For rollback, first verify no later writer superseded this exact v5 partial,
 then atomically restore the snapshotted v4 partial. Lint/hash before installation,
 refresh only page cache, and verify the public footer. The unused new SVG can
 remain; no deletion or database restore is necessary.
+
+The Updraft one-shot candidate still requires a reviewed treatment of its native
+temporary-file/old-lock maintenance and exact backup bookkeeping; it is not
+cleared for execution. A footer badge does not authorize an unbounded backup
+redesign, removal of safety guards, native maintenance deletions, or use of an
+old/incomplete backup. Payment operations retains that prerequisite and the
+source research. Issue #53 and PR #55 remain open, prepared but not deployed.
 
 No global or project memory files were updated.

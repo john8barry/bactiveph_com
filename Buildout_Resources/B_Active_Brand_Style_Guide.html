@@ -4,21 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>B Active — Brand Style Guide</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Local website fonts; Fraunces is retained only for historical logo and non-website concepts. */
+  @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('../wordpress/wp-content/themes/blocksy-child/assets/fonts/inter-400.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('../wordpress/wp-content/themes/blocksy-child/assets/fonts/inter-500.woff2') format('woff2')}
+  @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('../wordpress/wp-content/themes/blocksy-child/assets/fonts/inter-600.woff2') format('woff2')}
+  @font-face{font-family:'Fraunces';font-style:normal;font-weight:600;font-display:swap;src:url('../wordpress/wp-content/themes/blocksy-child/assets/fonts/fraunces-600.woff2') format('woff2')}
+/* latin-ext */
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../wordpress/wp-content/themes/blocksy-child/assets/fonts/rajdhani-600-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../wordpress/wp-content/themes/blocksy-child/assets/fonts/rajdhani-600-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
   :root{
     --ivory:#FAF8F4; --white:#FFFFFF; --charcoal:#2B2A28; --ink:#1C1B19;
     --sage:#9CAE92; --sage-deep:#5E6E54; --rose:#D8A7A0; --rose-deep:#A96E66;
     --greige:#E6DFD5; --stone:#6E675F; --sale:#A9544A;
-    --head:'Fraunces',Georgia,serif; --body:'Inter',system-ui,sans-serif;
+    --bactive-font-head:'Rajdhani','Inter',sans-serif; --head:var(--bactive-font-head); --body:'Inter',system-ui,sans-serif;
     --max:1080px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:var(--body);color:var(--charcoal);background:var(--ivory);line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(20px,5vw,56px)}
-  h1,h2,h3,h4{font-family:var(--head);color:var(--ink);font-weight:600;line-height:1.12;letter-spacing:-.01em}
+  h1,h2,h3,h4,h5,h6{font-family:var(--head);color:var(--ink);font-weight:600;line-height:1.12;letter-spacing:0}
   h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:.3em}
   h3{font-size:1.35rem;margin:1.6em 0 .5em}
   p{margin-bottom:1em;max-width:64ch}
@@ -30,8 +52,8 @@
   /* COVER */
   .cover{background:var(--ivory);text-align:center;border-top:none;padding-top:clamp(56px,10vw,120px)}
   .cover .lock{max-width:480px;width:78%;margin:0 auto 28px}
-  .cover h1{font-size:clamp(2.4rem,6vw,3.8rem);font-weight:500}
-  .cover .tag{font-family:var(--head);font-style:italic;font-size:1.4rem;color:var(--sage-deep);margin-top:.2em}
+  .cover h1{font-size:clamp(2.4rem,6vw,3.8rem);font-weight:600}
+  .cover .tag{font-family:var(--head);font-weight:600;font-style:normal;font-size:1.4rem;color:var(--sage-deep);margin-top:.2em}
   .cover .meta{margin-top:24px;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--stone)}
 
   /* generic grid */
@@ -59,7 +81,7 @@
   /* type */
   .specimen{background:var(--white);border:1px solid var(--greige);border-radius:6px;padding:28px 30px;margin-bottom:18px}
   .specimen .big{font-family:var(--head);font-weight:600;font-size:clamp(2.4rem,7vw,4.4rem);line-height:1;color:var(--ink)}
-  .specimen .alpha{font-family:var(--head);font-size:1.5rem;color:var(--charcoal);margin-top:.4em;letter-spacing:.02em}
+  .specimen .alpha{font-family:var(--head);font-weight:600;font-size:1.5rem;color:var(--charcoal);margin-top:.4em;letter-spacing:.02em}
   .specimen.sans .big,.specimen.sans .alpha{font-family:var(--body)}
   table{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--white);border:1px solid var(--greige);border-radius:6px;overflow:hidden}
   th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--greige)}
@@ -96,7 +118,7 @@
   .igpost{width:260px;aspect-ratio:1;background:linear-gradient(135deg,#E7DFD4,#CBBDAA);border-radius:6px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
   .igpost .ov{background:linear-gradient(transparent,rgba(28,27,25,.55));color:var(--ivory);padding:18px;width:100%}
   .sig{background:var(--white);border:1px solid var(--greige);border-radius:6px;padding:18px 20px;font-size:.85rem}
-  .sig .nm{font-family:var(--head);font-weight:600;color:var(--ink);font-size:1.05rem}
+  .sig .nm{font-family:'Fraunces',Georgia,serif;font-weight:600;color:var(--ink);font-size:1.05rem}
 
   footer{padding:48px 0 80px;border-top:1px solid var(--greige);text-align:center;color:var(--stone);font-size:.82rem}
   .reversed .wm-fill{fill:var(--ivory)!important}
@@ -115,9 +137,10 @@
       <text x="220" y="96" font-family="Fraunces,serif" font-weight="600" font-size="76" fill="#2B2A28">B Active</text>
       <text x="223" y="134" font-family="Inter,sans-serif" font-weight="500" font-size="16" letter-spacing="4.5" fill="#5E6E54">PREMIUM PICKLEBALL · ACTIVEWEAR</text>
     </svg>
+    <p class="muted" style="margin:0 auto 1em">Historical concept lockup shown above. The existing production logo remains unchanged.</p>
     <h1>Brand Style Guide</h1>
     <div class="tag">Sportswear for every move.</div>
-    <div class="meta">Version 1.0 · Davao City, Philippines · bactiveph.com</div>
+    <div class="meta">Version 1.1 · Typography approved 2026-09-06 · Davao City, Philippines · bactiveph.com</div>
   </div>
 </header>
 
@@ -143,7 +166,7 @@
 <section><div class="wrap">
   <div class="eyebrow">02 — Logo</div>
   <h2>The mark</h2>
-  <p>Our logo system has three forms: the <strong>lockup</strong> (primary), the <strong>wordmark</strong>, and the <strong>monogram</strong> (for avatars, favicons, hangtags). The wordmark is set in Fraunces; the soft sage ring on the monogram is our signature accent. <span class="muted">These are concept files — approve or refine with a designer; convert text to outlines for print.</span></p>
+  <p>These historical logo concepts have three forms: the <strong>lockup</strong> (primary), the <strong>wordmark</strong>, and the <strong>monogram</strong> (for avatars, favicons, hangtags). These earlier concepts use Fraunces and a soft sage ring; they do not define the current website typography or replace the existing production logo. <span class="muted">Keep the existing production logo artwork unchanged. Do not recreate the wordmark in Rajdhani or another font.</span></p>
 
   <div class="grid g2" style="margin:24px 0">
     <div>
@@ -229,31 +252,36 @@
 <section><div class="wrap">
   <div class="eyebrow">04 — Typography</div>
   <h2>Type</h2>
-  <p>A warm serif for display, a clean sans for everything else. Two families only; self-host on the live site for speed.</p>
+  <p><strong>Permanent website standard, approved by John Barry on 2026-09-06.</strong> Rajdhani’s angular letterforms complement the existing athletic logo; Inter keeps longer text and shopping controls readable. This replaces the earlier Fraunces website heading direction and optional alternative pairings.</p>
 
   <div class="specimen">
     <div class="eyebrow">Display &amp; headings</div>
-    <div class="big">Fraunces</div>
+    <div class="big">Rajdhani</div>
     <div class="alpha">Aa Bb Cc · Look good. Play good.</div>
-    <p class="muted" style="margin:.6em 0 0">Weights 400 / 500 / 600 · soft, fashionable, feminine. Use for H1–H4, product names, pull quotes.</p>
+    <p class="muted" style="margin:.6em 0 0">Semibold 600 · angular, athletic. Use for H1–H6, product titles, and desktop/mobile navigation. Preserve component sizing, casing and layout.</p>
   </div>
   <div class="specimen sans">
     <div class="eyebrow">Body &amp; UI</div>
     <div class="big">Inter</div>
     <div class="alpha">Aa Bb Cc · The premium feel, without the premium price.</div>
-    <p class="muted" style="margin:.6em 0 0">Weights 400 / 500 / 600 · highly legible. Use for body, navigation, buttons, labels.</p>
+    <p class="muted" style="margin:.6em 0 0">Weights 400 / 500 / 600 · highly legible. Use for body copy, forms, prices, buttons, labels and utility text.</p>
   </div>
 
   <h3>Scale &amp; rules</h3>
   <table>
     <tr><th>Style</th><th>Font</th><th>Size</th><th>Notes</th></tr>
-    <tr><td>H1 / Display</td><td>Fraunces 600</td><td>3.0rem</td><td>line-height 1.12</td></tr>
-    <tr><td>H2</td><td>Fraunces 600</td><td>2.25rem</td><td>section titles</td></tr>
-    <tr><td>H3</td><td>Fraunces 600</td><td>1.5rem</td><td>sub-sections</td></tr>
+    <tr><td>H1 / Display</td><td>Rajdhani 600</td><td>3.0rem</td><td>line-height 1.12</td></tr>
+    <tr><td>H2</td><td>Rajdhani 600</td><td>2.25rem</td><td>section titles</td></tr>
+    <tr><td>H3</td><td>Rajdhani 600</td><td>1.5rem</td><td>sub-sections</td></tr>
+    <tr><td>H4–H6 / product title</td><td>Rajdhani 600</td><td>Component-specific</td><td>preserve responsive sizing</td></tr>
+    <tr><td>Desktop / mobile navigation</td><td>Rajdhani 600</td><td>Component-specific</td><td>preserve casing and layout</td></tr>
+    <tr><td>Forms / prices</td><td>Inter 400/500/600</td><td>Component-specific</td><td>preserve existing weight</td></tr>
     <tr><td>Body</td><td>Inter 400</td><td>1.0rem (16px)</td><td>line-height 1.6 · max ~68ch</td></tr>
     <tr><td>Eyebrow / label</td><td>Inter 500</td><td>0.72rem</td><td>UPPERCASE · letter-spacing .18em · Deep Sage</td></tr>
     <tr><td>Button</td><td>Inter 500</td><td>0.8rem</td><td>UPPERCASE · letter-spacing .08em</td></tr>
   </table>
+  <p style="margin-top:1.2em"><strong>Implementation:</strong> <code>--bactive-font-head: 'Rajdhani', 'Inter', sans-serif</code>. Keep the existing Inter body token and weights. Self-host Rajdhani 600 Latin and Latin Extended WOFF2 with <code>font-display: swap</code>; retain the child theme’s <code>assets/fonts/rajdhani-OFL.txt</code> (SIL Open Font License). This guide uses the same local assets.</p>
+  <p><strong>Keep the existing logo artwork unchanged.</strong> Do not typeset it in Rajdhani, use faux italics, or apply condensed type to all text. This is the continuing website default; future typography changes require a new explicit brand decision. Do not restore older Fraunces or Cormorant Garamond/Jost guidance.</p>
 </div></section>
 
 <!-- VOICE -->
@@ -328,19 +356,20 @@
 <section><div class="wrap">
   <div class="eyebrow">09 — Applications</div>
   <h2>In the wild</h2>
+  <p><strong>Historical non-website concepts.</strong> These earlier print, social and email examples remain for reference. The 2026-09-06 approval establishes website typography only; it does not authorize replacement logos or a rollout to these other channels.</p>
   <div class="grid g3">
     <div>
       <div class="hangtag">
         <div class="hole"></div>
         <svg viewBox="0 0 240 240" width="62" height="62" style="margin-bottom:14px" xmlns="http://www.w3.org/2000/svg"><circle cx="120" cy="120" r="116" fill="#2B2A28"/><circle cx="120" cy="120" r="105" fill="none" stroke="#9CAE92" stroke-width="2" opacity=".75"/><text x="120" y="166" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="142" fill="#FAF8F4">B</text></svg>
-        <div style="font-family:var(--head);font-weight:600;font-size:1.2rem">B Active</div>
+        <div style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.2rem">B Active</div>
         <div class="muted" style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-top:4px">Quality you can feel</div>
       </div>
       <p class="muted" style="text-align:center;margin-top:8px">Hangtag</p>
     </div>
     <div>
       <div class="igpost">
-        <div class="ov"><div class="eyebrow" style="color:#9CAE92">The Court Edit</div><div style="font-family:var(--head);font-weight:600;font-size:1.5rem">Made to move with you.</div></div>
+        <div class="ov"><div class="eyebrow" style="color:#9CAE92">The Court Edit</div><div style="font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:1.5rem">Made to move with you.</div></div>
       </div>
       <p class="muted" style="text-align:center;margin-top:8px">Social post</p>
     </div>
@@ -369,14 +398,14 @@
     <tr><td>Membership</td><td>Optional rewards, no gating</td><td>Pay-to-unlock VIP wall</td></tr>
   </table>
   <h3 style="margin-top:1.4em">Tagline &amp; key messages</h3>
-  <p style="font-family:var(--head);font-style:italic;font-size:1.4rem;color:var(--sage-deep)">“Sportswear for every move.”</p>
+  <p style="font-family:var(--head);font-weight:600;font-style:normal;font-size:1.4rem;color:var(--sage-deep)">“Sportswear for every move.”</p>
   <p class="muted">Premium quality, comparable to the brands you love · Designed for pickleball and the active everyday · Looks great, performs better (moisture-wicking, four-way stretch, pockets) · Fair, accessible prices · Designed with an Asian fit.</p>
 </div></section>
 
 <footer>
   <div class="wrap">
-    B Active · Brand Style Guide v1.0 · Davao City, Philippines · bactiveph.com<br>
-    <span class="muted">Logo is a concept for approval. Companion files: B_Active_Brand_Style_Guide.md · B_Active_Master_Build_Guide.md · brand/ SVGs. Tip: print this page to PDF to share.</span>
+    B Active · Brand Style Guide v1.1 · Davao City, Philippines · bactiveph.com<br>
+    <span class="muted">Historical logo concepts are references only; existing production logo artwork remains unchanged. Companion files: B_Active_Brand_Style_Guide.md · B_Active_Master_Build_Guide.md · brand/ SVGs. Tip: print this page to PDF to share.</span>
   </div>
 </footer>
 

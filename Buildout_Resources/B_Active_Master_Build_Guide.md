@@ -500,7 +500,7 @@ Key features (bullets):
 
 Fit & sizing: True to size (Asian fit), S–XL. Model is [height] cm, wearing size [M].
 Fabric: [X]% Nylon, [Y]% Spandex.
-Care: Machine wash cold, gentle. Hang or tumble dry low. Do not bleach or iron print.
+Care: Gentle hand wash only. Wash in cold water with like colours, then hang to dry. Do not machine wash, tumble dry, use fabric softener, bleach, or iron.
 
 [Add to cart]   ·   [♡ Wishlist]
 Accordions: Description · Features & Fit · Shipping & Returns (7-day size exchange) · Fabric & Care
@@ -614,7 +614,7 @@ Body: `B Active is proud to call Davao home. Visit our store to feel the fabrics
 *H1:* `Fabric & care`
 - **CourtSoft™** — `Our signature four-way-stretch knit: buttery-soft, squat-proof, sweat-wicking and built to hold its shape. The everyday hero of The Court Edit.`
 - **BreezeKnit™** — `Lightweight and breathable for hot-court days — moves air, moves sweat, keeps you cool.`
-- **Care basics:** `Machine wash cold on gentle with like colours. Skip the fabric softener (it coats performance fibres). Hang dry or tumble low. Don't bleach or iron over prints. Treat them well and they'll keep their stretch and softness for seasons.`
+- **Care basics:** `Gentle hand wash only. Wash in cold water with like colours, then hang to dry. Do not machine wash, tumble dry, use fabric softener, bleach, or iron.`
 
 ---
 
@@ -1268,7 +1268,6 @@ At the workspace root (alongside this guide):
 B Active is entering a real, fast-growing market with a genuine, defensible wedge: **the first premium, women-first, Asian-fit, Davao-born pickleball brand in the Philippines.** The product is already strong; this guide turns it into a brand experience that looks and feels worthy of the price — and avoids every fast-fashion tell that would undercut it. Build it in order, hold the premium line, and let the community do the rest.
 
 *— End of guide —*
-
 
 
 

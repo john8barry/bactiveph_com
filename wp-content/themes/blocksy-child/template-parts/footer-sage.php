@@ -338,7 +338,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <div class="bactive-footer__inner bactive-footer__signup-layout">
             <div>
                 <h2 id="bactive-footer-signup-title">Stay in the loop</h2>
-                <p id="bactive-footer-signup-description">Join the club for 5% off your first order, new drops, and Davao court days.</p>
+                <p id="bactive-footer-signup-description">Join the club for 5% off your first order and new drops.</p>
             </div>
             <?php if (shortcode_exists('bactive_newsletter_form')) : ?>
                 <?php echo do_shortcode('[bactive_newsletter_form source="footer"]'); ?>
@@ -379,7 +379,6 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
                     <li><a href="<?php echo esc_url(home_url('/collections/sports-bras')); ?>">Sports Bras</a></li>
                     <li><a href="<?php echo esc_url(home_url('/collections/leggings')); ?>">Leggings</a></li>
                     <li><a href="<?php echo esc_url(home_url('/collections/sets')); ?>">Sets</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/collections/paddles')); ?>">Pickleball Paddles</a></li>
                 </ul>
             </nav>
             <nav class="bactive-footer__links" aria-labelledby="bactive-footer-help-title">

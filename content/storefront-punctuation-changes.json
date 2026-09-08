@@ -1,0 +1,872 @@
+{
+  "version": 1,
+  "site": "https://bactiveph.com",
+  "issue": 25,
+  "items": [
+    {
+      "kind": "post",
+      "id": 3,
+      "slug": "privacy",
+      "fields": {
+        "post_content": {
+          "before_sha256": "99c0a758506513efd409230104feec2c7a6500222902a22c415e8c4616bb7194",
+          "after_sha256": "727d3190ed799547e53bc8081e10b3f94094aef49e690472d55dc614d7f502de",
+          "replacements": [
+            {
+              "old": "<li><strong>Personal data / personal information</strong> — any information from which your identity is apparent or can reasonably and directly be ascertained, or when put together with other information would directly and certainly identify you (for example, your name, address, email, or phone number).</li>\n",
+              "new": "<li><strong>Personal data / personal information</strong>: any information from which your identity is apparent or can reasonably and directly be ascertained, or when put together with other information would directly and certainly identify you (for example, your name, address, email, or phone number).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Sensitive personal information</strong> — special categories of data under the Data Privacy Act, such as information about your health, race, ethnic origin, religious or political beliefs, marital status, age, government-issued ID numbers, and similar. <strong>B Active does not require or intentionally collect sensitive personal information.</strong> Please do not send us sensitive personal information unless we specifically ask for it.</li>\n",
+              "new": "<li><strong>Sensitive personal information</strong>: special categories of data under the Data Privacy Act, such as information about your health, race, ethnic origin, religious or political beliefs, marital status, age, government-issued ID numbers, and similar. <strong>B Active does not require or intentionally collect sensitive personal information.</strong> Please do not send us sensitive personal information unless we specifically ask for it.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Processing</strong> — any operation performed on personal data, such as collection, recording, storage, use, sharing, or deletion.</li>\n",
+              "new": "<li><strong>Processing</strong>: any operation performed on personal data, such as collection, recording, storage, use, sharing, or deletion.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Personal Information Processor (PIP)</strong> — a third party we engage to process personal data on our behalf and under our instructions (for example, our hosting provider or email platform).</li>\n",
+              "new": "<li><strong>Personal Information Processor (PIP)</strong>: a third party we engage to process personal data on our behalf and under our instructions (for example, our hosting provider or email platform).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Data subject</strong> — the individual whose personal data is processed. That's you.</li>\n",
+              "new": "<li><strong>Data subject</strong>: the individual whose personal data is processed. That's you.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>NPC</strong> — the National Privacy Commission of the Philippines.</li>\n",
+              "new": "<li><strong>NPC</strong>: the National Privacy Commission of the Philippines.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>g. Browsing and device information (collected automatically).</strong> When you use the Site, we and our service providers automatically collect technical data such as your IP address, browser type, device type, operating system, referring pages, the pages you view, and how you interact with the Site. We collect this using cookies and similar technologies — see <strong>Section 6 (Cookies)</strong>.</p>\n",
+              "new": "<p><strong>g. Browsing and device information (collected automatically).</strong> When you use the Site, we and our service providers automatically collect technical data such as your IP address, browser type, device type, operating system, referring pages, the pages you view, and how you interact with the Site. We collect this using cookies and similar technologies; see <strong>Section 6 (Cookies)</strong>.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Directly from you</strong> — when you create an account, place an order, sign up for our mailing list, leave a review, or contact us.</li>\n",
+              "new": "<li><strong>Directly from you</strong>: when you create an account, place an order, sign up for our mailing list, leave a review, or contact us.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Automatically</strong> — through cookies and similar technologies as you browse the Site (see Section 6).</li>\n",
+              "new": "<li><strong>Automatically</strong>: through cookies and similar technologies as you browse the Site (see Section 6).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>From third parties</strong> — such as our payment provider (payment confirmation), our couriers (delivery status), and social media or advertising platforms (for example, if you interact with our ads or pages on Facebook, Instagram, Threads, or TikTok).</li>\n",
+              "new": "<li><strong>From third parties</strong>: such as our payment provider (payment confirmation), our couriers (delivery status), and social media or advertising platforms (for example, if you interact with our ads or pages on Facebook, Instagram, Threads, or TikTok).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li>Send you marketing emails and promotions (you can withdraw consent at any time — see \"Your rights\" and the unsubscribe link in every marketing email).</li>\n",
+              "new": "<li>Send you marketing emails and promotions (you can withdraw consent at any time; see \"Your rights\" and the unsubscribe link in every marketing email).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Strictly necessary cookies</strong> — required for the Site to function, including keeping items in your cart, letting you log in, and processing checkout. These cannot be switched off in our systems.</li>\n",
+              "new": "<li><strong>Strictly necessary cookies</strong>: required for the Site to function, including keeping items in your cart, letting you log in, and processing checkout. These cannot be switched off in our systems.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Functional/preference cookies</strong> — remember choices you make, such as your region or login state.</li>\n",
+              "new": "<li><strong>Functional/preference cookies</strong>: remember choices you make, such as your region or login state.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Analytics cookies</strong> — help us understand how visitors use the Site so we can improve it. We use Google (Google Analytics).</li>\n",
+              "new": "<li><strong>Analytics cookies</strong>: help us understand how visitors use the Site so we can improve it. We use Google (Google Analytics).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Marketing/advertising cookies</strong> — used to measure and deliver relevant ads. We use the Meta Pixel (for Facebook, Instagram, and Threads) and Google.</li>\n",
+              "new": "<li><strong>Marketing/advertising cookies</strong>: used to measure and deliver relevant ads. We use the Meta Pixel (for Facebook, Instagram, and Threads) and Google.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Payment provider</strong> — we use <strong>HitPay</strong> (a Singapore-based payment gateway registered with the Bangko Sentral ng Pilipinas) to process your GCash, Maya, and card payments securely.</li>\n",
+              "new": "<li><strong>Payment provider</strong>: we use <strong>HitPay</strong> (a Singapore-based payment gateway registered with the Bangko Sentral ng Pilipinas) to process your GCash, Maya, and card payments securely.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Couriers and logistics partners</strong> — <strong>J&amp;T Express</strong> and <strong>LBC Express</strong>, to deliver your order and provide tracking.</li>\n",
+              "new": "<li><strong>Couriers and logistics partners</strong>: <strong>J&amp;T Express</strong> and <strong>LBC Express</strong>, to deliver your order and provide tracking.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Technology and hosting providers</strong> — our website hosting provider and IT support, and the WooCommerce/WordPress infrastructure that keeps the Site running.</li>\n",
+              "new": "<li><strong>Technology and hosting providers</strong>: our website hosting provider and IT support, and the WooCommerce/WordPress infrastructure that keeps the Site running.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Email marketing platform</strong> — we use <strong>Mailchimp</strong> to send our newsletter and promotional emails.</li>\n",
+              "new": "<li><strong>Email marketing platform</strong>: we use <strong>Mailchimp</strong> to send our newsletter and promotional emails.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Analytics and advertising platforms</strong> — <strong>Meta</strong> (Facebook, Instagram, Threads) and <strong>Google</strong>, where you have consented to the relevant cookies.</li>\n",
+              "new": "<li><strong>Analytics and advertising platforms</strong>: <strong>Meta</strong> (Facebook, Instagram, Threads) and <strong>Google</strong>, where you have consented to the relevant cookies.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Professional advisers</strong> — accountants, auditors, and lawyers, where reasonably necessary.</li>\n",
+              "new": "<li><strong>Professional advisers</strong>: accountants, auditors, and lawyers, where reasonably necessary.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Government authorities</strong> — the BIR, NPC, courts, or law enforcement, where we are legally required to disclose, or to establish, exercise, or defend legal claims.</li>\n",
+              "new": "<li><strong>Government authorities</strong>: the BIR, NPC, courts, or law enforcement, where we are legally required to disclose, or to establish, exercise, or defend legal claims.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>In a business transfer</strong> — if B Active is involved in a merger, acquisition, reorganisation, or sale of assets, your data may be transferred as part of that transaction, subject to this Policy.</li>\n",
+              "new": "<li><strong>In a business transfer</strong>: if B Active is involved in a merger, acquisition, reorganisation, or sale of assets, your data may be transferred as part of that transaction, subject to this Policy.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>Some of our service providers — including our payment gateway (HitPay, Singapore), our email platform (Mailchimp), and our analytics and advertising platforms (Meta and Google) — may store or process personal data on servers located outside the Philippines. Where this happens, we take steps to ensure your personal data continues to receive a level of protection consistent with the Data Privacy Act — for example, through contractual safeguards such as the NPC's Model Contractual Clauses or equivalent protections. We remain responsible for personal data that we transfer to our processors.</p>\n",
+              "new": "<p>Some of our service providers, including our payment gateway (HitPay, Singapore), our email platform (Mailchimp), and our analytics and advertising platforms (Meta and Google), may store or process personal data on servers located outside the Philippines. Where this happens, we take steps to ensure your personal data continues to receive a level of protection consistent with the Data Privacy Act, for example, through contractual safeguards such as the NPC's Model Contractual Clauses or equivalent protections. We remain responsible for personal data that we transfer to our processors.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Order and transaction records</strong> — retained for as long as required by Philippine tax and accounting laws (generally up to <strong>ten (10) years</strong> under BIR rules), and to handle returns, warranties, and disputes.</li>\n",
+              "new": "<li><strong>Order and transaction records</strong>: retained for as long as required by Philippine tax and accounting laws (generally up to <strong>ten (10) years</strong> under BIR rules), and to handle returns, warranties, and disputes.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Account information</strong> — kept while your account is active and for a reasonable period afterwards, unless you ask us to delete it earlier and we are not required to retain it.</li>\n",
+              "new": "<li><strong>Account information</strong>: kept while your account is active and for a reasonable period afterwards, unless you ask us to delete it earlier and we are not required to retain it.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Marketing data</strong> — kept until you unsubscribe or withdraw consent, after which we remove you from active marketing.</li>\n",
+              "new": "<li><strong>Marketing data</strong>: kept until you unsubscribe or withdraw consent, after which we remove you from active marketing.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Customer-service correspondence</strong> — kept for a reasonable period to resolve your query and for our records.</li>\n",
+              "new": "<li><strong>Customer-service correspondence</strong>: kept for a reasonable period to resolve your query and for our records.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Cookie and analytics data</strong> — kept for the retention periods set by the relevant cookie or platform, which we disclose where reasonably possible.</li>\n",
+              "new": "<li><strong>Cookie and analytics data</strong>: kept for the retention periods set by the relevant cookie or platform, which we disclose where reasonably possible.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to be informed</strong> — to know whether and how your personal data is being processed, and the purposes, recipients, and basis for it.</li>\n",
+              "new": "<li><strong>Right to be informed</strong>: to know whether and how your personal data is being processed, and the purposes, recipients, and basis for it.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to access</strong> — to obtain a copy of the personal data we hold about you and information about how we process it.</li>\n",
+              "new": "<li><strong>Right to access</strong>: to obtain a copy of the personal data we hold about you and information about how we process it.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to object</strong> — to object to processing, including direct marketing, and to withdraw consent you previously gave.</li>\n",
+              "new": "<li><strong>Right to object</strong>: to object to processing, including direct marketing, and to withdraw consent you previously gave.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to rectification</strong> — to have inaccurate or incomplete personal data corrected.</li>\n",
+              "new": "<li><strong>Right to rectification</strong>: to have inaccurate or incomplete personal data corrected.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to erasure or blocking</strong> — to have your personal data removed or blocked in the circumstances allowed by law (for example, where the data is outdated, false, unlawfully obtained, or no longer necessary).</li>\n",
+              "new": "<li><strong>Right to erasure or blocking</strong>: to have your personal data removed or blocked in the circumstances allowed by law (for example, where the data is outdated, false, unlawfully obtained, or no longer necessary).</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to data portability</strong> — to obtain and reuse a copy of personal data you provided to us, in a structured, commonly used, electronic format, where processing is based on consent or contract and done by electronic means.</li>\n",
+              "new": "<li><strong>Right to data portability</strong>: to obtain and reuse a copy of personal data you provided to us, in a structured, commonly used, electronic format, where processing is based on consent or contract and done by electronic means.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to damages</strong> — to be indemnified for damages you suffer due to inaccurate, incomplete, outdated, false, unlawfully obtained, or unauthorised use of your personal data.</li>\n",
+              "new": "<li><strong>Right to damages</strong>: to be indemnified for damages you suffer due to inaccurate, incomplete, outdated, false, unlawfully obtained, or unauthorised use of your personal data.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Right to file a complaint</strong> — to lodge a complaint with the National Privacy Commission.</li>\n",
+              "new": "<li><strong>Right to file a complaint</strong>: to lodge a complaint with the National Privacy Commission.</li>\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 14,
+      "slug": "home",
+      "fields": {
+        "post_content": {
+          "before_sha256": "d1bc7de18e471d32c652d00d1140379802d8341461d8d983abb3c9e105784d4c",
+          "after_sha256": "1f0a120db564934c968b6f61334188d000cb8c0cf2bee8c7630129bd7d22c7e0",
+          "replacements": [
+            {
+              "old": "<p><p style=\"color:#111111;margin-bottom:30px;font-size:1.1rem\">Dresses, skorts and sets designed to perform on the court and look effortless off it — cut for an Asian fit, priced to make sense.</p></p>\n",
+              "new": "<p><p style=\"color:#111111;margin-bottom:30px;font-size:1.1rem\">Dresses, skorts and sets designed to perform on the court and look effortless off it, cut for an Asian fit, priced to make sense.</p></p>\n",
+              "count": 1
+            },
+            {
+              "old": "            <p style=\"color:#475569;line-height:1.6\">Designed for our bodies — not adapted from someone else's.</p>\n",
+              "new": "            <p style=\"color:#475569;line-height:1.6\">Designed for our bodies, not adapted from someone else's.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "            <p style=\"margin-bottom:30px;line-height:1.8\">Most activewear is cut for a Western frame and \"adjusted\" for the rest of us. We start from our own measurements, so straps sit right, lengths land where they should, and nothing digs or gapes. True to size, S–XL.</p>\n",
+              "new": "            <p style=\"margin-bottom:30px;line-height:1.8\">Most activewear is cut for a Western frame and \"adjusted\" for the rest of us. We start from our own measurements, so straps sit right, lengths land where they should, and nothing digs or gapes. True to size, S to XL.</p>\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 20,
+      "slug": "shipping-returns",
+      "fields": {
+        "post_content": {
+          "before_sha256": "d7410fa5721c1c4a6da8714df6c2dd33c3556383154c191a285d18e7bb9024eb",
+          "after_sha256": "b8801cc018ecdd20f7e7e111c01b111df8f2787a0cef5fe17ee9e077083188d4",
+          "replacements": [
+            {
+              "old": "<p>Everything you need to know about getting your B Active pieces to you — and what to do if something isn't quite right. For the full legal detail, see our <a href=\"https://bactiveph.com/terms/\">Terms &amp; Conditions</a>.</p>\n",
+              "new": "<p>Everything you need to know about getting your B Active pieces to you and what to do if something isn't quite right. For the full legal detail, see our <a href=\"https://bactiveph.com/terms/\">Terms &amp; Conditions</a>.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>When it ships:</strong> we process and dispatch orders within <strong>1–3 business days</strong>. Delivery time after that depends on the courier and your location. Timeframes are estimates, not guarantees.</li>\n",
+              "new": "<li><strong>When it ships:</strong> we process and dispatch orders within <strong>1 to 3 business days</strong>. Delivery time after that depends on the courier and your location. Timeframes are estimates, not guarantees.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<h2 class=\"wp-block-heading\">Exchanges — changed your mind on size?</h2>\n",
+              "new": "<h2 class=\"wp-block-heading\">Exchanges: changed your mind on size?</h2>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>For a size exchange, the cost of sending the item back to us is on you, and we'll cover delivery of the new size. (If the exchange is because of our mistake, we cover everything — see below.)</p>\n",
+              "new": "<p>For a size exchange, the cost of sending the item back to us is on you, and we'll cover delivery of the new size. (If the exchange is because of our mistake, we cover everything; see below.)</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>Email us at <strong>hello@bactiveph.com within 7 days of delivery</strong> with your order number and a photo or two if you can. You're entitled to a <strong>repair, replacement, or refund</strong>, and where the problem is our fault or the item is defective, <strong>we cover the cost of sending it back and getting the right item to you</strong> — you won't be charged for the fix.</p>\n",
+              "new": "<p>Email us at <strong>hello@bactiveph.com within 7 days of delivery</strong> with your order number and a photo or two if you can. You're entitled to a <strong>repair, replacement, or refund</strong>, and where the problem is our fault or the item is defective, <strong>we cover the cost of sending it back and getting the right item to you</strong>. You won't be charged for the fix.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>When a refund is due, we'll process it once we've received and checked the returned item — normally within <strong>7–14 business days</strong>.</p>\n",
+              "new": "<p>When a refund is due, we'll process it once we've received and checked the returned item, normally within <strong>7 to 14 business days</strong>.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Email us</strong> at hello@bactiveph.com with your <strong>order number</strong>, what you'd like (a different size, or a repair/replacement/refund), and — for a faulty or wrong item — a quick photo.</li>\n",
+              "new": "<li><strong>Email us</strong> at hello@bactiveph.com with your <strong>order number</strong>, what you'd like (a different size, or a repair/replacement/refund), and (for a faulty or wrong item) a quick photo.</li>\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 21,
+      "slug": "faq",
+      "fields": {
+        "post_content": {
+          "before_sha256": "2749cfc3b5f5caf522b6bb85f67af2531583768f666c8066bccebd1ef3e2ce7a",
+          "after_sha256": "0b203abce6f61220c456cf7e037e6a9e0270468e706ed1db2fc34d3e0bc6c1ef",
+          "replacements": [
+            {
+              "old": "<p><strong>Do you ship nationwide?</strong><br>Yes — across the Philippines via J&amp;T Express and LBC Express, with free shipping over ₱5,000.</p>\n",
+              "new": "<p><strong>Do you ship nationwide?</strong><br>Yes, across the Philippines via J&amp;T Express and LBC Express, with free shipping over ₱5,000.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>What is \"Asian fit\"?</strong><br>Our patterns are designed from Filipina measurements rather than adapted from Western sizing, so straps, lengths and waistbands sit where they should. We run true to size, S–XL.</p>\n",
+              "new": "<p><strong>What is \"Asian fit\"?</strong><br>Our patterns are designed from Filipina measurements rather than adapted from Western sizing, so straps, lengths and waistbands sit where they should. We run true to size, S to XL.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>Can I exchange for a different size?</strong><br>Yes — within 7 days of delivery, for unworn items with tags. See <a href=\"/shipping-returns\">Shipping &amp; Returns</a>.</p>\n",
+              "new": "<p><strong>Can I exchange for a different size?</strong><br>Yes, within 7 days of delivery, for unworn items with tags. See <a href=\"/shipping-returns\">Shipping &amp; Returns</a>.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>Are there pockets?</strong><br>Yes — our dresses and skorts include a ball pocket; several styles add a phone pocket. Check the product page.</p>\n",
+              "new": "<p><strong>Are there pockets?</strong><br>Yes, our dresses and skorts include a ball pocket; several styles add a phone pocket. Check the product page.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>Do you have a physical store?</strong><br>Yes, in Davao City — see <a href=\"/our-store\">Our Store</a>.</p>\n",
+              "new": "<p><strong>Do you have a physical store?</strong><br>Yes, in Davao City. See <a href=\"/our-store\">Our Store</a>.</p>\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 24,
+      "slug": "terms",
+      "fields": {
+        "post_content": {
+          "before_sha256": "a5b0c6b6de121699b3e3e20df466dba3c138adb2ea05aa5ef48275ecf34a4296",
+          "after_sha256": "f0660ac86ac51f2140fe1430199323d8935bea0cce0b86c8d3bb99e148c5a975",
+          "replacements": [
+            {
+              "old": "<li><strong>Products</strong> — the apparel, accessories, and other goods we offer for sale on the Site.</li>\n",
+              "new": "<li><strong>Products</strong>: the apparel, accessories, and other goods we offer for sale on the Site.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Order</strong> — your offer to purchase Products through the Site.</li>\n",
+              "new": "<li><strong>Order</strong>: your offer to purchase Products through the Site.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Contract</strong> — the binding agreement formed between you and us when we accept your Order, as described in Section 6.</li>\n",
+              "new": "<li><strong>Contract</strong>: the binding agreement formed between you and us when we accept your Order, as described in Section 6.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Privacy Policy</strong> — our policy on how we handle personal data, available at https://bactiveph.com/privacy.</li>\n",
+              "new": "<li><strong>Privacy Policy</strong>: our policy on how we handle personal data, available at https://bactiveph.com/privacy.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Consumer Act</strong> — Republic Act No. 7394 (The Consumer Act of the Philippines) and its implementing rules.</li>\n",
+              "new": "<li><strong>Consumer Act</strong>: Republic Act No. 7394 (The Consumer Act of the Philippines) and its implementing rules.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Fit and sizing.</strong> Our Products are designed for an \"Asian fit\" and generally run true to size, S–XL, as set out in our Size Guide. The Size Guide is provided to help you choose; selecting the correct size is your responsibility, though we are glad to help if you contact us before ordering.</li>\n",
+              "new": "<li><strong>Fit and sizing.</strong> Our Products are designed for an \"Asian fit\" and generally run true to size, S to XL, as set out in our Size Guide. The Size Guide is provided to help you choose; selecting the correct size is your responsibility, though we are glad to help if you contact us before ordering.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>A binding <strong>Contract</strong> is formed only when we <strong>accept your Order</strong> — which we do when we dispatch the Products to you (or, for COD, when we confirm the Order for dispatch) — or earlier if we expressly confirm acceptance.</p>\n",
+              "new": "<p>A binding <strong>Contract</strong> is formed only when we <strong>accept your Order</strong>, which we do when we dispatch the Products to you (or, for COD, when we confirm the Order for dispatch), or earlier if we expressly confirm acceptance.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>We may decline or cancel an Order, in whole or in part, before acceptance — for example, where the Product is unavailable, where there was a pricing or description error, where we are unable to verify your details or payment, or where we suspect fraud or a breach of these Terms. If we cancel an Order you have already paid for, we will refund the amount paid for the cancelled items in full.</p>\n",
+              "new": "<p>We may decline or cancel an Order, in whole or in part, before acceptance, for example, where the Product is unavailable, where there was a pricing or description error, where we are unable to verify your details or payment, or where we suspect fraud or a breach of these Terms. If we cancel an Order you have already paid for, we will refund the amount paid for the cancelled items in full.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<li><strong>Processing and delivery times.</strong> We aim to process and dispatch Orders within <strong>1–3 business days</strong>, after which delivery times depend on the courier and your location. Any timeframes given are estimates only and are not guaranteed.</li>\n",
+              "new": "<li><strong>Processing and delivery times.</strong> We aim to process and dispatch Orders within <strong>1 to 3 business days</strong>, after which delivery times depend on the courier and your location. Any timeframes given are estimates only and are not guaranteed.</li>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>If a Product arrives <strong>defective, damaged, or not what you ordered</strong>, please contact us at hello@bactiveph.com <strong>within 7 days of delivery</strong>, with your Order number and photos where possible. In line with the Consumer Act, you are entitled to a remedy — <strong>repair, replacement, or refund</strong> — for items that do not conform to what was ordered or that fail to meet the quality and fitness the law requires. Where the issue is our fault or the item is defective, <strong>we cover the cost of return and redelivery</strong>, and you will not be charged for the remedy.</p>\n",
+              "new": "<p>If a Product arrives <strong>defective, damaged, or not what you ordered</strong>, please contact us at hello@bactiveph.com <strong>within 7 days of delivery</strong>, with your Order number and photos where possible. In line with the Consumer Act, you are entitled to a remedy (<strong>repair, replacement, or refund</strong>) for items that do not conform to what was ordered or that fail to meet the quality and fitness the law requires. Where the issue is our fault or the item is defective, <strong>we cover the cost of return and redelivery</strong>, and you will not be charged for the remedy.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>Where a refund is due, we will process it after we receive and inspect the returned item (where a return applies), normally within <strong>7–14 business days</strong>. Refunds are made to your original payment method where possible; for COD Orders, we will refund to a bank account or e-wallet you nominate. We refund the price you paid for the affected Products and, where the return is due to our error or a defect, any related shipping you paid.</p>\n",
+              "new": "<p>Where a refund is due, we will process it after we receive and inspect the returned item (where a return applies), normally within <strong>7 to 14 business days</strong>. Refunds are made to your original payment method where possible; for COD Orders, we will refund to a bank account or e-wallet you nominate. We refund the price you paid for the affected Products and, where the return is due to our error or a defect, any related shipping you paid.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>All content on the Site — including the <strong>B Active</strong> name and logo, <strong>CourtSoft™</strong>, product designs, photographs, graphics, text, and the overall look and feel — is owned by or licensed to B Active and is protected by intellectual property laws.</p>\n",
+              "new": "<p>All content on the Site, including the <strong>B Active</strong> name and logo, <strong>CourtSoft™</strong>, product designs, photographs, graphics, text, and the overall look and feel, is owned by or licensed to B Active and is protected by intellectual property laws.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>Nothing in these Terms limits or excludes our liability where it cannot lawfully be limited or excluded</strong> — including liability under the Consumer Act and other mandatory consumer-protection laws, liability for death or personal injury caused by our negligence, or liability for fraud or wilful misconduct. Because consumer rights under Philippine law cannot be waived, these limitations apply only to the extent the law allows.</p>\n",
+              "new": "<p><strong>Nothing in these Terms limits or excludes our liability where it cannot lawfully be limited or excluded</strong>, including liability under the Consumer Act and other mandatory consumer-protection laws, liability for death or personal injury caused by our negligence, or liability for fraud or wilful misconduct. Because consumer rights under Philippine law cannot be waived, these limitations apply only to the extent the law allows.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p>If we cannot resolve the matter together, you may seek assistance from the <strong>Department of Trade and Industry (DTI)</strong> under the Consumer Act and the Internet Transactions Act, and — for personal-data concerns — from the <strong>National Privacy Commission (NPC)</strong>. Using our internal process does not affect your right to pursue these remedies.</p>\n",
+              "new": "<p>If we cannot resolve the matter together, you may seek assistance from the <strong>Department of Trade and Industry (DTI)</strong> under the Consumer Act and the Internet Transactions Act, and (for personal-data concerns) from the <strong>National Privacy Commission (NPC)</strong>. Using our internal process does not affect your right to pursue these remedies.</p>\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 36,
+      "slug": "the-court-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "56668fd37786b401c4a1907dc2d2bb5c2b17c38f9a1d62ad31cd4740a68c63c0",
+          "after_sha256": "7350e0f32b0d457ccaf3a0ebcac0db2a82122993244a007067fa34acc9e1e08e",
+          "replacements": [
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 50,
+      "slug": "the-rally-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "8ceadeab65a7d4ca9fdc2dc11924a62d2d92bcf3ee304422238d34f19db76db3",
+          "after_sha256": "5120c79b39f03fed416548bf29fa21ed4c4f29820aedd18ce5e92bb84d9a3255",
+          "replacements": [
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 56,
+      "slug": "the-bubble-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "5a5afe9a907722873044402526d0329981bf8c88ef01f7605e7d80b0a23b319a",
+          "after_sha256": "02dd618021377f9807899b997466a2591fd603194d81aa09b68bebec85d347f9",
+          "replacements": [
+            {
+              "old": "The dress everyone asks about. A sculpted bodice meets a playful bubble hem — court-ready, café-ready.\r\n",
+              "new": "The dress everyone asks about. A sculpted bodice meets a playful bubble hem. Court-ready, café-ready.\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 83,
+      "slug": "the-match-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "cbe9c3922c545083e7a61b7c6b0d8fb31634e0108a4987b94633cc27f08758f3",
+          "after_sha256": "f40a1c7b14dc5b775a0eaab012d679a9d5d01a962a065898188ed0d3e4bf087f",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 89,
+      "slug": "the-serve-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "829c8e593ab6352bd6345633e116e8ea9353b5d8a74a0176be62f466e3a3f5f3",
+          "after_sha256": "6313b15b67d991d138e175511bb8b8e4df7d9e5f64b0b5f5a06b0ddea4670560",
+          "replacements": [
+            {
+              "old": "Clean lines, full range. A scoop-neck racerback dress with a pleated skirt — easy to move in, easy to love.\r\n",
+              "new": "Clean lines, full range. A scoop-neck racerback dress with a pleated skirt. Easy to move in, easy to love.\r\n",
+              "count": 1
+            },
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 95,
+      "slug": "the-eyelet-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "32ef0d026e8f1ffa0c26278742633b61d918b3d891c5030fa0a37b92a068f694",
+          "after_sha256": "65dea8f00993b41f819539d0d68d3077d7e34581f331a3d25945834607f1c73c",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 111,
+      "slug": "the-varsity-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "34bc95943153a0e3ef7b37f1c329d05f6a0a7f69e6e06439a47582549cbb7c88",
+          "after_sha256": "21af9162a34f320e4403f18fefe47a5f139bb42539019178577279a94f3dfddf",
+          "replacements": [
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 167 cm, wears M.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 167 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 117,
+      "slug": "the-ace-dress",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "a290b3a6efc117cdeb3363a09b2cd6b5b019c81eaf8d78f7380857173f2fe15c",
+          "after_sha256": "a31f9e9f4a412c4ac65b773f1062843e892cd8906594fe6afc17d90ba7ce2d64",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 128,
+      "slug": "the-everyday-skort",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "06cda7c8cfbb1e91b8442a193d783e64001593746a8a9ceeffcfcff15eed9d78",
+          "after_sha256": "af2785b281481c045285dc0a60a7d7919ced1fba3222fc435bc4abffd14a846c",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 165 cm, wears M.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 165 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 148,
+      "slug": "the-pleated-skort",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "0478deba14ed3bef3ffd45bc2a7ed545f6586aacec6f415cdf9a4bc42881b971",
+          "after_sha256": "928cbb24942d7b1d92b29db21f6a8105a4432992587bcc9556e972f7e3be52b0",
+          "replacements": [
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 165 cm, wears M.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 165 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 154,
+      "slug": "the-flow-skort",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "120df60a3c97450da8fa6b70b3cbcd5ce478e8d9165e9f09c04d35d08fc86740",
+          "after_sha256": "c4ca01d4ddad28a4919816321c19accc5562b60bcde0bf07526637b541902fc8",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 166 cm, wears M.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 166 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 160,
+      "slug": "the-breeze-skort",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "3ecfa82e9fd2105f0fcc8e356096bdd929a3f11b30e7afd76bdc6319db87120e",
+          "after_sha256": "6134a8dffd7d9566dc41204d5e4db82ca504d2975b4bf0436c9b48b303d8e732",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 185,
+      "slug": "the-court-skort",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "9dafe71b96f9849def170870fab4bb9354d979d1e5d96e78ae1f0abdb9916aae",
+          "after_sha256": "cf0d8f1d0be5b4b2eae11f7873e9cdc771a58c27b6e4bf3441bc1c565eaa0a0a",
+          "replacements": [
+            {
+              "old": "Our premium pleated skort. A structured waistband, deep pleats, and secure inner shorts — court-ready confidence in every step.\r\n",
+              "new": "Our premium pleated skort. A structured waistband, deep pleats, and secure inner shorts deliver court-ready confidence in every step.\r\n",
+              "count": 1
+            },
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 165 cm, wears M.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 165 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 211,
+      "slug": "the-ribbed-tank",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "90abbb396569a4f592587a75b0bf6c3afbc2dbffaf65d963590b956d75a0c411",
+          "after_sha256": "cc280a02c57ea0bdac498ee2ce0f3fdc7d0315142ac5f642653c6e568ccad640",
+          "replacements": [
+            {
+              "old": "<strong>Sizing:</strong> True to size (Asian fit), S–XL.",
+              "new": "<strong>Sizing:</strong> True to size (Asian fit), S to XL.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 217,
+      "slug": "the-strappy-bra",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "024d404a4515827285687c5ab5d04d145381a27caf915c261296ba9302c41442",
+          "after_sha256": "200d025194eadf5a908047fe1626e84f83c0cc5064a3aff8c5aab137e5e5b3a4",
+          "replacements": [
+            {
+              "old": " \t<li>Light–medium support</li>\r\n",
+              "new": " \t<li>Light to medium support</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 167 cm, wears M.\r\n",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 167 cm, wears M.\r\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 238,
+      "slug": "the-sculpt-legging",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "26fe5d6ec176936af43a1ecbc923c65d6d7ee5128ab313c0e1d119a915e373f0",
+          "after_sha256": "e532eb5067df9fc3414412f543caf4c048dbfdf3094f556c6eebe4662c216866",
+          "replacements": [
+            {
+              "old": "Sculpt and support, in one pull-on. High-waist leggings with flattering contour seams and squat-proof coverage you can trust.<br><br><ul><li>CourtSoft™ four-way stretch</li><li>Squat-proof, opaque coverage</li><li>High, smoothing waistband</li><li>Flattering contour seams</li><li>Asian fit, S–XL</li></ul><br><strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 168 cm, wears M.",
+              "new": "Sculpt and support, in one pull-on. High-waist leggings with flattering contour seams and squat-proof coverage you can trust.<br><br><ul><li>CourtSoft™ four-way stretch</li><li>Squat-proof, opaque coverage</li><li>High, smoothing waistband</li><li>Flattering contour seams</li><li>Asian fit, S to XL</li></ul><br><strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 168 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 248,
+      "slug": "the-core-legging",
+      "fields": {
+        "post_excerpt": {
+          "before_sha256": "675d2b9cb034444b7513750919ace21e1c53d6104c6cca9c6784dbc7fb0f866d",
+          "after_sha256": "59d8dee996e5c4970b6ad6a3353e859fdf6e685c679bfe452892edd59638a085",
+          "replacements": [
+            {
+              "old": " \t<li>Asian fit, S–XL</li>\r\n",
+              "new": " \t<li>Asian fit, S to XL</li>\r\n",
+              "count": 1
+            },
+            {
+              "old": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S–XL. Model is 166 cm, wears M.",
+              "new": "<strong>Fit &amp; Sizing:</strong> True to size (Asian fit), S to XL. Model is 166 cm, wears M.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 304,
+      "slug": "fabric-guide",
+      "fields": {
+        "post_content": {
+          "before_sha256": "512ab8951709170f7156fc92542b1b273e702521a3ab92615c5a3c9a707bd5a5",
+          "after_sha256": "779bf3864b2136cd8abc17b8fcaf0599384322cd3ef3bb46d54e6c791f15ea35",
+          "replacements": [
+            {
+              "old": "<p><strong>CourtSoft™</strong> — Our signature four-way-stretch knit: buttery-soft, squat-proof, sweat-wicking and built to hold its shape. The everyday hero of The Court Edit.</p>\n",
+              "new": "<p><strong>CourtSoft™</strong>: Our signature four-way-stretch knit: buttery-soft, squat-proof, sweat-wicking and built to hold its shape. The everyday hero of The Court Edit.</p>\n",
+              "count": 1
+            },
+            {
+              "old": "<p><strong>BreezeKnit™</strong> — Lightweight and breathable for hot-court days — moves air, moves sweat, keeps you cool.</p>\n",
+              "new": "<p><strong>BreezeKnit™</strong>: Lightweight and breathable for hot-court days. It moves air, moves sweat, and keeps you cool.</p>\n",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 309,
+      "slug": "smash-for-a-cause-davao-region-5-pickleball-tournament",
+      "fields": {
+        "post_content": {
+          "before_sha256": "12ff8cdf66f55eaa56bc896210b65b82ec5455512694aac98baecee0e1302906",
+          "after_sha256": "1ca0bd6aee70ffd4b4ce52a30398030ab5a61649cb925bf349e47b1dd4773df8",
+          "replacements": [
+            {
+              "old": "On June 6, 2026, PickleTown in Davao City will host 'Smash for a Cause', an exciting tournament bringing the community together for competition and charity. The event features Beginner (2.00–3.24) and Intermediate (3.25–3.74) levels across Men's, Women's, and Mixed categories. With a vibrant atmosphere under the tropical sun, players will battle it out while supporting a great cause.",
+              "new": "On June 6, 2026, PickleTown in Davao City will host 'Smash for a Cause', an exciting tournament bringing the community together for competition and charity. The event features Beginner (2.00 to 3.24) and Intermediate (3.25 to 3.74) levels across Men's, Women's, and Mixed categories. With a vibrant atmosphere under the tropical sun, players will battle it out while supporting a great cause.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 311,
+      "slug": "1st-annual-arena-athletics-pickleball-tournament-in-davao",
+      "fields": {
+        "post_content": {
+          "before_sha256": "f55d5137d59874ab60ce1f5c7c552fdc07ab7e4eecd034f59205c49fcd79eec1",
+          "after_sha256": "cd1f1ac259bdbec44832aeb13094ac8a3b0d433eb3b105606c3b56d5a53ce344",
+          "replacements": [
+            {
+              "old": "From June 12–14, 2026, Arena Athletics in Davao City is hosting its 1st Annual Pickleball Tournament. Set in a state-of-the-art 11-court facility, this event is designed for players of all levels, ranging from beginner to Open Elite (4.5–5.0+). The competition promises a professional tournament setup, guaranteeing an incredible weekend of high-level play.",
+              "new": "From June 12 to 14, 2026, Arena Athletics in Davao City is hosting its 1st Annual Pickleball Tournament. Set in a state-of-the-art 11-court facility, this event is designed for players of all levels, ranging from beginner to Open Elite (4.5 to 5.0+). The competition promises a professional tournament setup, guaranteeing an incredible weekend of high-level play.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "post",
+      "id": 317,
+      "slug": "pickleball-a-sport-for-every-filipino",
+      "fields": {
+        "post_content": {
+          "before_sha256": "6fd666d6b509be6a3306a47206e66b3d4416e3cc6c9448c10074f00082f99be0",
+          "after_sha256": "6c3d5e825be0eb74c6049acf882d28b6ea4c446b371e47b43853fc65169cb3e1",
+          "replacements": [
+            {
+              "old": "The true beauty of pickleball lies in its inclusivity. Across the Philippines, you'll find courts filled with a diverse mix of players—from children and corporate professionals to seniors enjoying an active lifestyle. It is more than just a game; it's a powerful tool for community bonding, promoting health, social interaction, and an immense amount of joy.",
+              "new": "The true beauty of pickleball lies in its inclusivity. Across the Philippines, you'll find courts filled with a diverse mix of players, from children and corporate professionals to seniors enjoying an active lifestyle. It is more than just a game; it's a powerful tool for community bonding, promoting health, social interaction, and an immense amount of joy.",
+              "count": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "option",
+      "name": "blogdescription",
+      "fields": {
+        "value": {
+          "before_sha256": "0d26c0b69372304fd84fafcfcf2be37732057a18d12a8765eea1d4526e3c94fe",
+          "after_sha256": "c98dd4c2246bcda601654d4f11d84dd6e98b854ca9aa630c3c9a1dc09de93898",
+          "replacements": [
+            {
+              "old": "Women&#039;s Pickleball Apparel &amp; Activewear — Philippines",
+              "new": "Women&#039;s Pickleball Apparel &amp; Activewear | Philippines",
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

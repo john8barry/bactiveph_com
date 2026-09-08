@@ -1,8 +1,8 @@
 # B Active — Brand Style Guide
-**Version 1.0 · Davao City, Philippines · bactiveph.com**
+**Version 1.1 · Typography approved 2026-09-06 · Davao City, Philippines · bactiveph.com**
 *Tagline: "Sportswear for every move."*
 
-> The shareable brand book. Hand this (or the visual `B_Active_Brand_Style_Guide.html`) to anyone who touches the brand — designers, photographers, printers, social managers, manufacturers. It's drawn from the Master Build Guide (§A3–A4) and expanded. Logo files are concepts for approval (`B Active Build Kit/brand/`).
+> The shareable brand book. Hand this (or the visual `B_Active_Brand_Style_Guide.html`) to anyone who touches the brand — designers, photographers, printers, social managers, manufacturers. It's drawn from the Master Build Guide (§A3–A4) and expanded. The older logo concepts in `B Active Build Kit/brand/` are historical references; the existing production logo artwork remains unchanged by this typography decision.
 
 ---
 
@@ -21,9 +21,9 @@
 
 ## 2. Logo
 
-Three forms: **lockup** (primary), **wordmark**, **monogram** (avatars, favicon, hangtags). Wordmark set in Fraunces; the soft sage ring on the monogram is our signature accent. Files: `B Active Build Kit/brand/bactive-logo-{wordmark,monogram,lockup}.svg`.
+Historical concept forms: **lockup**, **wordmark**, **monogram** (avatars, favicon, hangtags). These earlier concepts use a Fraunces wordmark and soft sage ring; they do not define the current website typography or replace the existing production logo. Files: `B Active Build Kit/brand/bactive-logo-{wordmark,monogram,lockup}.svg`.
 
-> These are **concept files** — approve or refine with a designer, and convert text to outlines before print.
+> Keep the existing production logo artwork unchanged. These are **historical concept files**, not replacement logos. Do not recreate the production wordmark in Rajdhani or another font.
 
 **Colourways**
 - Charcoal `#2B2A28` on Court Ivory — default.
@@ -60,21 +60,27 @@ Calm, warm, feminine: off-white + charcoal foundation, with **sage** and **dusty
 
 ## 4. Typography
 
-A warm serif for display, a clean sans for everything else. Two families only; self-host on the live site.
+**Permanent website standard, approved by John Barry on 2026-09-06.** Rajdhani's angular letterforms complement the existing athletic logo; Inter keeps longer text and shopping controls readable. This replaces the earlier Fraunces website heading direction and optional alternative pairing.
 
-- **Display & headings: Fraunces** (400/500/600) — soft, fashionable, feminine. H1–H4, product names, pull quotes.
-- **Body & UI: Inter** (400/500/600) — highly legible. Body, nav, buttons, labels.
+- **Headings, product titles & navigation: Rajdhani Semibold (600).** Use for H1–H6, product titles, and desktop/mobile navigation. Preserve each component's existing size, spacing, casing and layout unless a separate change is approved.
+- **Body & UI: Inter (400/500/600).** Use for body copy, forms, prices, buttons, labels and other utility text.
+- **Logo:** keep the existing artwork unchanged. Do not redraw or typeset the logo in Rajdhani. Do not apply faux italic styling or condensed type to all text.
 
 | Style | Font | Size | Notes |
 |---|---|---|---|
-| H1 / Display | Fraunces 600 | 3.0rem | line-height 1.12 |
-| H2 | Fraunces 600 | 2.25rem | section titles |
-| H3 | Fraunces 600 | 1.5rem | sub-sections |
+| H1 / Display | Rajdhani 600 | 3.0rem | line-height 1.12 |
+| H2 | Rajdhani 600 | 2.25rem | section titles |
+| H3 | Rajdhani 600 | 1.5rem | sub-sections |
+| H4–H6 / product title | Rajdhani 600 | Component-specific | preserve responsive sizing |
+| Desktop / mobile navigation | Rajdhani 600 | Component-specific | preserve casing and layout |
 | Body | Inter 400 | 1.0rem (16px) | line-height 1.6 · max ~68ch |
+| Forms / prices | Inter 400/500/600 | Component-specific | preserve existing weight |
 | Eyebrow / label | Inter 500 | 0.72rem | UPPERCASE · letter-spacing .18em · Deep Sage |
 | Button | Inter 500 | 0.8rem | UPPERCASE · letter-spacing .08em |
 
-*Alternative more-delicate pairing if ever needed: Cormorant Garamond + Jost.*
+**Implementation:** use `--bactive-font-head: 'Rajdhani', 'Inter', sans-serif` and retain `--bactive-font-body: 'Inter', system-ui, sans-serif`. Self-host Rajdhani 600 Latin and Latin Extended WOFF2 files with `font-display: swap`. The child theme's `assets/fonts/rajdhani-OFL.txt` records the SIL Open Font License; retain it with the font assets. Keep the existing self-hosted Inter weights. The visual guide uses the same local assets.
+
+**Decision record:** treat this pairing as the continuing website default. A future typography change requires a new explicit brand decision; do not restore Fraunces or the former Cormorant Garamond/Jost alternative from older build notes.
 
 ---
 
@@ -111,7 +117,7 @@ Our biggest premium signal. Soft, warm, natural light; consistent grade; **real 
 ## 8. Components (digital)
 
 - **Buttons:** primary = Charcoal fill + Ivory text, 2px radius, uppercase, hover → Deep Sage; secondary = Charcoal outline.
-- **Product cards:** 3:4 portrait image, 6px radius, hairline Greige border, name in Fraunces, price, colour swatches, sparing Sage/Rose badge; 3-up desktop / 2-up mobile; generous whitespace.
+- **Product cards:** 3:4 portrait image, 6px radius, hairline Greige border, name in Rajdhani 600, price, colour swatches, sparing Sage/Rose badge; 3-up desktop / 2-up mobile; generous whitespace.
 - **Badges:** Sage “New”, Rose “Best Seller” — used sparingly (1–2 per page).
 - **Announcement bar:** Court Ivory bg, Charcoal text, calm service message — no countdowns.
 - **Icons:** professional SVG line icons (Lucide/Heroicons), 24px, consistent. No emoji in UI.
@@ -120,6 +126,8 @@ Our biggest premium signal. Soft, warm, natural light; consistent grade; **real 
 ---
 
 ## 9. Applications
+
+**Historical non-website concepts.** The examples below preserve the earlier print, social and email direction for reference. The 2026-09-06 approval establishes website typography only; it does not authorize replacement logos or a rollout to these other channels.
 
 - **Hangtag:** monogram + “B Active” (Fraunces) + “Quality you can feel” on Cloud White, Greige edge.
 - **Social:** monogram as avatar; posts lead with editorial imagery + a Fraunces line; eyebrow in Sage.

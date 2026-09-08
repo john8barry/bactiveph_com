@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-06T08:02:10.237634Z",
+  "title": "Design System: B Active Sage header",
+  "extensions": {
+    "colorMeta": {
+      "sage": {
+        "role": "primary",
+        "displayName": "Sage",
+        "tonalRamp": [
+          "oklch(15.00% 0.05043 134.52)",
+          "oklch(26.43% 0.05043 134.52)",
+          "oklch(37.86% 0.05043 134.52)",
+          "oklch(49.29% 0.05043 134.52)",
+          "oklch(60.71% 0.05043 134.52)",
+          "oklch(72.14% 0.05043 134.52)",
+          "oklch(83.57% 0.05043 134.52)",
+          "oklch(95.00% 0.05043 134.52)"
+        ]
+      },
+      "ivory": {
+        "role": "neutral",
+        "displayName": "Warm ivory",
+        "tonalRamp": [
+          "oklch(15.00% 0.00452 78.30)",
+          "oklch(26.43% 0.00452 78.30)",
+          "oklch(37.86% 0.00452 78.30)",
+          "oklch(49.29% 0.00452 78.30)",
+          "oklch(60.71% 0.00452 78.30)",
+          "oklch(72.14% 0.00452 78.30)",
+          "oklch(83.57% 0.00452 78.30)",
+          "oklch(95.00% 0.00452 78.30)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Charcoal ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.00301 17.35)",
+          "oklch(26.43% 0.00301 17.35)",
+          "oklch(37.86% 0.00301 17.35)",
+          "oklch(49.29% 0.00301 17.35)",
+          "oklch(60.71% 0.00301 17.35)",
+          "oklch(72.14% 0.00301 17.35)",
+          "oklch(83.57% 0.00301 17.35)",
+          "oklch(95.00% 0.00301 17.35)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Deep green focus",
+        "tonalRamp": [
+          "oklch(15.00% 0.04613 140.38)",
+          "oklch(26.43% 0.04613 140.38)",
+          "oklch(37.86% 0.04613 140.38)",
+          "oklch(49.29% 0.04613 140.38)",
+          "oklch(60.71% 0.04613 140.38)",
+          "oklch(72.14% 0.04613 140.38)",
+          "oklch(83.57% 0.04613 140.38)",
+          "oklch(95.00% 0.04613 140.38)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "navigation": {
+        "displayName": "Desktop primary navigation",
+        "purpose": "Uppercase main destinations and Shop; consumes the shared Rajdhani heading token supplied by the approved brand typography stylesheet."
+      },
+      "mobile-navigation": {
+        "displayName": "Mobile primary navigation",
+        "purpose": "Larger uppercase destinations and the mobile Shop summary."
+      },
+      "category": {
+        "displayName": "Desktop category links",
+        "purpose": "Sentence-case links in the Shop panel."
+      },
+      "mobile-category": {
+        "displayName": "Mobile category links",
+        "purpose": "Full collection list within the expanded menu."
+      },
+      "form": {
+        "displayName": "Search form",
+        "purpose": "Label and field text, with the visible label at weight 500."
+      },
+      "utility": {
+        "displayName": "Desktop utility labels",
+        "purpose": "Supporting Search, Account and Bag labels beneath outline icons."
+      }
+    },
+    "shadows": [
+      {
+        "name": "disclosure-panel",
+        "value": "0 12px 28px #2422221f",
+        "purpose": "Shared ambient shadow under desktop Shop and search panels; the closed header and mobile flow stay flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "interactive-color",
+        "value": "color 160ms ease-out",
+        "purpose": "Link and summary color changes only under prefers-reduced-motion: no-preference."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "desktop-interaction",
+        "value": "1000px"
+      },
+      {
+        "name": "compact-desktop-upper",
+        "value": "1120px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary navigation",
+      "kind": "nav",
+      "refersTo": "primary-navigation",
+      "description": "Uppercase primary destinations consume the shared Rajdhani heading token; current pages carry a sage rule.",
+      "html": "<nav class=\"ds-primary\" aria-label=\"Primary navigation\"><a href=\"/pickleball-looks/\" aria-current=\"page\">Pickleball Looks</a><a href=\"/about-our-story/\">About</a><a href=\"/contact/\">Contact</a></nav>",
+      "css": ".ds-primary{display:flex;align-items:center;gap:clamp(22px,2.8vw,44px);background:#f9f7f4}.ds-primary a{display:flex;align-items:center;min-height:44px;font:600 19px/1.2 var(--bactive-font-head,\"Inter\",sans-serif);letter-spacing:.025em;text-transform:uppercase;white-space:nowrap;color:#242222;text-decoration:none}.ds-primary a[aria-current]{box-shadow:inset 0 -2px #829677}.ds-primary a:hover{color:#40543c}.ds-primary a:focus-visible{outline:2px solid #40543c;outline-offset:5px;border-radius:2px;}@media(prefers-reduced-motion:no-preference){.ds-primary a{transition:color 160ms ease-out}}"
+    },
+    {
+      "name": "Shop disclosure",
+      "kind": "nav",
+      "refersTo": "disclosure-panel",
+      "description": "Native Shop disclosure with the existing collection links. The component demonstrates native behavior; header-wide close and focus behavior belongs to the interaction script.",
+      "html": "<details class=\"ds-shop\"><summary>Shop <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"m6 9 6 6 6-6\"/></svg></summary><div class=\"ds-shop-panel\"><a href=\"/shop/\">Shop all</a><a href=\"/collections/pickleball-dresses\">Pickleball dresses</a><a href=\"/collections/skorts\">Skorts</a><a href=\"/collections/tops\">Tops &amp; tanks</a><a href=\"/collections/sports-bras\">Sports bras</a><a href=\"/collections/leggings\">Leggings</a><a href=\"/collections/sets\">Sets</a><a href=\"/collections/paddles\">Pickleball paddles</a></div></details>",
+      "css": ".ds-shop{position:relative;display:inline-block;background:#f9f7f4;color:#242222}.ds-shop>summary{display:flex;align-items:center;gap:8px;min-height:44px;list-style:none;cursor:pointer;font:600 19px/1.2 var(--bactive-font-head,\"Inter\",sans-serif);letter-spacing:.025em;text-transform:uppercase;box-shadow:inset 0 -2px #829677}.ds-shop>summary::-webkit-details-marker{display:none}.ds-shop[open]>summary svg{transform:rotate(180deg)}.ds-shop-panel{position:absolute;top:calc(100% + 18px);width:264px;padding:18px 22px;background:#f9f7f4;box-shadow:0 12px 28px #2422221f;z-index:2}.ds-shop-panel a{display:flex;align-items:center;min-height:44px;font:400 16px/1.4 \"Inter\",sans-serif;color:#242222;text-decoration:none;text-underline-offset:.3em}.ds-shop>summary:hover,.ds-shop-panel a:hover{color:#40543c}.ds-shop-panel a:hover{text-decoration:underline}.ds-shop>summary:focus-visible,.ds-shop-panel a:focus-visible{outline:2px solid #40543c;outline-offset:5px;border-radius:2px;}@media(prefers-reduced-motion:no-preference){.ds-shop>summary,.ds-shop-panel a{transition:color 160ms ease-out}}"
+    },
+    {
+      "name": "Account utility",
+      "kind": "nav",
+      "refersTo": "utility",
+      "description": "The shared desktop utility pattern places a small Inter label below an authored outline icon in a generous target.",
+      "html": "<a class=\"ds-utility\" href=\"/my-account/\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"7\" r=\"4\"/><path d=\"M3 22v-2c0-4 4-6 9-6s9 2 9 6v2Z\"/></svg><span>Account</span></a>",
+      "css": ".ds-utility{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:48px;min-height:60px;gap:6px;background:#f9f7f4;color:#242222;font:400 12px/1.3 \"Inter\",sans-serif;text-decoration:none}.ds-utility svg{display:block;flex:none}.ds-utility:hover{color:#40543c}.ds-utility:focus-visible{outline:2px solid #40543c;outline-offset:5px;border-radius:2px;}@media(prefers-reduced-motion:no-preference){.ds-utility{transition:color 160ms ease-out}}"
+    },
+    {
+      "name": "Search field",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "A visible medium-weight label accompanies a required search input; its white fill sits against the ivory panel.",
+      "html": "<div class=\"ds-search-field\"><label for=\"ds-header-search\">Search B Active</label><input id=\"ds-header-search\" type=\"search\" name=\"s\" placeholder=\"What are you looking for?\" required></div>",
+      "css": ".ds-search-field{background:#f9f7f4;color:#242222;font:400 15px/1.5 \"Inter\",sans-serif}.ds-search-field label{display:block;margin:0 0 10px;font-weight:500}.ds-search-field input{width:100%;min-width:0;height:48px;padding:10px 12px;border:1px solid #829677;border-radius:3px;background:#fff;color:#242222;caret-color:#40543c;font:inherit}.ds-search-field input::placeholder{color:#5c6158;opacity:1}.ds-search-field input:focus-visible{outline:2px solid #40543c;outline-offset:5px;border-radius:2px;}"
+    },
+    {
+      "name": "Search submit",
+      "kind": "button",
+      "refersTo": "search-button",
+      "description": "An ink submit button with an ivory outline icon and deep green hover state; minimum target size is 48px square.",
+      "html": "<button class=\"ds-search-submit\" type=\"submit\" aria-label=\"Submit search\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"10.5\" cy=\"10.5\" r=\"7.5\"/><path d=\"m16 16 5 5\"/></svg></button>",
+      "css": ".ds-search-submit{min-width:48px;min-height:48px;padding:12px;border:0;border-radius:3px;background:#242222;color:#f9f7f4;cursor:pointer}.ds-search-submit svg{display:block;flex:none}.ds-search-submit:hover{background:#40543c}.ds-search-submit:focus-visible{outline:2px solid #40543c;outline-offset:5px;border-radius:2px;}"
+    },
+    {
+      "name": "Mobile collections",
+      "kind": "nav",
+      "refersTo": "primary-navigation",
+      "description": "An initially open Shop disclosure reveals the full collection list in normal page flow inside the mobile menu.",
+      "html": "<details class=\"ds-mobile-shop\" open><summary>Shop <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"m6 9 6 6 6-6\"/></svg></summary><div class=\"ds-mobile-collections\"><a href=\"/shop/\">Shop all</a><a href=\"/collections/pickleball-dresses\">Pickleball dresses</a><a href=\"/collections/skorts\">Skorts</a><a href=\"/collections/tops\">Tops &amp; tanks</a><a href=\"/collections/sports-bras\">Sports bras</a><a href=\"/collections/leggings\">Leggings</a><a href=\"/collections/sets\">Sets</a><a href=\"/collections/paddles\">Pickleball paddles</a></div></details>",
+      "css": ".ds-mobile-shop{background:#f9f7f4;color:#242222}.ds-mobile-shop>summary{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding-bottom:10px;border-bottom:2px solid #829677;list-style:none;cursor:pointer;color:#40543c;font:600 22px/1.3 var(--bactive-font-head,\"Inter\",sans-serif);text-transform:uppercase;letter-spacing:.02em}.ds-mobile-shop>summary::-webkit-details-marker{display:none}.ds-mobile-shop[open]>summary svg{transform:rotate(180deg)}.ds-mobile-collections{padding:10px 0 16px}.ds-mobile-collections a{display:flex;align-items:center;min-height:48px;padding:9px 12px;font:400 17px/1.5 \"Inter\",sans-serif;color:#242222;text-decoration:none;text-underline-offset:.3em}.ds-mobile-collections a:hover{color:#40543c;text-decoration:underline}.ds-mobile-shop>summary:focus-visible,.ds-mobile-collections a:focus-visible{outline:2px solid #40543c;outline-offset:5px;border-radius:2px;}@media(prefers-reduced-motion:no-preference){.ds-mobile-shop>summary,.ds-mobile-collections a{transition:color 160ms ease-out}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Ivory and sage",
+    "overview": "The approved header gives the original athletic B Active logo a prominent place on a warm ivory surface. Sage rules organize the navigation, while clear groups and generous horizontal space keep shopping destinations and everyday utilities easy to find. The controls are restrained, readable and direct.\n\nThis guide records the implemented header candidate and the approved typography dependency. It extends the established brand and Sage footer without establishing a new visual system for page content. The [work record](../../work-records/2026-09-06-sage-header.md) owns the direction contract, acceptance evidence and release state; local source and screenshots do not establish deployment.",
+    "keyCharacteristics": [
+      "Original configured logo, complete and uncropped.",
+      "Warm ivory ground, charcoal text and sage rules.",
+      "Rajdhani primary navigation paired with Inter categories, forms and utilities.",
+      "Native expandable menus, visible focus and generous touch targets."
+    ],
+    "rules": [
+      {
+        "name": "The Header Boundary Rule",
+        "body": "Keep the ivory surface and sage rules scoped to this header; preserve the page and footer systems around it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Roles Rule",
+        "body": "Use the shared Rajdhani heading token for primary destinations; retain Inter for categories, search and utility labels.",
+        "section": "typography"
+      },
+      {
+        "name": "The Complete Mark Rule",
+        "body": "Contain the original logo at its intrinsic proportions and retain an automatically sized anchor; never crop the mark to fit a fixed anchor height.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Do preserve the complete WordPress-configured logo and its text fallback.",
+      "Do keep primary destinations in Rajdhani and supporting navigation and controls in Inter.",
+      "Do retain native disclosure semantics, visible focus and at least 44px interactive targets.",
+      "Do let the expanded mobile menu occupy normal page flow with every existing destination available.",
+      "Do keep header changes isolated from hero content, footer styling and commerce behavior."
+    ],
+    "donts": [
+      "Don't recreate, crop or duplicate the original brand asset to reproduce the mockup.",
+      "Don't add a glass backdrop or turn the header's plain navigation into a card grid.",
+      "Don't require JavaScript or hover alone to reach the Shop links or mobile menu.",
+      "Don't promote surrounding hero artwork, hero typography or footer layout into header rules."
+    ]
+  }
+}

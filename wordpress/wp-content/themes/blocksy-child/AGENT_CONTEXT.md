@@ -18,7 +18,7 @@ Reference these variables in CSS:
   --bactive-sale:#A9544A;
   
   /* Type */
-  --bactive-font-head:'Fraunces',Georgia,serif;
+  --bactive-font-head:'Rajdhani','Inter',sans-serif;
   --bactive-font-body:'Inter',system-ui,sans-serif;
   --bactive-fs-base:16px;
   
@@ -35,8 +35,12 @@ Reference these variables in CSS:
 ```
 
 ## Typography Rules
-- Headings: Fraunces (400/500/600).
-- Body & UI: Inter (400/500/600).
+- Permanent website typography approved by John Barry on 2026-09-06; recorded in `Buildout_Resources/B_Active_Brand_Style_Guide.md` and its HTML companion.
+- H1–H6, product titles, desktop navigation and mobile navigation: Rajdhani Semibold (600), via `--bactive-font-head`. Preserve existing component sizing and casing.
+- Body copy, forms, prices, buttons, labels and utility text: existing Inter (400/500/600).
+- Self-host Rajdhani 600 Latin and Latin Extended WOFF2 with `font-display: swap`; retain `assets/fonts/rajdhani-OFL.txt` (SIL Open Font License).
+- Keep existing logo artwork unchanged. No faux italic treatment and no condensed font applied to all text.
+- This supersedes earlier Fraunces website headings and optional alternate pairings. Do not restore old typography from historical build notes without a new explicit brand decision.
 - Eyebrows & Buttons: Inter, UPPERCASE, letter-spacing: 0.08em (or 0.18em for eyebrows).
 - Colors: Charcoal (#2B2A28) for text; Ivory/White for background. Deep Sage / Rose Clay for accent text.
 - No discounts, no countdown timers, no fast-fashion patterns.

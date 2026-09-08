@@ -1,0 +1,160 @@
+/* Approved header extension: ivory surface, sage rules, original B Active mark. */
+#header.bactive-header--sage {
+    --header-ivory: #f9f7f4;
+    --header-ink: #242222;
+    --header-sage: #829677;
+    --header-focus: #40543c;
+    /* Override the incumbent global glass-header rules without touching them. */
+    background: var(--header-ivory) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    color: var(--header-ink);
+    border-bottom: 2px solid var(--header-sage) !important;
+    position: relative;
+    z-index: 50;
+}
+.bactive-header--sage *, .bactive-header--sage *::before, .bactive-header--sage *::after { box-sizing: border-box; }
+.bactive-header--sage ::selection { background: var(--header-focus); color: var(--header-ivory); }
+.bactive-header--sage a, .bactive-header--sage summary, .bactive-header--sage button {
+    color: var(--header-ink);
+    text-decoration: none;
+    text-underline-offset: 0.3em;
+    -webkit-tap-highlight-color: #82967733;
+}
+.bactive-header--sage a:focus-visible, .bactive-header--sage summary:focus-visible,
+.bactive-header--sage button:focus-visible, .bactive-header--sage input:focus-visible {
+    outline: 2px solid var(--header-focus);
+    outline-offset: 5px;
+    border-radius: 2px;
+}
+.bactive-header--sage a:hover, .bactive-header--sage summary:hover { color: var(--header-focus); }
+.bactive-header--sage summary { cursor: pointer; list-style: none; }
+.bactive-header--sage summary::-webkit-details-marker { display: none; }
+.bactive-header--sage .bactive-header__icon { flex: none; display: block; width: 24px; height: 24px; }
+.bactive-header--sage .bactive-header__icon--chevron { width: 18px; height: 18px; }
+.bactive-header--sage details[open] > summary .bactive-header__icon--chevron { transform: rotate(180deg); }
+.bactive-header--sage .bactive-header__brand .site-logo-container ~ .site-title-container { display: none; }
+#header.bactive-header--sage .bactive-header__brand .site-logo-container { padding: 0; display: flex; min-height: 44px; height: auto; max-height: none; }
+#header.bactive-header--sage .bactive-header__brand img { width: 156px; max-width: 100%; height: 88px; max-height: 88px; object-fit: contain; }
+.bactive-header--sage .bactive-header__desktop {
+    width: min(1464px, 92%);
+    min-height: 108px;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    padding-block: 10px;
+}
+.bactive-header--sage .bactive-header__primary { display: flex; align-items: center; gap: clamp(22px, 2.8vw, 44px); }
+.bactive-header--sage .bactive-header__primary > a,
+.bactive-header--sage .bactive-header__shop > summary {
+    font-family: var(--bactive-font-head, 'Inter', sans-serif);
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 1.2;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+.bactive-header--sage .bactive-header__primary > a[aria-current],
+.bactive-header--sage .bactive-header__shop > summary {
+    box-shadow: inset 0 -2px var(--header-sage);
+}
+.bactive-header--sage .bactive-header__disclosure { position: relative; }
+.bactive-header--sage .bactive-header__dropdown,
+.bactive-header--sage .bactive-header__search-panel {
+    position: absolute;
+    top: calc(100% + 18px);
+    background: var(--header-ivory);
+    box-shadow: 0 12px 28px #2422221f;
+    padding: 18px 22px;
+    width: 264px;
+    z-index: 2;
+}
+.bactive-header--sage .bactive-header__dropdown a {
+    font: 400 16px/1.4 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+}
+.bactive-header--sage .bactive-header__dropdown a:hover,
+.bactive-header--sage .bactive-header__collection-links a:hover { text-decoration: underline; }
+.bactive-header--sage .bactive-header__utilities { display: flex; align-items: center; gap: 18px; }
+.bactive-header--sage .bactive-header__utility {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 60px;
+    gap: 6px;
+    font: 400 12px/1.3 'Inter', sans-serif;
+}
+.bactive-header--sage .bactive-header__search-panel { width: 350px; right: -132px; }
+.bactive-header--sage .bactive-header__search-form { margin: 0; font: 400 15px/1.5 'Inter', sans-serif; }
+.bactive-header--sage .bactive-header__search-form label { display: block; margin: 0 0 10px; color: var(--header-ink); font-weight: 500; }
+.bactive-header--sage .bactive-header__search-fields { display: flex; gap: 8px; }
+.bactive-header--sage .bactive-header__search-fields input {
+    width: 100%; min-width: 0; height: 48px; padding: 10px 12px; border: 1px solid var(--header-sage);
+    border-radius: 3px; background: #fff; color: var(--header-ink); caret-color: var(--header-focus); font: inherit;
+}
+.bactive-header--sage .bactive-header__search-fields input::placeholder { color: #5c6158; opacity: 1; }
+.bactive-header--sage .bactive-header__search-fields button {
+    min-width: 48px; min-height: 48px; padding: 12px; border: 0; border-radius: 3px;
+    background: var(--header-ink); color: var(--header-ivory); cursor: pointer;
+}
+.bactive-header--sage .bactive-header__search-fields button:hover { background: var(--header-focus); }
+.bactive-header--sage .bactive-header__mobile { position: relative; }
+.bactive-header--sage .bactive-header__mobile > .bactive-header__brand {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1;
+}
+#header.bactive-header--sage .bactive-header__mobile .bactive-header__brand img { width: 128px; height: 74px; max-height: 74px; }
+.bactive-header--sage .bactive-header__mobile-bag {
+    position: absolute; top: 24px; right: 16px; z-index: 1; width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+}
+.bactive-header--sage .bactive-header__menu-toggle {
+    display: flex; align-items: center; justify-content: center; width: 48px; height: 94px; margin-left: 16px;
+}
+.bactive-header--sage .bactive-header__menu-close { display: none; }
+.bactive-header--sage .bactive-header__mobile-menu[open] > summary .bactive-header__menu-open { display: none; }
+.bactive-header--sage .bactive-header__mobile-menu[open] > summary .bactive-header__menu-close { display: block; }
+.bactive-header--sage .bactive-header__mobile-panel { border-top: 1px solid #dfdcd5; padding: 26px 24px 32px; }
+.bactive-header--sage .bactive-header__collections > summary {
+    min-height: 44px; display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 10px; border-bottom: 2px solid var(--header-sage); color: var(--header-focus);
+    font: 600 22px/1.3 var(--bactive-font-head, 'Inter', sans-serif); text-transform: uppercase; letter-spacing: 0.02em;
+}
+.bactive-header--sage .bactive-header__collection-links { padding: 10px 0 16px; }
+.bactive-header--sage .bactive-header__collection-links a {
+    display: flex; align-items: center; min-height: 48px; padding: 9px 12px;
+    font: 400 17px/1.5 'Inter', sans-serif;
+}
+.bactive-header--sage .bactive-header__mobile-primary { padding-top: 14px; border-top: 2px solid var(--header-sage); }
+.bactive-header--sage .bactive-header__mobile-primary a {
+    display: flex; align-items: center; min-height: 50px; padding-block: 10px;
+    font: 600 22px/1.3 var(--bactive-font-head, 'Inter', sans-serif); text-transform: uppercase;
+}
+.bactive-header--sage .bactive-header__mobile-account {
+    display: flex; align-items: center; min-height: 48px; margin-top: 16px;
+    font: 500 15px/1.4 'Inter', sans-serif; text-transform: uppercase; color: #555d4f;
+}
+.bactive-header--sage .bactive-header__mobile-panel .bactive-header__search-form { margin-top: 20px; }
+.bactive-header--sage .bactive-header__sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .bactive-header--sage a, .bactive-header--sage summary { transition: color 160ms ease-out; }
+}
+@media (min-width: 1000px) and (max-width: 1120px) {
+    .bactive-header--sage .bactive-header__desktop { gap: 18px; width: 94%; }
+    #header.bactive-header--sage .bactive-header__brand img { width: 138px; }
+    .bactive-header--sage .bactive-header__primary { gap: 22px; }
+    .bactive-header--sage .bactive-header__utilities { gap: 12px; }
+}

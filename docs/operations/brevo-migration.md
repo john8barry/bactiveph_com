@@ -2,7 +2,7 @@
 
 Tracking: [issue #16](https://github.com/john8barry/bactiveph_com/issues/16). Priority: normal requested feature; production email continuity is a release requirement.
 
-Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, DOI template, and Turnstile widget are configured. No live marketing activation, test send, host deployment, contact import, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
+Status: [draft PR #20](https://github.com/john8barry/bactiveph_com/pull/20), with local and CI implementation checks passing. The Brevo Free account, authenticated sender/domain, branded subdomain, API key, confirmed-subscriber list, consent attributes, DOI template, and Turnstile widget are configured. The exact reviewed plugin package is installed on staging with marketing disabled, test mode retained and no test recipients. No live marketing activation, test send, contact import, footer/homepage integration, workflow activation, webhook registration, coupon publication, or MailPoet removal has been completed. See the [acceptance receipt](../releases/brevo-marketing.md).
 
 ## Scope and decisions
 
@@ -45,6 +45,15 @@ BACTIVE5 must be provisioned explicitly as a draft, bound by ID and campaign mar
 - Native DOI template: `B Active – Confirm your signup`, ID `1`, sender `hello@bactiveph.com`. Creation did not send an email.
 - Cloudflare Turnstile widget: `bactiveph-newsletter`, public site key `0x4AAAAAAEsSyWIvaEIenlIM`, managed mode, limited to `bactiveph.com`, `staging.bactiveph.com`, and `www.bactiveph.com`. Its secret and the generated webhook bearer token are stored only in the protected environment file.
 - No MailPoet contact was imported, no Brevo contact was added, no workflow or campaign was enabled, and no email was sent. The suppression webhook remains uncreated until the exact staging endpoint exists and can be tested.
+
+## Disabled staging deployment receipt (2026-09-08)
+
+- The staging target was independently identified as `https://staging.bactiveph.com`, database `waypmvhk_stg`, PHP 8.2.33, WordPress 7.1, active child theme `blocksy-child`, and `blog_public=0`.
+- Before the first host mutation, a fresh Updraft backup completed with database, plugins, themes, uploads, mu-plugins, and other files. All six components, totalling 122,567,295 bytes, were copied off-server and verified by exact size, SHA-256, and ZIP/gzip integrity. Backup email reporting was suppressed and no resumption remained scheduled.
+- Source commit `d452ca48daecab9e1ba918b783e6d572f2a54c47` produced the deterministic 12-file runtime archive SHA-256 `4e27bbf52a3461d2bc39fe16c4a52c4f6962915705053aa08274312d8881b575`. The server linted all ten PHP files and installed plugin version 1.0.0 from that archive.
+- Independent readback verified all 12 installed runtime files. The plugin is active while marketing remains explicitly disabled; test mode is true, the test-recipient list is empty, launch cutoff is zero, provider workflow verification is false, and no Brevo scheduler action exists. All five InnoDB tables were created and remain empty.
+- The disabled shortcode returns only its unavailable message and checkout renders no newsletter panel. The PayMongo plugin/settings, recent-order fingerprint, child-theme functions and error log were unchanged across deployment. Brevo list ID `3` still has zero subscribers and the Free quota still reports 300. No provider write or email send occurred.
+- Footer, homepage, MailPoet, webhook, workflow, coupon and cron changes were excluded. The next gate is an exact approved test-recipient address and separate authorization for a labeled DOI send.
 
 ## Acceptance and release gates
 

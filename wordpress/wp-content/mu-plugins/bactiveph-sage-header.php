@@ -65,16 +65,16 @@ add_action('wp_enqueue_scripts', static function () {
 function links($group) {
     if ($group === 'collections') {
         return array(
-            'Shop all' => '/shop/',
-            'Pickleball dresses' => '/collections/pickleball-dresses',
-            'Skorts' => '/collections/skorts',
-            'Tops & tanks' => '/collections/tops',
-            'Sports bras' => '/collections/sports-bras',
             'Leggings' => '/collections/leggings',
+            'Pickleball dresses' => '/collections/pickleball-dresses',
             'Sets' => '/collections/sets',
+            'Shop all' => '/shop/',
+            'Skorts' => '/collections/skorts',
+            'Sports bras' => '/collections/sports-bras',
+            'Tops & tanks' => '/collections/tops',
         );
     }
-    return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');
+    return array('About' => '/about-our-story/', 'Contact' => '/contact/', 'Pickleball Looks' => '/pickleball-looks/');
 }
 
 function current_attribute($path) {

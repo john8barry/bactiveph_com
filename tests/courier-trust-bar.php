@@ -42,15 +42,15 @@ namespace {
         ob_start();
         include $template;
         $html = ob_get_clean();
-        foreach (array('QR Ph','Maya','ShopeePay','BPI Online','UnionBank Online','PayMongo') as $name) {
+        foreach (array('QR Ph','Maya','GrabPay','ShopeePay','BPI Online','UnionBank Online','PayMongo') as $name) {
             if (!str_contains($html, 'alt="'.$name.'"')) {
                 throw new \RuntimeException($scenario . ': wrong payment mark ' . $name);
             }
         }
         $cod = !in_array($scenario, array('manager-error','all-disabled','no-commerce'), true);
         if (str_contains($html, 'alt="Cash on Delivery"') !== $cod) { throw new \RuntimeException($scenario . ': wrong COD availability'); }
-        preg_match_all('/alt="(QR Ph|Maya|ShopeePay|BPI Online|UnionBank Online|Cash on Delivery|PayMongo)"/', $html, $marks);
-        $expected_marks = array('QR Ph', 'Maya', 'ShopeePay', 'BPI Online', 'UnionBank Online');
+        preg_match_all('/alt="(QR Ph|Maya|GrabPay|ShopeePay|BPI Online|UnionBank Online|Cash on Delivery|PayMongo)"/', $html, $marks);
+        $expected_marks = array('QR Ph', 'Maya', 'GrabPay', 'ShopeePay', 'BPI Online', 'UnionBank Online');
         if ($cod) { $expected_marks[] = 'Cash on Delivery'; }
         $expected_marks[] = 'PayMongo';
         if ($marks[1] !== $expected_marks) { throw new \RuntimeException($scenario . ': wrong payment count or order'); }
@@ -77,8 +77,12 @@ namespace {
             || !str_contains($local[1], 'target="_blank" rel="noopener noreferrer"')) {
             throw new \RuntimeException($scenario . ': GrabExpress must be explicitly local, accessible and unstretched');
         }
-        if (substr_count($html, '<img ') !== ($cod ? 10 : 9)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
-        if (!str_contains($html, 'data-bactive-trust-version="2026-09-05-v4"')) { throw new \RuntimeException('Wrong combined release version'); }
+        preg_match('/<img[^>]+src="[^"]*\/assets\/images\/payments\/grabpay\.svg"[^>]*>/', $html, $grabpay);
+        if (empty($grabpay[0]) || !str_contains($grabpay[0], 'width="121" height="49" alt="GrabPay"')) {
+            throw new \RuntimeException($scenario . ': GrabPay must use the matching local asset and dimensions');
+        }
+        if (substr_count($html, '<img ') !== ($cod ? 11 : 10)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
+        if (!str_contains($html, 'data-bactive-trust-version="2026-09-08-v5"')) { throw new \RuntimeException('Wrong combined release version'); }
         $checks[] = $scenario;
         if ($scenario === $render_scenario) { $render_html = $html; }
     }

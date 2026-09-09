@@ -21,7 +21,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
     await page.goto('https://staging.bactiveph.com/cart/', { waitUntil: 'networkidle2' });
     await delay(2000);
     console.log("Taking cart screenshot...");
-    await page.screenshot({ path: '/Users/johnbarry/Documents/Antigravity/bactiveph_com/Buildout_Resources/cart_drawer.png', fullPage: true });
+    await page.screenshot({ path: '/Users/johnbarry/Projects/bactiveph_com/Buildout_Resources/cart_drawer.png', fullPage: true });
 
     console.log("Navigating to checkout...");
     await page.goto('https://staging.bactiveph.com/checkout/', { waitUntil: 'networkidle2' });
@@ -60,7 +60,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
     } catch(e){}
 
     console.log("Taking checkout populated screenshot...");
-    await page.screenshot({ path: '/Users/johnbarry/Documents/Antigravity/bactiveph_com/Buildout_Resources/checkout_page.png', fullPage: true });
+    await page.screenshot({ path: '/Users/johnbarry/Projects/bactiveph_com/Buildout_Resources/checkout_page.png', fullPage: true });
 
     console.log("Placing COD order...");
     try {
@@ -80,11 +80,11 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
         
         await page.waitForNavigation({waitUntil: 'networkidle2', timeout: 30000});
         console.log("Taking order received screenshot...");
-        await page.screenshot({ path: '/Users/johnbarry/Documents/Antigravity/bactiveph_com/Buildout_Resources/order_received_cod.png', fullPage: true });
+        await page.screenshot({ path: '/Users/johnbarry/Projects/bactiveph_com/Buildout_Resources/order_received_cod.png', fullPage: true });
     } catch (e) {
         console.log("Order placement failed or timed out: " + e.message);
         // Take a screenshot of the failure
-        await page.screenshot({ path: '/Users/johnbarry/Documents/Antigravity/bactiveph_com/Buildout_Resources/order_failed.png', fullPage: true });
+        await page.screenshot({ path: '/Users/johnbarry/Projects/bactiveph_com/Buildout_Resources/order_failed.png', fullPage: true });
     }
     
     await browser.close();

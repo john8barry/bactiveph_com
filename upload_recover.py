@@ -19,7 +19,7 @@ elif 'bactiveph.com' in files:
     ftp.cwd('bactiveph.com')
 
 print("Uploading recover.php...")
-with open('/Users/johnbarry/Documents/Antigravity/bactiveph_com/recover.php', 'rb') as f:
+with open('/Users/johnbarry/Projects/bactiveph_com/recover.php', 'rb') as f:
     ftp.storbinary('STOR recover.php', f)
 
 print("Triggering recover.php...")

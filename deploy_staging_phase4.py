@@ -2,7 +2,7 @@ import env_loader  # loads .env into os.environ
 import ftplib
 import os
 
-local_dir = "/Users/johnbarry/Documents/Antigravity/bactiveph_com/wordpress/wp-content/themes/blocksy-child"
+local_dir = "/Users/johnbarry/Projects/bactiveph_com/wordpress/wp-content/themes/blocksy-child"
 remote_dir = "staging/wp-content/themes/blocksy-child"
 
 ftp = ftplib.FTP()

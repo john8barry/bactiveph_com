@@ -38,9 +38,6 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-# Graphify
-graphify-out/
-
 # Secrets & server artifacts (security pass)
 wp-config.php
 *.sql

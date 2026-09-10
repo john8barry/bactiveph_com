@@ -34,11 +34,12 @@ namespace {
     check(\BactivePH\SageHeader\links('collections') === array(
         'Leggings' => '/collections/leggings',
         'Pickleball dresses' => '/collections/pickleball-dresses',
+        'Pilates & Yoga' => '/collections/pilates-and-yoga/',
         'Sets' => '/collections/sets',
         'Shop all' => '/shop/',
         'Skorts' => '/collections/skorts',
         'Sports bras' => '/collections/sports-bras',
-        'Tops & tanks' => '/collections/tops',
+        'Tops & Tanks' => '/collections/tops',
     ), 'Shop destinations and URLs are preserved alphabetically');
     foreach (array('/template-parts/header-sage.php', '/assets/css/header-sage.css', '/assets/js/header-sage.js') as $file) {
         $missing = array(get_stylesheet_directory() . $file);
@@ -77,7 +78,7 @@ namespace {
         }
     }
     check($mobileLabels === array('Shop', 'Pickleball Looks', 'About', 'Contact'), 'mobile top-level navigation follows requested priority order');
-    $expectedCollections = array('Leggings', 'Pickleball dresses', 'Sets', 'Shop all', 'Skorts', 'Sports bras', 'Tops & tanks');
+    $expectedCollections = array('Leggings', 'Pickleball dresses', 'Pilates & Yoga', 'Sets', 'Shop all', 'Skorts', 'Sports bras', 'Tops & Tanks');
     foreach (array(
         'desktop' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__primary ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__dropdown ")]/a',
         'mobile' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-panel ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__collection-links ")]/a',

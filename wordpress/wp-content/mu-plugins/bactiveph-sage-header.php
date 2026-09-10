@@ -66,13 +66,13 @@ function links($group) {
     if ($group === 'collections') {
         return array(
             'Leggings' => '/collections/leggings',
-            'Pickleball dresses' => '/collections/pickleball-dresses',
+            'Pickleball Dresses' => '/collections/pickleball-dresses',
             'Pilates & Yoga' => '/collections/pilates-and-yoga/',
             'Sets' => '/collections/sets',
             'Skorts' => '/collections/skorts',
-            'Sports bras' => '/collections/sports-bras',
+            'Sports Bras' => '/collections/sports-bras',
             'Tops & Tanks' => '/collections/tops',
-            'Shop all' => '/shop/',
+            'Shop All' => '/shop/',
         );
     }
     return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');

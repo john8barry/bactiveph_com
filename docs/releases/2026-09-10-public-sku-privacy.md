@@ -1,4 +1,4 @@
-# Public SKU privacy: staging verified, production approval pending
+# Public SKU privacy: production verified
 
 Owner: B Active / John Barry. Work record: [issue 71](https://github.com/john8barry/bactiveph_com/issues/71).
 Base: `92a1bae4938d67e583cdbf929f02da6d815a72e7`; branch `codex/public-sku-privacy`.
@@ -18,10 +18,12 @@ No product names, prices, inventory, variation relationships, or payment setting
 are changed. The module is loaded by both maintained child-theme copies. Core,
 parent-theme, and plugin files remain unchanged.
 
-**Production is not deployed.** Production checks below loaded the candidate only
-inside a private, temporary WP-CLI request. They do not establish public production
-acceptance. The live functions and server-routing files still matched their
-pre-change snapshots at closeout.
+**Production deployed and verified at 19:31–19:36 UTC after John approved the exact
+release in the controlling task.** PR #72 merged as
+`5b2aba5dfe9e0d369ed9c34f30d9bc72778a79d5` from reviewed head
+`9477f54cc85da6dbb68dad780d18f630f4775a99`. The additive live functions loader,
+privacy module, and media/routing changes passed destination hash readback.
+The earlier candidate-only checks below are supplemented by deployed verification.
 
 ## Integrations and media
 
@@ -110,6 +112,41 @@ Do not publish backups, SKU inventories, original path maps, or customer data.
 | Production routing before | `1c9c36fbc22ffb57d50211267048c4b10b2c818f7a53708fff59059190d4d01d` |
 | Production routing candidate | `a878aab81d9d86394da016eb2a75c2c6d8d99a35a8b5ad9a0efc7b92ed5ec258` |
 
+## Production release receipt
+
+- Fresh full production Updraft backup at **19:02:14 UTC**, verified off-server by
+  **19:04:26 UTC**. Six components passed matching SHA-256 and ZIP/gzip integrity.
+  Identity, reviewed PR head and three successful checks, live functions/routing,
+  all attachment metadata and source image hashes were rechecked before deployment.
+- Serialized deployment completed at **19:31:48 UTC**. Exactly 25 attachments and
+  136 images received the approved neutral names. Live module/functions/routing
+  hashes match the candidate table above. LiteSpeed caches were purged.
+- Ordinary anonymous production crawl: **98 pages/API responses, zero SKU
+  findings, zero errors, zero pending URLs**. Sitemap discovery and all published
+  product pages were covered. Additional public checks confirmed uppercase Store
+  API routes, blocked explicit SKU lookup, empty SKU text-search results, and all
+  **127 media REST objects** without SKU findings.
+- All **136 old image URLs redirect to their exact neutral URLs**; all **136 new
+  URLs return 200 with byte-for-byte matching source SHA-256 checksums**.
+- Deployed WooCommerce **11.1.0** runtime: **242 checks / 19 products / 218
+  variations**, zero saved orders and zero sent emails. Customer HTML/plain and
+  fulfillment output, authenticated management search, hydration and structured
+  data checks passed. SKU/lookup checksum remains
+  `a2a82d6e4e40de5f434270ba771d42b9f09beaa0a057392f2cd2cf709cf4b335`.
+- Logged-in browser: Court Dress S / Black option selection, add-to-cart and
+  checkout worked; no SKU labels/attributes, broken images or console errors.
+  Checkout was not submitted. Only this task's added item was removed; the
+  pre-existing cart item was preserved. The product screenshot was captured in
+  the controlling task. Observed product-page network: 79 requests, no old
+  batch-coded asset URLs or SKU-named payloads; no active commerce tracking
+  requests were observed (Google Fonts was the only Google/TikTok matching host).
+- At **19:36:04 UTC**, the available root PHP error log contained no post-release
+  entries. WordPress debug and child-theme error logs were absent. This is bounded
+  release evidence, not a guarantee about future plugin changes or customer orders.
+- Private originals, six backup archives, migration manifest and deployment/audit
+  receipts remain available outside Git and the public document root. The earlier
+  staging rollback rehearsals apply to the exact deployed helper.
+
 ## Release procedure and rollback
 
 1. Obtain John's exact production approval for the reviewed PR. Reconcile its
@@ -139,9 +176,10 @@ Do not publish backups, SKU inventories, original path maps, or customer data.
    needed. Purge affected caches and independently verify restored behavior.
    Never restore a whole staging database over production.
 
-## Remaining control point
+## Remaining maintenance boundaries
 
-Production deployment and final public acceptance await approval. The existing
+Production release acceptance passed. Future customer-facing integrations and
+documents must retain this privacy contract. The existing
 dependency backlog was re-read using the correct `john8barry` account: 19 open
 alerts (10 high, 8 medium, 1 low), tracked separately in issue 7. Initial default
 account alert access returned 403; that access gap was resolved without changing

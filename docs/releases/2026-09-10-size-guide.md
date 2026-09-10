@@ -22,8 +22,14 @@ The existing S to XL measurement values are unchanged.
 - `node --test tests/size-guide.test.cjs` passes the behavior and markup contracts.
 - The Impeccable detector reports no findings for the changed UI files.
 - A local browser fixture passed at desktop width and in a 390 by 844 mobile frame, including Escape and close-button focus return and horizontal table scrolling.
+- Pull request [#57](https://github.com/john8barry/bactiveph_com/pull/57) merged to `main` as `2b903bd9efbb862d8de3999e116edbd6e01e49fe` after both required checks and independent review passed.
+- A fresh complete UpdraftPlus production backup was created during the release and all six sets (database, plugins, themes, uploads, mu-plugins, and other files) were downloaded off-server and passed SHA-256 plus archive-integrity verification before installation.
+- Production installation merged the reviewed size-guide changes into the current live `functions.php`, rather than overwriting unrelated production drift. The final hashes are `84ef751a784187d8b876b1d6619475ebeda94715ee4e587f7cc0d26c5710e422` for `functions.php`, `3a22b7eb241fae702c90591421e1df43d9822ee47f8afd98c573dc8ab58b1378` for `size-guide.css`, and `e962cbb20e56f1412f2b186f4d59cca0067394f950a6fc92582123df8e107137` for `size-guide.js`.
+- The selected-site LiteSpeed page cache was invalidated through its installed page-cache-only API. The temporary one-shot delivery helper was removed immediately afterward.
+- All 17 product URLs in the production product sitemap passed ordinary-URL checks for the real fallback link, dialog markup, dedicated CSS and JavaScript, and corrected apostrophe. The standalone `/size-guide/` page passed with one H1, one chart, and no product-only script or dialog.
+- Live browser verification confirmed dialog open, close-button and Escape dismissal, unchanged URL, and focus restoration. Public CSS and JavaScript bytes matched the installed hashes, shared `custom.css` and `custom.js` stayed unchanged, and the bounded error-log check found no new fatal, parse, or uncaught PHP errors.
 
-Production deployment and live readback remain required before closing issue #34.
+Production deployment and live readback completed on September 10, 2026.
 
 ## Rollback
 

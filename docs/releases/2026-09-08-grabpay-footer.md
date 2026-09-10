@@ -4,8 +4,8 @@ Work item: [#53](https://github.com/john8barry/bactiveph_com/issues/53).
 Source review: [PR #55](https://github.com/john8barry/bactiveph_com/pull/55),
 runtime candidate `38384446a8e52b02d68a0d7d47b538966d29018b`.
 Severity: low, display-only. Owner: courier/payment footer task.
-Status: **STAGING VERIFIED; PRODUCTION BACKUP IN PROGRESS**.
-Production has not received this footer update.
+Status: **LIVE VERIFIED**.
+The exact two-file footer update is installed on staging and production.
 
 ## Scope
 
@@ -45,6 +45,66 @@ The canonical dirty checkout remains untouched; its filesystem reads stall and
 its full current status is unavailable. This change uses an isolated clone.
 
 ## Verification
+
+### Production release, September 10
+
+The production native Updraft backup `3e02593fb8f1` completed with exit zero,
+zero errors/warnings and all six archive groups. A slow read-only SFTP transfer
+was interrupted only after native completion was proven; its original failure
+and closed-connection receipts are retained. A separately reviewed read-only
+transport copied all six archives off-server. Full gzip/ZIP integrity, 137 table
+schemas, root/core/config integrity and source coverage passed: 27,547 of 27,547
+files, no missing files and no supplemental production archives needed.
+
+During backup, exactly two existing payment-readiness verification timestamps
+advanced. Native database values and fresh private reads were HMAC-bound and
+compared: only `recorded_at` and `verified_at` changed; all remaining serialized
+fields, secrets, capabilities, settings and protected orders were unchanged.
+The initiating request was not attributed. A nonce-specific qualification
+preserves these two raw changed fields and rejects all other or subsequent
+drift. Fresh qualification before/after state and original system crontab match.
+Qualified receipt SHA-256:
+`c59991be4c5ca7832b8f23f45c5471ae851d944ce8ee40f8fce4fd1ab0b4b975`.
+Backup freshness is enforced from original start 18:45:13 UTC, not qualification.
+
+Production overlay `8509631f9203` installed only the two listed files during the
+footer-owned 19:26–19:44 UTC window, preserving every other child-theme file,
+including the separately updated Sage footer. Remote PHP lint and both installed
+hashes passed. The previous partial is preserved locally and privately on-host
+for atomic rollback. Initial post-install logs had zero new bytes/errors.
+
+Production LiteSpeed 7.9.1 source was reviewed separately from staging 7.8.1.
+One header-only page-cache refresh (`987fbc173d60`) ran before normal plugins;
+no object/OPcache purge, payment setting or provider operation was performed.
+All three exact temporary transport paths were removed and independently checked
+absent; existing MU files were unchanged and connections closed.
+
+At 19:28:17 UTC, ordinary anonymous home, shop and shipping/returns URLs returned
+HTTP 200 and marker `2026-09-08-v5`, all seven payment badges and PayMongo. The
+public GrabPay SVG exactly matches the reviewed 5,468-byte source. Logged-in
+in-app and logged-out Chrome screenshots show the live footer. At 390px all
+seven payment badges render approximately 106.33×43.05; at 650px all are 121×49.
+All images load with `object-fit: contain`, no horizontal overflow, and centered
+mobile COD. Desktop seven-column alignment and Davao City-only GrabExpress are
+preserved. Temporary viewport overrides were reset.
+
+Final guarded state read passed and closed. Protected order groups, settings,
+runtime/worker sources, logical scheduling and all unrelated theme/root files
+match the qualified baseline. The only application metadata delta was another
+on-demand readiness refresh at 19:28:20 UTC: both verification timestamps
+advanced, while HMAC-bound comparison proves every other serialized field
+unchanged. This is separately recorded, not hidden as raw state equality; the
+initiating request is not independently attributed. The footer display path
+does not call gateway availability or change payment readiness.
+
+Bounded monitoring through 19:32:55 UTC repeated all three anonymous URL checks
+successfully. Final server/debug log readback reports zero new bytes, warnings,
+fatal or parse errors since installation. All connections are closed; the
+footer-owned host window was explicitly released at 19:33:30 UTC.
+
+Seven runtime fixtures, four negative layout fixtures, twelve timestamp-proof
+tests and freshness/one-use cache negative tests pass. PR #55 has no configured
+CI status checks; these are direct local and destination checks, not CI claims.
 
 ### September 10 continuation
 
@@ -225,8 +285,8 @@ The footer task owns backup qualification and the release; the payment task
 provides shared-host conflict information. Staging backup, exact two-file
 installation, ordinary public readback and actual browser verification passed.
 John authorized this exact display-only release on September 10. Production
-still requires its own qualified fresh backup, a serialized writer window,
-preflight and independent readback. Existing #2, #7 and #9 holds are not cleared.
+has its own qualified fresh backup, serialized writer window, exact preflight
+and independent public/browser readback. Existing #2, #7 and #9 holds are not cleared.
 
 For rollback, first verify no later writer superseded this exact v5 partial,
 then atomically restore the snapshotted v4 partial. Lint/hash before installation,
@@ -237,6 +297,6 @@ The reviewed one-shot backup confines native bookkeeping to its exact nonce,
 suppresses the known broad old-lock maintenance query and does not schedule a
 resume, send mail or invoke a remote provider. No unbounded cleanup, payment
 configuration change or old/incomplete backup is allowed. Issue #53 and PR #55
-remain open until the two-file deployment and public verification are complete.
+carry the completed two-file deployment and public verification record.
 
 No global or project memory files were updated.

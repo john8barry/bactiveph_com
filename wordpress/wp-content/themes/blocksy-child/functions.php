@@ -43,6 +43,25 @@ function blocksy_child_enqueue_styles() {
 		filemtime(get_stylesheet_directory() . '/assets/js/custom.js'),
 		true
 	);
+
+	if ( is_product() ) {
+		wp_enqueue_script(
+			'bactive-size-guide',
+			get_stylesheet_directory_uri() . '/assets/js/size-guide.js',
+			array(),
+			filemtime( get_stylesheet_directory() . '/assets/js/size-guide.js' ),
+			true
+		);
+	}
+
+	if ( is_product() || is_page( 'size-guide' ) ) {
+		wp_enqueue_style(
+			'bactive-size-guide',
+			get_stylesheet_directory_uri() . '/assets/css/size-guide.css',
+			array( 'blocksy-child-custom' ),
+			filemtime( get_stylesheet_directory() . '/assets/css/size-guide.css' )
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'blocksy_child_enqueue_styles' );
 
@@ -124,7 +143,49 @@ function bactive_fabric_care_tab_content() {
  */
 add_action( 'woocommerce_single_product_summary', 'bactive_size_guide_link', 25 );
 function bactive_size_guide_link() {
-	echo '<a href="#" class="bactive-size-guide-link" aria-label="Open Size Guide">True to size (Asian fit) &rarr; Size Guide</a>';
+	echo '<a href="' . esc_url( home_url( '/size-guide/' ) ) . '" class="bactive-size-guide-link" aria-haspopup="dialog" aria-controls="bactive-size-modal">True to size (Asian fit) &rarr; Size Guide</a>';
+}
+
+/**
+ * Render the canonical size-guide content for both the page and product dialog.
+ */
+function bactive_get_size_guide_content( $heading_id = '' ) {
+	$heading_attribute = $heading_id ? ' id="' . esc_attr( $heading_id ) . '"' : '';
+
+	ob_start();
+	?>
+	<div class="bactive-size-guide-content">
+		<h2<?php echo $heading_attribute; ?>>Find your fit</h2>
+		<p>B Active is designed with an Asian fit and runs true to size. If you're between sizes, size up for a relaxed feel or stay true for a closer fit.</p>
+		<h3>How to measure</h3>
+		<p><strong>Bust</strong>: around the fullest part.<br><strong>Waist</strong>: the narrowest part of your torso.<br><strong>Hips</strong>: the fullest part.</p>
+		<div class="bactive-size-table-wrap" role="region" aria-label="B Active size measurements" tabindex="0">
+			<table class="bactive-size-table">
+				<caption>Size chart in centimetres</caption>
+				<thead>
+					<tr><th scope="col">Size</th><th scope="col">Bust</th><th scope="col">Waist</th><th scope="col">Hips</th></tr>
+				</thead>
+				<tbody>
+					<tr><th scope="row">S</th><td>80 to 84</td><td>62 to 66</td><td>86 to 90</td></tr>
+					<tr><th scope="row">M</th><td>85 to 89</td><td>67 to 71</td><td>91 to 95</td></tr>
+					<tr><th scope="row">L</th><td>90 to 95</td><td>72 to 77</td><td>96 to 101</td></tr>
+					<tr><th scope="row">XL</th><td>96 to 101</td><td>78 to 83</td><td>102 to 107</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<?php
+
+	return ob_get_clean();
+}
+
+add_filter( 'the_content', 'bactive_size_guide_page_content' );
+function bactive_size_guide_page_content( $content ) {
+	if ( is_admin() || ! is_page( 'size-guide' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+
+	return bactive_get_size_guide_content( 'bactive-size-page-title' );
 }
 
 /**
@@ -134,24 +195,10 @@ add_action( 'wp_footer', 'bactive_size_guide_modal' );
 function bactive_size_guide_modal() {
 	if ( ! is_product() ) return;
 	?>
-	<dialog id="bactive-size-modal" class="bactive-modal">
+	<dialog id="bactive-size-modal" class="bactive-modal" aria-labelledby="bactive-size-modal-title">
 		<div class="bactive-modal-inner">
-			<button class="bactive-modal-close" aria-label="Close modal">&times;</button>
-			<h2>Find your fit</h2>
-			<p>B Active is designed with an Asian fit and runs true to size. If you\'re between sizes, size up for a relaxed feel or stay true for a closer fit.</p>
-			<h3>How to measure</h3>
-			<p><strong>Bust</strong>: around the fullest part.<br><strong>Waist</strong>: the narrowest part of your torso.<br><strong>Hips</strong>: the fullest part.</p>
-			<table class="bactive-size-table">
-				<thead>
-					<tr><th>Size</th><th>Bust (cm)</th><th>Waist (cm)</th><th>Hips (cm)</th></tr>
-				</thead>
-				<tbody>
-					<tr><td>S</td><td>80 to 84</td><td>62 to 66</td><td>86 to 90</td></tr>
-					<tr><td>M</td><td>85 to 89</td><td>67 to 71</td><td>91 to 95</td></tr>
-					<tr><td>L</td><td>90 to 95</td><td>72 to 77</td><td>96 to 101</td></tr>
-					<tr><td>XL</td><td>96 to 101</td><td>78 to 83</td><td>102 to 107</td></tr>
-				</tbody>
-			</table>
+			<button type="button" class="bactive-modal-close" aria-label="Close size guide">&times;</button>
+			<?php echo bactive_get_size_guide_content( 'bactive-size-modal-title' ); ?>
 		</div>
 	</dialog>
 	<?php

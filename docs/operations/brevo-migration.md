@@ -72,6 +72,13 @@ BACTIVE5 must be provisioned explicitly as a draft, bound by ID and campaign mar
 - The final Welcome test was requested and delivered at `2026-09-08T15:28:29+08:00`; quota moved from 293 to 292. Gmail Inbox visual readback showed the logo and complete branded layout, resolved `BACTIVE5`, branded `move.bactiveph.com` links, consent reason, registered address, privacy link, and unsubscribe link.
 - Templates are ready for workflow wiring, but workflows remain paused. Welcome is held until the coupon is published and guarded; cart reminders need exact event routing and end-to-end staging proof; care, review, and winback remain held on the complete settled-payment classifier. The suppression webhook remains pending exact staging endpoint verification.
 
+## Authenticated staging and provider readback (2026-09-10)
+
+- Strict-host-key SSH on `premium343.web-hosting.com:21098` independently identified `/home/waypmvhk/staging.bactiveph.com` as `https://staging.bactiveph.com`, database `waypmvhk_stg`, WordPress 7.1, active theme `blocksy-child` 1.0.0, and `blog_public=0`. The readback used WordPress with plugins and themes skipped so verification could not invoke plugin startup, scheduling, or schema writes.
+- The active `bactive-brevo-marketing` 1.0.0 plugin remains in test mode with one allowed recipient. Local settings point to confirmed list ID `3`, DOI template ID `1`, and the staging confirmation URL. Protected API, webhook, Turnstile secret, and Turnstile site-key presence checks all passed without exposing their values.
+- The authorized test identity is locally `confirmed`, sourced from the footer, and bound to provider contact ID `2`. The confirmation token has been cleared, while the possession session remains present through 2026-10-08. Brevo independently returned contact ID `2`, list ID `3`, and no email or SMS blacklist flag.
+- One unsent `ba_welcome_ready` outbox row is pending with zero attempts. `automations_verified=false` keeps event delivery fail-closed. Brevo still has zero campaigns, and the marketing-webhook read returned `document_not_found`, consistent with no configured marketing webhook. No email, provider object, WordPress option, contact, queue, session, database, or file was changed during this verification.
+
 ## Acceptance and release gates
 
 1. Focused unit, failure-path and concurrency tests; real Woo classic checkout, order-pay and Store API tests with HPOS and legacy order storage. Demonstrate no wp_mail interception and no nonconsenting events.

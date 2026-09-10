@@ -128,7 +128,7 @@ test('backdrop click closes, while clicks inside the dialog do not', () => {
     assert.equal(fixture.modal.closeCount, 1);
 });
 
-test('native close events, including Escape, return focus to the trigger', () => {
+test('native close events return focus to the trigger', () => {
     const fixture = loadSizeGuide();
 
     fixture.triggerListeners.click({ preventDefault() {} });

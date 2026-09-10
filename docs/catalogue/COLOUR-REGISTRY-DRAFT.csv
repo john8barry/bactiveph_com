@@ -1,0 +1,31 @@
+term_id,name,slug,used_by_product_ids,annotated_board_draft_hex,earlier_pilot_draft_hex,shade_conflict,approved_hex_or_texture,reference_source,product_override,approval_status
+33,Almond,almond,347 | 238,#C9B79E,,,,,,UNAPPROVED_DRAFT
+32,Apricot,apricot,217,,#E6B28E,,,,,UNAPPROVED_DRAFT
+81,Beige,beige,50,,,,,,,UNAPPROVED_DRAFT
+66,Black,black,160 | 154 | 128 | 95 | 56 | 36,#202124,#202124,,,,,UNAPPROVED_DRAFT
+34,Bloom,bloom,347,#DDA8A6,,,,,,UNAPPROVED_DRAFT
+35,Clay Red,clay-red,,,,,,,,UNUSED_PRESERVE
+72,Cloud Gray,cloud-gray,,,,,,,,UNUSED_PRESERVE
+24,Court Ivory,court-ivory,347 | 217,#EEE9DA,#EEE9DA,,,,,UNAPPROVED_DRAFT
+82,Gray,gray,128 | 50,,,,,,,UNAPPROVED_DRAFT
+78,Green,green,111,,,,,,,UNAPPROVED_DRAFT
+39,Green Jasper,green-jasper,185,#32685D,,,,,,UNAPPROVED_DRAFT
+73,Ivory,ivory,,,,,,,,UNUSED_PRESERVE
+79,Jujube Red,jujube-red,117,,,,,,,UNAPPROVED_DRAFT
+83,Lavender,lavender,154,,,,,,,UNAPPROVED_DRAFT
+68,Maroon,maroon,56,#763844,,,,,,UNAPPROVED_DRAFT
+37,Meadow Green,meadow-green,160,,,,,,,UNAPPROVED_DRAFT
+25,Midnight,midnight,,,,,,,,UNUSED_PRESERVE
+74,Mocha,mocha,50,,,,,,,UNAPPROVED_DRAFT
+69,Navy Blue,navy-blue,565 | 185 | 56 | 50 | 36,#202740,#202740,,,,,UNAPPROVED_DRAFT
+36,Night Indigo,night-indigo,160,,,,,,,UNAPPROVED_DRAFT
+38,Oil Blue,oil-blue,185,#537889,,,,,,UNAPPROVED_DRAFT
+26,Onyx,onyx,217 | 148,,#242426,,,,,UNAPPROVED_DRAFT
+28,Powder Blue,powder,565 | 347 | 217 | 95 | 56,#B3CAEC,#ADCBDC,RECONCILE,,,,UNAPPROVED_DRAFT
+65,Pure White,purewhite,185 | 95 | 56 | 36,#F4F3EF,#F4F3EF,,,,,UNAPPROVED_DRAFT
+29,Sagewood,sagewood,,,,,,,,UNUSED_PRESERVE
+27,Sakura Pink,sakura,347 | 211 | 185 | 160 | 128 | 89 | 56,#DAA7D4,,,,,,UNAPPROVED_DRAFT
+31,Stone,stone,238,,,,,,,UNAPPROVED_DRAFT
+70,Turquoise Blue,turquoise-blue,36,,#00ABD3,,,,,UNAPPROVED_DRAFT
+80,White,white,565 | 154 | 128 | 117 | 83,,,,,,,UNAPPROVED_DRAFT
+30,Wisteria,wisteria,,,,,,,,UNUSED_PRESERVE

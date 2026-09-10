@@ -261,3 +261,7 @@ function bactive_free_shipping_progress_bar() {
 
 // Storefront punctuation policy and generated WooCommerce ranges.
 require_once __DIR__ . '/inc/storefront-punctuation.php';
+
+// Catalogue visuals remain inert until a reviewed release enables exact products.
+require_once __DIR__ . '/inc/catalog-visuals.php';
+require_once __DIR__ . '/inc/collection-visuals.php';

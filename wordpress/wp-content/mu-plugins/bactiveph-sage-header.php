@@ -67,11 +67,12 @@ function links($group) {
         return array(
             'Leggings' => '/collections/leggings',
             'Pickleball dresses' => '/collections/pickleball-dresses',
+            'Pilates & Yoga' => '/collections/pilates-and-yoga/',
             'Sets' => '/collections/sets',
             'Shop all' => '/shop/',
             'Skorts' => '/collections/skorts',
             'Sports bras' => '/collections/sports-bras',
-            'Tops & tanks' => '/collections/tops',
+            'Tops & Tanks' => '/collections/tops',
         );
     }
     return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');

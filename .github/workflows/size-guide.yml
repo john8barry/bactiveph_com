@@ -5,7 +5,7 @@ on:
       - '.github/workflows/size-guide.yml'
       - '**/blocksy-child/functions.php'
       - '**/blocksy-child/assets/js/size-guide.js'
-      - '**/blocksy-child/assets/css/custom.css'
+      - '**/blocksy-child/assets/css/size-guide.css'
       - 'tests/size-guide.test.cjs'
   push:
     branches: [main]
@@ -13,7 +13,7 @@ on:
       - '.github/workflows/size-guide.yml'
       - '**/blocksy-child/functions.php'
       - '**/blocksy-child/assets/js/size-guide.js'
-      - '**/blocksy-child/assets/css/custom.css'
+      - '**/blocksy-child/assets/css/size-guide.css'
       - 'tests/size-guide.test.cjs'
 permissions:
   contents: read

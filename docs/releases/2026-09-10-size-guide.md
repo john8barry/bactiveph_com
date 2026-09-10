@@ -7,7 +7,7 @@ Issue [#34](https://github.com/john8barry/bactiveph_com/issues/34) tracks a shar
 This change:
 
 - gives every product trigger a real `/size-guide/` fallback URL;
-- loads a dedicated, product-only dialog script without replacing the drifted production `custom.js` cart behavior;
+- loads dedicated size-guide CSS and a product-only dialog script without replacing the drifted production `custom.css` or `custom.js` behavior;
 - supports native dialog opening, close-button and Escape dismissal, backdrop dismissal, and focus restoration;
 - renders one shared size-chart definition in both the product dialog and the standalone page;
 - adds responsive overflow containment plus table caption and header scopes; and
@@ -27,4 +27,4 @@ Production deployment and live readback remain required before closing issue #34
 
 ## Rollback
 
-Revert the release commit and redeploy the previous child-theme `functions.php` and `custom.css`; remove `assets/js/size-guide.js`. The product links will continue to reach the standalone `/size-guide/` page through their fallback URL only if the markup portion of this release remains deployed.
+Revert the release commit and apply the inverse size-guide patch to the latest production `functions.php`; remove `assets/css/size-guide.css` and `assets/js/size-guide.js`. Do not restore old whole-file copies over newer production changes. The product links will continue to reach the standalone `/size-guide/` page through their fallback URL only if the markup portion of this release remains deployed.

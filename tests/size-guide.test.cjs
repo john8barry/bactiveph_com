@@ -167,6 +167,7 @@ test('PHP markup exposes an accessible dialog and usable fallback link', () => {
     assert.match(markup, /home_url\( '\/size-guide\/' \)/);
     assert.match(markup, /'bactive-size-guide'/);
     assert.match(markup, /\/assets\/js\/size-guide\.js/);
+    assert.match(markup, /\/assets\/css\/size-guide\.css/);
     assert.match(markup, /aria-haspopup="dialog"/);
     assert.match(markup, /aria-controls="bactive-size-modal"/);
     assert.match(markup, /aria-labelledby="bactive-size-modal-title"/);

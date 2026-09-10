@@ -53,6 +53,15 @@ function blocksy_child_enqueue_styles() {
 			true
 		);
 	}
+
+	if ( is_product() || is_page( 'size-guide' ) ) {
+		wp_enqueue_style(
+			'bactive-size-guide',
+			get_stylesheet_directory_uri() . '/assets/css/size-guide.css',
+			array( 'blocksy-child-custom' ),
+			filemtime( get_stylesheet_directory() . '/assets/css/size-guide.css' )
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'blocksy_child_enqueue_styles' );
 

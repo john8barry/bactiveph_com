@@ -159,7 +159,7 @@ The logo is the incumbent asset configured in WordPress and rendered by Blocksy.
 
 ### Primary navigation and Shop
 
-The primary row retains Shop, Pickleball Looks, About and Contact. Shop is a native disclosure with eight existing storefront destinations, beginning with Shop all. Its baseline remains visible while closed. Category links underline on hover; primary links and summaries change to deep green. Recognized current primary pages retain their sage rule.
+The primary row retains Shop, Pickleball Looks, About and Contact. Shop is a native disclosure with seven alphabetized category destinations followed by Shop all. Its baseline remains visible while closed. Category links underline on hover; primary links and summaries change to deep green. Recognized current primary pages retain their sage rule.
 
 Desktop disclosure behavior permits one panel at a time. Clicking outside or moving focus outside an open panel closes it. Escape closes the active disclosure and returns focus to its summary. Native disclosure controls preserve access when scripting is unavailable.
 

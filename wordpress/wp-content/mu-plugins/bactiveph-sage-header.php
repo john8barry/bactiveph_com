@@ -69,10 +69,10 @@ function links($group) {
             'Pickleball dresses' => '/collections/pickleball-dresses',
             'Pilates & Yoga' => '/collections/pilates-and-yoga/',
             'Sets' => '/collections/sets',
-            'Shop all' => '/shop/',
             'Skorts' => '/collections/skorts',
             'Sports bras' => '/collections/sports-bras',
             'Tops & Tanks' => '/collections/tops',
+            'Shop all' => '/shop/',
         );
     }
     return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');

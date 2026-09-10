@@ -36,11 +36,11 @@ namespace {
         'Pickleball dresses' => '/collections/pickleball-dresses',
         'Pilates & Yoga' => '/collections/pilates-and-yoga/',
         'Sets' => '/collections/sets',
-        'Shop all' => '/shop/',
         'Skorts' => '/collections/skorts',
         'Sports bras' => '/collections/sports-bras',
         'Tops & Tanks' => '/collections/tops',
-    ), 'Shop destinations and URLs are preserved alphabetically');
+        'Shop all' => '/shop/',
+    ), 'Shop categories stay alphabetical with Shop all last');
     foreach (array('/template-parts/header-sage.php', '/assets/css/header-sage.css', '/assets/js/header-sage.js') as $file) {
         $missing = array(get_stylesheet_directory() . $file);
         check(!\BactivePH\SageHeader\ready(), 'missing asset retains original header: ' . $file);
@@ -78,7 +78,7 @@ namespace {
         }
     }
     check($mobileLabels === array('Shop', 'Pickleball Looks', 'About', 'Contact'), 'mobile top-level navigation follows requested priority order');
-    $expectedCollections = array('Leggings', 'Pickleball dresses', 'Pilates & Yoga', 'Sets', 'Shop all', 'Skorts', 'Sports bras', 'Tops & Tanks');
+    $expectedCollections = array('Leggings', 'Pickleball dresses', 'Pilates & Yoga', 'Sets', 'Skorts', 'Sports bras', 'Tops & Tanks', 'Shop all');
     foreach (array(
         'desktop' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__primary ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__dropdown ")]/a',
         'mobile' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-panel ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__collection-links ")]/a',
@@ -87,7 +87,7 @@ namespace {
         foreach ($xpath->query($query) as $node) {
             $collectionLabels[] = trim($node->textContent);
         }
-        check($collectionLabels === $expectedCollections, $deviceName . ' rendered Shop destinations are alphabetical');
+        check($collectionLabels === $expectedCollections, $deviceName . ' renders alphabetical categories with Shop all last');
     }
     check(!str_contains($markup, 'role="menu"'), 'ordinary site navigation semantics retained');
     echo "Header guard and markup checks passed.\n";

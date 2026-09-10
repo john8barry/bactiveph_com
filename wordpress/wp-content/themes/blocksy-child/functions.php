@@ -308,3 +308,6 @@ function bactive_free_shipping_progress_bar() {
 
 // Storefront punctuation policy and generated WooCommerce ranges.
 require_once __DIR__ . '/inc/storefront-punctuation.php';
+
+// Keep operational SKUs out of customer-facing output.
+require_once __DIR__ . '/inc/public-sku-privacy.php';

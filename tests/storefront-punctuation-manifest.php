@@ -196,4 +196,27 @@ $result = bactive_apply_punctuation_manifest(manifest(array($post)), 'apply');
 check(! $result['complete'] && $result['stopped_at'] === 0 && $result['changed'] === array(), 'Readback mismatch was counted as success');
 check(count($GLOBALS['state']['writes']) === 1, 'Uncertain write was retried');
 
+// The homepage tagline release must remain one exact, reversible, structure-safe edit.
+$tagline_path = __DIR__ . '/../content/storefront-homepage-tagline.json';
+$tagline = json_decode(file_get_contents($tagline_path), true);
+check(json_last_error() === JSON_ERROR_NONE, 'Homepage tagline manifest is not valid JSON');
+check(($tagline['version'] ?? null) === 1 && ($tagline['site'] ?? null) === 'https://bactiveph.com' && ($tagline['issue'] ?? null) === 58, 'Homepage tagline manifest identity changed');
+check(count($tagline['items'] ?? array()) === 1, 'Homepage tagline manifest must target one object');
+$tagline_item = $tagline['items'][0];
+check($tagline_item['kind'] === 'post' && $tagline_item['id'] === 14 && $tagline_item['slug'] === 'home', 'Homepage tagline target changed');
+check(array_keys($tagline_item['fields'] ?? array()) === array('post_content'), 'Homepage tagline must only change post content');
+$tagline_change = $tagline_item['fields']['post_content'] ?? array();
+check(($tagline_change['before_sha256'] ?? '') === '1f0a120db564934c968b6f61334188d000cb8c0cf2bee8c7630129bd7d22c7e0', 'Homepage tagline before hash changed');
+check(($tagline_change['after_sha256'] ?? '') === 'a7ac16d9cf1e29c70b0faa82bb3fcfc5429758804e09969bf60c79bf93e5524d', 'Homepage tagline after hash changed');
+check(count($tagline_change['replacements'] ?? array()) === 1, 'Homepage tagline replacement count changed');
+$tagline_replacement = $tagline_change['replacements'][0];
+$tagline_old = '<p><p style="color:#D4AF37;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Court-To-café Luxury.</p></p>';
+$tagline_new = '<p style="color:#D4AF37;font-weight:600;text-transform:none;letter-spacing:1px;margin-bottom:10px">From the Court to the Café</p>';
+check($tagline_replacement === array('old' => $tagline_old, 'new' => $tagline_new, 'count' => 1), 'Homepage tagline copy or markup changed');
+check(str_contains($tagline_new, 'text-transform:none'), 'Homepage tagline lost its case and CSS selector hook');
+$tagline_sample = 'before' . $tagline_old . 'after';
+$tagline_applied = str_replace($tagline_old, $tagline_new, $tagline_sample, $tagline_count);
+check($tagline_count === 1 && ! str_contains($tagline_applied, '<p><p') && substr_count($tagline_applied, 'From the Court to the Café') === 1, 'Homepage tagline forward replacement failed');
+check(str_replace($tagline_new, $tagline_old, $tagline_applied) === $tagline_sample, 'Homepage tagline rollback is not exact');
+
 echo "Storefront punctuation manifest regression checks passed\n";

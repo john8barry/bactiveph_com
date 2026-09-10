@@ -154,6 +154,20 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         .bactive-custom-footer .bactive-trust__group--shipping { align-items: flex-start; }
         .bactive-custom-footer .bactive-trust__group--payments { align-items: flex-end; }
     }
+    /* The sage footer originally reserved six columns; include GrabPay evenly. */
+    @media (min-width: 768px) {
+        .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments {
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 767px) {
+        .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments > li:last-child:nth-child(7) {
+            grid-column: 2;
+        }
+    }
 </style>
 <div class="bactive-trust" data-bactive-trust-version="2026-09-08-v5">
     <div class="bactive-trust__shipping">

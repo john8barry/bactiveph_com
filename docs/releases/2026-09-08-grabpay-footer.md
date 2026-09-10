@@ -4,7 +4,7 @@ Work item: [#53](https://github.com/john8barry/bactiveph_com/issues/53).
 Source review: [PR #55](https://github.com/john8barry/bactiveph_com/pull/55),
 candidate `56a53bfc2ddba6ed90e342872e363e63da64ec36`.
 Severity: low, display-only. Owner: courier/payment footer task.
-Status: **LOCAL VERIFIED; DEPLOYMENT BLOCKED BY SHARED BACKUP PREREQUISITE**.
+Status: **LOCAL VERIFIED; AUTHORIZED RELEASE AWAITING QUALIFIED BACKUPS**.
 Neither staging nor production has received this footer update.
 
 ## Scope
@@ -12,8 +12,9 @@ Neither staging nor production has received this footer update.
 Add GrabPay after Maya in the existing payment-options footer. Preserve QR Ph,
 ShopeePay, BPI Online, UnionBank Online, enabled-only COD, separate PayMongo
 attribution, J&T/LBC nationwide and GrabExpress with its Davao City-only label.
-The existing responsive layout, typography, badge sizing and aspect-ratio
-handling are unchanged. No payment, checkout, shipping, order, plugin or
+Typography, badge sizing and aspect-ratio handling are unchanged. The current
+Sage footer now accommodates seven columns from 768px and three columns below,
+with the seventh COD badge centered. No payment, checkout, shipping, order, plugin or
 configuration change is included. This logo does not activate GrabPay checkout;
 runtime payment readiness remains a separate task in #2.
 
@@ -34,7 +35,7 @@ Only these two child-theme files are deployable; both source mirrors agree:
 
 | File | SHA-256 |
 | --- | --- |
-| `template-parts/trust-bar.php` | `146cb5146676917b5c80aaffac2b215121aa2f99d8d2c2a3a8c3fa05eb31fab5` |
+| `template-parts/trust-bar.php` | `57b84bbc2fb81c7c5d60a1cc934adee1f4b21d23b7467e64161d71160686d6f4` |
 | `assets/images/payments/grabpay.svg` | `d140bd7323719935e2e05c102553ac3283e5ccb3ee22739673b3b3164d3e6e23` |
 
 Render marker: `2026-09-08-v5`. Tests, release notes and private helpers are not
@@ -44,6 +45,35 @@ The canonical dirty checkout remains untouched; its filesystem reads stall and
 its full current status is unavailable. This change uses an isolated clone.
 
 ## Verification
+
+### September 10 continuation
+
+John explicitly authorized proceeding with the display-only release. No payment
+activation or checkout configuration is included. Current installed Sage CSS
+was read directly: its six-column override required a scoped responsive fix in
+the trust partial, not an overwrite of the independently updated Sage footer.
+Impeccable review preserved the original logo artwork and uniform proportions.
+An independent review caught the 600–767px breakpoint gap; it is corrected and
+covered by four negative layout fixtures. Both mirrors pass all seven runtime
+scenarios, PHP syntax checks and diff whitespace checks.
+
+The local browser preview combines the current installed staging Sage styles
+with the exact candidate partial. Desktop, 390px and 650px previews show all
+seven marks, centered mobile COD and no horizontal overflow. At 650px all seven
+images load at 121×49 with object-fit contain. These are local previews only.
+
+The first September 10 native-backup preflight failed locally before backup
+creation because Python 3.9 lacks hashlib.file_digest. A chunked SHA-256 reader
+replaces it; independent review and 12 positive/17 negative SQL guard tests pass.
+The previous attempt's closure receipt confirms backup_started=false and closed
+connections. The retry also stopped before native backup creation: the root
+archive contains an existing test.txt symlink, which the archive guard rejected.
+Its closure receipt again confirms no active process and closed connections.
+Safe preservation of that exact link without following it is under review.
+No backup or deployment is claimed successful until independent artifact and
+destination checks pass.
+
+### Earlier evidence (historical candidate)
 
 PASS: native PHP 8.3.33 syntax checks; seven runtime scenarios (ready,
 not-ready, missing gateway, gateway error, manager error, all disabled and no

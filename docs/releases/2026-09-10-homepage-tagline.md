@@ -26,6 +26,14 @@ Retain the exact pre-change page 14 content privately. Roll back only if page 14
 
 Pre-change page 14 `post_content` SHA-256: `1f0a120db564934c968b6f61334188d000cb8c0cf2bee8c7630129bd7d22c7e0`.
 
-Expected post-change SHA-256: `a7ac16d9cf1e29c70b0faa82bb3fcfc5429758804e09969bf60c79bf93e5524d`.
+Post-change page 14 `post_content` SHA-256: `a7ac16d9cf1e29c70b0faa82bb3fcfc5429758804e09969bf60c79bf93e5524d`.
 
-Production publication and final verification evidence will be added after the live readback succeeds.
+The release manifest shipped in [pull request 59](https://github.com/john8barry/bactiveph_com/pull/59), passed the storefront regression workflow, and merged to `main` as `8c06013535b54c545ca87bdee844fbbba3a80a83`.
+
+Production WP-CLI check and apply modes both completed against the exact page 14 pre-change hash. Independent authenticated readback then confirmed one approved tagline, zero old taglines, and the post-change hash above. Product 95's preserved excerpt remained at SHA-256 `65dea8f00993b41f819539d0d68d3077d7e34581f331a3d25945834607f1c73c`.
+
+The stale homepage entry was cleared through a one-request, token-gated LiteSpeed origin purge. The temporary purge loader and token were removed immediately afterward. Ordinary public homepage reads returned one `From the Court to the Café` and zero `Court-To-café Luxury.` occurrences.
+
+A fresh crawl covered 61 URLs across all eight WordPress sitemaps with no request failures. It found three intentional public court/café copy sources: the corrected homepage tagline, product 95's already-correct running sentence, and product 56's valid parallel compound `Court-ready, café-ready.` No malformed public variant remained.
+
+Desktop and 390×844 mobile browser checks showed the tagline once, preserved the hero hierarchy and layout, produced no horizontal overflow, and logged no console errors. The private release stage was removed and the production writer lock was released after verification. The exact pre-change page content remains available as the rollback source for this release.

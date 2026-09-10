@@ -2,10 +2,10 @@
 
 Work item: [#53](https://github.com/john8barry/bactiveph_com/issues/53).
 Source review: [PR #55](https://github.com/john8barry/bactiveph_com/pull/55),
-candidate `56a53bfc2ddba6ed90e342872e363e63da64ec36`.
+runtime candidate `38384446a8e52b02d68a0d7d47b538966d29018b`.
 Severity: low, display-only. Owner: courier/payment footer task.
-Status: **LOCAL VERIFIED; AUTHORIZED RELEASE AWAITING QUALIFIED BACKUPS**.
-Neither staging nor production has received this footer update.
+Status: **STAGING VERIFIED; PRODUCTION BACKUP IN PROGRESS**.
+Production has not received this footer update.
 
 ## Scope
 
@@ -72,6 +72,74 @@ Its closure receipt again confirms no active process and closed connections.
 Safe preservation of that exact link without following it is under review.
 No backup or deployment is claimed successful until independent artifact and
 destination checks pass.
+
+Later September 10 evidence supersedes those preparation holds: the exact
+staging symlink is preserved as metadata without following its target. Transport
+now drains SSH output through EOF and verifies the full gzip trailer. A failed
+native attempt was stopped by the SQL guard on Updraft's session-only SQL-mode
+adjustment; its four exact job/lock bookkeeping rows were transactionally
+reconciled with before-images, fresh protected-state equality and independent
+closure proof. No archives, backup history, payment state or theme files were
+deleted or changed by that reconciliation.
+
+The subsequent native staging backup `255a517fc3d4` completed with zero Updraft
+errors/warnings, all six database/file groups, preserved prior history and a
+17,705-entry source inventory. The runner retained a failure receipt because
+stderr contained five identical cPanel Mounts.pm warnings (505 bytes total).
+An independently reviewed, read-only continuation qualifies that existing
+attempt rather than rerunning it. It preserves the original failure and permits
+only the exact captured warning bytes with complete exit-zero/native-success
+proof. The original system-crontab hash was not persisted; this evidence gap is
+explicit, with fresh continuation crontab equality, exact worker attestation,
+original logical payment-state comparison and the reviewed no-cron-write guard
+used as independent controls.
+
+Final qualification verified all six native archive groups, root/core/config
+archive and two exact opaque historical-backup supplements: 17,705 of 17,705
+source files are covered. Full comparison of 32 order rows and 295 metadata
+rows found only test-order 374's update timestamp and its reconciliation polling
+counter (113 to 114) changed. Existing Action Scheduler action 1013 and worker
+logs independently attribute this to the scheduled reconciliation at 17:35:30
+UTC. Payment status/details, notes, stock, other orders and scoped settings did
+not change. The exact changed fields remain in the qualified receipt, bound to
+this staging nonce only; production retains its strict unchanged-state gate.
+Original failed receipts remain intact. Backup freshness is conservatively
+measured from the original 17:19:14 UTC start, not the later qualification time.
+The exact staging receipt passed the overlay gate and eleven negative checks.
+
+Production bootstrap/configuration and the version-specific Updraft source were
+reviewed privately. The production hero MU file is `bactiveph-hero-glass.php`,
+not the staging filename. Production backup and the exact two-file overlay are
+prepared and separately sealed; the backup began at 18:45:13 UTC. No production
+footer overlay has been executed at this checkpoint.
+Current task owns backup qualification and release. The payment task supplies
+shared-host scheduling only, not authorization or review.
+
+The exact two-file staging overlay completed with independent deployed hashes
+and no unrelated theme changes. A header-only, staging-specific page-cache purge
+used a short-lived, token-gated MU transport; it loaded no normal plugins and
+all three temporary paths were removed with absence and unchanged-MU checks.
+Ordinary home, shop and shipping/returns URLs returned HTTP 200 and the v5
+footer with all seven payment marks. Actual browser checks at 1280, 390 and
+650px confirm loaded assets, original proportions, no horizontal overflow and
+centered mobile COD. GrabExpress retains its Davao City-only qualification.
+
+Post-cache settings, identity, logical worker invariants, theme and root files
+matched the fresh pre-cache snapshot. Full comparison of 32 orders and 295
+metadata rows found only order 374's timestamp and polling counter (114 to 115)
+advanced. Existing action 1014 ran via WP Cron at 18:36:45–18:36:46 UTC, before
+the cache runner started at 18:37:01. Payment status, other order fields, notes
+and stock were unchanged. There were no new log bytes across the cache
+snapshots; an earlier 486-byte increase contains three existing DOING_CRON
+warnings and no fatal/parse/uncaught errors. One earlier invariant read was
+blocked by the original SQL guard; later guarded reads passed without relaxing
+it, and that transient failure's cause remains unreproduced.
+
+The staging window is explicitly released. The payment scheduling task is now
+in Plan mode and reports no competing writer or active host connection. Under
+John's current explicit authorization, this footer task records and notifies
+its own bounded backup/release windows; the other task's expired queue is not
+silently renewed or edited. Production backup qualification is the next gate.
 
 ### Earlier evidence (historical candidate)
 
@@ -153,12 +221,11 @@ gzip integrity passed. This is a diagnostic/source archive, **not a site backup*
 
 ## Remaining gates and rollback
 
-The payment coordinator owns staging serialization and the shared qualified
-backup prerequisite. A fresh complete supported backup, private off-server
-integrity verification including missing core/config/root coverage, protected-state consistency,
-exact two-file staging installation and actual staging browser verification
-remain required. Production additionally requires fresh explicit human approval
-for this artifact, a serialized writer window and production-specific backup,
+The footer task owns backup qualification and the release; the payment task
+provides shared-host conflict information. Staging backup, exact two-file
+installation, ordinary public readback and actual browser verification passed.
+John authorized this exact display-only release on September 10. Production
+still requires its own qualified fresh backup, a serialized writer window,
 preflight and independent readback. Existing #2, #7 and #9 holds are not cleared.
 
 For rollback, first verify no later writer superseded this exact v5 partial,
@@ -166,11 +233,10 @@ then atomically restore the snapshotted v4 partial. Lint/hash before installatio
 refresh only page cache, and verify the public footer. The unused new SVG can
 remain; no deletion or database restore is necessary.
 
-The Updraft one-shot candidate still requires a reviewed treatment of its native
-temporary-file/old-lock maintenance and exact backup bookkeeping; it is not
-cleared for execution. A footer badge does not authorize an unbounded backup
-redesign, removal of safety guards, native maintenance deletions, or use of an
-old/incomplete backup. Payment operations retains that prerequisite and the
-source research. Issue #53 and PR #55 remain open, prepared but not deployed.
+The reviewed one-shot backup confines native bookkeeping to its exact nonce,
+suppresses the known broad old-lock maintenance query and does not schedule a
+resume, send mail or invoke a remote provider. No unbounded cleanup, payment
+configuration change or old/incomplete backup is allowed. Issue #53 and PR #55
+remain open until the two-file deployment and public verification are complete.
 
 No global or project memory files were updated.

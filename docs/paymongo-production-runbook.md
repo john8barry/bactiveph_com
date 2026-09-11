@@ -1,12 +1,13 @@
 # PayMongo Hosted Checkout production runbook
 
 This runbook is the payment authority for B Active. It supersedes older build
-notes that mention GCash, cards, GrabPay, Atome, or manual bank transfer.
+notes that mention GCash, cards, Atome, or manual bank transfer. GrabPay is
+now supported only through the explicit verification and selection process below.
 
 ## Approved customer payment methods
 
 - PayMongo Hosted Checkout: QRPh, Maya, ShopeePay, BPI Direct Debit, and UBP
-  Direct Debit only.
+  Direct Debit, plus opt-in GrabPay (`grab_pay`).
 - WooCommerce Cash on Delivery remains available under the existing fee and
   order-value rules.
 - At public PayMongo activation, disable WooCommerce manual bank transfer
@@ -24,14 +25,18 @@ readback that passes the same order, session, payment, currency and amount check
 
 ## Phased activation while provider support is pending
 
-The operator may launch a verified subset of the five approved methods while
+The operator may launch a verified subset of the supported methods while
 unsupported methods remain deferred. Set **Payment methods for new checkouts**
 (`issuance_methods`) through WooCommerce settings to that exact subset. Missing
-legacy settings retain all five; explicitly empty or malformed selections stop
-issuance. Checkout copy is generated from the selection. Both fresh and cached
+legacy settings retain the original five without GrabPay; explicitly empty or
+malformed selections stop issuance. Checkout copy is generated from the selection. Both fresh and cached
 live readiness require only selected capabilities, and each selected method
 still requires an independently reconciled live payment before public release.
-A listed capability alone never proves authorization works.
+A listed capability alone never proves authorization works. GrabPay is never
+automatically added to existing selections. Confirm the live `grab_pay`
+capability, then complete and reconcile any current canary before selecting it:
+the settings change drains tracked sessions. Use a new manager-only GrabPay
+canary and verify its payment, order, stock and both inboxes before public release.
 
 Changes to the selection serialize with issuance, drain tracked sessions and
 invalidate stale requests. A settings save cannot override review holds or
@@ -358,8 +363,9 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
    only to `checkout_session.payment.paid`.
 5. Update and read back the rendered FAQ, checkout reassurance, Terms, Privacy,
    and footer. They must list only the methods verified for public launch plus COD;
-   remove GCash, cards, GrabPay, manual bank transfer, and HitPay claims. Show
-   PayMongo as processor branding, not as a sixth customer payment rail.
+   remove GCash, cards, manual bank transfer, and HitPay claims. Include GrabPay
+   only after its live canary passes. Show PayMongo as processor branding,
+   separate from customer payment methods.
 6. Independently read back both registered settings and populated manager and
    guest checkouts. The manager may see `bactive_paymongo` and eligible `cod`;
    the guest must not see `bactive_paymongo` while verification is restricted.

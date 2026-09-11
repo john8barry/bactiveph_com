@@ -17,6 +17,7 @@ if (function_exists('WC')) {
 $bactive_payment_marks = array(
     'qrph' => 'QR Ph',
     'maya' => 'Maya',
+    'grabpay' => 'GrabPay',
     'shopeepay' => 'ShopeePay',
     'bpi' => 'BPI Online',
     'unionbank' => 'UnionBank Online',
@@ -153,8 +154,22 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         .bactive-custom-footer .bactive-trust__group--shipping { align-items: flex-start; }
         .bactive-custom-footer .bactive-trust__group--payments { align-items: flex-end; }
     }
+    /* The sage footer originally reserved six columns; include GrabPay evenly. */
+    @media (min-width: 768px) {
+        .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments {
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 767px) {
+        .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments > li:last-child:nth-child(7) {
+            grid-column: 2;
+        }
+    }
 </style>
-<div class="bactive-trust" data-bactive-trust-version="2026-09-05-v4">
+<div class="bactive-trust" data-bactive-trust-version="2026-09-08-v5">
     <div class="bactive-trust__shipping">
         <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
             <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>
@@ -186,7 +201,7 @@ $bactive_theme_url = get_stylesheet_directory_uri();
     <div class="bactive-trust__group bactive-trust__group--payments" role="group" aria-labelledby="bactive-payments-label">
         <span class="bactive-trust__label" id="bactive-payments-label">Payment options</span>
         <ul class="bactive-trust__list bactive-trust__list--payments" role="list">
-            <?php // Keep the five user-approved logos visible independently of checkout readiness. ?>
+            <?php // Keep user-approved payment branding visible independently of checkout readiness. ?>
             <?php foreach ($bactive_payment_marks as $bactive_mark => $bactive_label) : ?>
                 <li>
                     <span class="bactive-trust__badge">

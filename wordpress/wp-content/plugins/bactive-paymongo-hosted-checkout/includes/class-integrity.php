@@ -6,7 +6,9 @@ defined('ABSPATH') || defined('BACTIVE_PAYMONGO_TESTING') || exit;
 
 final class Integrity
 {
-    public const CHECKOUT_METHODS = array('qrph', 'paymaya', 'shopee_pay', 'dob', 'dob_ubp');
+    /** Preserve the original rollout when older settings have no explicit selection. */
+    public const DEFAULT_CHECKOUT_METHODS = array('qrph', 'paymaya', 'shopee_pay', 'dob', 'dob_ubp');
+    public const CHECKOUT_METHODS = array('qrph', 'paymaya', 'shopee_pay', 'dob', 'dob_ubp', 'grab_pay');
 
     private const ID_PATTERN = '/^[A-Za-z0-9_-]{3,128}$/D';
 
@@ -429,6 +431,9 @@ final class Integrity
         }
 
         $type = strtolower((string) ($source['type'] ?? ''));
+        if ($type === 'grab_pay') {
+            return array('method' => 'grab_pay', 'provider' => '');
+        }
         if ($type === 'qrph') {
             return array('method' => 'qrph', 'provider' => '');
         }

@@ -239,6 +239,7 @@ final class Readiness
             'shopee_pay' => array('shopee_pay', 'shopeepay'),
             'dob' => array('dob', 'dob_bpi', 'bpi'),
             'dob_ubp' => array('dob_ubp', 'ubp', 'unionbank'),
+            'grab_pay' => array('grab_pay'),
         );
 
         foreach ($required as $method) {

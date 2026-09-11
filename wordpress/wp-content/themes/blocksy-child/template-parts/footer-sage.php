@@ -373,31 +373,31 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
             <nav class="bactive-footer__links" aria-labelledby="bactive-footer-shop-title">
                 <h3 id="bactive-footer-shop-title">Shop</h3>
                 <ul>
-                    <li><a href="<?php echo esc_url(home_url('/collections/pickleball-dresses')); ?>">Pickleball Dresses</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/collections/skorts')); ?>">Skorts</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/collections/tops')); ?>">Tops &amp; Tanks</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/collections/sports-bras')); ?>">Sports Bras</a></li>
                     <li><a href="<?php echo esc_url(home_url('/collections/leggings')); ?>">Leggings</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/collections/pickleball-dresses')); ?>">Pickleball Dresses</a></li>
                     <li><a href="<?php echo esc_url(home_url('/collections/sets')); ?>">Sets</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/collections/skorts')); ?>">Skorts</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/collections/sports-bras')); ?>">Sports Bras</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/collections/tops')); ?>">Tops &amp; Tanks</a></li>
                 </ul>
             </nav>
             <nav class="bactive-footer__links" aria-labelledby="bactive-footer-help-title">
                 <h3 id="bactive-footer-help-title">Help</h3>
                 <ul>
-                    <li><a href="<?php echo esc_url(home_url('/shipping-returns')); ?>">Shipping &amp; Returns</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/size-guide')); ?>">Size Guide</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/faq')); ?>">FAQ</a></li>
                     <li><a href="<?php echo esc_url(home_url('/contact')); ?>">Contact</a></li>
                     <li><a href="<?php echo esc_url(home_url('/fabric-guide')); ?>">Fabric &amp; Care</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/faq')); ?>">FAQ</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/shipping-returns')); ?>">Shipping &amp; Returns</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/size-guide')); ?>">Size Guide</a></li>
                 </ul>
             </nav>
             <nav class="bactive-footer__links bactive-footer__links--brand" aria-labelledby="bactive-footer-brand-title">
                 <h3 id="bactive-footer-brand-title">Brand</h3>
                 <ul>
                     <li><a href="<?php echo esc_url(home_url('/about')); ?>">About</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/bir-registration/')); ?>">BIR Registration</a></li>
                     <li><a href="<?php echo esc_url(home_url('/journal')); ?>">Journal</a></li>
                     <li><a href="<?php echo esc_url(home_url('/our-store')); ?>">Our Store</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/bir-registration/')); ?>">BIR Registration</a></li>
                 </ul>
             </nav>
         </div>

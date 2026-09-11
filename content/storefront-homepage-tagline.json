@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "site": "https://bactiveph.com",
+  "issue": 58,
+  "items": [
+    {
+      "kind": "post",
+      "id": 14,
+      "slug": "home",
+      "fields": {
+        "post_content": {
+          "before_sha256": "1f0a120db564934c968b6f61334188d000cb8c0cf2bee8c7630129bd7d22c7e0",
+          "after_sha256": "a7ac16d9cf1e29c70b0faa82bb3fcfc5429758804e09969bf60c79bf93e5524d",
+          "replacements": [
+            {
+              "old": "<p><p style=\"color:#D4AF37;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px\">Court-To-café Luxury.</p></p>",
+              "new": "<p style=\"color:#D4AF37;font-weight:600;text-transform:none;letter-spacing:1px;margin-bottom:10px\">From the Court to the Café</p>",
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

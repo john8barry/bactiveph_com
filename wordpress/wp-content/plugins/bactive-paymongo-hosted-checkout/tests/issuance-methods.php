@@ -9,7 +9,7 @@ use BActive\PayMongo\Reconciler;
 use BActive\PayMongo\Webhook;
 
 $methods_gateway = rollout_test_setup();
-same(Integrity::CHECKOUT_METHODS, $methods_gateway->issuance_methods(), 'missing methods setting preserves legacy five-method issuance');
+same(Integrity::DEFAULT_CHECKOUT_METHODS, $methods_gateway->issuance_methods(), 'missing methods setting preserves legacy five-method issuance');
 $fake_mutating_settings_getter = true;
 $methods_gateway = rollout_test_setup();
 $fake_current_user_caps = array('manage_woocommerce');

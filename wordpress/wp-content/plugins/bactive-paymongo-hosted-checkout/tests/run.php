@@ -544,6 +544,7 @@ if (!class_exists('WC_Order')) {
         public bool $paid = false;
         public string $transaction_id = '';
         public ?DateTimeImmutable $date_paid = null;
+        public array $refunds = array();
         public bool $payment_complete_result = true;
         public int $payment_complete_calls = 0;
         public int $read_count = 0;
@@ -584,6 +585,7 @@ if (!class_exists('WC_Order')) {
         public function get_status(): string { return $this->status; }
         public function get_transaction_id(): string { return $this->transaction_id; }
         public function get_date_paid(string $context = 'view'): ?DateTimeImmutable { return $this->date_paid; }
+        public function get_refunds(): array { return $this->refunds; }
         public function get_changes(): array { return $this->changes; }
         public function get_items(string $type = 'line_item'): array { return $this->items[$type] ?? array(); }
         public function get_formatted_billing_full_name(): string { return 'Test Buyer'; }
@@ -3450,6 +3452,80 @@ $fake_order_query_handler = static function (array $args): array {
 check(Reconciler::has_tracked_orders(), 'a database failure cannot clear the outstanding-payment gate');
 $wpdb->last_error = '';
 $fake_order_query_handler = null;
+
+
+// A cancelled Woo awaiting-payment pointer is not proof of payment. Once all
+// attempts were independently verified expired, a later checkout must proceed
+// without changing the prior order, its session pointer or its audit records.
+$closed_prior = new WC_Order();
+$closed_prior->status = 'cancelled';
+$closed_prior->meta['_bactive_paymongo_attempts'][0]['expired_at'] = time();
+$run_prior_guard = static function (WC_Order $prior): bool {
+    global $fake_orders, $fake_options, $fake_wc, $lifecycle_test_gateway, $snapshot_line_item;
+    $fake_orders = array(42 => clone $prior);
+    $fake_options = array();
+    $fake_wc->session->data['order_awaiting_payment'] = 42;
+    $fresh = new WC_Order();
+    $fresh->id = 0;
+    $fresh->items['line_item'] = array($snapshot_line_item);
+    $blocked = false;
+    $lifecycle_test_gateway->acquire_checkout_submission_lock();
+    try {
+        $lifecycle_test_gateway->handle_checkout_create_order($fresh, array());
+    } catch (Exception $error) {
+        $blocked = true;
+    } finally {
+        $lifecycle_test_gateway->release_request_locks();
+    }
+    return $blocked;
+};
+check(!$run_prior_guard($closed_prior), 'cancelled prior with verified expired session permits fresh checkout');
+same($closed_prior->meta, $fake_orders[42]->meta, 'repeat checkout preserves prior expired attempt audit');
+same('cancelled', $fake_orders[42]->status, 'repeat checkout preserves prior cancellation');
+same(0, $fake_orders[42]->save_calls, 'repeat checkout performs no prior order save');
+same(42, $fake_wc->session->data['order_awaiting_payment'], 'repeat checkout leaves pointer replacement to Woo new-order persistence');
+check(!Order_Lock::held_by_request(42), 'closed prior checkout releases its acquired order fence');
+check(!Order_Lock::checkout_held_by_request(), 'closed prior request cleanup releases session fence');
+
+$unsafe_prior_variants = array();
+$variant = clone $closed_prior; $variant->status = 'processing'; $variant->paid = true;
+$unsafe_prior_variants['paid processing order'] = $variant;
+$variant = clone $closed_prior; $variant->transaction_id = 'pay_prior_123';
+$unsafe_prior_variants['transaction on cancelled order'] = $variant;
+$variant = clone $closed_prior; $variant->date_paid = new DateTimeImmutable('@1788559200');
+$unsafe_prior_variants['paid date on cancelled order'] = $variant;
+$variant = clone $closed_prior; $variant->refunds = array(new stdClass());
+$unsafe_prior_variants['refund on cancelled order'] = $variant;
+$variant = clone $closed_prior; unset($variant->meta['_bactive_paymongo_attempts'][0]['expired_at']);
+$unsafe_prior_variants['unexpired cancelled session'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][] = array('session_id' => 'cs_other_123', 'mode' => 'test');
+$unsafe_prior_variants['second outstanding session'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][0]['request_pending'] = true;
+$unsafe_prior_variants['ambiguous creation request'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][0]['payment_id'] = 'pay_prior_123';
+$unsafe_prior_variants['attempt financial marker'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][0]['paid_at'] = 'invalid';
+$unsafe_prior_variants['malformed paid timestamp'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][0]['paid_at'] = -1;
+$unsafe_prior_variants['negative paid timestamp'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][0]['expired_at'] = 'not-a-timestamp';
+$unsafe_prior_variants['malformed expiry timestamp'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'][] = 'malformed';
+$unsafe_prior_variants['filtered malformed attempt'] = $variant;
+$variant = clone $closed_prior; $variant->meta['_bactive_paymongo_attempts'] = array();
+$unsafe_prior_variants['zero-attempt cancellation'] = $variant;
+foreach (array(Reconciler::REQUIRED_META, Reconciler::UNRESOLVED_META, '_bactive_paymongo_review_required', '_bactive_paymongo_review_incidents', '_bactive_paymongo_settlement_pending') as $key) {
+    $variant = clone $closed_prior; $variant->meta[$key] = 'review';
+    $unsafe_prior_variants['review marker ' . $key] = $variant;
+}
+foreach ($unsafe_prior_variants as $label => $variant) {
+    check($run_prior_guard($variant), $label . ' still blocks fresh checkout');
+    same(0, $fake_orders[42]->save_calls, $label . ' leaves prior order untouched');
+    check(!Order_Lock::held_by_request(42), $label . ' releases its prior order fence');
+}
+$fake_wc->session->data = array();
+$fake_orders = array();
+$fake_options = array();
 
 // Active-order discovery queries retained audit history, then excludes only a
 // coherent settled order. This lets a drain reach zero without deleting

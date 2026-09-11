@@ -64,6 +64,9 @@ The fixture uses no real credentials, customer records, or provider payments.
 == Changelog ==
 
 = 1.0.0 =
+* Allow a new checkout after an unpaid cancelled order only when every retained
+  session is verified expired and no payment, refund, pending request or review
+  remains. Preserve the prior order, session pointer and all paid-order guards.
 * Add opt-in GrabPay issuance, capability checks, settlement and recovery without
   changing existing method selections or the original five-method default.
 * Select a validated subset for new checkout sessions, with matching customer

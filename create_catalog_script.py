@@ -373,7 +373,7 @@ try:
         ftp.storbinary('STOR staging/setup_catalog.php', f)
         
     # Upload images
-    img_dir = '/Users/johnbarry/Documents/Antigravity/bactiveph_com/Buildout_Resources/B Active Build Kit/product-images'
+    img_dir = '/Users/johnbarry/Projects/bactiveph_com/Buildout_Resources/B Active Build Kit/product-images'
     try:
         ftp.mkd('staging/product_images')
     except:

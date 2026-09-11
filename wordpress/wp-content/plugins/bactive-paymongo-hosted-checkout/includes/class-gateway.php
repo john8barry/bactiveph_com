@@ -1087,6 +1087,12 @@ final class Gateway extends \WC_Payment_Gateway
             if (!self::has_protected_payment_state($prior)) {
                 return;
             }
+            // Woo leaves the awaiting-payment pointer on a cancelled order,
+            // then constructs a fresh order. A verified expired, unpaid prior
+            // attempt is terminal; it must not strand this customer's session.
+            if ($this->cancelled_prior_order_is_closed($prior)) {
+                return;
+            }
             if (!$this->checkout_state_is_payable($prior)) {
                 throw new \Exception(__('The prior PayMongo order may already be paid. Do not submit a second order; reload and contact support if needed.', 'bactive-paymongo'));
             }
@@ -1104,6 +1110,55 @@ final class Gateway extends \WC_Payment_Gateway
                 Order_Lock::release($prior_id);
             }
         }
+    }
+
+
+    /** Only a fully closed, unpaid cancellation can release a new checkout. */
+    private function cancelled_prior_order_is_closed(\WC_Order $order): bool
+    {
+        if (!$order->has_status('cancelled')
+            || $order->is_paid()
+            || $order->get_date_paid('edit') !== null
+            || $order->get_transaction_id() !== ''
+            || $order->get_refunds() !== array()
+            || self::has_provider_payment_evidence($order)
+            || self::has_inconsistent_provider_payment_state($order)
+            || Webhook::has_pending_reviews($order->get_id())
+            || Webhook::review_resolution_recovery_pending($order)
+            || Webhook::operator_disposition_recovery_pending($order)) {
+            return false;
+        }
+        foreach (array(
+            Reconciler::REQUIRED_META,
+            Reconciler::UNRESOLVED_META,
+            '_bactive_paymongo_review_required',
+            '_bactive_paymongo_review_incidents',
+            '_bactive_paymongo_settlement_pending',
+        ) as $key) {
+            if (!empty($order->get_meta($key, true))) {
+                return false;
+            }
+        }
+
+        // Do not let order_attempts() filtering turn malformed audit data into
+        // an empty/safe history. Each retained session needs its verified expiry.
+        $attempts = $order->get_meta(self::ATTEMPTS_META, true);
+        if (!is_array($attempts) || $attempts === array() || !array_is_list($attempts)) {
+            return false;
+        }
+        foreach ($attempts as $attempt) {
+            if (!is_array($attempt)
+                || !is_string($attempt['session_id'] ?? null)
+                || !preg_match('/^cs_[A-Za-z0-9_-]{3,128}$/D', $attempt['session_id'])
+                || !in_array($attempt['mode'] ?? '', array('test', 'live'), true)
+                || !is_int($attempt['expired_at'] ?? null)
+                || $attempt['expired_at'] < 1
+                || !empty($attempt['paid_at'])
+                || !empty($attempt['request_pending'])) {
+                return false;
+            }
+        }
+        return !self::has_outstanding_attempts($order);
     }
 
     private function transition_requires_guard(\WC_Order $order): bool

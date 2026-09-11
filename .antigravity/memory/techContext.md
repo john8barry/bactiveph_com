@@ -7,7 +7,7 @@
 - **Scripting:** Python 3 (for automation scripts like `ftp_move.py`, `generate_wp_config.py`)
 
 ## Tooling & Verification
-- **Graphify:** Installed globally via `pipx` (Python 3.11). Configured to use OpenRouter API (`openrouter/owl-alpha` model) in `.graphify/providers.json`.
+- **Source verification:** Inspect exact current source and ordinary project documentation, then run direct tests and verify the destination. Graphify is permanently retired; its old installation and provider settings are not active tooling or release gates.
 - **Environment Variables:** Managed via `.env` file (contains cPanel credentials, Cloudflare tokens, FTP credentials, WordPress app password, and OpenRouter API key).
 
 ## Verification Commands

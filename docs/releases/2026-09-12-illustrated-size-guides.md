@@ -28,7 +28,17 @@ John supplied both original 853-by-1280 JPEGs on September 11, 2026. The copied 
 
 ## Acceptance and current status
 
-Local implementation complete; independent review, GitHub checks, production installation and live verification pending. Do not treat this record as proof of deployment until updated with the receipt.
+Live installation completed September 12, 2026, at 05:27:20 UTC. PR [#81](https://github.com/john8barry/bactiveph_com/pull/81), source head `0cdfb7e7d33707155ccd4c729647fb2335315c00`, merged as `9249d093be012916746cf32733913809c2391908`. Independent finish review returned **ship**, with no material findings; documentation review confirmed the scoped record and provenance. All four GitHub workflows passed on both PR and merged revision.
+
+- Anonymous ordinary-URL readback passed for all 19 published products. Only the two approved products render their matching illustration. Both standalone figures, exact 55 measurements and fallback anchors passed.
+- Both public JPEG URLs returned HTTP 200, image/jpeg, and byte-for-byte original checksums. Public dedicated CSS matched its deployment checksum.
+- Logged-in live browser verification confirmed Bubble Dress's loaded 853-by-1280 image, desktop/mobile containment, and the full-resolution image tab. Local screenshots also cover Court Skort. A separate Chrome automation check timed out; logged-out verification is anonymous HTTP readback, not a completed Chrome UI test.
+- Production `functions.php`: `b5b0282725e767677fd9b7fe60fa28667684953291fadf2f55a1e89ce9520b00`; `size-guide.css`: `321a300c740001e80663fab375194e400582e183bcc9c7a60a65160daec0978a`. Image hashes are in the provenance table above.
+- Final readback at 05:31:31 UTC (251 seconds after installation) confirmed all seven changed/protected file checksums, zero new error-log bytes and zero critical errors. Shared custom CSS/JS and dialog JavaScript stayed unchanged. Cache plugin remained inactive.
+- Fresh PHP/CSS preimages were captured at 05:25 UTC, and the same-session six-component off-server Updraft backup was re-hashed successfully. Remote staging directory was removed, all SSH/SFTP connections closed, and the writer window explicitly released at 05:31 UTC to the payment and shipping tasks.
+- Production intentionally retained the pre-shipping-release sections of `functions.php`; PR #79 is merged but its production rollout belongs to the shipping task. That task will patch its sections onto a fresh readback, preserving these illustrations. Do not overwrite the whole theme from Git to resolve that recorded difference.
+
+Private evidence lives in the project-owned `illustrated-size-guides-20260912` recovery directory: exact preimages/candidates, manifest, deployment receipt, public verification, final monitoring and browser captures. No memory files were updated.
 
 ## Rollback
 

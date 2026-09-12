@@ -68,6 +68,7 @@
     {
       "zone_id": 1,
       "zone_name": "Davao City",
+      "locations_sha256": "781993f82de9d50f8fae519645c2239f0759c3e99da1aef212d7d9595b44b06c",
       "instance_id": 13,
       "option_name": "woocommerce_free_shipping_13_settings",
       "before_sha256": "c4efce4058b73b64a7acaf83985f9df075ee471aa42c1d1c9ff5de2bd3ac3434",
@@ -76,6 +77,7 @@
     {
       "zone_id": 2,
       "zone_name": "Mindanao (excl. Davao)",
+      "locations_sha256": "d925410a179841c0fd840da5d5951ed265c8e6accc21b419f99b835a0c48a6bf",
       "instance_id": 16,
       "option_name": "woocommerce_free_shipping_16_settings",
       "before_sha256": "f85ad66d39894c7a846803c29a55d580eb8a84801d9726054220900ab1d93601",
@@ -84,6 +86,7 @@
     {
       "zone_id": 3,
       "zone_name": "Luzon & Visayas",
+      "locations_sha256": "aa5c369c8ceaa36da9fda7c1c1b6bb4f86197aa07a0ebef248c874618cc69cb4",
       "instance_id": 18,
       "option_name": "woocommerce_free_shipping_18_settings",
       "before_sha256": "c317362d6d6a660051d5d1a80b9e14f493fe62fc8c43c08a0e4767d5d544c71d",

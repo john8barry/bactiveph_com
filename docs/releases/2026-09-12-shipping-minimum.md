@@ -8,15 +8,15 @@ Issue [#77](https://github.com/john8barry/bactiveph_com/issues/77) tracks the pr
 - Keep the fallback/international zone without a complimentary-shipping method.
 - Align the shared product Shipping & Returns tab, mini-cart progress message, Shipping & Returns page, FAQ, and Terms.
 - Treat ₱5,000 as inclusive: Philippine orders of ₱5,000 or more qualify.
-- Suppress the mini-cart complimentary-shipping progress/unlock message after an international destination is selected.
+- Suppress the mini-cart complimentary-shipping progress/unlock message after an international destination is selected, and remove any free-shipping rate for a non-`PH` package even if a zone is later misconfigured.
 
 No product prices, inventory, payment settings, coupons, orders, courier rates, local pickup, COD eligibility, tax configuration, or international shipping availability are changed.
 
 ## Release control
 
-The repository checkout was dirty and 113 commits behind `origin/main`, so implementation uses the isolated `codex/shipping-minimum-5000` worktree based on `origin/main` at `cf0fc63`. Production's child-theme `functions.php` differs from `origin/main` only because merged size-chart issue #74 has not been installed there. Do not deploy the whole repository file: apply only the reviewed shipping-policy hunks to the exact current destination file.
+The repository checkout was dirty and 113 commits behind `origin/main`, so implementation uses the isolated `codex/shipping-minimum-5000` worktree rebased onto `origin/main` at `20fab86`. Do not deploy the whole repository file: derive and apply only the reviewed shipping-policy hunks to the exact current destination file so unrelated live-only changes remain intact.
 
-The private WP-CLI helper and reviewed manifest fail closed on site/database/theme identity, page IDs/slugs/content hashes, exact replacement counts, domestic zone identities, enabled free-shipping instance IDs, option hashes, and the absence of an enabled fallback-zone free-shipping method. It supports check, apply, and rollback modes on the explicitly listed production and staging targets.
+The private WP-CLI helper and reviewed manifest fail closed on site/database/theme identity, transactional table engines, page IDs/slugs/content hashes, exact replacement counts, domestic zone identities and exact location-set hashes, enabled free-shipping instance IDs, option hashes, discount handling, and the absence of an enabled fallback-zone free-shipping method. All six database changes run in one transaction; a write/readback failure rolls back the transaction, clears affected caches, and verifies the original records before reporting recovery. It supports check, apply, and rollback modes on the explicitly listed production and staging targets.
 
 Stage first. Before production, obtain a fresh complete backup plus private off-server checksums, retain exact preimages for the child-theme file and six database records, verify the current production hashes again, and serialize the writer window. After applying only the shipping changes, invalidate the affected page/object caches and confirm the ordinary public URLs, the WooCommerce settings, the domestic boundary, the international negative path, and server logs.
 

@@ -7,6 +7,7 @@ on:
       - 'content/shipping-minimum-5000.json'
       - 'tools/apply_shipping_minimum.php'
       - 'tests/shipping-minimum.php'
+      - 'tests/shipping-release-helper.php'
   push:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ on:
       - 'content/shipping-minimum-5000.json'
       - 'tools/apply_shipping_minimum.php'
       - 'tests/shipping-minimum.php'
+      - 'tests/shipping-release-helper.php'
 permissions:
   contents: read
 jobs:
@@ -31,4 +33,5 @@ jobs:
           php -l wordpress/wp-content/themes/blocksy-child/functions.php
           php -l tools/apply_shipping_minimum.php
           php tests/shipping-minimum.php
+          php tests/shipping-release-helper.php
           cmp wp-content/themes/blocksy-child/functions.php wordpress/wp-content/themes/blocksy-child/functions.php

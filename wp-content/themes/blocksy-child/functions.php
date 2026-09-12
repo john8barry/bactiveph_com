@@ -157,6 +157,23 @@ function bactive_complimentary_shipping_cart_total( $cart ) {
 	return round( $total, wc_get_price_decimals() );
 }
 
+add_filter( 'woocommerce_package_rates', 'bactive_restrict_complimentary_shipping_rates', 100, 2 );
+function bactive_restrict_complimentary_shipping_rates( $rates, $package ) {
+	$country = strtoupper( (string) ( $package['destination']['country'] ?? '' ) );
+	if ( 'PH' === $country ) {
+		return $rates;
+	}
+
+	foreach ( $rates as $rate_id => $rate ) {
+		$method_id = method_exists( $rate, 'get_method_id' ) ? $rate->get_method_id() : ( $rate->method_id ?? '' );
+		if ( 'free_shipping' === $method_id ) {
+			unset( $rates[ $rate_id ] );
+		}
+	}
+
+	return $rates;
+}
+
 function bactive_shipping_returns_tab_content() {
 	echo '<h2>Shipping & Returns</h2>';
 	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and LBC Express. Complimentary shipping is available on Philippine orders of ₱5,000 or more. It does not apply to international destinations.</p>';

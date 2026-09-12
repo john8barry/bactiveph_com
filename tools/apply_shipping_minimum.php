@@ -14,6 +14,21 @@ function bactive_shipping_manifest_target( $manifest ) {
 	throw new RuntimeException( 'Site or database identity mismatch' );
 }
 
+function bactive_shipping_assert_transactional_tables() {
+	global $wpdb;
+	foreach ( array( $wpdb->posts, $wpdb->options ) as $table ) {
+		$engine = $wpdb->get_var(
+			$wpdb->prepare(
+				'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s',
+				$table
+			)
+		);
+		if ( 'InnoDB' !== $engine ) {
+			throw new RuntimeException( 'Required database table is not transactional' );
+		}
+	}
+}
+
 function bactive_shipping_post_state( $item ) {
 	$post = get_post( $item['id'] ?? 0 );
 	if ( ! $post || 'publish' !== $post->post_status || 'page' !== $post->post_type
@@ -72,6 +87,19 @@ function bactive_shipping_method_states( $manifest, $reverse ) {
 	foreach ( $manifest['shipping_methods'] as $item ) {
 		$instance_id = (int) $item['instance_id'];
 		$method = $found[ $instance_id ] ?? null;
+		$zone = WC_Shipping_Zones::get_zone( $item['zone_id'] );
+		$locations = array_map(
+			function ( $location ) {
+				return array( 'code' => $location->code, 'type' => $location->type );
+			},
+			$zone->get_zone_locations()
+		);
+		usort(
+			$locations,
+			function ( $left, $right ) {
+				return strcmp( $left['type'] . ':' . $left['code'], $right['type'] . ':' . $right['code'] );
+			}
+		);
 		$option_name = $item['option_name'] ?? '';
 		$settings = get_option( $option_name, null );
 		$from_hash = $reverse ? 'after_sha256' : 'before_sha256';
@@ -80,8 +108,10 @@ function bactive_shipping_method_states( $manifest, $reverse ) {
 		$to_amount = $reverse ? '2000' : '5000';
 		if ( ! $method || 'yes' !== $method['enabled'] || (int) $item['zone_id'] !== $method['zone_id']
 			|| $item['zone_name'] !== $method['zone_name']
+			|| ! hash_equals( $item['locations_sha256'] ?? '', hash( 'sha256', wp_json_encode( $locations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) ) )
 			|| 'woocommerce_free_shipping_' . $instance_id . '_settings' !== $option_name
 			|| ! is_array( $settings ) || 'min_amount' !== ( $settings['requires'] ?? null )
+			|| 'no' !== ( $settings['ignore_discounts'] ?? 'no' )
 			|| $from_amount !== (string) ( $settings['min_amount'] ?? '' )
 			|| ! hash_equals( $item[ $from_hash ] ?? '', hash( 'sha256', serialize( $settings ) ) ) ) {
 			throw new RuntimeException( 'Complimentary shipping method precondition changed' );
@@ -104,6 +134,7 @@ function bactive_apply_shipping_minimum_manifest( $manifest, $mode = 'check' ) {
 	}
 
 	$target = bactive_shipping_manifest_target( $manifest );
+	bactive_shipping_assert_transactional_tables();
 	$reverse = 'rollback' === $mode;
 	$posts = array();
 	foreach ( $target['config']['posts'] ?? array() as $item ) {
@@ -122,31 +153,61 @@ function bactive_apply_shipping_minimum_manifest( $manifest, $mode = 'check' ) {
 		return $result;
 	}
 
-	foreach ( $posts as $post_state ) {
-		$item = $post_state['item'];
-		$saved = wp_update_post( wp_slash( array( 'ID' => $item['id'], 'post_content' => $post_state['after'] ) ), true );
-		if ( is_wp_error( $saved ) ) {
-			$result['error'] = 'Stopped; inspect the destination before any further write';
-			return $result;
-		}
-		clean_post_cache( $item['id'] );
-		if ( bactive_shipping_post_state( $item ) !== $post_state['after'] ) {
-			$result['error'] = 'Stopped; inspect the destination before any further write';
-			return $result;
-		}
-		$result['changed'][] = array( 'kind' => 'post', 'id' => $item['id'] );
+	global $wpdb;
+	if ( false === $wpdb->query( 'START TRANSACTION' ) ) {
+		throw new RuntimeException( 'Database transaction could not start' );
 	}
 
-	foreach ( $methods as $method_state ) {
-		$item = $method_state['item'];
-		if ( ! update_option( $item['option_name'], $method_state['after'] )
-			|| get_option( $item['option_name'], null ) !== $method_state['after'] ) {
-			$result['error'] = 'Stopped; inspect the destination before any further write';
-			return $result;
+	try {
+		foreach ( $posts as $post_state ) {
+			$item = $post_state['item'];
+			$saved = wp_update_post( wp_slash( array( 'ID' => $item['id'], 'post_content' => $post_state['after'] ) ), true );
+			if ( is_wp_error( $saved ) ) {
+				throw new RuntimeException( 'Post write failed' );
+			}
+			clean_post_cache( $item['id'] );
+			if ( bactive_shipping_post_state( $item ) !== $post_state['after'] ) {
+				throw new RuntimeException( 'Post write readback failed' );
+			}
+			$result['changed'][] = array( 'kind' => 'post', 'id' => $item['id'] );
 		}
-		$result['changed'][] = array( 'kind' => 'shipping_method', 'instance_id' => (int) $item['instance_id'] );
-	}
 
-	$result['complete'] = true;
-	return $result;
+		foreach ( $methods as $method_state ) {
+			$item = $method_state['item'];
+			if ( ! update_option( $item['option_name'], $method_state['after'] )
+				|| get_option( $item['option_name'], null ) !== $method_state['after'] ) {
+				throw new RuntimeException( 'Shipping method write or readback failed' );
+			}
+			$result['changed'][] = array( 'kind' => 'shipping_method', 'instance_id' => (int) $item['instance_id'] );
+		}
+
+		if ( false === $wpdb->query( 'COMMIT' ) ) {
+			throw new RuntimeException( 'Database transaction commit was not confirmed' );
+		}
+		$result['complete'] = true;
+		return $result;
+	} catch ( Throwable $error ) {
+		$rolled_back = false !== $wpdb->query( 'ROLLBACK' );
+		foreach ( $posts as $post_state ) {
+			clean_post_cache( $post_state['item']['id'] );
+		}
+		foreach ( $methods as $method_state ) {
+			wp_cache_delete( $method_state['item']['option_name'], 'options' );
+		}
+		wp_cache_delete( 'alloptions', 'options' );
+
+		$restored = $rolled_back;
+		foreach ( $posts as $post_state ) {
+			$restored = $restored && bactive_shipping_post_state( $post_state['item'] ) === $post_state['before'];
+		}
+		foreach ( $methods as $method_state ) {
+			$restored = $restored && get_option( $method_state['item']['option_name'], null ) === $method_state['before'];
+		}
+		$result['changed'] = array();
+		$result['rolled_back'] = $restored;
+		$result['error'] = $restored
+			? 'Write failed; the transaction was rolled back and the original state was verified'
+			: 'Write outcome is uncertain; stop and perform exact destination recovery';
+		return $result;
+	}
 }

@@ -227,6 +227,12 @@ function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 		<h2<?php echo $heading_attribute; ?>>Court Skort size chart</h2>
 		<p>This chart is for the Court Skort only. Sizes are shown using the chart's numeric labels.</p>
 		<p>Shopping with S, M, L or XL? <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us to confirm your matching Court Skort size</a>.</p>
+		<figure class="bactive-size-illustration">
+			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Court Skort illustrated size guide full size in a new tab">
+				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Court Skort size chart with arrows showing waist, inner hip, skirt length and inner shorts length. Measurements and instructions follow below.">
+			</a>
+			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
+		</figure>
 		<div class="bactive-size-table-wrap" role="region" aria-label="Court Skort measurements; scroll to see all sizes" tabindex="0">
 			<table class="bactive-size-table">
 				<caption>Court Skort measurements in centimeters (cm)</caption>
@@ -255,6 +261,12 @@ function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 		<?php elseif ( 'bubble-dress' === $chart ) : ?>
 		<h2<?php echo $heading_attribute; ?>>Bubble Dress size chart</h2>
 		<p>This chart is for the Bubble Dress only.</p>
+		<figure class="bactive-size-illustration">
+			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Bubble Dress illustrated size guide full size in a new tab">
+				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Bubble Dress size chart with arrows showing coat length, bust, waist, hip and the inner shorts leg opening. Measurements and instructions follow below.">
+			</a>
+			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
+		</figure>
 		<div class="bactive-size-table-wrap" role="region" aria-label="Bubble Dress measurements; scroll to see all measurements" tabindex="0">
 			<table class="bactive-size-table bactive-size-table-bubble">
 				<caption>Bubble Dress measurements in centimeters (cm)</caption>

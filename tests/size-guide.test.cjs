@@ -208,6 +208,7 @@ function renderGuide({ slug = '', product = true, page = false, admin = false,
         function in_the_loop() { return $GLOBALS['config']['loop']; }
         function is_main_query() { return $GLOBALS['config']['main']; }
         function home_url($path) { return 'https://bactiveph.com' . $path; }
+        function get_stylesheet_directory_uri() { return 'https://bactiveph.com/wp-content/themes/blocksy-child'; }
         function esc_url($value) { return htmlspecialchars($value, ENT_QUOTES); }
         function esc_attr($value) { return htmlspecialchars($value, ENT_QUOTES); }
         eval(base64_decode('${section}'));
@@ -249,7 +250,7 @@ test('other skorts, dresses and unknown products never inherit an approved chart
         const html = renderGuide({ slug });
         assert.match(html, /Size guidance/);
         assert.match(html, /https:\/\/bactiveph.com\/contact\//);
-        assert.doesNotMatch(html, /<table|Skort size chart|80 to 84|Asian fit/);
+        assert.doesNotMatch(html, /<table|<img|Skort size chart|80 to 84|Asian fit/);
         assert.match(renderGuide({ slug, action: 'link' }), /\/size-guide\/#sizing-help/);
     }
     assert.match(renderGuide({ slug: 'the-court-skort', action: 'link' }), /#court-skort-size-chart/);
@@ -289,4 +290,30 @@ test('standalone guide separates the two named products and preserves unrelated 
     for (const override of [{ page: false }, { admin: true }, { loop: false }, { main: false }]) {
         assert.equal(renderGuide({ action: 'page', page: true, ...override }), 'original content');
     }
+});
+
+test('original illustrated guides are intact and restricted to their exact products', () => {
+    const { createHash } = require('node:crypto');
+    const guides = [
+        ['court-skort', '9658c8213afa114480f5563f839fb890a93cb786bc019e374d788b6c0b6cdfaf'],
+        ['bubble-dress', '42a81babe16dea20dbeb5bf6a86cd6c8d05880a4466ebd727c78136badbac2e9'],
+    ];
+    for (const [chart, sha256] of guides) {
+        const filename = `${chart}-illustrated-20260911.jpg`;
+        const asset = fs.readFileSync(path.join(projectRoot,
+            'wordpress/wp-content/themes/blocksy-child/assets/images/size-guides', filename));
+        assert.equal(createHash('sha256').update(asset).digest('hex'), sha256);
+        assert.equal(asset.subarray(0, 3).toString('hex'), 'ffd8ff');
+        const html = renderGuide({ slug: `the-${chart}` });
+        assert.equal([...html.matchAll(/<img /g)].length, 1);
+        assert.ok(html.indexOf('<figure') < html.indexOf('<table'));
+        assert.ok(html.includes(`/assets/images/size-guides/${filename}`));
+        assert.match(html, /width="853" height="1280" loading="lazy" alt="[^"]+"/);
+        assert.match(html, /target="_blank" rel="noopener" aria-label="Open [^"]+new tab"/);
+        for (const [other] of guides.filter(([key]) => key !== chart)) {
+            assert.ok(!html.includes(`${other}-illustrated-20260911.jpg`));
+        }
+    }
+    assert.equal([...renderGuide({ action: 'page', page: true }).matchAll(/<img /g)].length, 2);
+    assert.doesNotMatch(renderGuide({ action: 'content', chart: 'unapproved' }), /<img/);
 });

@@ -18,6 +18,8 @@ The repository checkout was dirty and 113 commits behind `origin/main`, so imple
 
 The private WP-CLI helper and reviewed manifest fail closed on site/database/theme identity, transactional table engines, page IDs/slugs/content hashes, exact replacement counts, domestic zone identities and exact location-set hashes, enabled free-shipping instance IDs, option hashes, discount handling, and the absence of an enabled fallback-zone free-shipping method. All six database changes run in one transaction; a write/readback failure rolls back the transaction, clears affected caches, and verifies the original records before reporting recovery. It supports check, apply, and rollback modes on the explicitly listed production and staging targets.
 
+Action-time production preflight found that the Shipping & Returns page had independently advanced from an outdated ₱2,000 claim to an exclusive “over ₱5,000” claim after PR #79 merged. The follow-up manifest updates only that production page's exact preimage and result hashes; it still replaces one exact list item with the approved inclusive domestic policy and explicit international exclusion. The other five database preimages remain unchanged.
+
 Stage first. Before production, obtain a fresh complete backup plus private off-server checksums, retain exact preimages for the child-theme file and six database records, verify the current production hashes again, and serialize the writer window. After applying only the shipping changes, invalidate the affected page/object caches and confirm the ordinary public URLs, the WooCommerce settings, the domestic boundary, the international negative path, and server logs.
 
 ## Rollback

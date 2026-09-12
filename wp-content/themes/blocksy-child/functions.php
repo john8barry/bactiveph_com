@@ -144,18 +144,25 @@ function bactive_fabric_care_tab_content() {
 add_action( 'woocommerce_single_product_summary', 'bactive_size_guide_link', 25 );
 function bactive_size_guide_link() {
 	$url = home_url( '/size-guide/' );
-	if ( ! bactive_product_has_skort_chart() ) {
-		$url .= '#sizing-help';
-	}
+	$chart = bactive_get_product_size_chart();
+	$url .= $chart ? '#' . $chart . '-size-chart' : '#sizing-help';
 	echo '<a href="' . esc_url( $url ) . '" class="bactive-size-guide-link" aria-haspopup="dialog" aria-controls="bactive-size-modal">Size Guide</a>';
 }
 
 /**
- * Only the skorts category has an approved chart. Never infer sizing from
- * a product title, letter-size variation, or a broader clothing category.
+ * Approved charts belong to these exact products, not their categories.
+ * Slugs are explicit identities; never infer sizing from a title or variation.
  */
-function bactive_product_has_skort_chart() {
-	return is_product() && has_term( 'skorts', 'product_cat', get_queried_object_id() );
+function bactive_get_product_size_chart() {
+	if ( ! is_product() ) {
+		return '';
+	}
+	$charts = array(
+		'the-court-skort' => 'court-skort',
+		'the-bubble-dress' => 'bubble-dress',
+	);
+	$slug = get_post_field( 'post_name', get_queried_object_id() );
+	return $charts[ $slug ] ?? '';
 }
 
 /**
@@ -167,13 +174,13 @@ function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 	ob_start();
 	?>
 	<div class="bactive-size-guide-content">
-		<?php if ( 'skort' === $chart ) : ?>
-		<h2<?php echo $heading_attribute; ?>>Skort size chart</h2>
-		<p>This chart is for skorts only. Sizes are shown using the chart's numeric labels.</p>
-		<p>Shopping with S, M, L or XL? <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us to confirm your matching skort size</a>.</p>
-		<div class="bactive-size-table-wrap" role="region" aria-label="Skort measurements; scroll to see all sizes" tabindex="0">
+		<?php if ( 'court-skort' === $chart ) : ?>
+		<h2<?php echo $heading_attribute; ?>>Court Skort size chart</h2>
+		<p>This chart is for the Court Skort only. Sizes are shown using the chart's numeric labels.</p>
+		<p>Shopping with S, M, L or XL? <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us to confirm your matching Court Skort size</a>.</p>
+		<div class="bactive-size-table-wrap" role="region" aria-label="Court Skort measurements; scroll to see all sizes" tabindex="0">
 			<table class="bactive-size-table">
-				<caption>Skort measurements in centimeters (cm)</caption>
+				<caption>Court Skort measurements in centimeters (cm)</caption>
 				<thead>
 					<tr><th scope="col">Size</th><th scope="col">4</th><th scope="col">6</th><th scope="col">8</th><th scope="col">10</th><th scope="col">12</th><th scope="col">14</th></tr>
 				</thead>
@@ -196,6 +203,34 @@ function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 			<dt>Inner Leg Opening</dt><dd>Measure across the leg opening of the built-in shorts.</dd>
 			<dt>Inner Length</dt><dd>Measure the length of the inner shorts (from crotch to hem).</dd>
 		</dl>
+		<?php elseif ( 'bubble-dress' === $chart ) : ?>
+		<h2<?php echo $heading_attribute; ?>>Bubble Dress size chart</h2>
+		<p>This chart is for the Bubble Dress only.</p>
+		<div class="bactive-size-table-wrap" role="region" aria-label="Bubble Dress measurements; scroll to see all measurements" tabindex="0">
+			<table class="bactive-size-table bactive-size-table-bubble">
+				<caption>Bubble Dress measurements in centimeters (cm)</caption>
+				<thead>
+					<tr><th scope="col">Size</th><th scope="col">Coat Length (cm)</th><th scope="col">Bust (cm)</th><th scope="col">Waist (cm)</th><th scope="col">Hip (cm)</th><th scope="col">Slack Bottom (cm)</th></tr>
+				</thead>
+				<tbody>
+					<tr><th scope="row">S</th><td>74</td><td>68</td><td>56</td><td>80</td><td>41</td></tr>
+					<tr><th scope="row">M</th><td>76</td><td>72</td><td>60</td><td>84</td><td>43</td></tr>
+					<tr><th scope="row">L</th><td>78</td><td>76</td><td>64</td><td>88</td><td>45</td></tr>
+					<tr><th scope="row">XL</th><td>80</td><td>80</td><td>68</td><td>92</td><td>47</td></tr>
+					<tr><th scope="row">XXL</th><td>84</td><td>84</td><td>72</td><td>98</td><td>49</td></tr>
+				</tbody>
+			</table>
+		</div>
+		<p class="bactive-size-scroll-hint">Scroll the table horizontally to see all measurements.</p>
+		<p>Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</p>
+		<h3>How to measure</h3>
+		<dl class="bactive-size-measurements">
+			<dt>Coat Length</dt><dd>Total length from top of shoulder to bottom hem of outer skirt.</dd>
+			<dt>Bust</dt><dd>Measure around the fullest part of your bust.</dd>
+			<dt>Waist</dt><dd>Measure around the narrowest part of your waist.</dd>
+			<dt>Hip</dt><dd>Measure around the fullest part of your hips.</dd>
+			<dt>Slack Bottom</dt><dd>This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs.</dd>
+		</dl>
 		<?php else : ?>
 		<h2<?php echo $heading_attribute; ?>>Size guidance</h2>
 		<p>Size charts vary by style. <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us for help choosing your size</a>.</p>
@@ -212,8 +247,9 @@ function bactive_size_guide_page_content( $content ) {
 		return $content;
 	}
 
-	return bactive_get_size_guide_content( 'bactive-size-page-title', 'skort' )
-		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>For tops, dresses and other styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>. The skort chart above does not apply to these garments.</p></section>';
+	return bactive_get_size_guide_content( 'court-skort-size-chart', 'court-skort' )
+		. bactive_get_size_guide_content( 'bubble-dress-size-chart', 'bubble-dress' )
+		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>For other skorts, dresses, tops and styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>. The charts above apply only to the Court Skort and Bubble Dress, respectively.</p></section>';
 }
 
 /**
@@ -226,7 +262,7 @@ function bactive_size_guide_modal() {
 	<dialog id="bactive-size-modal" class="bactive-modal" aria-labelledby="bactive-size-modal-title">
 		<div class="bactive-modal-inner">
 			<button type="button" class="bactive-modal-close" aria-label="Close size guide">&times;</button>
-			<?php echo bactive_get_size_guide_content( 'bactive-size-modal-title', bactive_product_has_skort_chart() ? 'skort' : '' ); ?>
+			<?php echo bactive_get_size_guide_content( 'bactive-size-modal-title', bactive_get_product_size_chart() ); ?>
 		</div>
 	</dialog>
 	<?php

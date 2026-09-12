@@ -108,6 +108,15 @@
     white-space: normal;
 }
 
+.bactive-size-table-bubble th {
+    white-space: normal;
+}
+
+.bactive-size-table-bubble th:first-child {
+    width: auto;
+    min-width: 64px;
+}
+
 .bactive-size-table tbody tr:last-child > * {
     border-bottom: 0;
 }
@@ -127,5 +136,14 @@
 
 #sizing-help {
     margin-top: 32px;
+    scroll-margin-top: 120px;
+}
+
+.bactive-size-guide-content + .bactive-size-guide-content {
+    margin-top: 48px;
+}
+
+#court-skort-size-chart,
+#bubble-dress-size-chart {
     scroll-margin-top: 120px;
 }

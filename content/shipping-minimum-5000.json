@@ -10,9 +10,9 @@
         {
           "id": 20,
           "slug": "shipping-returns",
-          "before_sha256": "b8801cc018ecdd20f7e7e111c01b111df8f2787a0cef5fe17ee9e077083188d4",
-          "after_sha256": "63ebd08bc36c49bdb408df19c0ee8bdf4a3a6d70cec3543a7b8ebf98f422a8ad",
-          "old": "<li><strong>Free shipping on orders over ₱2,000.</strong> For orders at or below ₱2,000, your shipping fee is calculated and shown at checkout before you pay.</li>",
+          "before_sha256": "d669d6e62274f112a88725115e8d8c8b244be69dcd24c071f93ac150c747faca",
+          "after_sha256": "7e31c16ec0f1cdd750a66498f48081f8ce67d4747946a776464dc9184a4cb138",
+          "old": "<li><strong>Free shipping on orders over ₱5,000.</strong> For orders at or below ₱5,000, your shipping fee is calculated and shown at checkout before you pay.</li>",
           "new": "<li><strong>Complimentary shipping on Philippine orders of ₱5,000 or more.</strong> For Philippine orders below ₱5,000, your shipping fee is calculated and shown at checkout before you pay. Complimentary shipping does not apply to international destinations.</li>"
         },
         {

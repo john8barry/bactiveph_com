@@ -246,7 +246,7 @@ function checkout_reassurance(): void
             $available = array();
         }
         if (isset($available[GATEWAY_ID])) {
-            $parts[] = __('PayMongo: QRPh, Maya, ShopeePay, BPI Direct Debit & UBP Direct Debit', 'bactive-paymongo');
+            $parts[] = __('PayMongo: QRPh, Maya, ShopeePay & GrabPay', 'bactive-paymongo');
         }
         if (isset($available['cod'])) {
             $parts[] = __('COD', 'bactive-paymongo');

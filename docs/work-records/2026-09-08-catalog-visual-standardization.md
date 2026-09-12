@@ -2,6 +2,29 @@
 
 User approved execution on September 7, 2026 (America/Denver). Owner: current imagery/design coordinator. Priority: medium; customer-facing design and catalogue correctness. Production target: https://bactiveph.com.
 
+## Current status — September 12, 2026
+
+This section supersedes the historical September 8 baseline below. Implementation remains unfinished and has not been deployed.
+
+- Current main `01c81c2e7e5494ebb48beca72d858466e5ad099b` merged into the isolated design branch at `544a4b28`; collection/editorial implementation integrated at `be54d45b`. Canonical dirty checkout preserved. PR #50 remains draft.
+- Authenticated catalogue: **19 products, 253 variations, 96 unique image references**. Existing references can support the 15 qualified candidates without new product imagery. Court Skort numeric sizes and new colours were reviewed afresh. Pleated Skort and Aria Set remain trashed.
+- Fresh encrypted off-server backup completed **2026-09-12 07:53:49 UTC**, before implementation. AES-256-GCM archives cover database, site root and runtime configuration; separate private recovery key. Ciphertext hashes, authenticated decryption, gzip integrity and tar coverage verified. Manifest SHA256: `019eb832ebb641704cc81327487e1cfca62866e80db82237cbd18085278334c9`. 137 tables and 31,803 file entries. Database and files captured sequentially, not an atomic cross-resource snapshot.
+- Actual contained restore passed on WP 7.1, WooCommerce 11.1.0, PHP 8.2.33, MariaDB 11.4.13. Outbound traffic blocked before WordPress boot; production users, orders, sessions, jobs and integrations sanitized. Production configuration, MU plugins and drop-ins excluded from the clone.
+- Real isolated Woo cart matrix: 188 successful additions, 64 correct unavailable rejections, one known held Bubble variation 80 rejection. 43 invalid cart combinations rejected; 294 combinations gave identical lookup results in either selection order. All 253 protected commerce snapshots unchanged after drills.
+- Actual targeted image rollback passed normal, partial, repeated and later-writer conflict cases, preserving synthetic later order, stock and price changes. Design-file rollback still needs its own deployment rehearsal.
+- Separate collection/editorial switches and exact existing-block hash guard implemented. Product gallery styles and accessible native-select enhancements are implemented locally. Current focused checks: 23 JavaScript tests and both PHP module gates pass. These do not establish browser or live readiness.
+- Private clone canary overlay enabled only Courtline 117 and Flow 154. PHP gates pass under PHP 8.2.33; HTTP confirms both product modules, two qualified collection cards, and exactly one transformed existing editorial section. Exact inner fit group SHA256: `fd70fe15ef7449aa7c5524e9f441ba922722c34959f969be9c07d5827b10b710`. Independent code review found a selected-size keyboard focus cascade defect; a specific focus-visible rule fixes it. Browser confirmation remains pending.
+- Browser preview attempts using the in-app browser and Chrome both returned `net::ERR_BLOCKED_BY_CLIENT` for the isolated loopback URL. Isolation was not weakened. Responsive visual review, keyboard checks, deployed responsive images and bounded live cart checks remain outstanding.
+- Security source review found no new write endpoint or external dependency in these modules. Current Dependabot API access returns 403; unresolved historical issue #7 applicability and issue #9 credential-history work are not described as cleared.
+
+### Holds and remaining control point
+
+Keep product 56 Bubble Dress (duplicate Black XL, missing colour, unlisted Onyx), 160 Rally Skort (unlisted colours), 238 Sculpt Leggings (shared Almond/Stone image), and 211 Ribbed Tank (variation 646 missing colour) unchanged. Court Skort's Lavender circle remains text-only until its bright pink source is reconciled; do not borrow Flow Skort's Lavender value. Bloom and Sakura Pink remain distinct.
+
+Finish the reviewed palette/asset manifest, restore-browser qualification and design-file rollback; independently review the final diff; then obtain a serialized production writer window. Release Courtline Dress, then Flow Skort, then shared presentation and qualified batches of at most three. Each release still requires public cached readback, 20-minute monitoring and a next-day check. No production design writer window is currently reserved.
+
+## Historical record (superseded where noted above)
+
 ## Scope
 Implement the three approved surfaces: collection cards, editorial homepage section, and product gallery/colour/size presentation. Preserve original logo, Rajdhani 600, sage/ivory design, WooCommerce pricing and purchase rules. Standardize imagery using product references; generated detail must not invent garment construction. Review every product independently.
 

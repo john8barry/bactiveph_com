@@ -73,7 +73,7 @@ test('labels are text and unapproved/malicious palette values never create colou
     const p = await page({palette:{attribute_pa_colour:{black:'url(javascript:alert(1))',white:'#ffffff'}}});
     assert.equal(p.w.document.querySelectorAll('.bactive-selector-options img').length,0);
     assert.equal(p.w.document.querySelectorAll('.bactive-selector-colour').length,1);
-    assert.match(p.buttons()[3].textContent,/<img/);
+    assert.ok(p.buttons().some(button => /<img/.test(button.textContent)));
     p.close();
 });
 test('explicit fallback restores native selection and removes enhancement handlers', async () => {
@@ -104,5 +104,23 @@ test('partial initialization failure restores all native controls', async () => 
     assert.equal(p.buttons().length,0);
     assert.ok([...p.w.document.querySelectorAll('select')].every(select=>!select.hidden));
     p.w.MutationObserver.prototype.observe = observe;
+    p.close();
+});
+test('colour focus order and complete description return to native positions on fallback', async () => {
+    const p = await page({productId:99});
+    const summary = p.w.document.querySelector('.summary');
+    const description = p.w.document.createElement('div');
+    description.className = 'woocommerce-product-details__short-description';
+    description.innerHTML = '<p>Original fit and care.</p><a href="/size-guide">Matching guidance</a>';
+    summary.prepend(description);
+    p.w.bactiveCatalogVisuals = config;
+    p.w.eval(source); p.form.trigger('wc_variation_form');
+    assert.equal(p.form.find('.variations select').first().attr('name'), 'attribute_pa_colour');
+    assert.equal(summary.querySelector('.bactive-product-details a').getAttribute('href'), '/size-guide');
+    assert.equal(summary.querySelector('.bactive-product-details .woocommerce-product-details__short-description'), description);
+    p.w.document.querySelector('.bactive-selector-fallback').click();
+    assert.equal(p.form.find('.variations select').first().attr('name'), 'attribute_pa_size');
+    assert.equal(summary.firstElementChild, description);
+    assert.equal(summary.querySelector('.bactive-product-details'), null);
     p.close();
 });

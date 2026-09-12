@@ -1,6 +1,9 @@
 <?php
 define( 'ABSPATH', __DIR__ );
 function add_action( ...$args ) {}
+function add_filter( ...$args ) {}
+$option = array();
+function get_option( $name, $default ) { global $option; return $option; }
 function get_term_by( $field, $slug, $taxonomy ) { return 'black' === $slug && 'pa_colour' === $taxonomy ? (object) array( 'term_id' => 7 ) : false; }
 function is_wp_error( $value ) { return false; }
 require __DIR__ . '/../wordpress/wp-content/themes/blocksy-child/inc/catalog-visuals.php';
@@ -9,6 +12,11 @@ $registry = array( 'schema_version' => 1, 'version' => 'test-1', 'enabled' => tr
     'products' => array( 36 => array( 'enabled' => true, 'palette' => array(
         'attribute_pa_colour' => array( 'black' => array( 'approved' => true, 'term_id' => 7, 'hex' => '#010203' ) ) ) ) ) );
 check( null === bactive_catalog_visuals_config( null, 36 ) );
+check( array() === bactive_catalog_visuals_registry() );
+$option = $registry;
+check( $registry === bactive_catalog_visuals_registry() );
+$option = 'invalid';
+check( array() === bactive_catalog_visuals_registry() );
 check( null === bactive_catalog_visuals_config( $registry, 37 ) );
 check( null === bactive_catalog_visuals_config( $registry, '36' ) );
 foreach ( array( 'schema_version' => 2, 'enabled' => 'true', 'version' => '</script>' ) as $key => $value ) {

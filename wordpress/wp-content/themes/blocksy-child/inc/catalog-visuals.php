@@ -2,7 +2,8 @@
 /**
  * Product selectors, inert until an exact product is released.
  *
- * Define BACTIVE_CATALOG_VISUALS_REGISTRY in private deployment configuration:
+ * Store bactive_catalog_visuals_release as a private option, or define
+ * BACTIVE_CATALOG_VISUALS_REGISTRY in private deployment configuration:
  * ['schema_version' => 1, 'version' => 'release-id', 'enabled' => true,
  *  'products' => [36 => ['enabled' => true, 'palette' => []]]].
  * Optional palette: attribute_pa_colour => slug =>
@@ -12,6 +13,13 @@
  * Never stores prices, availability, variation IDs, or gallery assignments.
  */
 defined( 'ABSPATH' ) || exit;
+
+/** Private release option; constants retain precedence for existing deployments. */
+function bactive_catalog_visuals_registry() {
+    $registry = defined( 'BACTIVE_CATALOG_VISUALS_REGISTRY' )
+        ? BACTIVE_CATALOG_VISUALS_REGISTRY : get_option( 'bactive_catalog_visuals_release', array() );
+    return is_array( $registry ) ? $registry : array();
+}
 
 function bactive_catalog_visuals_config( $registry, $product_id ) {
     if ( ! is_array( $registry ) || 1 !== ( $registry['schema_version'] ?? null )
@@ -51,15 +59,14 @@ function bactive_catalog_visuals_config( $registry, $product_id ) {
 }
 
 function bactive_enqueue_catalog_visuals() {
-    if ( ! function_exists( 'is_product' ) || ! is_product()
-        || ! defined( 'BACTIVE_CATALOG_VISUALS_REGISTRY' ) ) {
+    if ( ! function_exists( 'is_product' ) || ! is_product() ) {
         return;
     }
     $product = wc_get_product( get_queried_object_id() );
     if ( ! $product || ! $product->is_type( 'variable' ) ) {
         return;
     }
-    $config = bactive_catalog_visuals_config( BACTIVE_CATALOG_VISUALS_REGISTRY, $product->get_id() );
+    $config = bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() );
     $base = get_stylesheet_directory();
     if ( ! $config || ! is_readable( $base . '/assets/css/catalog-visuals.css' )
         || ! is_readable( $base . '/assets/js/catalog-visuals.js' ) ) {
@@ -74,3 +81,16 @@ function bactive_enqueue_catalog_visuals() {
         wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . ';', 'before' );
 }
 add_action( 'wp_enqueue_scripts', 'bactive_enqueue_catalog_visuals', 40 );
+
+function bactive_catalog_body_classes( $classes ) {
+    if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+        return $classes;
+    }
+    $product = wc_get_product( get_queried_object_id() );
+    if ( $product && $product->is_type( 'variable' )
+        && bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() ) ) {
+        $classes[] = 'bactive-product-page';
+    }
+    return $classes;
+}
+add_filter( 'body_class', 'bactive_catalog_body_classes' );

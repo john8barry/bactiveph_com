@@ -25,11 +25,13 @@
         let observer;
         let active = true;
         let invalidated = false;
+        const layoutCleanup = [];
         function restore() {
             active = false;
             if (observer) observer.disconnect();
             $form.off('.bactiveSelectors');
             groups.forEach(({select, group, hidden}) => { select.hidden = hidden; group.remove(); });
+            layoutCleanup.reverse().forEach(cleanup => cleanup());
             notice.remove(); fallback.remove();
             form.classList.remove('bactive-catalog-selectors');
             form.dataset.bactiveSelectors = 'fallback';
@@ -55,6 +57,7 @@
             selects.forEach(select => {
                 const group = document.createElement('div');
                 group.className = 'bactive-selector-options';
+                group.dataset.bactiveKind = select.name === 'attribute_pa_size' ? 'size' : 'colour';
                 group.setAttribute('role', 'group');
                 const label = select.labels && select.labels[0];
                 group.setAttribute('aria-label', label ? label.textContent.trim() :
@@ -70,6 +73,7 @@
                     button.className = 'bactive-selector-option';
                     const hex = config.palette && config.palette[select.name] && config.palette[select.name][option.value];
                     if (typeof hex === 'string' && /^#[a-fA-F0-9]{6}$/.test(hex)) {
+                        button.classList.add('bactive-selector-option--colour');
                         const circle = document.createElement('span');
                         circle.className = 'bactive-selector-colour';
                         circle.setAttribute('aria-hidden', 'true');
@@ -98,6 +102,31 @@
                 select.after(group);
             });
             if (!groups.length) return;
+            // Reorder the real rows, preserving DOM focus order and native selects.
+            const size = selects.find(select => select.name === 'attribute_pa_size');
+            const colour = selects.find(select => select.name !== 'attribute_pa_size');
+            const sizeRow = size && size.closest('tr');
+            const colourRow = colour && colour.closest('tr');
+            if (sizeRow && colourRow && sizeRow.parentNode === colourRow.parentNode) {
+                const marker = document.createComment('original-colour-row');
+                colourRow.before(marker);
+                sizeRow.before(colourRow);
+                layoutCleanup.push(() => { marker.before(colourRow); marker.remove(); });
+            }
+            // Retain every word of the original description in an accessible disclosure.
+            const summary = form.closest('.summary');
+            const description = summary && summary.querySelector(':scope > .woocommerce-product-details__short-description');
+            if (description && !summary.querySelector('.bactive-product-details')) {
+                const marker = document.createComment('original-product-description');
+                const details = document.createElement('details');
+                details.className = 'bactive-product-details';
+                const heading = document.createElement('summary');
+                heading.textContent = 'Details & fit';
+                description.before(marker);
+                details.append(heading, description);
+                (form.closest('.ct-product-add-to-cart') || form).after(details);
+                layoutCleanup.push(() => { marker.before(description); marker.remove(); details.remove(); });
+            }
             form.querySelector('.variations').after(notice, fallback);
             fallback.addEventListener('click', () => { restore(); selects[0].focus(); });
             $form.on('woocommerce_update_variation_values.bactiveSelectors woocommerce_variation_has_changed.bactiveSelectors', sync);

@@ -24,3 +24,5 @@ Courtline Dress (117), then Flow Skort (154), remain the canaries. Their current
 The checklist has one row per published product; the image manifest has 253 uniquely owned variation records and 96 attachment hashes. Product/variation identities and current images are preserved, and no SKU, price or inventory changes are proposed. No generation gap was identified that blocks current UI qualification. Any later generated asset needs its own source/fidelity review and neutral public filename.
 
 Backup and restore qualification belong to the root release record. This independent source review does not re-certify them. UI/cart matrix, mobile/desktop, accessibility, performance and all production gates remain untested here. Refresh evidence, complete those gates, and only then enable the qualified batch.
+
+Root reconciliation: the separate restore evidence now records all 253 real Woo cart outcomes, 43 rejected invalid combinations and 294 order-equivalent lookups. Product checklist backend gates reflect those results, including the known held Bubble80 rejection. Actual browser interaction and all production gates remain pending.

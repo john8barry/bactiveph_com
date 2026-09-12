@@ -194,7 +194,7 @@ add_action( 'woocommerce_single_product_summary', 'bactive_size_guide_link', 25 
 function bactive_size_guide_link() {
 	$url = home_url( '/size-guide/' );
 	$chart = bactive_get_product_size_chart();
-	$url .= $chart ? '#' . $chart . '-size-chart' : '#sizing-help';
+	$url .= $chart ? '?chart=' . $chart . '#' . $chart . '-size-chart' : '#sizing-help';
 	echo '<a href="' . esc_url( $url ) . '" class="bactive-size-guide-link" aria-haspopup="dialog" aria-controls="bactive-size-modal">Size Guide</a>';
 }
 
@@ -225,73 +225,24 @@ function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 	<div class="bactive-size-guide-content">
 		<?php if ( 'court-skort' === $chart ) : ?>
 		<h2<?php echo $heading_attribute; ?>>Court Skort size chart</h2>
-		<p>This chart is for the Court Skort only. Sizes are shown using the chart's numeric labels.</p>
-		<p>Shopping with S, M, L or XL? <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us to confirm your matching Court Skort size</a>.</p>
 		<figure class="bactive-size-illustration">
-			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Court Skort illustrated size guide full size in a new tab">
-				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Court Skort size chart with arrows showing waist, inner hip, skirt length and inner shorts length. Measurements and instructions follow below.">
+			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Court Skort illustrated size guide full size in a new tab" aria-describedby="court-skort-measurements-description">
+				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Court Skort size chart with arrows showing waist, inner hip, skirt length and inner shorts length.">
 			</a>
 			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
 		</figure>
-		<div class="bactive-size-table-wrap" role="region" aria-label="Court Skort measurements; scroll to see all sizes" tabindex="0">
-			<table class="bactive-size-table">
-				<caption>Court Skort measurements in centimeters (cm)</caption>
-				<thead>
-					<tr><th scope="col">Size</th><th scope="col">4</th><th scope="col">6</th><th scope="col">8</th><th scope="col">10</th><th scope="col">12</th><th scope="col">14</th></tr>
-				</thead>
-				<tbody>
-					<tr><th scope="row">Length (cm)</th><td>35</td><td>36</td><td>37</td><td>38</td><td>39</td><td>40</td></tr>
-					<tr><th scope="row">Waist (cm)</th><td>64</td><td>68</td><td>72</td><td>76</td><td>80</td><td>84</td></tr>
-					<tr><th scope="row">Inner Hip (cm)</th><td>72</td><td>76</td><td>80</td><td>84</td><td>88</td><td>92</td></tr>
-					<tr><th scope="row">Inner Leg Opening (cm)</th><td>40</td><td>42</td><td>44</td><td>46</td><td>48</td><td>50</td></tr>
-					<tr><th scope="row">Inner Length (cm)</th><td>8.5</td><td>8.8</td><td>9.1</td><td>9.4</td><td>9.7</td><td>10.0</td></tr>
-				</tbody>
-			</table>
-		</div>
-		<p class="bactive-size-scroll-hint">Scroll the table horizontally to see all sizes.</p>
-		<p>Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</p>
-		<h3>How to measure</h3>
-		<dl class="bactive-size-measurements">
-			<dt>Length</dt><dd>Measure from the top of the waistband to the hem.</dd>
-			<dt>Waist</dt><dd>Measure around the narrowest part of your waist.</dd>
-			<dt>Inner Hip</dt><dd>Measure around the fullest part of your hips (below the waistband).</dd>
-			<dt>Inner Leg Opening</dt><dd>Measure across the leg opening of the built-in shorts.</dd>
-			<dt>Inner Length</dt><dd>Measure the length of the inner shorts (from crotch to hem).</dd>
-		</dl>
+		<!-- Referenced text alternative, not a second visible chart. -->
+		<div id="court-skort-measurements-description" hidden>Court Skort measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12, 14. Length: 35, 36, 37, 38, 39, 40. Waist: 64, 68, 72, 76, 80, 84. Inner Hip: 72, 76, 80, 84, 88, 92. Inner Leg Opening: 40, 42, 44, 46, 48, 50. Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0. How to measure: Length: Measure from the top of the waistband to the hem. Waist: Measure around the narrowest part of your waist. Inner Hip: Measure around the fullest part of your hips (below the waistband). Inner Leg Opening: Measure across the leg opening of the built-in shorts. Inner Length: Measure the length of the inner shorts (from crotch to hem). Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</div>
 		<?php elseif ( 'bubble-dress' === $chart ) : ?>
 		<h2<?php echo $heading_attribute; ?>>Bubble Dress size chart</h2>
-		<p>This chart is for the Bubble Dress only.</p>
 		<figure class="bactive-size-illustration">
-			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Bubble Dress illustrated size guide full size in a new tab">
-				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Bubble Dress size chart with arrows showing coat length, bust, waist, hip and the inner shorts leg opening. Measurements and instructions follow below.">
+			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Bubble Dress illustrated size guide full size in a new tab" aria-describedby="bubble-dress-measurements-description">
+				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Bubble Dress size chart with arrows showing coat length, bust, waist, hip and the inner shorts leg opening.">
 			</a>
 			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
 		</figure>
-		<div class="bactive-size-table-wrap" role="region" aria-label="Bubble Dress measurements; scroll to see all measurements" tabindex="0">
-			<table class="bactive-size-table bactive-size-table-bubble">
-				<caption>Bubble Dress measurements in centimeters (cm)</caption>
-				<thead>
-					<tr><th scope="col">Size</th><th scope="col">Coat Length (cm)</th><th scope="col">Bust (cm)</th><th scope="col">Waist (cm)</th><th scope="col">Hip (cm)</th><th scope="col">Slack Bottom (cm)</th></tr>
-				</thead>
-				<tbody>
-					<tr><th scope="row">S</th><td>74</td><td>68</td><td>56</td><td>80</td><td>41</td></tr>
-					<tr><th scope="row">M</th><td>76</td><td>72</td><td>60</td><td>84</td><td>43</td></tr>
-					<tr><th scope="row">L</th><td>78</td><td>76</td><td>64</td><td>88</td><td>45</td></tr>
-					<tr><th scope="row">XL</th><td>80</td><td>80</td><td>68</td><td>92</td><td>47</td></tr>
-					<tr><th scope="row">XXL</th><td>84</td><td>84</td><td>72</td><td>98</td><td>49</td></tr>
-				</tbody>
-			</table>
-		</div>
-		<p class="bactive-size-scroll-hint">Scroll the table horizontally to see all measurements.</p>
-		<p>Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</p>
-		<h3>How to measure</h3>
-		<dl class="bactive-size-measurements">
-			<dt>Coat Length</dt><dd>Total length from top of shoulder to bottom hem of outer skirt.</dd>
-			<dt>Bust</dt><dd>Measure around the fullest part of your bust.</dd>
-			<dt>Waist</dt><dd>Measure around the narrowest part of your waist.</dd>
-			<dt>Hip</dt><dd>Measure around the fullest part of your hips.</dd>
-			<dt>Slack Bottom</dt><dd>This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs.</dd>
-		</dl>
+		<!-- Referenced text alternative, not a second visible chart. -->
+		<div id="bubble-dress-measurements-description" hidden>Bubble Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order. S: 74, 68, 56, 80, 41. M: 76, 72, 60, 84, 43. L: 78, 76, 64, 88, 45. XL: 80, 80, 68, 92, 47. XXL: 84, 84, 72, 98, 49. How to measure: Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Bust: Measure around the fullest part of your bust. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</div>
 		<?php else : ?>
 		<h2<?php echo $heading_attribute; ?>>Size guidance</h2>
 		<p>Size charts vary by style. <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us for help choosing your size</a>.</p>
@@ -308,9 +259,16 @@ function bactive_size_guide_page_content( $content ) {
 		return $content;
 	}
 
-	return bactive_get_size_guide_content( 'court-skort-size-chart', 'court-skort' )
-		. bactive_get_size_guide_content( 'bubble-dress-size-chart', 'bubble-dress' )
-		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>For other skorts, dresses, tops and styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>. The charts above apply only to the Court Skort and Bubble Dress, respectively.</p></section>';
+	// Only exact, scalar chart keys may select a product guide. Never reflect input.
+	$chart = isset( $_GET['chart'] ) && is_string( $_GET['chart'] ) ? $_GET['chart'] : '';
+	if ( in_array( $chart, array( 'court-skort', 'bubble-dress' ), true ) ) {
+		return bactive_get_size_guide_content( $chart . '-size-chart', $chart );
+	}
+
+	return '<section class="bactive-size-guide-content"><h2>Choose your product</h2>'
+		. '<ul><li id="court-skort-size-chart"><a href="' . esc_url( home_url( '/size-guide/?chart=court-skort#court-skort-size-chart' ) ) . '">Court Skort visual size chart</a></li>'
+		. '<li id="bubble-dress-size-chart"><a href="' . esc_url( home_url( '/size-guide/?chart=bubble-dress#bubble-dress-size-chart' ) ) . '">Bubble Dress visual size chart</a></li></ul></section>'
+		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>Size charts vary by style. For other skorts, dresses, tops and styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>.</p></section>';
 }
 
 /**

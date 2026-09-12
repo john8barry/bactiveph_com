@@ -143,36 +143,63 @@ function bactive_fabric_care_tab_content() {
  */
 add_action( 'woocommerce_single_product_summary', 'bactive_size_guide_link', 25 );
 function bactive_size_guide_link() {
-	echo '<a href="' . esc_url( home_url( '/size-guide/' ) ) . '" class="bactive-size-guide-link" aria-haspopup="dialog" aria-controls="bactive-size-modal">True to size (Asian fit) &rarr; Size Guide</a>';
+	$url = home_url( '/size-guide/' );
+	if ( ! bactive_product_has_skort_chart() ) {
+		$url .= '#sizing-help';
+	}
+	echo '<a href="' . esc_url( $url ) . '" class="bactive-size-guide-link" aria-haspopup="dialog" aria-controls="bactive-size-modal">Size Guide</a>';
+}
+
+/**
+ * Only the skorts category has an approved chart. Never infer sizing from
+ * a product title, letter-size variation, or a broader clothing category.
+ */
+function bactive_product_has_skort_chart() {
+	return is_product() && has_term( 'skorts', 'product_cat', get_queried_object_id() );
 }
 
 /**
  * Render the canonical size-guide content for both the page and product dialog.
  */
-function bactive_get_size_guide_content( $heading_id = '' ) {
+function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 	$heading_attribute = $heading_id ? ' id="' . esc_attr( $heading_id ) . '"' : '';
 
 	ob_start();
 	?>
 	<div class="bactive-size-guide-content">
-		<h2<?php echo $heading_attribute; ?>>Find your fit</h2>
-		<p>B Active is designed with an Asian fit and runs true to size. If you're between sizes, size up for a relaxed feel or stay true for a closer fit.</p>
-		<h3>How to measure</h3>
-		<p><strong>Bust</strong>: around the fullest part.<br><strong>Waist</strong>: the narrowest part of your torso.<br><strong>Hips</strong>: the fullest part.</p>
-		<div class="bactive-size-table-wrap" role="region" aria-label="B Active size measurements" tabindex="0">
+		<?php if ( 'skort' === $chart ) : ?>
+		<h2<?php echo $heading_attribute; ?>>Skort size chart</h2>
+		<p>This chart is for skorts only. Sizes are shown using the chart's numeric labels.</p>
+		<p>Shopping with S, M, L or XL? <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us to confirm your matching skort size</a>.</p>
+		<div class="bactive-size-table-wrap" role="region" aria-label="Skort measurements; scroll to see all sizes" tabindex="0">
 			<table class="bactive-size-table">
-				<caption>Size chart in centimetres</caption>
+				<caption>Skort measurements in centimeters (cm)</caption>
 				<thead>
-					<tr><th scope="col">Size</th><th scope="col">Bust</th><th scope="col">Waist</th><th scope="col">Hips</th></tr>
+					<tr><th scope="col">Size</th><th scope="col">4</th><th scope="col">6</th><th scope="col">8</th><th scope="col">10</th><th scope="col">12</th><th scope="col">14</th></tr>
 				</thead>
 				<tbody>
-					<tr><th scope="row">S</th><td>80 to 84</td><td>62 to 66</td><td>86 to 90</td></tr>
-					<tr><th scope="row">M</th><td>85 to 89</td><td>67 to 71</td><td>91 to 95</td></tr>
-					<tr><th scope="row">L</th><td>90 to 95</td><td>72 to 77</td><td>96 to 101</td></tr>
-					<tr><th scope="row">XL</th><td>96 to 101</td><td>78 to 83</td><td>102 to 107</td></tr>
+					<tr><th scope="row">Length (cm)</th><td>35</td><td>36</td><td>37</td><td>38</td><td>39</td><td>40</td></tr>
+					<tr><th scope="row">Waist (cm)</th><td>64</td><td>68</td><td>72</td><td>76</td><td>80</td><td>84</td></tr>
+					<tr><th scope="row">Inner Hip (cm)</th><td>72</td><td>76</td><td>80</td><td>84</td><td>88</td><td>92</td></tr>
+					<tr><th scope="row">Inner Leg Opening (cm)</th><td>40</td><td>42</td><td>44</td><td>46</td><td>48</td><td>50</td></tr>
+					<tr><th scope="row">Inner Length (cm)</th><td>8.5</td><td>8.8</td><td>9.1</td><td>9.4</td><td>9.7</td><td>10.0</td></tr>
 				</tbody>
 			</table>
 		</div>
+		<p class="bactive-size-scroll-hint">Scroll the table horizontally to see all sizes.</p>
+		<p>Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</p>
+		<h3>How to measure</h3>
+		<dl class="bactive-size-measurements">
+			<dt>Length</dt><dd>Measure from the top of the waistband to the hem.</dd>
+			<dt>Waist</dt><dd>Measure around the narrowest part of your waist.</dd>
+			<dt>Inner Hip</dt><dd>Measure around the fullest part of your hips (below the waistband).</dd>
+			<dt>Inner Leg Opening</dt><dd>Measure across the leg opening of the built-in shorts.</dd>
+			<dt>Inner Length</dt><dd>Measure the length of the inner shorts (from crotch to hem).</dd>
+		</dl>
+		<?php else : ?>
+		<h2<?php echo $heading_attribute; ?>>Size guidance</h2>
+		<p>Size charts vary by style. <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us for help choosing your size</a>.</p>
+		<?php endif; ?>
 	</div>
 	<?php
 
@@ -185,7 +212,8 @@ function bactive_size_guide_page_content( $content ) {
 		return $content;
 	}
 
-	return bactive_get_size_guide_content( 'bactive-size-page-title' );
+	return bactive_get_size_guide_content( 'bactive-size-page-title', 'skort' )
+		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>For tops, dresses and other styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>. The skort chart above does not apply to these garments.</p></section>';
 }
 
 /**
@@ -198,7 +226,7 @@ function bactive_size_guide_modal() {
 	<dialog id="bactive-size-modal" class="bactive-modal" aria-labelledby="bactive-size-modal-title">
 		<div class="bactive-modal-inner">
 			<button type="button" class="bactive-modal-close" aria-label="Close size guide">&times;</button>
-			<?php echo bactive_get_size_guide_content( 'bactive-size-modal-title' ); ?>
+			<?php echo bactive_get_size_guide_content( 'bactive-size-modal-title', bactive_product_has_skort_chart() ? 'skort' : '' ); ?>
 		</div>
 	</dialog>
 	<?php

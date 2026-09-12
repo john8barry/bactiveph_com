@@ -1,19 +1,47 @@
 # PayMongo Hosted Checkout production runbook
 
-This runbook is the payment authority for B Active. It supersedes older build
-notes that mention GCash, cards, Atome, or manual bank transfer. GrabPay is
-now supported only through the explicit verification and selection process below.
+This runbook records payment operations for B Active under the authorized
+project release. It supersedes older build notes advertising GCash, cards,
+Atome, bank debit or manual bank transfer as currently available.
 
-## Approved customer payment methods
+## Current production payment methods
 
-- PayMongo Hosted Checkout: QRPh, Maya, ShopeePay, BPI Direct Debit, and UBP
-  Direct Debit, plus opt-in GrabPay (`grab_pay`).
+- Public PayMongo Hosted Checkout: QRPh (`qrph`), Maya (`paymaya`),
+  ShopeePay (`shopee_pay`) and GrabPay (`grab_pay`).
+- BPI (`dob`), UnionBank (`dob_ubp`) and GCash are excluded from new public
+  checkout pending separate provider-backed qualification and support resolution.
 - WooCommerce Cash on Delivery remains available under the existing fee and
   order-value rules.
-- At public PayMongo activation, disable WooCommerce manual bank transfer
-  (`bacs`) in its own settings. During disabled, private or sandbox preparation,
-  the plugin preserves the existing BACS offering; legacy PayMongo stays hidden.
+- WooCommerce manual bank transfer (`bacs`) is disabled. Historically, during
+  disabled, private or sandbox preparation, the plugin preserved the existing
+  BACS offering; that compatibility behavior is not the current public setting.
 - Legacy PayMongo WooCommerce gateways are not offered.
+
+## Activation checkpoint — 2026-09-12
+
+The release owner activated the four-method public selection at **06:46:39 UTC**.
+The post-activation monitor completed from **06:46:50 to 07:17:34 UTC**
+(1,844.5 seconds): all seven checks passed, with no failed or overdue payment
+actions, payment locks or new fatal-error markers. Final payment-census acceptance
+remains with the release owner in [issue #2](https://github.com/john8barry/bactiveph_com/issues/2).
+Next-day reconciliation is due **2026-09-13 at 06:46:39 UTC**, handled by the
+first existing 30-minute heartbeat at or after that time; do not create a duplicate
+monitor.
+
+The checkout reassurance correction is [PR #88](https://github.com/john8barry/bactiveph_com/pull/88),
+source `32bf276d2c0691d32d3d81c18e660fb63d1cc896`, merge
+`5f487880dfe05c827a5770c9b4727e0fbfbb6be5`. It changes only the hardcoded
+reassurance method names; gateway availability and payment behavior are unchanged.
+All 1,679 local checks, 22 PHP lints, PHP 8.1–8.3 CI and real WooCommerce
+datastore CI passed, with independent runtime/package review.
+
+- Eleven-file runtime ZIP SHA256: `ea8a2cc6559543d142c2defc5a26b07ad44b4f1ecd9b6301e972ca3711469528`.
+- Runtime manifest SHA256: `f072c20782559cc425e3f97158fe8b4ae8333349628daaba4ec038cdefd5d50e`.
+- Main plugin PHP SHA256: `e2fae9ef3d6cc77255d7949a29c3622fa5b15002e90cff3165e4ea74c9cbd838`.
+
+Keep worker runtime hash maps and the qualification's review checksum aligned
+with the installed artifact. Credentials, callbacks and scheduled recovery remain
+in place for existing sessions and deferred-method historical payments.
 
 WooCommerce owns the catalog, cart, customer details, shipping, taxes, coupons,
 and order. Clicking **Checkout securely** creates a pending WooCommerce order
@@ -29,7 +57,9 @@ The operator may launch a verified subset of the supported methods while
 unsupported methods remain deferred. Set **Payment methods for new checkouts**
 (`issuance_methods`) through WooCommerce settings to that exact subset. Missing
 legacy settings retain the original five without GrabPay; explicitly empty or
-malformed selections stop issuance. Checkout copy is generated from the selection. Both fresh and cached
+malformed selections stop issuance. The gateway description is generated from the
+selection; the separate reassurance literal currently names the four launch
+methods and must be reviewed when the selection changes. Both fresh and cached
 live readiness require only selected capabilities, and each selected method
 still requires an independently reconciled live payment before public release.
 A listed capability alone never proves authorization works. GrabPay is never
@@ -43,7 +73,7 @@ invalidate stale requests. A settings save cannot override review holds or
 unexplained sessions. Historical payments from every approved method continue
 through their existing callbacks and recovery; never narrow the integrity
 allowlist to the current public selection. Record deferred methods and their
-support dependencies in issue #2, leaving the full five-method goal open.
+support dependencies in issue #2, leaving deferred-method qualification open.
 
 Prefer manager-only small **live** canaries on production: they test the real
 credential, callback, orders, stock and both inboxes. Show John the exact order
@@ -261,7 +291,9 @@ never retry an uncertain webhook creation or credential mutation blindly.
     UBP. It does not learn mappings or activate bank capabilities. Unexpected
     payloads require a reviewed implementation change and regression coverage.
 
-PayMongo's sandbox controls:
+Previously documented sandbox controls (bank Hosted Checkout applicability remains
+unresolved with support; do not treat the bank instructions as accepted testing
+evidence or enable banks until the supported procedure is confirmed):
 
 - Maya and ShopeePay: use the PayMongo test redirect and select Authorize for
   success or Fail for a negative test.
@@ -401,7 +433,8 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
     Record the deployed plugin hash and sanitized live evidence in issue #2.
 
 A partial launch does not close issue #2: keep deferred methods and the staging
-support case open until all five methods and remaining acceptance criteria are proven.
+support case open until deferred-method qualification and remaining acceptance
+criteria are proven.
 
 ## Monitoring and reconciliation
 

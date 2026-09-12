@@ -172,10 +172,8 @@ test('PHP markup exposes an accessible dialog and usable fallback link', () => {
     assert.match(markup, /aria-haspopup="dialog"/);
     assert.match(markup, /aria-controls="bactive-size-modal"/);
     assert.match(markup, /aria-labelledby="bactive-size-modal-title"/);
-    assert.match(markup, /class="bactive-size-table-wrap"/);
-    assert.match(markup, /<caption>Court Skort measurements in centimeters \(cm\)<\/caption>/);
-    assert.match(markup, /<th scope="col">Size<\/th>/);
-    assert.match(markup, /<th scope="col">14<\/th>/);
+    assert.match(markup, /aria-describedby="court-skort-measurements-description"/);
+    assert.match(markup, /id="court-skort-measurements-description" hidden/);
     assert.match(markup, /add_filter\( 'the_content', 'bactive_size_guide_page_content' \)/);
     assert.match(markup, /is_page\( 'size-guide' \)/);
     assert.doesNotMatch(markup, /you\\'re/);
@@ -184,15 +182,16 @@ test('PHP markup exposes an accessible dialog and usable fallback link', () => {
 // Execute the actual isolated size-guide section with a minimal WordPress
 // contract. This tests rendered category routing, not just source patterns.
 function renderGuide({ slug = '', product = true, page = false, admin = false,
-    loop = true, main = true, action = 'modal', chart = '' } = {}) {
+    loop = true, main = true, action = 'modal', chart = '', query = {} } = {}) {
     const source = fs.readFileSync(functionsPath, 'utf8');
     const start = source.indexOf('add_action( \'woocommerce_single_product_summary\', \'bactive_size_guide_link\'');
     const end = source.indexOf('/**\n * Phase 4: Sticky Add-to-Cart HTML', start);
     assert.ok(start > 0 && end > start, 'size-guide section exists');
-    const config = Buffer.from(JSON.stringify({ slug, product, page, admin, loop, main, action, chart })).toString('base64');
+    const config = Buffer.from(JSON.stringify({ slug, product, page, admin, loop, main, action, chart, query })).toString('base64');
     const section = Buffer.from(source.slice(start, end)).toString('base64');
     const php = `
         $config = json_decode(base64_decode('${config}'), true);
+        $_GET = $config['query'];
         function add_action(...$args) {}
         function add_filter(...$args) {}
         function is_product() { return $GLOBALS['config']['product']; }
@@ -223,24 +222,21 @@ function renderGuide({ slug = '', product = true, page = false, admin = false,
     return execFileSync('php', ['-r', php], { encoding: 'utf8' });
 }
 
-test('Court Skort chart preserves every supplied size and measurement exactly', () => {
+test('Court Skort displays only the visual chart with a nonvisual text alternative', () => {
     const html = renderGuide({ slug: 'the-court-skort' });
-    const rows = [...html.matchAll(/<tr>(.*?)<\/tr>/g)].map(([, row]) =>
-        [...row.matchAll(/<(?:th|td)[^>]*>(.*?)<\/(?:th|td)>/g)].map(([, value]) => value)
-    );
-    assert.deepEqual(rows, [
-        ['Size', '4', '6', '8', '10', '12', '14'],
-        ['Length (cm)', '35', '36', '37', '38', '39', '40'],
-        ['Waist (cm)', '64', '68', '72', '76', '80', '84'],
-        ['Inner Hip (cm)', '72', '76', '80', '84', '88', '92'],
-        ['Inner Leg Opening (cm)', '40', '42', '44', '46', '48', '50'],
-        ['Inner Length (cm)', '8.5', '8.8', '9.1', '9.4', '9.7', '10.0'],
-    ]);
+    assert.doesNotMatch(html, /<table|<dl|<h3/);
+    assert.match(html, /id="court-skort-measurements-description" hidden/);
+    for (const values of [
+        'Sizes, in order: 4, 6, 8, 10, 12, 14.',
+        'Length: 35, 36, 37, 38, 39, 40.',
+        'Waist: 64, 68, 72, 76, 80, 84.',
+        'Inner Hip: 72, 76, 80, 84, 88, 92.',
+        'Inner Leg Opening: 40, 42, 44, 46, 48, 50.',
+        'Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0.',
+    ]) assert.ok(html.includes(values));
     assert.match(html, /Measure across the leg opening of the built-in shorts/);
     assert.match(html, /Please allow 1–2 cm difference/);
-    assert.match(html, /Contact us to confirm your matching Court Skort size/);
-    assert.doesNotMatch(html, /Bubble Dress|Slack Bottom/);
-    assert.doesNotMatch(html, /80 to 84|Asian fit|runs true to size/);
+    assert.doesNotMatch(html, /Bubble Dress|Slack Bottom|follow below/);
 });
 
 test('other skorts, dresses and unknown products never inherit an approved chart', () => {
@@ -260,35 +256,55 @@ test('other skorts, dresses and unknown products never inherit an approved chart
     assert.equal(renderGuide({ slug: 'the-court-skort', product: false }), '');
 });
 
-test('Bubble Dress chart preserves all sizes and measurements without numeric mapping', () => {
+test('Bubble Dress displays only the visual chart with a nonvisual text alternative', () => {
     const html = renderGuide({ slug: 'the-bubble-dress' });
-    const rows = [...html.matchAll(/<tr>(.*?)<\/tr>/g)].map(([, row]) =>
-        [...row.matchAll(/<(?:th|td)[^>]*>(.*?)<\/(?:th|td)>/g)].map(([, value]) => value)
-    );
-    assert.deepEqual(rows, [
-        ['Size', 'Coat Length (cm)', 'Bust (cm)', 'Waist (cm)', 'Hip (cm)', 'Slack Bottom (cm)'],
-        ['S', '74', '68', '56', '80', '41'],
-        ['M', '76', '72', '60', '84', '43'],
-        ['L', '78', '76', '64', '88', '45'],
-        ['XL', '80', '80', '68', '92', '47'],
-        ['XXL', '84', '84', '72', '98', '49'],
-    ]);
-    assert.match(html, /This chart is for the Bubble Dress only/);
+    assert.doesNotMatch(html, /<table|<dl|<h3/);
+    assert.match(html, /id="bubble-dress-measurements-description" hidden/);
+    for (const values of [
+        'S: 74, 68, 56, 80, 41.', 'M: 76, 72, 60, 84, 43.',
+        'L: 78, 76, 64, 88, 45.', 'XL: 80, 80, 68, 92, 47.',
+        'XXL: 84, 84, 72, 98, 49.',
+    ]) assert.ok(html.includes(values));
     assert.match(html, /flat half-width of the leg opening/);
     assert.match(html, /Double to get full thigh opening circumference/);
-    assert.doesNotMatch(html, /Court Skort|numeric labels|Inner Hip/);
+    assert.doesNotMatch(html, /Court Skort|numeric labels|Inner Hip|follow below/);
 });
 
-test('standalone guide separates the two named products and preserves unrelated content', () => {
+test('standalone guide offers a chooser instead of stacking charts', () => {
     const html = renderGuide({ action: 'page', page: true, product: false });
-    assert.match(html, /Court Skort size chart/);
-    assert.match(html, /Bubble Dress size chart/);
-    assert.match(html, /id="court-skort-size-chart"/);
-    assert.match(html, /id="bubble-dress-size-chart"/);
+    assert.match(html, /Choose your product/);
+    assert.doesNotMatch(html, /<img|<table/);
+    for (const chart of ['court-skort', 'bubble-dress']) {
+        assert.ok(html.includes('/size-guide/?chart=' + chart + '#' + chart + '-size-chart'));
+        assert.ok(html.includes('id="' + chart + '-size-chart"'));
+    }
     assert.match(html, /id="sizing-help"/);
-    assert.match(html, /only to the Court Skort and Bubble Dress, respectively/);
     for (const override of [{ page: false }, { admin: true }, { loop: false }, { main: false }]) {
         assert.equal(renderGuide({ action: 'page', page: true, ...override }), 'original content');
+    }
+});
+
+test('product fallback pages show only their exact selected visual chart', () => {
+    for (const chart of ['court-skort', 'bubble-dress']) {
+        const html = renderGuide({ action: 'page', page: true, product: false, query: { chart } });
+        assert.equal([...html.matchAll(/<img /g)].length, 1);
+        assert.doesNotMatch(html, /<table|Choose your product/);
+        assert.ok(html.includes(chart + '-illustrated-20260911.jpg'));
+        assert.ok(html.includes('id="' + chart + '-size-chart"'));
+        const link = renderGuide({ action: 'link', slug: 'the-' + chart });
+        assert.ok(link.includes('/size-guide/?chart=' + chart + '#' + chart + '-size-chart'));
+        const other = chart === 'court-skort' ? 'bubble-dress' : 'court-skort';
+        assert.ok(!html.includes(other));
+    }
+});
+
+test('invalid chart queries fail safely to the chooser without reflecting input', () => {
+    for (const chart of ['', 'skort', 'court-skort-lookalike', 'Court-skort',
+        '../court-skort', '<script>alert(1)</script>', ['court-skort'],
+        { key: 'bubble-dress' }, null, 1]) {
+        const html = renderGuide({ action: 'page', page: true, query: { chart } });
+        assert.match(html, /Choose your product/);
+        assert.doesNotMatch(html, /<img|<table|<script>|\.\.\//);
     }
 });
 
@@ -306,7 +322,7 @@ test('original illustrated guides are intact and restricted to their exact produ
         assert.equal(asset.subarray(0, 3).toString('hex'), 'ffd8ff');
         const html = renderGuide({ slug: `the-${chart}` });
         assert.equal([...html.matchAll(/<img /g)].length, 1);
-        assert.ok(html.indexOf('<figure') < html.indexOf('<table'));
+        assert.doesNotMatch(html, /<table/);
         assert.ok(html.includes(`/assets/images/size-guides/${filename}`));
         assert.match(html, /width="853" height="1280" loading="lazy" alt="[^"]+"/);
         assert.match(html, /target="_blank" rel="noopener" aria-label="Open [^"]+new tab"/);
@@ -314,6 +330,6 @@ test('original illustrated guides are intact and restricted to their exact produ
             assert.ok(!html.includes(`${other}-illustrated-20260911.jpg`));
         }
     }
-    assert.equal([...renderGuide({ action: 'page', page: true }).matchAll(/<img /g)].length, 2);
+    assert.equal([...renderGuide({ action: 'page', page: true }).matchAll(/<img /g)].length, 0);
     assert.doesNotMatch(renderGuide({ action: 'content', chart: 'unapproved' }), /<img/);
 });

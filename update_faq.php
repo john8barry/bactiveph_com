@@ -16,7 +16,7 @@ $faq_content = '
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p><strong>What payment methods do you accept?</strong><br>GCash, Maya, credit/debit cards, and Cash on Delivery.</p>
+<p><strong>What payment methods do you accept?</strong><br>QRPh, Maya, ShopeePay and GrabPay through PayMongo. Cash on Delivery is available for eligible orders; eligibility and fees are shown at checkout.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->

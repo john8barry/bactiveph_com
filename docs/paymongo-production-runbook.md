@@ -20,9 +20,13 @@ Atome, bank debit or manual bank transfer as currently available.
 ## Activation checkpoint — 2026-09-12
 
 The release owner activated the four-method public selection at **06:46:39 UTC**.
-The 30-minute post-activation monitor is **pending completion** at this checkpoint;
-activation alone does not establish the finished launch milestone. Track the
-final acceptance and next-day follow-up in [issue #2](https://github.com/john8barry/bactiveph_com/issues/2).
+The post-activation monitor completed from **06:46:50 to 07:17:34 UTC**
+(1,844.5 seconds): all seven checks passed, with no failed or overdue payment
+actions, payment locks or new fatal-error markers. Final payment-census acceptance
+remains with the release owner in [issue #2](https://github.com/john8barry/bactiveph_com/issues/2).
+Next-day reconciliation is due **2026-09-13 at 06:46:39 UTC**, handled by the
+first existing 30-minute heartbeat at or after that time; do not create a duplicate
+monitor.
 
 The checkout reassurance correction is [PR #88](https://github.com/john8barry/bactiveph_com/pull/88),
 source `32bf276d2c0691d32d3d81c18e660fb63d1cc896`, merge

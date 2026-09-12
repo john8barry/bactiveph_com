@@ -17,6 +17,15 @@ This section supersedes the historical September 8 baseline below. Implementatio
 - Browser preview attempts using the in-app browser and Chrome both returned `net::ERR_BLOCKED_BY_CLIENT` for the isolated loopback URL. Isolation was not weakened. Responsive visual review, keyboard checks, deployed responsive images and bounded live cart checks remain outstanding.
 - Security source review found no new write endpoint or external dependency in these modules. Current Dependabot API access returns 403; unresolved historical issue #7 applicability and issue #9 credential-history work are not described as cleared.
 
+### September 12 continuation checkpoint
+
+- Current main remains `01c81c2e7e5494ebb48beca72d858466e5ad099b`. Final design and catalogue records are committed locally through `b3f1c14c`; the remote draft PR has not received them.
+- 24 JavaScript tests pass against the restored WooCommerce 11.1.0 engine, both PHP suites pass under the exact restored PHP 8.2.33, and 19 Python recovery tests pass. Root compared the four latest canary module files directly with the private runtime. Independent review findings for card-switch coupling, desktop margin and CTA cascade are resolved.
+- Refreshed checklist and source manifest reconcile 19 products, 253 variation mappings and 96 original attachment hashes. The registry is entirely default-off, with 15 reviewed entries and four held entries. Court Skort Lavender is excluded from its palette.
+- Chrome still renders a blocked page for the private loopback preview (`ERR_BLOCKED_BY_CLIENT`). The user was asked to open the same local page themselves to distinguish browser/tool access from application behavior. No security setting or network containment was weakened.
+- Publishing the prepared commits failed: GitHub denied repository write access to `johnbarry-tpg`. Independent authenticated `/user` checks confirm that both saved credential slots (`john8barry` and `johnbarry-tpg`) identify as `johnbarry-tpg`. The user was asked to authenticate GitHub CLI as `john8barry`. No tokens or credentials are recorded here. Do not claim the remote PR is synchronized.
+- Production remains unchanged. Remote CI, rendered browser qualification, serialized production release and live/next-day checks remain outstanding.
+
 ### Holds and remaining control point
 
 Keep product 56 Bubble Dress (duplicate Black XL, missing colour, unlisted Onyx), 160 Rally Skort (unlisted colours), 238 Sculpt Leggings (shared Almond/Stone image), and 211 Ribbed Tank (variation 646 missing colour) unchanged. Court Skort's Lavender circle remains text-only until its bright pink source is reconciled; do not borrow Flow Skort's Lavender value. Bloom and Sakura Pink remain distinct.

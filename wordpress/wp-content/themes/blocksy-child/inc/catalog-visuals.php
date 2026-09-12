@@ -5,7 +5,7 @@
  * Store bactive_catalog_visuals_release as a private option, or define
  * BACTIVE_CATALOG_VISUALS_REGISTRY in private deployment configuration:
  * ['schema_version' => 1, 'version' => 'release-id', 'enabled' => true,
- *  'products' => [36 => ['enabled' => true, 'palette' => []]]].
+ *  'products' => [36 => ['enabled' => true, 'reviewed' => true, 'palette' => []]]].
  * Optional palette: attribute_pa_colour => slug =>
  * ['term_id' => 123, 'approved' => true, 'hex' => '#aabbcc'].
  * Omit unapproved shades: named text buttons remain fully usable.
@@ -21,9 +21,9 @@ function bactive_catalog_visuals_registry() {
     return is_array( $registry ) ? $registry : array();
 }
 
-function bactive_catalog_visuals_config( $registry, $product_id ) {
+/** Validated review data is independent of which presentation is released. */
+function bactive_catalog_visuals_entry( $registry, $product_id ) {
     if ( ! is_array( $registry ) || 1 !== ( $registry['schema_version'] ?? null )
-        || true !== ( $registry['enabled'] ?? false )
         || ! is_string( $registry['version'] ?? null )
         || ! preg_match( '/\A[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}\z/', $registry['version'] )
         || ! is_int( $product_id ) || $product_id < 1
@@ -31,8 +31,13 @@ function bactive_catalog_visuals_config( $registry, $product_id ) {
         return null;
     }
     $entry = $registry['products'][ $product_id ] ?? null;
-    if ( ! is_array( $entry ) || true !== ( $entry['enabled'] ?? false ) ) {
-        return null;
+    return is_array( $entry ) ? $entry : null;
+}
+
+function bactive_catalog_visuals_palette( $registry, $product_id ) {
+    $entry = bactive_catalog_visuals_entry( $registry, $product_id );
+    if ( ! $entry || true !== ( $entry['reviewed'] ?? false ) ) {
+        return array();
     }
     $palette = array();
     foreach ( array( 'attribute_pa_colour', 'attribute_pa_color' ) as $attribute ) {
@@ -54,8 +59,16 @@ function bactive_catalog_visuals_config( $registry, $product_id ) {
             }
         }
     }
+    return $palette;
+}
+
+function bactive_catalog_visuals_config( $registry, $product_id ) {
+    $entry = bactive_catalog_visuals_entry( $registry, $product_id );
+    if ( ! $entry || true !== ( $registry['enabled'] ?? false ) || true !== ( $entry['enabled'] ?? false ) ) {
+        return null;
+    }
     return array( 'schemaVersion' => 1, 'version' => $registry['version'],
-        'productId' => $product_id, 'palette' => (object) $palette );
+        'productId' => $product_id, 'palette' => (object) bactive_catalog_visuals_palette( $registry, $product_id ) );
 }
 
 function bactive_enqueue_catalog_visuals() {

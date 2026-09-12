@@ -127,6 +127,40 @@
                 (form.closest('.ct-product-add-to-cart') || form).after(details);
                 layoutCleanup.push(() => { marker.before(description); marker.remove(); details.remove(); });
             }
+            // Blocksy owns gallery slides and variation image replacement. Give its
+            // existing thumbnail click targets equivalent keyboard operation.
+            const product = form.closest('.product');
+            if (product) {
+                const original = new Map();
+                const attributes = ['role', 'tabindex', 'aria-pressed'];
+                function thumbnails() {
+                    product.querySelectorAll('.woocommerce-product-gallery .flexy-pills li > span').forEach(target => {
+                        if (!original.has(target)) original.set(target, attributes.map(name => target.getAttribute(name)));
+                        target.setAttribute('role', 'button');
+                        target.setAttribute('tabindex', '0');
+                        target.setAttribute('aria-pressed', String(target.parentElement.classList.contains('active')));
+                    });
+                }
+                function thumbnailKey(event) {
+                    if (!['Enter', ' '].includes(event.key)) return;
+                    const target = event.target.closest('.woocommerce-product-gallery .flexy-pills li > span');
+                    if (!target || !product.contains(target)) return;
+                    event.preventDefault();
+                    target.click();
+                }
+                const galleryObserver = new MutationObserver(() => { try { thumbnails(); } catch (_) { restore(); } });
+                layoutCleanup.push(() => {
+                    galleryObserver.disconnect();
+                    product.removeEventListener('keydown', thumbnailKey);
+                    original.forEach((values, target) => attributes.forEach((name, index) => {
+                        if (values[index] === null) target.removeAttribute(name);
+                        else target.setAttribute(name, values[index]);
+                    }));
+                });
+                thumbnails();
+                product.addEventListener('keydown', thumbnailKey);
+                galleryObserver.observe(product, {childList: true, subtree: true, attributes: true, attributeFilter: ['class']});
+            }
             form.querySelector('.variations').after(notice, fallback);
             fallback.addEventListener('click', () => { restore(); selects[0].focus(); });
             $form.on('woocommerce_update_variation_values.bactiveSelectors woocommerce_variation_has_changed.bactiveSelectors', sync);

@@ -9,7 +9,7 @@ function is_wp_error( $value ) { return false; }
 require __DIR__ . '/../wordpress/wp-content/themes/blocksy-child/inc/catalog-visuals.php';
 function check( $condition ) { if ( ! $condition ) { throw new Exception( 'Contract failed' ); } }
 $registry = array( 'schema_version' => 1, 'version' => 'test-1', 'enabled' => true,
-    'products' => array( 36 => array( 'enabled' => true, 'palette' => array(
+    'products' => array( 36 => array( 'enabled' => true, 'reviewed' => true, 'palette' => array(
         'attribute_pa_colour' => array( 'black' => array( 'approved' => true, 'term_id' => 7, 'hex' => '#010203' ) ) ) ) ) );
 check( null === bactive_catalog_visuals_config( null, 36 ) );
 check( array() === bactive_catalog_visuals_registry() );
@@ -28,4 +28,10 @@ foreach ( array( 'approved' => false, 'term_id' => 8, 'hex' => '#123;url(evil)' 
     $bad = $registry; $bad['products'][36]['palette']['attribute_pa_colour']['black'][$key] = $value;
     check( 0 === count( (array) bactive_catalog_visuals_config( $bad, 36 )['palette'] ) );
 }
+
+$off=$registry; $off['enabled']=false; $off['products'][36]['enabled']=false;
+check(null===bactive_catalog_visuals_config($off,36));
+check('#010203'===bactive_catalog_visuals_palette($off,36)['attribute_pa_colour']['black']);
+$off['products'][36]['reviewed']=false;
+check([]===bactive_catalog_visuals_palette($off,36));
 echo "Catalog registry gate and exact shade mapping: PASS\n";

@@ -1,8 +1,8 @@
 <?php
 define('ABSPATH', __DIR__);
-$release = array(); $option = array(); $front = true; $page_id = 14; $palette = array();
+$release = array(); $option = array(); $front = true; $page_id = 14; $registry = array();
 function add_filter(...$args) {} function add_action(...$args) {} function add_shortcode(...$args) {}
-function get_option($name,$default) { global $option; return $option; }
+function get_option($name,$default) { global $option,$registry; return $name==='bactive_catalog_visuals_release' ? $registry : $option; }
 function apply_filters($name,$value) { global $release; return $release ?: $value; }
 function is_front_page() { global $front; return $front; }
 function get_queried_object_id() { global $page_id; return $page_id; }
@@ -11,10 +11,9 @@ function esc_attr__($v,$d) { return esc_attr($v); }
 function esc_html($v) { return htmlspecialchars($v,ENT_QUOTES); }
 function esc_url($v) { return str_starts_with($v,'https://') ? esc_attr($v) : ''; }
 function add_query_arg($key,$value,$url) { return $url.'?'.http_build_query([$key=>$value]); }
-function get_term_by(...$args) { return (object)['name'=>'White <script>alert(1)</script>']; }
+function get_term_by(...$args) { return (object)['term_id'=>7,'name'=>'White <script>alert(1)</script>']; }
 function is_wp_error($v) { return false; }
-function bactive_catalog_visuals_registry() { return []; }
-function bactive_catalog_visuals_config(...$args) { global $palette; return $palette; }
+require __DIR__.'/../wordpress/wp-content/themes/blocksy-child/inc/catalog-visuals.php';
 function serialize_block($b) { return $b['innerHTML']; }
 function get_post($id) { return (object)['post_type'=>'page','post_status'=> $id===304 ? 'draft':'publish','post_password'=>'']; }
 function get_permalink($p) { return 'https://bactiveph.com/size-guide/'; }
@@ -47,12 +46,13 @@ check(true===bactive_collection_release()['editorial']['enabled'],'Independent e
 $release['enabled']=true; $release['product_ids']=['36'];
 check([]===bactive_collection_product_classes([],$product),'Exact integer IDs');
 $release['product_ids']=[36];
-$palette=['palette'=>(object)['attribute_pa_colour'=>['white'=>'#ffffff','orphan'=>'#000000','bad'=>'red;position:fixed']]];
+$registry=['schema_version'=>1,'version'=>'test-1','enabled'=>false,'products'=>[36=>['enabled'=>false,'reviewed'=>true,'palette'=>['attribute_pa_colour'=>['white'=>['term_id'=>7,'approved'=>true,'hex'=>'#ffffff'],'orphan'=>['term_id'=>7,'approved'=>true,'hex'=>'#000000'],'bad'=>['term_id'=>7,'approved'=>true,'hex'=>'red;position:fixed']]]]]];
+check(null===bactive_catalog_visuals_config($registry,36),'Product enhancement remains off');
 ob_start(); bactive_collection_colour_previews(); $html=ob_get_clean();
 check(str_contains($html,'attribute_pa_colour=white'),'Product colour links');
 check(str_contains($html,'&lt;script&gt;') && !str_contains($html,'<script>'),'Escaped label');
 check(!str_contains($html,'orphan') && !str_contains($html,'position:fixed'),'Reject orphan and invalid hex');
-$palette=null; ob_start(); bactive_collection_colour_previews(); check(''===ob_get_clean(),'Held products have no previews');
+$registry['products'][36]['reviewed']=false; ob_start(); bactive_collection_colour_previews(); check(''===ob_get_clean(),'Held products have no previews');
 $release['editorial']=['enabled'=>true,'heading'=>'<script>','body'=>'Existing copy','link_label'=>'Size guide','attachment_id'=>10,'page_id'=>20];
 check(str_contains(bactive_editorial_shortcode(),'https://bactiveph.com/size-guide/'),'Page CTA');
 check(str_contains(bactive_editorial_shortcode(),'&lt;script&gt;'),'Escaped heading');

@@ -62,14 +62,14 @@ add_shortcode( 'bactive_editorial', 'bactive_editorial_shortcode' );
 function bactive_collection_colour_previews() {
 	global $product;
 	if ( ! $product instanceof WC_Product || ! in_array( 'bactive-collection-product', bactive_collection_product_classes( array(), $product ), true )
-		|| ! function_exists( 'bactive_catalog_visuals_registry' ) || ! function_exists( 'bactive_catalog_visuals_config' ) || ! $product->is_type( 'variable' ) ) {
+		|| ! function_exists( 'bactive_catalog_visuals_registry' ) || ! function_exists( 'bactive_catalog_visuals_palette' ) || ! $product->is_type( 'variable' ) ) {
 		return;
 	}
-	$config = bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() );
-	if ( ! is_array( $config ) ) { return; }
+	$palette = bactive_catalog_visuals_palette( bactive_catalog_visuals_registry(), $product->get_id() );
+	if ( ! $palette ) { return; }
 	$attributes = $product->get_variation_attributes();
 	$links = array();
-	foreach ( (array) ( $config['palette'] ?? array() ) as $attribute => $shades ) {
+	foreach ( $palette as $attribute => $shades ) {
 		if ( ! in_array( $attribute, array( 'attribute_pa_colour', 'attribute_pa_color' ), true ) ) { continue; }
 		$taxonomy = substr( $attribute, 10 );
 		foreach ( (array) $shades as $slug => $hex ) {

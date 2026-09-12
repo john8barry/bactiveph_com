@@ -1,0 +1,40 @@
+name: Public SKU privacy
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/public-sku-privacy.yml'
+      - '**/blocksy-child/functions.php'
+      - '**/blocksy-child/inc/public-sku-privacy.php'
+      - 'tools/*sku*'
+      - 'tests/*sku*'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-sku-privacy.yml'
+      - '**/blocksy-child/functions.php'
+      - '**/blocksy-child/inc/public-sku-privacy.php'
+      - 'tools/*sku*'
+      - 'tests/*sku*'
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Output boundaries and syntax
+        run: |
+          php -l wp-content/themes/blocksy-child/functions.php
+          php -l wp-content/themes/blocksy-child/inc/public-sku-privacy.php
+          php -l tools/sku_media.php
+          php -l tests/public-sku-runtime.php
+          php tests/public-sku-privacy.php
+          php tests/sku-media.php
+      - name: Audit detection and source mirrors
+        run: |
+          python3 -m unittest discover -s tests -p 'test_audit_public_skus.py'
+          cmp wp-content/themes/blocksy-child/functions.php wordpress/wp-content/themes/blocksy-child/functions.php
+          cmp wp-content/themes/blocksy-child/inc/public-sku-privacy.php wordpress/wp-content/themes/blocksy-child/inc/public-sku-privacy.php

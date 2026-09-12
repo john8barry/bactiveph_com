@@ -1,0 +1,102 @@
+/* B Active product and standalone size guide */
+.bactive-size-guide-link {
+    display: inline-block;
+    margin-block: var(--bactive-space-1, 8px) var(--bactive-space-2, 16px);
+    text-underline-offset: 0.2em;
+}
+
+.bactive-size-guide-content {
+    width: min(100%, 720px);
+    margin-inline: auto;
+}
+
+.bactive-size-guide-content > h2 {
+    margin-top: 0;
+}
+
+.bactive-size-illustration {
+    margin: 24px 0 32px;
+}
+
+.bactive-size-illustration a {
+    display: block;
+    cursor: zoom-in;
+}
+
+.bactive-size-illustration a:focus-visible {
+    outline: 2px solid var(--bactive-charcoal, #2b2a28);
+    outline-offset: 4px;
+}
+
+.bactive-size-illustration img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.bactive-size-illustration figcaption {
+    margin-top: 8px;
+    font-size: 0.875rem;
+}
+
+.bactive-modal {
+    width: min(760px, calc(100% - 32px));
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    padding: 0;
+    overflow: auto;
+    border: 1px solid var(--bactive-greige, #e6dfd5);
+    border-radius: var(--bactive-radius-card, 6px);
+    background: var(--bactive-ivory, #faf8f4);
+    color: var(--bactive-charcoal, #2b2a28);
+    box-shadow: 0 24px 64px rgba(28, 27, 25, 0.22);
+}
+
+.bactive-modal::backdrop {
+    background: rgba(28, 27, 25, 0.62);
+}
+
+.bactive-modal-inner {
+    position: relative;
+    padding: clamp(24px, 6vw, 48px);
+}
+
+.bactive-modal-inner .bactive-size-guide-content > h2 {
+    margin-block: 0 16px;
+    margin-inline: 0 48px;
+}
+
+.bactive-modal-close {
+    position: absolute;
+    inset-block-start: 16px;
+    inset-inline-end: 16px;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    font-size: 1.5rem;
+    line-height: 1;
+    box-shadow: none !important;
+}
+
+.bactive-modal-close:hover,
+.bactive-modal-close:focus {
+    transform: none !important;
+    box-shadow: none !important;
+}
+#sizing-help {
+    margin-top: 32px;
+    scroll-margin-top: 120px;
+}
+
+.bactive-size-guide-content + .bactive-size-guide-content {
+    margin-top: 48px;
+}
+
+#court-skort-size-chart,
+#bubble-dress-size-chart {
+    scroll-margin-top: 120px;
+}

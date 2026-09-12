@@ -8,4 +8,4 @@ The core goal is to maintain, develop, and deploy this WordPress site to a Namec
 ## Core Goals
 - Maintain WordPress site configuration and deployment.
 - Automate configuration generation (`wp-config.php`) and FTP deployments (`ftp_move.py`).
-- Utilize the Antigravity Memory System and Graphify to track and manage code structure.
+- Use project notes for intent and exact current source, tests, and destination evidence for code structure and behavior. Graphify is permanently retired.

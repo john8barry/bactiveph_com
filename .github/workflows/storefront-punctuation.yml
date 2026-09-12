@@ -8,6 +8,7 @@ on:
       - 'tools/*storefront*'
       - 'tests/*storefront*'
       - 'content/storefront-punctuation-changes.json'
+      - 'content/storefront-homepage-tagline.json'
   push:
     branches: [main]
     paths:
@@ -17,6 +18,7 @@ on:
       - 'tools/*storefront*'
       - 'tests/*storefront*'
       - 'content/storefront-punctuation-changes.json'
+      - 'content/storefront-homepage-tagline.json'
 permissions:
   contents: read
 jobs:

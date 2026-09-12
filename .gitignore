@@ -38,7 +38,7 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-# Graphify
+# Retired analysis output stays excluded; do not regenerate it.
 graphify-out/
 
 # Secrets & server artifacts (security pass)

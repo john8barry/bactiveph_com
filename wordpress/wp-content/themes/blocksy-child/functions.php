@@ -43,6 +43,25 @@ function blocksy_child_enqueue_styles() {
 		filemtime(get_stylesheet_directory() . '/assets/js/custom.js'),
 		true
 	);
+
+	if ( is_product() ) {
+		wp_enqueue_script(
+			'bactive-size-guide',
+			get_stylesheet_directory_uri() . '/assets/js/size-guide.js',
+			array(),
+			filemtime( get_stylesheet_directory() . '/assets/js/size-guide.js' ),
+			true
+		);
+	}
+
+	if ( is_product() || is_page( 'size-guide' ) ) {
+		wp_enqueue_style(
+			'bactive-size-guide',
+			get_stylesheet_directory_uri() . '/assets/css/size-guide.css',
+			array( 'blocksy-child-custom' ),
+			filemtime( get_stylesheet_directory() . '/assets/css/size-guide.css' )
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'blocksy_child_enqueue_styles' );
 
@@ -106,9 +125,58 @@ function bactive_features_fit_tab_content() {
 	echo apply_filters( 'the_excerpt', $post->post_excerpt );
 }
 
+function bactive_complimentary_shipping_minimum() {
+	return 5000;
+}
+
+function bactive_is_domestic_shipping_destination() {
+	$woocommerce = function_exists( 'WC' ) ? WC() : null;
+	$country = '';
+
+	if ( $woocommerce && $woocommerce->customer ) {
+		$country = $woocommerce->customer->get_shipping_country();
+		if ( ! $country ) {
+			$country = $woocommerce->customer->get_billing_country();
+		}
+	}
+
+	if ( ! $country && function_exists( 'wc_get_base_location' ) ) {
+		$base_location = wc_get_base_location();
+		$country = isset( $base_location['country'] ) ? $base_location['country'] : '';
+	}
+
+	return 'PH' === strtoupper( (string) $country );
+}
+
+function bactive_complimentary_shipping_cart_total( $cart ) {
+	$total = $cart->get_displayed_subtotal() - $cart->get_discount_total();
+	if ( $cart->display_prices_including_tax() ) {
+		$total -= $cart->get_discount_tax();
+	}
+
+	return round( $total, wc_get_price_decimals() );
+}
+
+add_filter( 'woocommerce_package_rates', 'bactive_restrict_complimentary_shipping_rates', 100, 2 );
+function bactive_restrict_complimentary_shipping_rates( $rates, $package ) {
+	$country = strtoupper( (string) ( $package['destination']['country'] ?? '' ) );
+	if ( 'PH' === $country ) {
+		return $rates;
+	}
+
+	foreach ( $rates as $rate_id => $rate ) {
+		$method_id = method_exists( $rate, 'get_method_id' ) ? $rate->get_method_id() : ( $rate->method_id ?? '' );
+		if ( 'free_shipping' === $method_id ) {
+			unset( $rates[ $rate_id ] );
+		}
+	}
+
+	return $rates;
+}
+
 function bactive_shipping_returns_tab_content() {
 	echo '<h2>Shipping & Returns</h2>';
-	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and LBC Express. Complimentary shipping on orders over ₱2,000.</p>';
+	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and LBC Express. Complimentary shipping is available on Philippine orders of ₱5,000 or more. It does not apply to international destinations.</p>';
 	echo '<p><strong>Returns & Exchanges</strong><br>We want you in the right size. If your fit isn\'t perfect, we accept size exchanges within 7 days of delivery for unworn items with tags attached and original packaging.</p>';
 }
 
@@ -124,7 +192,83 @@ function bactive_fabric_care_tab_content() {
  */
 add_action( 'woocommerce_single_product_summary', 'bactive_size_guide_link', 25 );
 function bactive_size_guide_link() {
-	echo '<a href="#" class="bactive-size-guide-link" aria-label="Open Size Guide">True to size (Asian fit) &rarr; Size Guide</a>';
+	$url = home_url( '/size-guide/' );
+	$chart = bactive_get_product_size_chart();
+	$url .= $chart ? '?chart=' . $chart . '#' . $chart . '-size-chart' : '#sizing-help';
+	echo '<a href="' . esc_url( $url ) . '" class="bactive-size-guide-link" aria-haspopup="dialog" aria-controls="bactive-size-modal">Size Guide</a>';
+}
+
+/**
+ * Approved charts belong to these exact products, not their categories.
+ * Slugs are explicit identities; never infer sizing from a title or variation.
+ */
+function bactive_get_product_size_chart() {
+	if ( ! is_product() ) {
+		return '';
+	}
+	$charts = array(
+		'the-court-skort' => 'court-skort',
+		'the-bubble-dress' => 'bubble-dress',
+	);
+	$slug = get_post_field( 'post_name', get_queried_object_id() );
+	return $charts[ $slug ] ?? '';
+}
+
+/**
+ * Render the canonical size-guide content for both the page and product dialog.
+ */
+function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
+	$heading_attribute = $heading_id ? ' id="' . esc_attr( $heading_id ) . '"' : '';
+
+	ob_start();
+	?>
+	<div class="bactive-size-guide-content">
+		<?php if ( 'court-skort' === $chart ) : ?>
+		<h2<?php echo $heading_attribute; ?>>Court Skort size chart</h2>
+		<figure class="bactive-size-illustration">
+			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Court Skort illustrated size guide full size in a new tab" aria-describedby="court-skort-measurements-description">
+				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Court Skort size chart with arrows showing waist, inner hip, skirt length and inner shorts length.">
+			</a>
+			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
+		</figure>
+		<!-- Referenced text alternative, not a second visible chart. -->
+		<div id="court-skort-measurements-description" hidden>Court Skort measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12, 14. Length: 35, 36, 37, 38, 39, 40. Waist: 64, 68, 72, 76, 80, 84. Inner Hip: 72, 76, 80, 84, 88, 92. Inner Leg Opening: 40, 42, 44, 46, 48, 50. Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0. How to measure: Length: Measure from the top of the waistband to the hem. Waist: Measure around the narrowest part of your waist. Inner Hip: Measure around the fullest part of your hips (below the waistband). Inner Leg Opening: Measure across the leg opening of the built-in shorts. Inner Length: Measure the length of the inner shorts (from crotch to hem). Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</div>
+		<?php elseif ( 'bubble-dress' === $chart ) : ?>
+		<h2<?php echo $heading_attribute; ?>>Bubble Dress size chart</h2>
+		<figure class="bactive-size-illustration">
+			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Bubble Dress illustrated size guide full size in a new tab" aria-describedby="bubble-dress-measurements-description">
+				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Bubble Dress size chart with arrows showing coat length, bust, waist, hip and the inner shorts leg opening.">
+			</a>
+			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
+		</figure>
+		<!-- Referenced text alternative, not a second visible chart. -->
+		<div id="bubble-dress-measurements-description" hidden>Bubble Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order. S: 74, 68, 56, 80, 41. M: 76, 72, 60, 84, 43. L: 78, 76, 64, 88, 45. XL: 80, 80, 68, 92, 47. XXL: 84, 84, 72, 98, 49. How to measure: Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Bust: Measure around the fullest part of your bust. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</div>
+		<?php else : ?>
+		<h2<?php echo $heading_attribute; ?>>Size guidance</h2>
+		<p>Size charts vary by style. <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us for help choosing your size</a>.</p>
+		<?php endif; ?>
+	</div>
+	<?php
+
+	return ob_get_clean();
+}
+
+add_filter( 'the_content', 'bactive_size_guide_page_content' );
+function bactive_size_guide_page_content( $content ) {
+	if ( is_admin() || ! is_page( 'size-guide' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+
+	// Only exact, scalar chart keys may select a product guide. Never reflect input.
+	$chart = isset( $_GET['chart'] ) && is_string( $_GET['chart'] ) ? $_GET['chart'] : '';
+	if ( in_array( $chart, array( 'court-skort', 'bubble-dress' ), true ) ) {
+		return bactive_get_size_guide_content( $chart . '-size-chart', $chart );
+	}
+
+	return '<section class="bactive-size-guide-content"><h2>Choose your product</h2>'
+		. '<ul><li id="court-skort-size-chart"><a href="' . esc_url( home_url( '/size-guide/?chart=court-skort#court-skort-size-chart' ) ) . '">Court Skort visual size chart</a></li>'
+		. '<li id="bubble-dress-size-chart"><a href="' . esc_url( home_url( '/size-guide/?chart=bubble-dress#bubble-dress-size-chart' ) ) . '">Bubble Dress visual size chart</a></li></ul></section>'
+		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>Size charts vary by style. For other skorts, dresses, tops and styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>.</p></section>';
 }
 
 /**
@@ -134,24 +278,10 @@ add_action( 'wp_footer', 'bactive_size_guide_modal' );
 function bactive_size_guide_modal() {
 	if ( ! is_product() ) return;
 	?>
-	<dialog id="bactive-size-modal" class="bactive-modal">
+	<dialog id="bactive-size-modal" class="bactive-modal" aria-labelledby="bactive-size-modal-title">
 		<div class="bactive-modal-inner">
-			<button class="bactive-modal-close" aria-label="Close modal">&times;</button>
-			<h2>Find your fit</h2>
-			<p>B Active is designed with an Asian fit and runs true to size. If you\'re between sizes, size up for a relaxed feel or stay true for a closer fit.</p>
-			<h3>How to measure</h3>
-			<p><strong>Bust</strong>: around the fullest part.<br><strong>Waist</strong>: the narrowest part of your torso.<br><strong>Hips</strong>: the fullest part.</p>
-			<table class="bactive-size-table">
-				<thead>
-					<tr><th>Size</th><th>Bust (cm)</th><th>Waist (cm)</th><th>Hips (cm)</th></tr>
-				</thead>
-				<tbody>
-					<tr><td>S</td><td>80 to 84</td><td>62 to 66</td><td>86 to 90</td></tr>
-					<tr><td>M</td><td>85 to 89</td><td>67 to 71</td><td>91 to 95</td></tr>
-					<tr><td>L</td><td>90 to 95</td><td>72 to 77</td><td>96 to 101</td></tr>
-					<tr><td>XL</td><td>96 to 101</td><td>78 to 83</td><td>102 to 107</td></tr>
-				</tbody>
-			</table>
+			<button type="button" class="bactive-modal-close" aria-label="Close size guide">&times;</button>
+			<?php echo bactive_get_size_guide_content( 'bactive-size-modal-title', bactive_get_product_size_chart() ); ?>
 		</div>
 	</dialog>
 	<?php
@@ -193,7 +323,7 @@ add_action( 'woocommerce_cart_calculate_fees', 'bactive_add_cod_fee', 20, 1 );
 function bactive_add_cod_fee( $cart ) {
     if ( is_admin() && ! defined( 'DOING_AJAX' ) ) return;
     $chosen_gateway = WC()->session->get( 'chosen_payment_method' );
-    if ( 'cod' === $chosen_gateway ) {
+    if ( 'cod' === $chosen_gateway && $cart->get_cart_contents_total() <= 2500 ) {
         $fee = 50;
         $cart->add_fee( 'COD Fee', $fee, false, '' );
     }
@@ -242,25 +372,29 @@ function bactive_custom_button_text() {
     return 'Checkout securely';
 }
 
-// Free Shipping Progress Bar
+// Complimentary Shipping Progress Bar
 add_action( 'woocommerce_widget_shopping_cart_before_buttons', 'bactive_free_shipping_progress_bar', 5 );
 function bactive_free_shipping_progress_bar() {
-    if ( ! WC()->cart || WC()->cart->is_empty() ) return;
-    
-    $free_shipping_threshold = 2000;
-    $cart_subtotal = WC()->cart->get_cart_contents_total();
+    $woocommerce = function_exists( 'WC' ) ? WC() : null;
+    if ( ! $woocommerce || ! $woocommerce->cart || $woocommerce->cart->is_empty() || ! bactive_is_domestic_shipping_destination() ) return;
+
+    $free_shipping_threshold = bactive_complimentary_shipping_minimum();
+    $cart_subtotal = bactive_complimentary_shipping_cart_total( $woocommerce->cart );
     
     if ( $cart_subtotal < $free_shipping_threshold ) {
         $amount_left = $free_shipping_threshold - $cart_subtotal;
-        echo '<div style="background:#FAF8F4; border:1px solid #E5E5E5; padding:10px; text-align:center; margin-bottom:15px; font-size:13px; color:#2B2A28;">You are just <strong>₱' . number_format($amount_left, 2) . '</strong> away from free shipping!</div>';
+        echo '<div style="background:#FAF8F4; border:1px solid #E5E5E5; padding:10px; text-align:center; margin-bottom:15px; font-size:13px; color:#2B2A28;">You are just <strong>₱' . number_format($amount_left, 2) . '</strong> away from complimentary shipping!</div>';
     } else {
-        echo '<div style="background:#5E6E54; color:#FAF8F4; padding:10px; text-align:center; margin-bottom:15px; font-size:13px;">You have unlocked <strong>Free Shipping!</strong></div>';
+        echo '<div style="background:#5E6E54; color:#FAF8F4; padding:10px; text-align:center; margin-bottom:15px; font-size:13px;">You have unlocked <strong>complimentary shipping!</strong></div>';
     }
 }
 // END PHASE 6 SNIPPETS
 
 // Storefront punctuation policy and generated WooCommerce ranges.
 require_once __DIR__ . '/inc/storefront-punctuation.php';
+
+// Keep operational SKUs out of customer-facing output.
+require_once __DIR__ . '/inc/public-sku-privacy.php';
 
 // Catalogue visuals remain inert until a reviewed release enables exact products.
 require_once __DIR__ . '/inc/catalog-visuals.php';

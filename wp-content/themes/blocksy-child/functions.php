@@ -125,9 +125,41 @@ function bactive_features_fit_tab_content() {
 	echo apply_filters( 'the_excerpt', $post->post_excerpt );
 }
 
+function bactive_complimentary_shipping_minimum() {
+	return 5000;
+}
+
+function bactive_is_domestic_shipping_destination() {
+	$woocommerce = function_exists( 'WC' ) ? WC() : null;
+	$country = '';
+
+	if ( $woocommerce && $woocommerce->customer ) {
+		$country = $woocommerce->customer->get_shipping_country();
+		if ( ! $country ) {
+			$country = $woocommerce->customer->get_billing_country();
+		}
+	}
+
+	if ( ! $country && function_exists( 'wc_get_base_location' ) ) {
+		$base_location = wc_get_base_location();
+		$country = isset( $base_location['country'] ) ? $base_location['country'] : '';
+	}
+
+	return 'PH' === strtoupper( (string) $country );
+}
+
+function bactive_complimentary_shipping_cart_total( $cart ) {
+	$total = $cart->get_displayed_subtotal() - $cart->get_discount_total();
+	if ( $cart->display_prices_including_tax() ) {
+		$total -= $cart->get_discount_tax();
+	}
+
+	return round( $total, wc_get_price_decimals() );
+}
+
 function bactive_shipping_returns_tab_content() {
 	echo '<h2>Shipping & Returns</h2>';
-	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and LBC Express. Complimentary shipping on orders over ₱2,000.</p>';
+	echo '<p><strong>Shipping</strong><br>We ship nationwide across the Philippines via J&T Express and LBC Express. Complimentary shipping is available on Philippine orders of ₱5,000 or more. It does not apply to international destinations.</p>';
 	echo '<p><strong>Returns & Exchanges</strong><br>We want you in the right size. If your fit isn\'t perfect, we accept size exchanges within 7 days of delivery for unworn items with tags attached and original packaging.</p>';
 }
 
@@ -353,19 +385,20 @@ function bactive_custom_button_text() {
     return 'Checkout securely';
 }
 
-// Free Shipping Progress Bar
+// Complimentary Shipping Progress Bar
 add_action( 'woocommerce_widget_shopping_cart_before_buttons', 'bactive_free_shipping_progress_bar', 5 );
 function bactive_free_shipping_progress_bar() {
-    if ( ! WC()->cart || WC()->cart->is_empty() ) return;
-    
-    $free_shipping_threshold = 2000;
-    $cart_subtotal = WC()->cart->get_cart_contents_total();
+    $woocommerce = function_exists( 'WC' ) ? WC() : null;
+    if ( ! $woocommerce || ! $woocommerce->cart || $woocommerce->cart->is_empty() || ! bactive_is_domestic_shipping_destination() ) return;
+
+    $free_shipping_threshold = bactive_complimentary_shipping_minimum();
+    $cart_subtotal = bactive_complimentary_shipping_cart_total( $woocommerce->cart );
     
     if ( $cart_subtotal < $free_shipping_threshold ) {
         $amount_left = $free_shipping_threshold - $cart_subtotal;
-        echo '<div style="background:#FAF8F4; border:1px solid #E5E5E5; padding:10px; text-align:center; margin-bottom:15px; font-size:13px; color:#2B2A28;">You are just <strong>₱' . number_format($amount_left, 2) . '</strong> away from free shipping!</div>';
+        echo '<div style="background:#FAF8F4; border:1px solid #E5E5E5; padding:10px; text-align:center; margin-bottom:15px; font-size:13px; color:#2B2A28;">You are just <strong>₱' . number_format($amount_left, 2) . '</strong> away from complimentary shipping!</div>';
     } else {
-        echo '<div style="background:#5E6E54; color:#FAF8F4; padding:10px; text-align:center; margin-bottom:15px; font-size:13px;">You have unlocked <strong>Free Shipping!</strong></div>';
+        echo '<div style="background:#5E6E54; color:#FAF8F4; padding:10px; text-align:center; margin-bottom:15px; font-size:13px;">You have unlocked <strong>complimentary shipping!</strong></div>';
     }
 }
 // END PHASE 6 SNIPPETS

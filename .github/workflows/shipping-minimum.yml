@@ -1,0 +1,34 @@
+name: Shipping minimum
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/shipping-minimum.yml'
+      - '**/blocksy-child/functions.php'
+      - 'content/shipping-minimum-5000.json'
+      - 'tools/apply_shipping_minimum.php'
+      - 'tests/shipping-minimum.php'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/shipping-minimum.yml'
+      - '**/blocksy-child/functions.php'
+      - 'content/shipping-minimum-5000.json'
+      - 'tools/apply_shipping_minimum.php'
+      - 'tests/shipping-minimum.php'
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Validate the shipping policy and release helper
+        run: |
+          php -l wp-content/themes/blocksy-child/functions.php
+          php -l wordpress/wp-content/themes/blocksy-child/functions.php
+          php -l tools/apply_shipping_minimum.php
+          php tests/shipping-minimum.php
+          cmp wp-content/themes/blocksy-child/functions.php wordpress/wp-content/themes/blocksy-child/functions.php

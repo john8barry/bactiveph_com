@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "issue": 77,
+  "minimum_php": 5000,
+  "targets": {
+    "production": {
+      "site": "https://bactiveph.com",
+      "database": "waypmvhk_bactwp",
+      "posts": [
+        {
+          "id": 20,
+          "slug": "shipping-returns",
+          "before_sha256": "b8801cc018ecdd20f7e7e111c01b111df8f2787a0cef5fe17ee9e077083188d4",
+          "after_sha256": "63ebd08bc36c49bdb408df19c0ee8bdf4a3a6d70cec3543a7b8ebf98f422a8ad",
+          "old": "<li><strong>Free shipping on orders over ₱2,000.</strong> For orders at or below ₱2,000, your shipping fee is calculated and shown at checkout before you pay.</li>",
+          "new": "<li><strong>Complimentary shipping on Philippine orders of ₱5,000 or more.</strong> For Philippine orders below ₱5,000, your shipping fee is calculated and shown at checkout before you pay. Complimentary shipping does not apply to international destinations.</li>"
+        },
+        {
+          "id": 21,
+          "slug": "faq",
+          "before_sha256": "0b203abce6f61220c456cf7e037e6a9e0270468e706ed1db2fc34d3e0bc6c1ef",
+          "after_sha256": "e2d9ba24bda020b79145cc8f26691fff7c820d8cafba62f7fb1ea3406e61bbff",
+          "old": "<p><strong>Do you ship nationwide?</strong><br>Yes, across the Philippines via J&amp;T Express and LBC Express, with free shipping over ₱5,000.</p>",
+          "new": "<p><strong>Do you ship nationwide?</strong><br>Yes, across the Philippines via J&amp;T Express and LBC Express, with complimentary shipping on Philippine orders of ₱5,000 or more. Complimentary shipping does not apply to international destinations.</p>"
+        },
+        {
+          "id": 24,
+          "slug": "terms",
+          "before_sha256": "f0660ac86ac51f2140fe1430199323d8935bea0cce0b86c8d3bb99e148c5a975",
+          "after_sha256": "2c754eb35364660bdf929fa82e21768316e8a5e3963d9c6019dff5231a809926",
+          "old": "<li><strong>Shipping fees.</strong> Shipping is <strong>free for Orders over ₱2,000</strong>. For Orders at or below that amount, the applicable shipping fee is calculated and shown at checkout before you confirm.</li>",
+          "new": "<li><strong>Shipping fees.</strong> Shipping is <strong>complimentary for Philippine Orders of ₱5,000 or more</strong>. For Philippine Orders below ₱5,000, the applicable shipping fee is calculated and shown at checkout before you confirm. Complimentary shipping does not apply to international destinations.</li>"
+        }
+      ]
+    },
+    "staging": {
+      "site": "https://staging.bactiveph.com",
+      "database": "waypmvhk_stg",
+      "posts": [
+        {
+          "id": 20,
+          "slug": "shipping-returns",
+          "before_sha256": "a04b910be154397ed08af337d3fff736337eba7db6e6137d19eba2b740aa1f39",
+          "after_sha256": "084e1b754af4c9fcc89912f2473fdfa80d9267abb024c4ea07ae29a3c01cd4d5",
+          "old": "<li><strong>Free shipping on orders over ₱2,000.</strong> For orders at or below ₱2,000, your shipping fee is calculated and shown at checkout before you pay.</li>",
+          "new": "<li><strong>Complimentary shipping on Philippine orders of ₱5,000 or more.</strong> For Philippine orders below ₱5,000, your shipping fee is calculated and shown at checkout before you pay. Complimentary shipping does not apply to international destinations.</li>"
+        },
+        {
+          "id": 21,
+          "slug": "faq",
+          "before_sha256": "aeb7ea8636193f03de8cdad1bacbb4a203c52430bbd604be724cfa8a7979ed81",
+          "after_sha256": "60fd061a6fe32d523989070f3f247a1bb757aafdfe2e219d6728245c66b9415e",
+          "old": "<p><strong>Do you ship nationwide?</strong><br>Yes — across the Philippines via J&amp;T Express and LBC Express, with free shipping over ₱2,000.</p>",
+          "new": "<p><strong>Do you ship nationwide?</strong><br>Yes, across the Philippines via J&amp;T Express and LBC Express, with complimentary shipping on Philippine orders of ₱5,000 or more. Complimentary shipping does not apply to international destinations.</p>"
+        },
+        {
+          "id": 24,
+          "slug": "terms",
+          "before_sha256": "3723c8c652b22720c63af9108d80da021ca14d8d6e918124dedb8c365b290b48",
+          "after_sha256": "5f4cfa3a51463ec5415a43258cd8a59ebd785b60a0d965762551c781f11d9223",
+          "old": "<li><strong>Shipping fees.</strong> Shipping is <strong>free for Orders over ₱2,000</strong>. For Orders at or below that amount, the applicable shipping fee is calculated and shown at checkout before you confirm.</li>",
+          "new": "<li><strong>Shipping fees.</strong> Shipping is <strong>complimentary for Philippine Orders of ₱5,000 or more</strong>. For Philippine Orders below ₱5,000, the applicable shipping fee is calculated and shown at checkout before you confirm. Complimentary shipping does not apply to international destinations.</li>"
+        }
+      ]
+    }
+  },
+  "shipping_methods": [
+    {
+      "zone_id": 1,
+      "zone_name": "Davao City",
+      "instance_id": 13,
+      "option_name": "woocommerce_free_shipping_13_settings",
+      "before_sha256": "c4efce4058b73b64a7acaf83985f9df075ee471aa42c1d1c9ff5de2bd3ac3434",
+      "after_sha256": "81292a0457392f09eb32e4ba9fb4931446b934409318f2276ff5b4215675f3f4"
+    },
+    {
+      "zone_id": 2,
+      "zone_name": "Mindanao (excl. Davao)",
+      "instance_id": 16,
+      "option_name": "woocommerce_free_shipping_16_settings",
+      "before_sha256": "f85ad66d39894c7a846803c29a55d580eb8a84801d9726054220900ab1d93601",
+      "after_sha256": "ce174a3e1d50c03a885a426bfc086d0849764fb2f1183d25056afa4572cd2ef1"
+    },
+    {
+      "zone_id": 3,
+      "zone_name": "Luzon & Visayas",
+      "instance_id": 18,
+      "option_name": "woocommerce_free_shipping_18_settings",
+      "before_sha256": "c317362d6d6a660051d5d1a80b9e14f493fe62fc8c43c08a0e4767d5d544c71d",
+      "after_sha256": "f3af230ce19eb843dccd24af637a456e509cafbb01d61b461b0d29bfba2df02f"
+    }
+  ]
+}

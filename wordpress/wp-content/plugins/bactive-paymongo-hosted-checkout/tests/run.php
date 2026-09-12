@@ -5754,6 +5754,7 @@ require __DIR__ . '/recovery-boundaries.php';
 require __DIR__ . '/rollout-restriction.php';
 require __DIR__ . '/issuance-methods.php';
 require __DIR__ . '/grabpay.php';
+require __DIR__ . '/checkout-reassurance.php';
 require __DIR__ . '/settings-review-drain.php';
 abandoned_session_recovery_tests();
 

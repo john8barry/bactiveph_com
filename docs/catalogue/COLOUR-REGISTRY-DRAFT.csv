@@ -1,31 +1,69 @@
-term_id,name,slug,used_by_product_ids,annotated_board_draft_hex,earlier_pilot_draft_hex,shade_conflict,approved_hex_or_texture,reference_source,product_override,approval_status
-33,Almond,almond,347 | 238,#C9B79E,,,,,,UNAPPROVED_DRAFT
-32,Apricot,apricot,217,,#E6B28E,,,,,UNAPPROVED_DRAFT
-81,Beige,beige,50,,,,,,,UNAPPROVED_DRAFT
-66,Black,black,160 | 154 | 128 | 95 | 56 | 36,#202124,#202124,,,,,UNAPPROVED_DRAFT
-34,Bloom,bloom,347,#DDA8A6,,,,,,UNAPPROVED_DRAFT
-35,Clay Red,clay-red,,,,,,,,UNUSED_PRESERVE
-72,Cloud Gray,cloud-gray,,,,,,,,UNUSED_PRESERVE
-24,Court Ivory,court-ivory,347 | 217,#EEE9DA,#EEE9DA,,,,,UNAPPROVED_DRAFT
-82,Gray,gray,128 | 50,,,,,,,UNAPPROVED_DRAFT
-78,Green,green,111,,,,,,,UNAPPROVED_DRAFT
-39,Green Jasper,green-jasper,185,#32685D,,,,,,UNAPPROVED_DRAFT
-73,Ivory,ivory,,,,,,,,UNUSED_PRESERVE
-79,Jujube Red,jujube-red,117,,,,,,,UNAPPROVED_DRAFT
-83,Lavender,lavender,154,,,,,,,UNAPPROVED_DRAFT
-68,Maroon,maroon,56,#763844,,,,,,UNAPPROVED_DRAFT
-37,Meadow Green,meadow-green,160,,,,,,,UNAPPROVED_DRAFT
-25,Midnight,midnight,,,,,,,,UNUSED_PRESERVE
-74,Mocha,mocha,50,,,,,,,UNAPPROVED_DRAFT
-69,Navy Blue,navy-blue,565 | 185 | 56 | 50 | 36,#202740,#202740,,,,,UNAPPROVED_DRAFT
-36,Night Indigo,night-indigo,160,,,,,,,UNAPPROVED_DRAFT
-38,Oil Blue,oil-blue,185,#537889,,,,,,UNAPPROVED_DRAFT
-26,Onyx,onyx,217 | 148,,#242426,,,,,UNAPPROVED_DRAFT
-28,Powder Blue,powder,565 | 347 | 217 | 95 | 56,#B3CAEC,#ADCBDC,RECONCILE,,,,UNAPPROVED_DRAFT
-65,Pure White,purewhite,185 | 95 | 56 | 36,#F4F3EF,#F4F3EF,,,,,UNAPPROVED_DRAFT
-29,Sagewood,sagewood,,,,,,,,UNUSED_PRESERVE
-27,Sakura Pink,sakura,347 | 211 | 185 | 160 | 128 | 89 | 56,#DAA7D4,,,,,,UNAPPROVED_DRAFT
-31,Stone,stone,238,,,,,,,UNAPPROVED_DRAFT
-70,Turquoise Blue,turquoise-blue,36,,#00ABD3,,,,,UNAPPROVED_DRAFT
-80,White,white,565 | 154 | 128 | 117 | 83,,,,,,,UNAPPROVED_DRAFT
-30,Wisteria,wisteria,,,,,,,,UNUSED_PRESERVE
+product_id,term_id,name,slug,suggested_hex,reference_attachment_ids,review_basis,status,enabled
+677,88,Brown,brown,#61483D,687,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+677,28,Powder Blue,powder,#A4C8EC,691,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+677,66,Black,black,#242426,692,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+677,94,Purple,purple,#8A6BE7,693,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+660,91,Dusty Mauve,dusty-mauve,#95718B,663,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+660,92,Light Pink,light-pink,#F1D4E2,664,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+660,66,Black,black,#242428,662,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+573,89,Magenta,magenta,#B80B72,574 | 598,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+573,90,Champagne,champagne,#D6C9B5,575,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+573,72,Cloud Gray,cloud-gray,#85858E,576,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+565,28,Powder Blue,powder,#B3CAEC,583,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+565,69,Navy Blue,navy-blue,#202740,566,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+565,80,White,white,#F4F3EF,568,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+217,96,Yellow,yellow,#F8EFA7,601,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+217,28,Powder Blue,powder,#75BCF0,708,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+217,94,Purple,purple,#57346E,711,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+217,80,White,white,#F4F3EF,710,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+217,82,Gray,gray,#A8B4BC,730,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+217,97,Steel Blue,steelblue,#718B9A,731,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+211,80,White,white,#F4F3EF,594,Existing AI imagery visual approximation; not fabric calibration,held,false
+211,87,Dusty Lavender,dusty-lavender,#B8A4AE,596,Existing AI imagery visual approximation; not fabric calibration,held,false
+211,28,Powder Blue,powder,#96BCEC,595 | 611,Existing AI imagery visual approximation; not fabric calibration,held,false
+211,66,Black,black,#202124,593,Existing AI imagery visual approximation; not fabric calibration,held,false
+211,27,Sakura Pink,sakura,#CB7CA1,597,Existing AI imagery visual approximation; not fabric calibration,held,false
+211,88,Brown,brown,#8E705D,592,Existing AI imagery visual approximation; not fabric calibration,held,false
+185,96,Yellow,yellow,#F6E978,746,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,82,Gray,gray,#DDDCD9,751,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,83,Lavender,lavender,,750,Existing AI imagery visual approximation; not fabric calibration,TEXT_FALLBACK,false
+185,100,Lime Green,limegreen,#DDEDAC,749,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,109,Blush Pink,blushpink,#EDCBC8,748,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,80,White,white,#F4F3EF,747,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,66,Black,black,#202124,744,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,28,Powder Blue,powder,#96BCEC,743,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+185,108,Forest Green,forestgreen,#415E55,752,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+160,37,Meadow Green,meadow-green,#A5BBB0,453,Existing AI imagery visual approximation; not fabric calibration,held,false
+160,36,Night Indigo,night-indigo,#929AD2,456,Existing AI imagery visual approximation; not fabric calibration,held,false
+160,27,Sakura Pink,sakura,#F2C6CD,454,Existing AI imagery visual approximation; not fabric calibration,held,false
+160,66,Black,black,#202124,455,Existing AI imagery visual approximation; not fabric calibration,held,false
+154,66,Black,black,#202124,543,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+154,83,Lavender,lavender,#CEC5D6,554,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+154,80,White,white,#F4F3EF,541,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+128,27,Sakura Pink,sakura,#B997AA,502,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+128,82,Gray,gray,#A5A1AD,503,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+128,80,White,white,#F4F3EF,504,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+128,66,Black,black,#202124,505,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+117,80,White,white,#F4F3EF,462,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+117,79,Jujube Red,jujube-red,#763844,463,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+111,78,Green,green,#203D2D,460,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+95,28,Powder Blue,powder,#B3CAEC,449,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+95,65,Pure White,purewhite,#F4F3EF,451,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+95,66,Black,black,#202124,450,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+89,27,Sakura Pink,sakura,#F0CFD4,472,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+83,80,White,white,#F4F3EF,473,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+56,66,Black,black,#202124,60 | 373 | 386,Existing AI imagery visual approximation; not fabric calibration,held,false
+56,69,Navy Blue,navy-blue,#202740,374,Existing AI imagery visual approximation; not fabric calibration,held,false
+56,68,Maroon,maroon,#A60B26,381,Existing AI imagery visual approximation; not fabric calibration,held,false
+56,27,Sakura Pink,sakura,#F2CED3,58 | 377 | 378,Existing AI imagery visual approximation; not fabric calibration,held,false
+56,28,Powder Blue,powder,#B3CAEC,375,Existing AI imagery visual approximation; not fabric calibration,held,false
+56,65,Pure White,purewhite,#F4F3EF,376,Existing AI imagery visual approximation; not fabric calibration,held,false
+50,69,Navy Blue,navy-blue,#283D67,394,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+50,82,Gray,gray,#B8B8BF,477,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+50,81,Beige,beige,#EEE9DA,474,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+50,74,Mocha,mocha,#A58775,475,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+36,70,Turquoise Blue,turquoise-blue,#04AED9,387,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+36,65,Pure White,purewhite,#F4F3EF,388,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+36,69,Navy Blue,navy-blue,#202740,391,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+36,66,Black,black,#202124,390,Existing AI imagery visual approximation; not fabric calibration,visually_reviewed_approximation,false
+,34,Bloom,bloom,,,User confirmed distinct from Sakura Pink; no active variation in this snapshot,UNASSIGNED_DISTINCT_COLOUR,false

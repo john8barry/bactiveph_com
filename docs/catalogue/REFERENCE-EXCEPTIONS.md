@@ -1,3 +1,5 @@
+> Historical reference review. The 12 September 2026 current baseline is in `CURRENT-REVIEW.md` and `CURRENT-IMAGE-MANIFEST.json`. Do not use old counts or mappings for release.
+
 # Original-reference visual exceptions
 
 Reviewed 2026-09-08: 47 attachment files across nine products, individually with

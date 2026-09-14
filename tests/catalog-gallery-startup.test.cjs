@@ -1,6 +1,7 @@
 /*
- * Actual Woo variation engine and Blocksy variable-products.js; only the lazy
- * Flexy mount/slide driver is simulated. This proves event/timer ordering, not
+ * Actual Woo variation engine and Blocksy variable-products.js. Readiness cases
+ * also execute the actual bundled Flexy class and parent mount function, with
+ * controlled geometry and chunk-load completion. This proves event/timer ordering, not
  * browser geometry, trusted-input delivery, or production behavior.
  *
  * NODE_PATH=<catalogue-runtime/node_modules> node --test tests/catalog-gallery-startup.test.cjs
@@ -22,6 +23,9 @@ const wpUtil = source(`${wordpress}/wp-includes/js/wp-util.js`);
 const woo = source(process.env.WC_VARIATION_ENGINE_PATH || `${wordpress}/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.js`);
 const parent = source(process.env.BLOCKSY_VARIATION_ENGINE_PATH || `${wordpress}/wp-content/themes/blocksy/static/js/frontend/woocommerce/variable-products.js`);
 const child = source(process.env.CATALOG_GALLERY_CHILD_PATH || `${wordpress}/wp-content/themes/blocksy-child/assets/js/catalog-visuals.js`);
+const flexyEngine = source(process.env.BLOCKSY_FLEXY_ENGINE_PATH || `${wordpress}/wp-content/themes/blocksy/static/bundle/71.c54d2d99d2996e1be440.js`);
+const flexyMount = source(process.env.BLOCKSY_FLEXY_MOUNT_PATH || `${wordpress}/wp-content/themes/blocksy/static/js/frontend/flexy.js`);
+assert.equal(require('node:crypto').createHash('sha256').update(flexyEngine).digest('hex'), 'b0355ac2f1727c55d30c028115c35785797fe521059dc353c9b97fd6f871fcc8', 'review a changed native Flexy implementation');
 const parentScript = parent.replace(/^import .*\n/gm, '').replace('export const mount =', 'window.mountBlocksyVariableProducts =');
 assert.match(parentScript, /window\.mountBlocksyVariableProducts/);
 assert.doesNotMatch(parentScript, /^import /m);
@@ -58,7 +62,7 @@ function clock(window) {
     };
 }
 
-async function fixture({patched = true, ajax = false, custom = false, defaults = false, offGallery = false} = {}) {
+async function fixture({patched = true, ajax = false, custom = false, defaults = false, offGallery = false, nativeFlexy = false, holdNativeFrame = false, initialItem = null} = {}) {
     const dom = new JSDOM(`<div id="product-117" class="product type-product">
       <div class="woocommerce-product-gallery"><div class="ct-product-gallery-container"><div class="flexy-container" data-flexy="no">
         <div class="flexy"><div class="flexy-view"><div class="flexy-items"></div></div>
@@ -108,6 +112,33 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     $.ajax = options => { requests.push(options); return {abort() {}}; };
     w.ctEvents = {trigger() {}};
     w.cachedFetch = url => { fetches.push(url); return Promise.resolve({json: () => Promise.resolve({success: false})}); };
+    const heldNativeFrames = [];
+    if (nativeFlexy) {
+        // The real library needs layout measurements. Geometry alone is fixed;
+        // its constructor, first RAF, native attributes and pill handlers are real.
+        w.Element.prototype.getBoundingClientRect = function () {
+            return {left: 0, top: 0, width: 300, height: 400, right: 300, bottom: 400};
+        };
+        const computed = w.getComputedStyle.bind(w);
+        w.getComputedStyle = (element) => new Proxy(computed(element), {get(target, key) {
+            if (key === 'content') return '""';
+            if (typeof key === 'string' && /^(padding|margin|border)/.test(key)) return '0px';
+            const value = target[key];
+            return typeof value === 'function' ? value.bind(target) : value;
+        }});
+        if (initialItem !== null) slider.style.setProperty('--current-item', String(initialItem));
+        w.eval(flexyEngine);
+        const exports = {};
+        const module = w.blocksyJsonP.find(chunk => chunk[0].includes(71))[1][3071];
+        module({}, exports, {d: (target, definitions) => Object.entries(definitions)
+            .forEach(([key, get]) => Object.defineProperty(target, key, {get}))});
+        w.NativeFlexy = exports.r;
+        const mountScript = flexyMount.replace(/^import .*\n/gm, '')
+            .replace(/^export \{ Flexy \}.*$/gm, '')
+            .replace('export const mount =', 'window.mountBlocksyFlexy =');
+        assert.doesNotMatch(mountScript, /^(import|export) /m);
+        w.eval(`(function ($, Flexy, ctEvents, getCurrentScreen, isTouchDevice, pauseVideo, maybePlayAutoplayedVideo, getScalarOrCallback) { ${mountScript}\n})(window.jQuery, window.NativeFlexy, window.ctEvents, () => 'desktop', () => false, () => {}, () => {}, value => typeof value === 'function' ? value() : value);`);
+    }
     // Record only handlers registered by the child. jsdom cannot create trusted
     // browser events, so the manual-input test invokes those exact callbacks
     // with a trusted event-shaped object. Real trusted delivery needs a browser.
@@ -127,21 +158,31 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     slider.forcedMount = () => { mountCalls++; return mountPromise; };
     function commitMount() {
         if (!installed) {
-            installed = true; slider.flexy = {}; slider.dataset.flexy = '';
-            [...pills.children].forEach((pill, index) => pill.addEventListener('click', event => {
+            installed = true;
+            if (nativeFlexy) {
+                const raf = w.requestAnimationFrame;
+                if (holdNativeFrame) w.requestAnimationFrame = callback => { heldNativeFrames.push(callback); return 0; };
+                try { w.mountBlocksyFlexy(slider); } finally { w.requestAnimationFrame = raf; }
+                [...pills.children].forEach((pill, index) => pill.addEventListener('click', () => clicked.push(index)));
+            } else {
+                slider.flexy = {}; slider.dataset.flexy = '';
+                [...pills.children].forEach((pill, index) => pill.addEventListener('click', event => {
                 // Flexy's real pill handler also commits on a subsequent task.
                 w.setTimeout(() => {
                     if (event.defaultPrevented) return;
                     pills.querySelector('.active')?.classList.remove('active');
                     pill.classList.add('active'); clicked.push(index); event.preventDefault();
                 });
-            }));
+                }));
+            }
         }
         resolveMount(slider.flexy);
     }
     if (defaults) {
         $form.find('[name=attribute_pa_colour]').val('jujube-red');
         $form.find('[name=attribute_pa_size]').val('l');
+        // The native PHP gallery already identifies a server-selected default.
+        if (nativeFlexy) gallery.dataset.currentVariation = '126';
     }
     w.eval(woo);
     if (patched) w.eval(child);
@@ -162,6 +203,7 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
         tick: timer.tick, mount: async () => { commitMount(); await timer.tick(0); },
         reject: async () => { rejectMount(new Error('synthetic mount failure')); await timer.tick(0); },
         mountCalls: () => mountCalls,
+        releaseNativeFrame() { heldNativeFrames.splice(0).forEach(callback => w.requestAnimationFrame(callback)); },
         active: () => [...pills.children].findIndex(pill => pill.classList.contains('active')),
         choose(colour, size = 'l') {
             $form.find('[name=attribute_pa_colour]').val(colour).trigger('change');
@@ -342,4 +384,97 @@ test('native AJAX and custom-gallery products pass through without starting a ch
             assert.equal(f.fetches.length, 1); f.intact();
         } finally { f.close(); }
     }
+});
+
+test('real Flexy first RAF completes default selection without collapsing selectors', async () => {
+    const f = await fixture({nativeFlexy: true, defaults: true, initialItem: 1});
+    try {
+        assert.equal(f.id(), '126');
+        await f.mount();
+        assert.ok(f.slider.flexy, 'the parent assigns the actual instance before its first draw');
+        assert.equal(f.slider.dataset.flexy, 'no', 'the native first frame has not committed yet');
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready', 'normal intermediate state is not a failure');
+        assert.equal(f.nativeCalls.filter(call => call.args[0]?.variation_id).length, 0);
+        await f.tick(100);
+        assert.equal(f.slider.dataset.flexy, '');
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        assert.equal(f.nativeCalls.at(-1).args[0], f.variations[1]);
+        assert.equal(f.id(), '126'); assert.equal(f.active(), 1); f.intact();
+        await f.tick(5200);
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready', 'successful readiness clears its failure watchdog');
+    } finally { f.close(); }
+});
+
+test('real Flexy instance before its first RAF does not let newer selection bypass readiness', async () => {
+    const f = await fixture({nativeFlexy: true});
+    try {
+        f.choose('jujube-red'); await f.tick(0); await f.mount();
+        assert.ok(f.slider.flexy); assert.equal(f.slider.dataset.flexy, 'no');
+        f.choose('navy'); await f.tick(0);
+        assert.equal(f.id(), '127');
+        assert.equal(f.nativeCalls.filter(call => call.args[0]?.variation_id).length, 0);
+        await f.tick(600);
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        assert.deepEqual(f.nativeCalls.filter(call => call.args[0]?.variation_id).map(call => call.args[0].variation_id), [127]);
+        assert.equal(f.active(), 2); f.intact();
+    } finally { f.close(); }
+});
+
+test('reset and trusted manual navigation cancel during the real native readiness interval', async () => {
+    for (const reset of [true, false]) {
+        const f = await fixture({nativeFlexy: true});
+        try {
+            f.choose('jujube-red'); await f.tick(0); await f.mount();
+            assert.equal(f.slider.dataset.flexy, 'no');
+            if (reset) f.reset(); else f.manual();
+            await f.tick(100);
+            assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+            assert.equal(f.nativeCalls.filter(call => call.args[0]?.variation_id).length, 0);
+            if (reset) assert.equal(f.id(), ''); else { f.click(2); await f.tick(30); assert.equal(f.active(), 2); }
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('fallback cleanup cancels readiness resources before the real native first frame', async () => {
+    const f = await fixture({nativeFlexy: true, holdNativeFrame: true});
+    try {
+        f.choose('jujube-red'); await f.tick(0); await f.mount();
+        f.form.querySelector('.bactive-selector-fallback').click();
+        assert.equal(f.form.dataset.bactiveSelectors, 'fallback');
+        f.releaseNativeFrame(); await f.tick(5500);
+        assert.equal(f.slider.dataset.flexy, '');
+        assert.equal(f.form.dataset.bactiveSelectors, 'fallback');
+        assert.equal(f.nativeCalls.filter(call => call.args[0]?.variation_id).length, 0); f.intact();
+    } finally { f.close(); }
+});
+
+test('clearing a server default before the real native first frame restores the original photo', async () => {
+    const f = await fixture({nativeFlexy: true, defaults: true, initialItem: 1});
+    try {
+        await f.mount();
+        assert.equal(f.slider.dataset.flexy, 'no');
+        assert.equal(f.gallery.dataset.currentVariation, '126');
+        f.reset(); await f.tick(600);
+        assert.equal(f.id(), '');
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        assert.equal(f.active(), 0, 'native Reset must restore the original White photo');
+        f.intact();
+    } finally { f.close(); }
+});
+
+test('native readiness that never commits has a bounded deadline and no late image update', async () => {
+    const f = await fixture({nativeFlexy: true, holdNativeFrame: true});
+    try {
+        f.choose('jujube-red'); await f.tick(0); await f.mount();
+        assert.ok(f.slider.flexy); assert.equal(f.slider.dataset.flexy, 'no');
+        await f.tick(4900);
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready', 'watchdog is not a fixed image delay');
+        await f.tick(200);
+        assert.equal(f.form.dataset.bactiveSelectors, 'fallback');
+        assert.ok([...f.form.querySelectorAll('.variations select')].every(select => !select.hidden));
+        assert.equal(f.nativeCalls.filter(call => call.args[0]?.variation_id).length, 0);
+        f.releaseNativeFrame(); await f.tick(100);
+        assert.equal(f.form.dataset.bactiveSelectors, 'fallback'); f.intact();
+    } finally { f.close(); }
 });

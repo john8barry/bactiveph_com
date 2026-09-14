@@ -19,6 +19,32 @@
         let wrapper;
         let original;
         const pendingMounts = new WeakMap();
+        const mountWaiters = new Set();
+        const ready = slider => slider.flexy && !String(slider.dataset.flexy || '').includes('no');
+        function awaitFirstRender(slider) {
+            if (ready(slider)) return Promise.resolve();
+            if (!slider.flexy) return Promise.reject(new Error('Gallery did not mount'));
+            // Flexy assigns its instance before its first animation-frame draw.
+            // Wait for the native readiness attribute, rather than treating that
+            // ordinary intermediate state as an enhancement failure.
+            return new Promise((resolve, reject) => {
+                let observer;
+                let timer;
+                const finish = error => {
+                    observer.disconnect();
+                    window.clearTimeout(timer);
+                    mountWaiters.delete(finish);
+                    if (error) reject(error); else resolve();
+                };
+                observer = new MutationObserver(() => { if (ready(slider)) finish(); });
+                mountWaiters.add(finish);
+                observer.observe(slider, {attributes: true, attributeFilter: ['data-flexy']});
+                // A failure deadline only: successful native rendering proceeds
+                // immediately, with no polling or delayed selection replay.
+                timer = window.setTimeout(() => finish(new Error('Gallery did not render')), 5000);
+                if (ready(slider)) finish();
+            });
+        }
         const attributes = () => JSON.stringify([...form.querySelectorAll('.variations select')]
             .map(select => [select.name, select.value]));
         const cancel = () => { sequence++; };
@@ -73,18 +99,20 @@
                     });
                     return result;
                 }
-                if (!slider || slider.flexy || !String(slider.dataset.flexy || '').includes('no') ||
-                    typeof slider.forcedMount !== 'function') return applyNative();
+                if (!slider || !String(slider.dataset.flexy || '').includes('no') ||
+                    (!slider.flexy && typeof slider.forcedMount !== 'function')) return applyNative();
                 let mounted = pendingMounts.get(slider);
                 if (!mounted) {
-                    mounted = Promise.resolve().then(() => slider.forcedMount());
+                    mounted = Promise.resolve().then(() => {
+                        if (!slider.flexy) return slider.forcedMount();
+                    }).then(() => awaitFirstRender(slider));
                     pendingMounts.set(slider, mounted);
                 }
                 mounted.then(() => {
                     if (!current()) return;
                     const nativeId = form.querySelector('input[name="variation_id"], input.variation_id');
                     if (expectedId && (!nativeId || nativeId.value !== expectedId)) return;
-                    if (!slider.flexy || String(slider.dataset.flexy || '').includes('no')) return failed();
+                    if (!ready(slider)) return failed();
                     applyNative();
                 }).catch(() => { if (active && generation === sequence) failed(); });
                 return this;
@@ -94,12 +122,15 @@
         // This Woo event runs before image resolution, including initial
         // defaults. Reinstall if Blocksy loaded its own handler lazily since then.
         $(form).on('woocommerce_update_variation_values.bactiveGallery', install);
-        $(form).on('reset_data.bactiveGallery', cancel);
+        // Woo's reset_data handler calls this wrapper with false via reset_image.
+        // That new request cancels the previous variation and must remain live
+        // until Flexy's first render can restore the original product image.
         ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(name =>
             product.addEventListener(name, manual, true));
         install();
         cleanup.push(() => {
             active = false; cancel();
+            [...mountWaiters].forEach(finish => finish());
             $(form).off('.bactiveGallery');
             ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(name =>
                 product.removeEventListener(name, manual, true));

@@ -119,3 +119,14 @@ Catalogue review correction: actual stored term snapshot uses Powder Blue slug p
 Two independent read-only lanes inspected all69 unique original attachments across the18 currently returned products (47+22 files). Findings recorded in REFERENCE-EXCEPTIONS.md and REFERENCE-CANARIES.md; root reviewed both and directly confirmed the Bubble image61 and Aria343 findings. Strong original reuse is available across much of the catalogue. Missing rear/interior views are not invented. These reference reviews do not pass product release gates.
 
 Draft PR50 source commit f9c2cb0c2012bb6e9468bd0fd8f70e6e37cb4a76 passed Catalogue visuals and Storefront punctuation CI. No merge/deployment. Product148 remains statusunknown; colour reference basis remains pending.
+
+## 14 September: Flow gallery quality and related-card consistency
+
+User review found a soft main gallery image and mixed old/new related-card styles. The main Flow gallery was choosing 600px derivatives despite available 853px Black and 960px Lavender/White originals. The staged card ID list styled only released related products.
+
+- Enhanced product galleries now use the existing full image source. Native Woo variation payloads use that same source, with positive integer dimension guards and unchanged fallback for incomplete metadata. Thumbnail strips retain their separate small sources; no attachment assignments or commerce fields change.
+- Every card in the native related loop on an enhanced product page shares the approved frame, title and action styling when collection presentation is enabled. Colour previews still require each product's explicit release and reviewed palette. Held mappings remain held.
+- Private files were backed up before replacement. Independent review identified the dimension guard, now included. Both PHP contracts, 24 JS tests and 19 Python tests pass. Real WordPress HTTP output confirms all 3 Flow main originals, all 12 native variation image payloads and all 4 consistently styled related cards.
+- Browser automated reload still returns the previous document, so updated visual/interactive acceptance requires a manual refresh. No production deployment of these visual changes. The earlier fresh encrypted backup and isolated rollback evidence remain recorded separately; production activation remains pending browser qualification.
+
+Rollback: restore the prior release-owned module files after matching their expected hashes, or disable the respective private presentation switch. Never roll back orders, stock, prices or image assignments for this delivery-only fix.

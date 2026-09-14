@@ -107,3 +107,51 @@ function bactive_catalog_body_classes( $classes ) {
     return $classes;
 }
 add_filter( 'body_class', 'bactive_catalog_body_classes' );
+
+/** Serve the existing original in the large gallery; thumbnail strips stay small. */
+function bactive_catalog_gallery_originals( $html ) {
+    if ( ! function_exists( 'is_product' ) || ! is_product()
+        || ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), get_queried_object_id() )
+        || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+        return $html;
+    }
+    $tags = new WP_HTML_Tag_Processor( $html );
+    $original = null;
+    while ( $tags->next_tag( array( 'tag_closers' => 'visit' ) ) ) {
+        if ( 'FIGURE' === $tags->get_tag() ) {
+            $original = $tags->is_tag_closer() ? null : $tags->get_attribute( 'data-src' );
+        }
+        if ( 'IMG' !== $tags->get_tag() ) {
+            continue;
+        }
+        // Blocksy exposes the original on its figure; native Woo exposes it on img.
+        $src = $original ?: $tags->get_attribute( 'data-large_image' );
+        if ( ! is_string( $src ) || ! preg_match( '~\Ahttps?://~i', $src ) ) {
+            continue;
+        }
+        $tags->set_attribute( 'src', $src );
+        $tags->remove_attribute( 'srcset' );
+        $tags->remove_attribute( 'sizes' );
+    }
+    return $tags->get_updated_html();
+}
+add_filter( 'woocommerce_single_product_image_thumbnail_html', 'bactive_catalog_gallery_originals', 30 );
+
+/** Keep native variation changes from replacing the main image with a 600px copy. */
+function bactive_catalog_variation_original( $data, $product ) {
+    if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() )
+        || ! is_array( $data['image'] ?? null )
+        || ! is_string( $data['image']['full_src'] ?? null )
+        || ! preg_match( '~\Ahttps?://~i', $data['image']['full_src'] )
+        || ! is_int( $data['image']['full_src_w'] ?? null ) || $data['image']['full_src_w'] < 1
+        || ! is_int( $data['image']['full_src_h'] ?? null ) || $data['image']['full_src_h'] < 1 ) {
+        return $data;
+    }
+    $data['image']['src'] = $data['image']['full_src'];
+    $data['image']['src_w'] = $data['image']['full_src_w'];
+    $data['image']['src_h'] = $data['image']['full_src_h'];
+    $data['image']['srcset'] = '';
+    $data['image']['sizes'] = '';
+    return $data;
+}
+add_filter( 'woocommerce_available_variation', 'bactive_catalog_variation_original', 30, 2 );

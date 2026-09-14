@@ -74,7 +74,7 @@ namespace {
         }
         if (!str_contains($html, 'LBC Express') || !str_contains($html, 'J&T Express')) { throw new \RuntimeException('Courier missing'); }
         preg_match_all('/<a class="bactive-trust__badge bactive-trust__badge--carrier[^"]*" href="([^"]+)"/', $html, $couriers);
-        if ($couriers[1] !== array('https://www.jtexpress.ph/track-and-trace', 'https://www.lbcexpress.com/ph/track', 'https://www.grab.com/ph/express/')) {
+        if ($couriers[1] !== array('https://www.jtexpress.ph/track-and-trace', 'https://www.lbcexpress.com/ph/track', 'https://www.grab.com/ph/express/', 'https://taximaxim.com/ph/en/')) {
             throw new \RuntimeException($scenario . ': wrong courier count, order or destination');
         }
         preg_match('/aria-labelledby="bactive-shipping-label">(.*?)<\/div>/s', $html, $nationwide);
@@ -83,19 +83,23 @@ namespace {
             || substr_count($nationwide[1], '<li>') !== 2
             || !str_contains($local[1], '>Davao City only</span>')
             || !str_contains($local[1], 'aria-label="GrabExpress delivery within Davao City only (opens in a new tab)"')
-            || substr_count($local[1], '<li>') !== 1
+            || str_contains($nationwide[1], 'maxim')
+            || substr_count($local[1], '<li>') !== 2
+            || !str_contains($local[1], 'aria-label="Maxim Delivery within Davao City only (opens in a new tab)"')
+            || !str_contains($local[1], '/assets/images/couriers/maxim.svg')
+            || !str_contains($local[1], 'width="180" height="45" alt=""')
             || !str_contains($local[1], '/assets/images/couriers/grabexpress.png')
             || !str_contains($local[1], 'width="2868" height="800" alt=""')
             || !str_contains($local[1], 'target="_blank" rel="noopener noreferrer"')) {
-            throw new \RuntimeException($scenario . ': GrabExpress must be explicitly local, accessible and unstretched');
+            throw new \RuntimeException($scenario . ': GrabExpress and Maxim must be explicitly local, accessible and unstretched');
         }
         preg_match('/<img[^>]+src="[^"]*\/assets\/images\/payments\/grabpay\.svg"[^>]*>/', $html, $grabpay);
         if (empty($grabpay[0]) || !str_contains($grabpay[0], 'width="121" height="49" alt="GrabPay"')) {
             throw new \RuntimeException($scenario . ': GrabPay must use the matching local asset and dimensions');
         }
-        if (substr_count($html, '<img ') !== ($cod ? 9 : 8)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
+        if (substr_count($html, '<img ') !== ($cod ? 10 : 9)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
         assert_sage_payment_layout($html);
-        if (!str_contains($html, 'data-bactive-trust-version="2026-09-12-v6"')) { throw new \RuntimeException('Wrong combined release version'); }
+        if (!str_contains($html, 'data-bactive-trust-version="2026-09-14-v7"')) { throw new \RuntimeException('Wrong combined release version'); }
         $checks[] = $scenario;
         if ($scenario === $render_scenario) { $render_html = $html; }
     }

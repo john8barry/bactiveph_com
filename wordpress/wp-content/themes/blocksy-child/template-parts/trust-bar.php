@@ -114,7 +114,8 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         max-width: 88px;
         max-height: 24px;
     }
-    .bactive-custom-footer .bactive-trust__badge--grab img {
+    .bactive-custom-footer .bactive-trust__badge--grab img,
+    .bactive-custom-footer .bactive-trust__badge--maxim img {
         max-width: 104px;
         max-height: 26px;
     }
@@ -164,7 +165,7 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         }
     }
 </style>
-<div class="bactive-trust" data-bactive-trust-version="2026-09-12-v6">
+<div class="bactive-trust" data-bactive-trust-version="2026-09-14-v7">
     <div class="bactive-trust__shipping">
         <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
             <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>
@@ -188,6 +189,11 @@ $bactive_theme_url = get_stylesheet_directory_uri();
                 <li>
                     <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--grab" href="https://www.grab.com/ph/express/" target="_blank" rel="noopener noreferrer" aria-label="GrabExpress delivery within Davao City only (opens in a new tab)">
                         <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/grabexpress.png'); ?>" width="2868" height="800" alt="" loading="lazy" decoding="async" />
+                    </a>
+                </li>
+                <li>
+                    <a class="bactive-trust__badge bactive-trust__badge--carrier bactive-trust__badge--maxim" href="https://taximaxim.com/ph/en/" target="_blank" rel="noopener noreferrer" aria-label="Maxim Delivery within Davao City only (opens in a new tab)">
+                        <img src="<?php echo esc_url($bactive_theme_url . '/assets/images/couriers/maxim.svg'); ?>" width="180" height="45" alt="" loading="lazy" decoding="async" />
                     </a>
                 </li>
             </ul>

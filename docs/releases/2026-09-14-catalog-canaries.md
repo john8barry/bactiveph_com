@@ -1,8 +1,8 @@
 # Catalogue visual canaries — 14 September 2026
 
-Courtline Dress117 and Flow Skort154 are enabled on production. Other product enhancements, collection cards and editorial presentation remain off while verification continues. This is not full catalogue completion.
+Fifteen qualified product enhancements, the shared collection-card presentation and homepage editorial section are enabled on production. Four catalogue exceptions remain held. The first fourteen products passed their 20-minute monitoring windows; Court Skort monitoring is running. Image optimization, the Court Skort Lavender circle and next-day verification are unfinished. The sections below retain the chronological release evidence.
 
-## Source and destination
+## Initial canary source and destination (historical)
 
 - PR50 merged as7e5718bcd76afb8718b745ca2412da6565933773 after allfive checks passed.
 - Exact target: https://bactiveph.com, child theme blocksy-child.
@@ -103,3 +103,23 @@ The second-batch monitor passed14:29:31–14:49:41 UTC:75 checks over1,210.17sec
 All three independent anonymous carts passed and were cleared: Everyday Skort variation134 Gray/M/₱1,500; Match Polo624 Powder Blue/M/₱1,750; Warm-Up Jacket619 Cloud Gray/M/₱1,850; each quantity1 with exact native variation ID. No orders/payments. Live desktop and375px mobile checks passed for Sakura/M, Powder Blue/M and Magenta/M respectively, retaining original selected images1122/1024/960px, no horizontal overflow, working purchase controls and hidden SKU. Browser checks did not alter the signed-in cart.
 
 Third-batch20-minute monitoring is running. Fourth batch660/677/217 is prepared with its own encrypted option backup and may activate only after this monitor passes. Court185 remains the last unreleased qualified product, with native AJAX-specific live verification required. Four catalogue exceptions, private-only image optimization and next-day verification remain unfinished.
+
+
+## Fourteen products live
+
+Third-batch monitoring passed14:51:12–15:11:22 UTC:75 checks over1,209.79seconds, zero failures. Fourth batch217/660/677 was activated after fresh target/source/identity checks and verification of its encrypted predecessor backup. Registry is batch-fourth-20260914; all shared/protected assets remain unchanged.
+
+Independent anonymous cart checks passed: Everyday Tee665 Black/M/₱1,050; Sculpt Romper688 Brown/M/₱1,950; Strappy Bra723 White/M/₱980. Each quantity1 and exact native variation ID confirmed, then removed; no orders/payments. Live desktop and375px mobile checks passed for Dusty Mauve/M, Brown/M and White/M. Original galleries, enabled purchase, hidden SKU and no horizontal overflow were confirmed; the Romper retains both front/back views within its image.
+
+Fourth-batch20-minute monitoring is running. Court185 remains staged but unreleased, pending this monitor and native AJAX-specific live checks. Its separate anonymous-cart helper passed independent/root review and9 mocked success/failure/cleanup tests with network blocked. Four catalogue exceptions, optimized image delivery and next-day verification remain unfinished.
+
+
+## Fifteen qualified products enabled
+
+Fourth-batch monitoring completed with75 passing checks over1,207.9seconds,15:28:20–15:48:29 UTC. A temporary task-permission restriction paused further releases; access was restored before final target, writer, source and backup checks. Court185 then activated as batch-court-20260914. The four catalogue exceptions remain held.
+
+Court live White/10 resolved native variation782 at₱1,650. The independent anonymous AJAX cart confirmed that variation, quantity1 and price, then removed the item. Black/4 (missing) and Lime Green/4 (sold-out784) disabled purchase; the latter displayed Out of stock. Native Reset cleared both attributes and retained allnine original gallery sources. Keyboard thumbnail activation and size-first Lavender/10 resolved770. Desktop and375px mobile had no horizontal overflow; original gallery sources survived AJAX and Reset. Native dropdown fallback preserved selected values. The matching Court Skort illustrated numeric-size dialog opened and closed with Escape. SKU remained hidden. No orders/payments or signed-in browser cart changes.
+
+Final Court20-minute monitoring is running in monitor_court.py, owned by root. Existing automation remains responsible for continuation and next-day checks. Image-delivery optimization remains private-only and unfinished. Fifteen enabled products does not mean the entire improvement plan is complete.
+
+A final palette audit found 50 approved circles across 51 product/colour pairs. Court Skort Lavender is intentionally text-only because attachment750 looks bright pink. The user has been asked to confirm that reference before a product-specific circle is added; the name, photo and variation mappings remain unchanged.

@@ -9,8 +9,8 @@
   "bytes": 91130,
   "review": "Root and independent image review PASS; approximate editorial fidelity, not exact product or colour proof",
   "private_attachment_id": 802,
-  "production_attachment_id": null,
+  "production_attachment_id": 799,
   "source_block_sha256": "fd70fe15ef7449aa7c5524e9f441ba922722c34959f969be9c07d5827b10b710",
-  "status": "PRIVATE_VERIFIED_NOT_LIVE",
+  "status": "LIVE_20MIN_PASS_NEXTDAY_PENDING",
   "preservation": "Original master retained privately; no product attachments reassigned"
 }

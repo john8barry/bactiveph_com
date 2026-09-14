@@ -56,6 +56,16 @@ GitHub device success did not yet produce a saved writer credential. The user's 
 
 Fresh CLI authentication completed. Independent authenticated identity is `john8barry`, with repository push/admin permissions confirmed. Fetch confirms current main is already incorporated into this isolated branch. The earlier credential blocker is resolved; production qualification remains unfinished.
 
+## 2026-09-14 backup and live-release preparation
+
+John explicitly authorized a fresh backup followed by live deployment. A serialized backup-only production window was granted by the active courier release task; that writer resumed only after backup capture and integrity verification completed.
+
+Fresh encrypted capture ran 10:33:56–10:36:54 UTC: three artifacts, 692,162,509 bytes, 137 database tables and 31,802 site-root entries. Authenticated decryption, plaintext/ciphertext hashes, gzip CRC and archive/configuration coverage passed; root independently rechecked ciphertext and manifest hashes. Manifest SHA-256: `accda0f3c2491d243be64f9b8de9c618df0cb2f633220224440318bb0e1efc93`. This is a pre-Maxim baseline. Preserve the courier release and snapshot its latest affected files before any visual deployment. The September 12 actual restore remains separate from this new capture; do not claim the fresh capture has itself been restored.
+
+Authenticated catalogue comparison still returns 19 published products, 253 variations and 96 identical source attachment hashes. Mappings, defaults and colour terms are unchanged. Stock drift at variations 156, 722, 755 and 776 is legitimate current commerce data and must be preserved. Four holds remain unchanged.
+
+Additional rendered review exposed an incumbent important CSS rule with specificity (0,3,1) overriding the product CTA rule (0,3,0). Both mirrors now scope through the actual `form.cart`, raising specificity to (0,4,1). Independent selector/mirror review passes; freshly loaded browser colour/radius/case confirmation remains required. Automated navigation of the isolated preview is still unavailable; the user was asked to open Flow Skort manually. No visual production writes or merge have occurred.
+
 ## Historical record (superseded where noted above)
 
 ## Scope

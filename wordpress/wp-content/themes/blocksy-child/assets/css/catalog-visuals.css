@@ -112,7 +112,7 @@
     margin-bottom: 14px;
 }
 .bactive-product-page .summary > .price { font-size: 20px; margin-bottom: 20px; }
-.bactive-product-page .summary .single_add_to_cart_button {
+.bactive-product-page .summary form.cart .single_add_to_cart_button {
     min-height: 52px;
     background: #263d32;
     color: #fff;
@@ -178,17 +178,17 @@
     outline-offset: -3px;
 }
 .bactive-product-page .product-entry-wrapper > .entry-summary { margin-inline-start: 0; }
-.bactive-product-page .summary .single_add_to_cart_button {
+.bactive-product-page .summary form.cart .single_add_to_cart_button {
     background: #263d32 !important;
     color: #fff !important;
 }
 
-.bactive-product-page .summary .single_add_to_cart_button,
-.bactive-product-page .summary .single_add_to_cart_button:hover {
+.bactive-product-page .summary form.cart .single_add_to_cart_button,
+.bactive-product-page .summary form.cart .single_add_to_cart_button:hover {
     text-transform: none !important;
     letter-spacing: normal !important;
     box-shadow: none !important;
     transform: none !important;
     border-radius: 3px !important;
 }
-.bactive-product-page .summary .single_add_to_cart_button:hover:not(:disabled) { background: #1b2d24 !important; }
+.bactive-product-page .summary form.cart .single_add_to_cart_button:hover:not(:disabled) { background: #1b2d24 !important; }

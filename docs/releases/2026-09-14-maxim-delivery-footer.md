@@ -1,6 +1,7 @@
 # Maxim local-delivery footer update
 
-Status: local candidate; not deployed. Owner: B Active footer task.
+Status: staging deployed; production held at browser-verification gate.
+Owner: B Active footer task.
 Work record: https://github.com/john8barry/bactiveph_com/issues/90.
 John approved this scoped production release on 2026-09-14.
 Base: 01c81c2e7e5494ebb48beca72d858466e5ad099b.
@@ -42,8 +43,31 @@ Actual incumbent Sage CSS plus candidate partial rendered in Chromium at
 Desktop and mobile screenshots inspected; both local badges have equal cells
 (156x56 at 1440px, 132x48 at smaller widths) and proportional artwork.
 Local preview evidence is in /private/tmp/bactive-maxim-8g7wxy/sage-*.png.
-Production currently observed publicly at 2026-09-12-v6; authenticated revision,
-staging, backup qualification and deployment remain unverified for this change.
+Authenticated staging preflight confirmed its separate database and noindex;
+production identity and current v6 template matched the reviewed base. Both sites
+received fresh native six-component UpdraftPlus backups, verified off-server by
+SHA-256 and complete ZIP CRC/gzip reads. Private backups and rollback snapshots
+are retained in BactivePH Application Support under footer-releases/2026-09-14-maxim.
+
+Staging deployed only maxim.svg and trust-bar.php; all protected file/payment
+hashes are unchanged, with zero new staging log bytes on two readbacks.
+Deployed SHA-256:
+- maxim.svg: c814e226371c46655278aad47514b6c9d93ff7b0b53b589988a09967b68c3a00
+- trust-bar.php: b8a93c633de5f392bb4b9811715ab9d9e141367328da9817d8e9d0ae7d7f00a1
+
+Direct staging GET returned 200 and v7, but browser navigation intermittently
+timed out or received Cloudflare 522 across Chromium, installed Chrome and the
+in-app browser. Subsequent direct GETs recovered to 200. Browser acceptance is
+not established; production remains unchanged (Maxim absent, v6 template hash
+18fe403de1ea0e2004ece45c90b3d195bc55749a8efb2a04598fb441df71967b).
+
+Commit f06ac4da56b7ed49dae9d4f05a0b0c09f03245ca was pushed and independently
+read back through existing github-john8barry SSH access. HTTPS GitHub credentials
+resolve to a non-collaborator, preventing PR creation; browser GitHub recovery
+also timed out. No direct main push or security/approval bypass was attempted.
+Resume with staging browser acceptance, qualified current backup/drift checks,
+PR/check completion and the already-approved narrow live deployment. No new
+production approval is needed unless scope changes.
 Independent release review reran both mirrors' seven scenarios and four negative
 fixtures, PHP lint, mirror equality and git whitespace checks successfully.
 Remote main still matches the base above; latest five workflow results succeeded.

@@ -116,7 +116,28 @@
 }
 .products .product.bactive-collection-product { min-width: 0; display: flex; flex-direction: column; }
 .products .bactive-collection-product .woocommerce-loop-product__title { min-height: 2.3em; }
-.products .bactive-collection-product .ct-woo-card-actions { margin-top: auto; }
+.products .bactive-collection-product .ct-woo-card-actions { margin-top: 0; }
+/* Share content tracks within each card row; optional previews cannot lift prices.
+ * Keep native/mixed grids and unfamiliar Blocksy card structures on the flex fallback. */
+@supports (grid-template-rows: subgrid) {
+  .products:not(:has(> :not(.bactive-collection-product), > .product > :not(figure, .woocommerce-loop-product__title, .entry-meta, .ct-woo-card-actions, .bactive-colour-previews))) > .product.bactive-collection-product {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+    grid-row: span 5;
+    row-gap: 0;
+    align-items: start;
+  }
+  .products:not(:has(> :not(.bactive-collection-product), > .product > :not(figure, .woocommerce-loop-product__title, .entry-meta, .ct-woo-card-actions, .bactive-colour-previews))) > .product.bactive-collection-product > :is(figure, .ct-woo-card-actions) {
+    width: 100%;
+    margin-inline: 0;
+  }
+  .products > .bactive-collection-product > figure { grid-row: 1; }
+  .products > .bactive-collection-product > .woocommerce-loop-product__title { grid-row: 2; }
+  .products > .bactive-collection-product > .entry-meta { grid-row: 3; }
+  .products > .bactive-collection-product > .ct-woo-card-actions { grid-row: 4; }
+  .products > .bactive-collection-product > .bactive-colour-previews { grid-row: 5; }
+}
 .bactive-colour-previews { display: flex; flex-wrap: wrap; gap: 0 12px; margin-top: 10px; }
 .bactive-colour-preview { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font: 400 12px/1.3 Inter, sans-serif; color: #40543c; text-decoration: none; }
 .bactive-colour-preview:hover { text-decoration: underline; text-underline-offset: 3px; }

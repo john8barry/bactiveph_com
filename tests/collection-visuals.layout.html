@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; font-src 'self'; connect-src 'none'">
+<title>Collection card row regression fixture</title>
+<style>
+  body { margin: 24px; font: 16px/1.5 system-ui, sans-serif; }
+  iframe { display: block; height: 720px; border: 1px solid; margin-bottom: 32px; }
+  output { display: block; white-space: pre-wrap; max-height: 240px; overflow: auto; }
+</style>
+<h1>Collection card row regression fixture</h1>
+<p>Synthetic content, not catalogue data. The native Blocksy type-2 card structure and shipped CSS/font files are used. Each frame has its own viewport; browser settings are unchanged.</p>
+<p>Serve the repository locally and open this file. All results must pass. Add <code>?baseline</code> to restore the previous flex/auto-margin behavior and demonstrate the regression.</p>
+<output id="results">Running…</output>
+<main id="frames"></main>
+<script>
+// No WordPress, commerce requests, third-party resources, or customer data.
+const base = '../wordpress/wp-content/themes/';
+const sheets = [
+  'blocksy-child/assets/css/custom.css',
+  'blocksy-child/assets/css/inter-fonts.css',
+  'blocksy/static/bundle/main.min.css',
+  'blocksy/static/bundle/woocommerce.min.css',
+  'blocksy-child/assets/css/brand-typography.css',
+  'blocksy-child/assets/css/collection-visuals.css'
+].map(path => `<link rel="stylesheet" href="${base}${path}">`).join('');
+const baseline = new URLSearchParams(location.search).has('baseline');
+const cases = [
+  ['The Court Dress', [], 'Dresses'],
+  ['Rally Skort', ['White'], 'Skorts'],
+  ['Courtline Dress', ['Jujube Red', 'White'], 'Dresses'],
+  ['The Warm-Up Jacket', ['Black', 'Navy Blue', 'Pure White', 'Turquoise Blue'], 'Jackets'],
+  ['Long synthetic product title for wrap coverage', ['Black', 'Navy Blue', 'Turquoise Blue'], 'Long synthetic category label'],
+  ['Flow Skort', [], ''],
+  ['Match Polo', ['Long synthetic colour name'], 'Tops'],
+  ['Court Skort', ['Black', 'White'], 'Skorts']
+];
+function card([name, colours, category], index, mode) {
+  const native = mode === 'mixed' && index === 0;
+  return `<li class="product${native ? '' : ' bactive-collection-product'}">
+    <figure><a class="ct-media-container" href="#fixture"><img width="300" height="400" alt="Synthetic image stage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></a></figure>
+    <h2 class="woocommerce-loop-product__title"><a href="#fixture">${name}</a></h2>
+    ${category ? `<ul class="entry-meta"><li><a href="#fixture">${category}</a></li></ul>` : ''}
+    ${mode === 'extra' && index === 0 ? '<div class="ct-woo-card-rating">Additional native card field</div>' : ''}
+    <div class="ct-woo-card-actions"><span class="price">₱2,800.00</span><a class="button" href="#fixture">Select options</a></div>
+    ${colours.length ? `<div class="bactive-colour-previews" aria-label="Product colours">${colours.map(colour => `<a class="bactive-colour-preview" href="#fixture"><span class="bactive-colour-dot" aria-hidden="true"></span><span>${colour}</span></a>`).join('')}</div>` : ''}
+  </li>`;
+}
+const configurations = [1440, 1024, 768, 390, 320].map(width => ({width, mode: 'shared'}));
+configurations.push({width: 1440, mode: 'mixed'}, {width: 1440, mode: 'extra'});
+const results = [];
+function measure(frame, configuration) {
+  const doc = frame.contentDocument;
+  const cards = [...doc.querySelectorAll('.products > .product')];
+  const rows = new Map();
+  for (const card of cards) {
+    const rect = card.getBoundingClientRect();
+    const top = Math.round(rect.top);
+    if (!rows.has(top)) rows.set(top, []);
+    const actions = card.querySelector('.ct-woo-card-actions').getBoundingClientRect();
+    const price = card.querySelector('.price').getBoundingClientRect();
+    const previews = card.querySelector('.bactive-colour-previews')?.getBoundingClientRect();
+    rows.get(top).push({top, bottom: rect.bottom, actions: actions.top, price: price.top});
+    if (previews && (previews.top < actions.bottom - 1 || previews.bottom > rect.bottom + 1)) {
+      throw new Error('Colour previews overlap actions or leave the card');
+    }
+  }
+  const spread = key => Math.max(...[...rows.values()].map(row => Math.max(...row.map(item => item[key])) - Math.min(...row.map(item => item[key]))));
+  const display = cards.map(card => frame.contentWindow.getComputedStyle(card).display);
+  const rowList = [...rows.values()];
+  const ordered = rowList.every((row, i) => !i || row[0].top >= Math.max(...rowList[i - 1].map(card => card.bottom)) - 1);
+  const shared = configuration.mode === 'shared';
+  const columns = configuration.width > 999 ? 4 : 2;
+  const pass = ordered && cards.length === 8 && rowList.length === 8 / columns && (shared
+    ? spread('actions') <= 1 && spread('price') <= 1 && display.every(value => value === 'grid') && doc.documentElement.scrollWidth <= doc.documentElement.clientWidth
+    : display.every(value => value === 'flex'));
+  return {...configuration, pass, rows: rowList.length, actionSpread: spread('actions'), priceSpread: spread('price'), noRowOverlap: ordered, scrollWidth: doc.documentElement.scrollWidth, clientWidth: doc.documentElement.clientWidth, display: [...new Set(display)]};
+}
+for (const configuration of configurations) {
+  const heading = document.createElement('h2');
+  heading.textContent = `${configuration.width}px — ${configuration.mode}`;
+  const frame = document.createElement('iframe');
+  frame.width = configuration.width;
+  frame.title = heading.textContent;
+  frame.onload = async () => {
+    try {
+      await frame.contentDocument.fonts.ready;
+      await new Promise(resolve => frame.contentWindow.requestAnimationFrame(() => frame.contentWindow.requestAnimationFrame(resolve)));
+      results.push(measure(frame, configuration));
+    } catch (error) {
+      results.push({...configuration, pass: false, error: error.message});
+    }
+    document.getElementById('results').textContent = JSON.stringify({baseline, complete: results.length === configurations.length, passed: results.filter(result => result.pass).length, total: configurations.length, results}, null, 2);
+  };
+  frame.srcdoc = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${sheets}
+    <style>body {margin:0;padding:24px;} .products {margin:0; padding:0; list-style:none;} .ct-media-container img {display:block;} ${baseline ? '.products > .product.bactive-collection-product {display:flex;grid-row:auto;} .products .bactive-collection-product .ct-woo-card-actions {margin-top:auto;}' : ''}</style>
+    <body><main class="woocommerce"><ul class="products columns-4" data-products="type-2">${cases.map((entry, index) => card(entry, index, configuration.mode)).join('')}</ul></main></body></html>`;
+  document.getElementById('frames').append(heading, frame);
+}
+</script>
+</html>

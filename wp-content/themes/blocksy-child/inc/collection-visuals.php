@@ -10,7 +10,14 @@ function bactive_collection_release() {
 function bactive_collection_product_classes( $classes, $product ) {
 	$config = bactive_collection_release();
 	$ids = isset( $config['product_ids'] ) && is_array( $config['product_ids'] ) ? $config['product_ids'] : array();
-	if ( true === ( $config['enabled'] ?? false ) && $product instanceof WC_Product && in_array( $product->get_id(), $ids, true ) ) {
+	// A related grid shares one presentation even while product rollouts are staged.
+	// This does not release the related products' selectors or colour mappings.
+	$shared_related = function_exists( 'is_product' ) && is_product()
+		&& function_exists( 'wc_get_loop_prop' ) && 'related' === wc_get_loop_prop( 'name' )
+		&& function_exists( 'bactive_catalog_visuals_config' ) && function_exists( 'bactive_catalog_visuals_registry' )
+		&& bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), get_queried_object_id() );
+	if ( true === ( $config['enabled'] ?? false ) && $product instanceof WC_Product
+		&& ( in_array( $product->get_id(), $ids, true ) || $shared_related ) ) {
 		$classes[] = 'bactive-collection-product';
 	}
 	return $classes;
@@ -61,7 +68,9 @@ add_shortcode( 'bactive_editorial', 'bactive_editorial_shortcode' );
 /** Add approved, named previews after native card content; never changes cart actions. */
 function bactive_collection_colour_previews() {
 	global $product;
-	if ( ! $product instanceof WC_Product || ! in_array( 'bactive-collection-product', bactive_collection_product_classes( array(), $product ), true )
+	$release = bactive_collection_release();
+	$ids = is_array( $release['product_ids'] ?? null ) ? $release['product_ids'] : array();
+	if ( ! $product instanceof WC_Product || ! in_array( $product->get_id(), $ids, true ) || ! in_array( 'bactive-collection-product', bactive_collection_product_classes( array(), $product ), true )
 		|| ! function_exists( 'bactive_catalog_visuals_registry' ) || ! function_exists( 'bactive_catalog_visuals_palette' ) || ! $product->is_type( 'variable' ) ) {
 		return;
 	}

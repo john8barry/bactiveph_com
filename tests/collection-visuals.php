@@ -4,6 +4,9 @@ $release = array(); $option = array(); $front = true; $page_id = 14; $registry =
 function add_filter(...$args) {} function add_action(...$args) {} function add_shortcode(...$args) {}
 function get_option($name,$default) { global $option,$registry; return $name==='bactive_catalog_visuals_release' ? $registry : $option; }
 function apply_filters($name,$value) { global $release; return $release ?: $value; }
+$product_page=false; $loop_name='';
+function is_product() { global $product_page; return $product_page; }
+function wc_get_loop_prop($name) { global $loop_name; return $loop_name; }
 function is_front_page() { global $front; return $front; }
 function get_queried_object_id() { global $page_id; return $page_id; }
 function esc_attr($v) { return htmlspecialchars($v,ENT_QUOTES); }
@@ -70,3 +73,22 @@ $page_id=304; check($original===bactive_editorial_existing_block($original,$bloc
 $block['innerHTML'].=' changed'; check($original===bactive_editorial_existing_block($original,$block),'Changed source unchanged');
 $release['version']='<script>'; check([]===bactive_collection_release(),'Bad version blocked');
 echo "Collection/editorial activation, palette, preservation and image guards: PASS\n";
+
+// A mixed related grid gets one frame, without promoting held product mappings.
+$release=['version'=>'test-1','enabled'=>true,'product_ids'=>[117]];
+$product_page=true; $loop_name='related'; $page_id=117;
+$registry=['schema_version'=>1,'version'=>'test-1','enabled'=>true,'products'=>[
+117=>['enabled'=>true],36=>['enabled'=>false,'reviewed'=>true,'palette'=>['attribute_pa_colour'=>['white'=>['term_id'=>7,'approved'=>true,'hex'=>'#ffffff']]]]]];
+check(['bactive-collection-product']===bactive_collection_product_classes([],$product),'Unreleased related card shares frame');
+ob_start(); bactive_collection_colour_previews(); check(''===ob_get_clean(),'Unreleased related card never gets previews even with reviewed palette');
+$registry['products'][36]['reviewed']=false;
+check(['bactive-collection-product']===bactive_collection_product_classes([],$product),'Held related card shares frame');
+ob_start(); bactive_collection_colour_previews(); check(''===ob_get_clean(),'Held related card has no previews');
+$loop_name='upsells'; check([]===bactive_collection_product_classes([],$product),'Other product loops unchanged');
+$loop_name='related'; $registry['products'][117]['enabled']=false;
+check([]===bactive_collection_product_classes([],$product),'Unenhanced page unchanged');
+$registry['products'][117]['enabled']=true; $release['enabled']=false;
+check([]===bactive_collection_product_classes([],$product),'Collection off preserves related cards');
+$release['enabled']=true; $product_page=false;
+check([]===bactive_collection_product_classes([],$product),'Non-product page unchanged');
+echo "Mixed related cards preserve independent release gates: PASS\n";

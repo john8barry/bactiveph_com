@@ -94,3 +94,12 @@ The second-batch monitoring window is restarted after the one-file gallery relea
 Seven lossless WebP candidates were prepared privately:15.14MB of accepted PNG sources becomes7.66MB, with decoded pixels, dimensions and colour profiles unchanged. They are not deployed. A future narrow derivative-delivery switch must preserve attachment IDs, original files and image assignments, cover all Blocksy full-image references and fall back to originals if a source changes. Image-delivery optimization and next-day verification remain explicitly unfinished.
 
 Rollback order from this state: reverse any later product batches first; revert the AJAX PHP file only when the eight-product and shared options match its recorded release; then reverse second/first batches, shared option, PR93 files and original canary release as needed. Exact comparisons stop unexpected edits. Never replace the production database over newer commerce activity.
+
+
+## Eleven products live
+
+The second-batch monitor passed14:29:31–14:49:41 UTC:75 checks over1,210.17seconds with zero failures after the gallery PHP deployment. Third batch128/565/573 was enabled only after that PASS, encrypted predecessor-backup verification, exact deployed/protected-file checks and catalogue identity validation. Product registry is batch-third-20260914; shared presentation remains unchanged.
+
+All three independent anonymous carts passed and were cleared: Everyday Skort variation134 Gray/M/₱1,500; Match Polo624 Powder Blue/M/₱1,750; Warm-Up Jacket619 Cloud Gray/M/₱1,850; each quantity1 with exact native variation ID. No orders/payments. Live desktop and375px mobile checks passed for Sakura/M, Powder Blue/M and Magenta/M respectively, retaining original selected images1122/1024/960px, no horizontal overflow, working purchase controls and hidden SKU. Browser checks did not alter the signed-in cart.
+
+Third-batch20-minute monitoring is running. Fourth batch660/677/217 is prepared with its own encrypted option backup and may activate only after this monitor passes. Court185 remains the last unreleased qualified product, with native AJAX-specific live verification required. Four catalogue exceptions, private-only image optimization and next-day verification remain unfinished.

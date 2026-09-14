@@ -1,6 +1,6 @@
 # Automatic product presentation and colour editing
 
-Status: implemented in PR #101 on `codex/catalogue-defaults-20260914`; **not live**. This extends issue #48 and incorporates the merged PR #102 gallery startup fix. The existing 15 qualified product releases and PR #100 related-card previews are live. Lossless-image activation, the new defaults, native editor and metadata migration require their own release evidence.
+Status: implemented in PR #101 on `codex/catalogue-defaults-20260914`; **not live**. This extends issue #48 and incorporates the merged PR #102 gallery startup fix and PR #103 first-render/reset correction. The existing 15 qualified product releases and PR #100 related-card previews are live. Further lossless-image activation, the new defaults, native editor and metadata migration require their own release evidence; see `LOSSLESS-DELIVERY.md` for the current canary and gallery-release checkpoint.
 
 ## What becomes automatic
 
@@ -72,15 +72,20 @@ Persist the dry-run JSON privately, inspect it and calculate its hash before app
 - A newly created private variable product preserved distinct S/M images, kept sold-out L unavailable, used a reviewed fallback for L's missing photo, and matched the native theme gallery to WooCommerce's payload. Photo changes invalidated review and an outdated editing form was refused.
 - An actual internal WooCommerce REST update preserved the saved parent gallery and the variation's explicit empty image assignment. The reviewed representative appeared only in the display path; anonymous private-product access remained denied.
 - After integration with PR #102, all 32 JavaScript tests passed against both repository and fresh-restore WooCommerce/Blocksy engines. Five PHP suites and 19 Python tests passed. The combined lifecycle covers representative preview, complete variation, clearing size, keyboard browsing and native fallback. Native synthetic gallery clicks no longer dismiss the returning colour-only preview. These tests simulate trusted-input handlers; actual browser delivery remains a separate gate.
+- After merging PR #103 at `eb8e80a0d289b8b267d53591ee57cb253361ae54`, all 39 combined JavaScript tests passed against both repository and fresh-restore engines using `/usr/local/bin/node` v24.13.0. All 21 inherited gallery tests were preserved; the added case verifies that a new product's representative preview survives native Reset during Flexy's first render. The PR #101 keyboard and trusted-navigation guards remain intact. Five PHP suites and 19 Python tests also passed. This verifies the local merge, not the outstanding browser or production gates below.
 - The native server matrix covered all 19 original products and 253 variations: 187 correct cart additions, 65 unavailable rejections, and the existing held Bubble variation 80 missing-colour rejection. All 43 absent combinations, 294 selection-order matches and 19 blank resets were checked. Non-image payloads and protected metadata were unchanged; the test cart was cleared.
 - A separate contained restore completed the full deployment rollback rehearsal: all 11 intermediate file states booted with enhancements disabled; metadata and defaults-option changes applied and rolled back; all six originally absent files returned to absence. Later stock changes survived, while conflicting later option/file edits stopped rollback. Final reapplication also passed. This proves the tested local recovery path; the production adapter still needs its own current bindings and qualification.
 - Current dependency triage found no new dependency path specific to this change. Four active parent-theme vendor findings remain unresolved; this does not constitute overall security clearance. Parent vendor updates remain a separate tracked responsibility.
 
 These are local results, not production proof. Private receipts remain under `catalog-recovery/restore-20260914T184757Z`; no synthetic credentials, raw databases or customer data belong in GitHub.
 
+## Remaining interaction qualification
+
+A native-engine fixture exposes an existing animation edge: clear only size while keeping the colour, then reselect that same size during Reset's movement. The native theme can settle on another photo. The same result occurs without PR #101's layout or representative-preview modules; PR #103 addresses first-render readiness and does not resolve this separate edge. Actual browser reproduction and resolution are required before promoting automatic defaults. The fixture's simulated geometry is not production evidence. No speculative animation change is included in this merge.
+
 ## Remaining release sequence
 
-1. Finish PR #100's lossless-image activation after PR #102's live gallery monitor passes. Related previews are already live. Use a new option-only release journal protecting the deployed gallery fix; preserve earlier file-release journals and backups.
+1. Independently verify PR #103's gallery correction in production before continuing PR #100's lossless-image activation. Related previews and the Courtline lossless canary are already live. Use a new option-only release journal protecting the deployed gallery fix; preserve earlier file-release journals and backups.
 2. Reconcile current main, this feature branch, the current catalogue, applicable security findings and the production target. Recheck the GitHub account before every push or mutation.
 3. Finish actual admin media-picker/save and responsive storefront checks. The full native variation/cart matrix and source review have passed; rerun affected checks after any fixes.
 4. Refresh the backup/target evidence as needed; qualify the production adapter against the completed full rollback rehearsal and stage the new files with defaults disabled. Bind production recovery to the production snapshot, including original file absence and later-edit guards.

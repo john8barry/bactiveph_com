@@ -60,3 +60,23 @@ foreach ( ['full_src_w','full_src_h'] as $dimension ) {
         check($missing===bactive_catalog_variation_original($missing,$product));
     }
 }
+
+// Blocksy's independent first-slide reset payload must receive the same protection.
+$data['blocksy_original_image'] = array_merge($data['image'], [
+    'id'=>42, 'full_src'=>'https://example.test/black.jpg', 'full_src_w'=>853,
+    'gallery_thumbnail_src'=>'black-thumb.jpg']);
+$expected['blocksy_original_image'] = array_merge($data['blocksy_original_image'], [
+    'src'=>'https://example.test/black.jpg','src_w'=>853,'src_h'=>1280,'srcset'=>'','sizes'=>'']);
+check($expected===bactive_catalog_variation_original($data,$product));
+$option=[]; check($data===bactive_catalog_variation_original($data,$product)); $option=$registry;
+foreach (['image','blocksy_original_image'] as $key) {
+    $other=$key==='image'?'blocksy_original_image':'image';
+    foreach (['full_src'=>'javascript:alert(1)','full_src_w'=>0,'full_src_h'=>'1280'] as $field=>$bad) {
+        $partial=$data; $partial[$key][$field]=$bad;
+        $result=bactive_catalog_variation_original($partial,$product);
+        check($result[$key]===$partial[$key]); check($result[$other]===$expected[$other]);
+    }
+    $partial=$data; unset($partial[$key]); $result=bactive_catalog_variation_original($partial,$product);
+    check(!isset($result[$key])); check($result[$other]===$expected[$other]);
+}
+echo "Blocksy first-slide reset and independent validation: PASS\n";

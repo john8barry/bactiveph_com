@@ -137,21 +137,27 @@ function bactive_catalog_gallery_originals( $html ) {
 }
 add_filter( 'woocommerce_single_product_image_thumbnail_html', 'bactive_catalog_gallery_originals', 30 );
 
-/** Keep native variation changes from replacing the main image with a 600px copy. */
+/** Keep Woo and Blocksy's first-slide reset on the existing full originals. */
 function bactive_catalog_variation_original( $data, $product ) {
-    if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() )
-        || ! is_array( $data['image'] ?? null )
-        || ! is_string( $data['image']['full_src'] ?? null )
-        || ! preg_match( '~\Ahttps?://~i', $data['image']['full_src'] )
-        || ! is_int( $data['image']['full_src_w'] ?? null ) || $data['image']['full_src_w'] < 1
-        || ! is_int( $data['image']['full_src_h'] ?? null ) || $data['image']['full_src_h'] < 1 ) {
+    if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() ) ) {
         return $data;
     }
-    $data['image']['src'] = $data['image']['full_src'];
-    $data['image']['src_w'] = $data['image']['full_src_w'];
-    $data['image']['src_h'] = $data['image']['full_src_h'];
-    $data['image']['srcset'] = '';
-    $data['image']['sizes'] = '';
+    // Blocksy restores its separate original payload when returning to a gallery slide.
+    foreach ( array( 'image', 'blocksy_original_image' ) as $key ) {
+        $image = $data[ $key ] ?? null;
+        if ( ! is_array( $image )
+            || ! is_string( $image['full_src'] ?? null )
+            || ! preg_match( '~\Ahttps?://~i', $image['full_src'] )
+            || ! is_int( $image['full_src_w'] ?? null ) || $image['full_src_w'] < 1
+            || ! is_int( $image['full_src_h'] ?? null ) || $image['full_src_h'] < 1 ) {
+            continue;
+        }
+        $data[ $key ]['src'] = $image['full_src'];
+        $data[ $key ]['src_w'] = $image['full_src_w'];
+        $data[ $key ]['src_h'] = $image['full_src_h'];
+        $data[ $key ]['srcset'] = '';
+        $data[ $key ]['sizes'] = '';
+    }
     return $data;
 }
 add_filter( 'woocommerce_available_variation', 'bactive_catalog_variation_original', 30, 2 );

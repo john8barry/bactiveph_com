@@ -7,6 +7,8 @@ const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 const {JSDOM} = require('jsdom');
 const jquery = readFileSync(require.resolve('../wordpress/wp-includes/js/jquery/jquery.js'), 'utf8');
+const underscore = readFileSync(require.resolve('../wordpress/wp-includes/js/underscore.js'), 'utf8');
+const wpUtil = readFileSync(require.resolve('../wordpress/wp-includes/js/wp-util.js'), 'utf8');
 const theme = '../wordpress/wp-content/themes/blocksy-child/';
 const source = readFileSync(require.resolve(theme + 'assets/js/catalog-visuals.js'), 'utf8');
 // CI exercises the incumbent source; release qualification also points at the
@@ -24,7 +26,8 @@ async function page(overrides = {}, ajax = false) {
     w.wc_add_to_cart_variation_params = {wc_ajax_url:'https://example.test/?wc-ajax=%%endpoint%%', i18n_no_matching_variations_text:'No matching variations',i18n_make_a_selection_text:'Select',i18n_unavailable_text:'Unavailable'};
     $.fn.block = $.fn.unblock = function () {return this;};
     $.fn.wc_set_content = $.fn.wc_reset_content = $.fn.wc_variations_image_update = function () {return this;};
-    w.wp = {template: () => () => '<div>Native variation</div>'};
+    // Use the real WordPress compiler: stubbing this hid a preview CSP incompatibility.
+    w.eval(underscore); w.eval(wpUtil);
     const form = $('form');
     const variations = [
         {variation_id:101,attributes:{attribute_pa_size:'s',attribute_pa_colour:'black'},is_in_stock:true,is_purchasable:true,variation_is_visible:true,variation_is_active:true,min_qty:1,max_qty:3,image:{},price_html:'native-price'},

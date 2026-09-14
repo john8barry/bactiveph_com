@@ -32,6 +32,18 @@ Keep product 56 Bubble Dress (duplicate Black XL, missing colour, unlisted Onyx)
 
 Finish the reviewed palette/asset manifest and restore-browser qualification; independently review the final diff; then obtain a serialized production writer window. Release Courtline Dress, then Flow Skort, then shared presentation and qualified batches of at most three. Each release still requires public cached readback, 20-minute monitoring and a next-day check. No production design writer window is currently reserved.
 
+## 2026-09-14 local preview repair — browser confirmation pending
+
+The user opened the restored Courtline Dress page manually. Browser inspection confirmed a native WooCommerce variation exception: the private preview CSP blocked the WordPress/Underscore template compiler (`new Function`). The enhancer then restored its native dropdown fallback. This was a preview configuration incompatibility; selection was not verified as working merely because the page loaded.
+
+- Snapshotted the private bridge and router, then permitted the native compiler in the private script policy. Self-only resource/connect/form policies, blocked frames/workers and container network containment remain in place. Fresh HTTP readback confirms the updated policy. No production configuration changed.
+- Replaced the selector test's WordPress template stub with the real WordPress and Underscore sources. All nine selector tests pass. This does not substitute for a freshly loaded browser interaction test.
+- Restored the approved presentation-only header and hero modules into the private clone with exact local root/URL adaptations. Restored the safe WooCommerce permalink option and flushed rewrite rules after a fresh WordPress boot. All seven header collection destinations return 200 under `/collections/`, without redirect loops or internal production links. Product, variation, metadata and order hashes remain unchanged.
+- Browser automation can inspect the manually opened page, but automated navigation remains blocked and reload did not refresh the document. Requested one manual refresh before continuing actual colour/size and gallery verification.
+- Switched to the saved `john8barry` GitHub account with the user's authorization. Independent `/user` readback still identifies its token as `johnbarry-tpg`; repository permission remains read-only. Fresh authentication as the repository writer is required. Remote PR #50 remains at `8568c5a3`; no push or deployment occurred.
+
+Private evidence: `variation-csp-fix.json` and `presentation-parity-20260914/{receipt.json,http-readback.json}` in the qualified restore directory. Production release still requires a fresh baseline/backup, applicable security checks, completed browser qualification and a serialized writer window.
+
 ## Historical record (superseded where noted above)
 
 ## Scope

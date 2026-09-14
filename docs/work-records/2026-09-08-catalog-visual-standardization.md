@@ -44,6 +44,18 @@ The user opened the restored Courtline Dress page manually. Browser inspection c
 
 Private evidence: `variation-csp-fix.json` and `presentation-parity-20260914/{receipt.json,http-readback.json}` in the qualified restore directory. Production release still requires a fresh baseline/backup, applicable security checks, completed browser qualification and a serialized writer window.
 
+## 2026-09-14 refreshed browser interaction evidence
+
+The user refreshed the private Courtline Dress page. Browser interaction now confirms all eight Jujube Red/White × S/M/L/XL pairs remain enhanced and enable the native purchase control, with stock text updating (Jujube Red S: one; the other tested pairs: two). Clear removes both choices and disables purchase. Choosing an already selected colour toggles it off and correctly leaves purchase disabled until a complete pair is selected. No selection navigated away from the product route; browser error logs remained empty. Keyboard Enter/Space operates gallery thumbnails; the tested desktop viewport has no horizontal overflow. Explicit native-dropdown fallback preserves selections and updates stock after changing to Jujube Red S.
+
+This is bounded interaction evidence, not full product release qualification: image fidelity/mapping, mobile review, hidden variation IDs and a browser cart readback still need completion. No order or payment was started. The inspected tab was deliberately left in dropdown fallback after that test; refreshing restores enhanced controls.
+
+GitHub device success did not yet produce a saved writer credential. The user's app terminal is still paused at the CLI prompt to press Enter before opening device authorization; requested Enter so it can redeem and save the authorization. Both saved credential entries still independently identify as the read-only account. No push attempted.
+
+## 2026-09-14 GitHub access restored
+
+Fresh CLI authentication completed. Independent authenticated identity is `john8barry`, with repository push/admin permissions confirmed. Fetch confirms current main is already incorporated into this isolated branch. The earlier credential blocker is resolved; production qualification remains unfinished.
+
 ## Historical record (superseded where noted above)
 
 ## Scope

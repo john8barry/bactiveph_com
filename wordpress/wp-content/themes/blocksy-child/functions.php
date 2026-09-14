@@ -396,6 +396,10 @@ require_once __DIR__ . '/inc/storefront-punctuation.php';
 // Keep operational SKUs out of customer-facing output.
 require_once __DIR__ . '/inc/public-sku-privacy.php';
 
-// Catalogue visuals remain inert until a reviewed release enables exact products.
+// Catalogue presentation is controlled by reviewed releases or automatic defaults.
+require_once __DIR__ . '/inc/catalogue-settings.php';
 require_once __DIR__ . '/inc/catalog-visuals.php';
 require_once __DIR__ . '/inc/collection-visuals.php';
+if ( is_admin() && bactive_catalogue_feature( 'editor' ) ) {
+    require_once __DIR__ . '/inc/catalogue-editor.php';
+}

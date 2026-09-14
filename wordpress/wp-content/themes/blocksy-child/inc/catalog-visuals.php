@@ -1,6 +1,6 @@
 <?php
 /**
- * Product selectors, inert until an exact product is released.
+ * Product selectors, controlled by staged releases or native catalogue defaults.
  *
  * Store bactive_catalog_visuals_release as a private option, or define
  * BACTIVE_CATALOG_VISUALS_REGISTRY in private deployment configuration:
@@ -35,6 +35,10 @@ function bactive_catalog_visuals_entry( $registry, $product_id ) {
 }
 
 function bactive_catalog_visuals_palette( $registry, $product_id ) {
+    if ( function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'selectors' ) ) {
+        $product = wc_get_product( $product_id );
+        return $product ? bactive_catalogue_palette( $product ) : array();
+    }
     $entry = bactive_catalog_visuals_entry( $registry, $product_id );
     if ( ! $entry || true !== ( $entry['reviewed'] ?? false ) ) {
         return array();
@@ -63,6 +67,19 @@ function bactive_catalog_visuals_palette( $registry, $product_id ) {
 }
 
 function bactive_catalog_visuals_config( $registry, $product_id ) {
+    if ( ! is_int( $product_id ) || $product_id < 1 ) { return null; }
+    if ( function_exists( 'bactive_catalogue_defaults' ) && true === ( bactive_catalogue_defaults()['enabled'] ?? false )
+        && ( ! bactive_catalogue_feature( 'selectors' ) || bactive_catalogue_held( $product_id ) ) ) { return null; }
+    if ( function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'selectors' )
+        && is_int( $product_id ) && $product_id > 0 && ! bactive_catalogue_held( $product_id ) && ! bactive_catalogue_native( $product_id ) ) {
+        $product = wc_get_product( $product_id );
+        if ( $product && $product->is_type( 'variable' ) ) {
+            return array( 'schemaVersion' => 1, 'version' => bactive_catalogue_defaults()['version'],
+                'productId' => $product_id, 'palette' => (object) bactive_catalogue_palette( $product ),
+                'previews' => (object) bactive_catalogue_previews( $product ) );
+        }
+    }
+    if ( function_exists( 'bactive_catalogue_native' ) && bactive_catalogue_native( $product_id ) ) { return null; }
     $entry = bactive_catalog_visuals_entry( $registry, $product_id );
     if ( ! $entry || true !== ( $registry['enabled'] ?? false ) || true !== ( $entry['enabled'] ?? false ) ) {
         return null;
@@ -71,25 +88,42 @@ function bactive_catalog_visuals_config( $registry, $product_id ) {
         'productId' => $product_id, 'palette' => (object) bactive_catalog_visuals_palette( $registry, $product_id ) );
 }
 
+function bactive_catalog_images_enabled( $id ) {
+    if ( ! is_int( $id ) || $id < 1 ) { return false; }
+    if ( function_exists( 'bactive_catalogue_native' ) && bactive_catalogue_native( $id ) ) { return false; }
+    if ( function_exists( 'bactive_catalogue_defaults' ) && true === ( bactive_catalogue_defaults()['enabled'] ?? false ) ) { return bactive_catalogue_feature( 'image_quality' ); }
+    $registry = bactive_catalog_visuals_registry();
+    $entry = bactive_catalog_visuals_entry( $registry, $id );
+    return true === ( $registry['enabled'] ?? false ) && true === ( $entry['enabled'] ?? false ) && true === ( $entry['reviewed'] ?? false );
+}
+
 function bactive_enqueue_catalog_visuals() {
     if ( ! function_exists( 'is_product' ) || ! is_product() ) {
         return;
     }
     $product = wc_get_product( get_queried_object_id() );
-    if ( ! $product || ! $product->is_type( 'variable' ) ) {
+    if ( ! $product ) {
         return;
     }
     $config = bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() );
     $base = get_stylesheet_directory();
-    if ( ! $config || ! is_readable( $base . '/assets/css/catalog-visuals.css' )
+    $layout = function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'layout' ) && ! bactive_catalogue_native( $product->get_id() );
+    if ( ( ! $config && ! $layout ) || ! is_readable( $base . '/assets/css/catalog-visuals.css' )
         || ! is_readable( $base . '/assets/js/catalog-visuals.js' ) ) {
         return;
     }
     $uri = get_stylesheet_directory_uri();
     wp_enqueue_style( 'bactive-catalog-visuals', $uri . '/assets/css/catalog-visuals.css',
         array( 'bactive-brand-typography' ), filemtime( $base . '/assets/css/catalog-visuals.css' ) );
+    if ( $layout ) {
+        wp_enqueue_script( 'bactive-catalogue-layout', $uri . '/assets/js/catalogue-layout.js', array(), filemtime( $base . '/assets/js/catalogue-layout.js' ), true );
+    }
+    if ( ! $config ) { return; }
     wp_enqueue_script( 'bactive-catalog-visuals', $uri . '/assets/js/catalog-visuals.js',
         array( 'jquery', 'wc-add-to-cart-variation' ), filemtime( $base . '/assets/js/catalog-visuals.js' ), true );
+    if ( ! empty( $config['previews'] ) ) {
+        wp_enqueue_script( 'bactive-colour-photo', $uri . '/assets/js/catalogue-colour-photo.js', array( 'bactive-catalog-visuals' ), filemtime( $base . '/assets/js/catalogue-colour-photo.js' ), true );
+    }
     wp_add_inline_script( 'bactive-catalog-visuals', 'window.bactiveCatalogVisuals=' .
         wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . ';', 'before' );
 }
@@ -100,10 +134,11 @@ function bactive_catalog_body_classes( $classes ) {
         return $classes;
     }
     $product = wc_get_product( get_queried_object_id() );
-    if ( $product && $product->is_type( 'variable' )
-        && bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() ) ) {
-        $classes[] = 'bactive-product-page';
-    }
+    $automatic = function_exists( 'bactive_catalogue_defaults' ) && true === ( bactive_catalogue_defaults()['enabled'] ?? false );
+    $layout = $product && ( $automatic
+        ? bactive_catalogue_feature( 'layout' ) && ! bactive_catalogue_native( $product->get_id() )
+        : $product->is_type( 'variable' ) && bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() ) );
+    if ( $layout ) { $classes[] = 'bactive-product-page'; }
     return $classes;
 }
 add_filter( 'body_class', 'bactive_catalog_body_classes' );
@@ -184,7 +219,7 @@ function bactive_catalog_gallery_originals( $html ) {
             $product_id = $product->get_id();
         }
     }
-    if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product_id ) ) {
+    if ( ! bactive_catalog_images_enabled( $product_id ) ) {
         return $html;
     }
     return bactive_catalog_normalize_gallery_originals( $html, $product_id );
@@ -238,8 +273,8 @@ function bactive_catalog_normalize_gallery_originals( $html, $product_id = 0 ) {
 add_filter( 'woocommerce_single_product_image_thumbnail_html', 'bactive_catalog_gallery_originals', 30 );
 
 /** Keep Woo and Blocksy's first-slide reset on the existing full originals. */
-function bactive_catalog_variation_original( $data, $product ) {
-    if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() ) ) {
+function bactive_catalog_variation_original( $data, $product, $variation = null ) {
+    if ( ! bactive_catalog_images_enabled( $product->get_id() ) ) {
         return $data;
     }
     // The product object supplies the release gate even during native AJAX lookups.
@@ -269,4 +304,4 @@ function bactive_catalog_variation_original( $data, $product ) {
     }
     return $data;
 }
-add_filter( 'woocommerce_available_variation', 'bactive_catalog_variation_original', 30, 2 );
+add_filter( 'woocommerce_available_variation', 'bactive_catalog_variation_original', 30, 3 );

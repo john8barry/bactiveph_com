@@ -1,0 +1,16 @@
+#bactive_catalogue_panel .bactive-catalogue-editor { padding: 16px 20px; }
+#bactive_catalogue_panel h2 { padding: 0; font-size: 16px; }
+#bactive_catalogue_panel p { padding: 0; margin: 12px 0; max-width: 75ch; }
+#bactive_catalogue_panel label { float: none; width: auto; margin: 0; }
+#bactive_catalogue_panel input, #bactive_catalogue_panel select { float: none; width: auto; }
+#bactive_catalogue_panel .bactive-colour-row { border-top: 1px solid #dcdcde; margin-top: 20px; padding-top: 4px; }
+#bactive_catalogue_panel .bactive-colour-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+#bactive_catalogue_panel .bactive-preview { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0; }
+#bactive_catalogue_panel .bactive-preview img, #bactive_catalogue_panel .bactive-size-photos img { width: 64px; height: 80px; object-fit: contain; }
+#bactive_catalogue_panel img[hidden] { display: none; }
+#bactive_catalogue_panel .bactive-size-photos { display: flex; gap: 16px; flex-wrap: wrap; }
+#bactive_catalogue_panel .bactive-size-photos li { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 140px; }
+#bactive_catalogue_panel summary { cursor: pointer; padding: 8px 0; }
+#bactive_catalogue_panel .bactive-review { display: block; margin: 16px 0; max-width: 75ch; }
+#bactive_catalogue_panel .wp-picker-container input { width: 90px; }
+#bactive_catalogue_panel .button:focus-visible, #bactive_catalogue_panel summary:focus-visible { outline: 2px solid #2271b1; outline-offset: 2px; }

@@ -1,0 +1,16 @@
+{
+  "placement": "Existing homepage Designed for an Asian fit section only",
+  "reference_attachment_id": 387,
+  "master_sha256": "885650e3a2248d4e8bf410d1aff6cc0d799fc8eaad8d235647b61c1a68086943",
+  "delivery_sha256": "f14195942762944f5c8c7a776f2695e1c72d03e92d2ceade903efbfbd780d69c",
+  "delivery_file": "assets/asian-fit-court-editorial.webp",
+  "width": 1448,
+  "height": 1086,
+  "bytes": 91130,
+  "review": "Root and independent image review PASS; approximate editorial fidelity, not exact product or colour proof",
+  "private_attachment_id": 802,
+  "production_attachment_id": null,
+  "source_block_sha256": "fd70fe15ef7449aa7c5524e9f441ba922722c34959f969be9c07d5827b10b710",
+  "status": "PRIVATE_VERIFIED_NOT_LIVE",
+  "preservation": "Original master retained privately; no product attachments reassigned"
+}

@@ -1,6 +1,6 @@
 # Maxim local-delivery footer update
 
-Status: staging files deployed; production held for stale staging rendering.
+Status: staging accepted; approved production deployment pending serialized access.
 Owner: B Active footer task.
 Work record: https://github.com/john8barry/bactiveph_com/issues/90.
 John approved this scoped production release on 2026-09-14.
@@ -57,14 +57,23 @@ Deployed SHA-256:
 
 Initial direct staging GET returned 200 and v7, while browser navigation
 intermittently timed out or received Cloudflare 522. Later browser evidence
-showed old v5 content despite exact deployed v7 file hashes. Browser acceptance
-has failed: ordinary HTTPS still renders stale content after both native
+showed old v5 content despite exact deployed v7 file hashes. Initial ordinary
+HTTPS readbacks remained stale after both native
 `wp litespeed-purge all` (reported success) and origin-loopback HTTP PURGE on
 `/`, `/shop/` and `/shipping-returns/` (200 responses). Direct-origin HTTPS PURGE
 using the verified DNS address failed certificate verification (curl exit 51);
-no TLS bypass was attempted. The precise stale cache/PHP-rendering layer remains
-unresolved. Read-only Cloudflare DNS inspection confirmed both sites use the
-same single A record address; no DNS or configuration writes were made.
+no TLS bypass was attempted. Subsequent native page-cache queue delivery/draining
+was observed and ordinary URLs converged to v7. The individual earlier purge
+attempts are not proven causes of convergence. Read-only Cloudflare inspection
+confirmed both sites use the same single A record address and staging has an
+existing Flexible SSL override, explaining origin transport divergence. No SSL,
+DNS or configuration changes were made.
+
+Staging browser acceptance now passes on ordinary URLs: homepage at 1440px and
+390px, shop at 390px, and shipping/returns at 1280px all returned 200 and v7.
+All logo images loaded, local-delivery badge cells matched, no horizontal
+overflow occurred, and the incumbent payment set was preserved. Main deployment
+lane inspected desktop/mobile homepage screenshots and accepted the visual result.
 
 Production remains unchanged (Maxim absent, v6 template hash
 18fe403de1ea0e2004ece45c90b3d195bc55749a8efb2a04598fb441df71967b).
@@ -78,13 +87,13 @@ read back through existing github-john8barry SSH access. The GitHub API auth gap
 was resolved through an existing isolated project GH_CONFIG_DIR; john8barry
 identity and repository write permissions were independently verified without
 global authentication changes. PR https://github.com/john8barry/bactiveph_com/pull/91
-is open and mergeable. No required status checks, branch protection or rulesets
-were reported; merge is deliberately held at the failed staging acceptance gate.
+is ready for normal merge following fresh exact-head checks. No required status
+checks, branch protection or rulesets were reported. Staging acceptance is passed.
 No direct main push or security/approval bypass was attempted.
-Resume by identifying and correcting the staging stale-rendering layer, then
-verify browser acceptance, qualified current backup/drift checks, exact-head PR
-state and the already-approved narrow live deployment. No new production approval
-is needed unless scope changes. Production has not been deployed.
+Next: complete the normal merge, wait for the catalogue backup-only writer to
+release production access, then verify qualified current backup/drift checks and
+perform the already-approved narrow live deployment. No new production approval
+is needed unless scope changes. Production has not been deployed as of this record.
 Independent release review reran both mirrors' seven scenarios and four negative
 fixtures, PHP lint, mirror equality and git whitespace checks successfully.
 Remote main still matches the base above; latest five workflow results succeeded.

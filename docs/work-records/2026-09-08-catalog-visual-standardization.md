@@ -130,3 +130,11 @@ User review found a soft main gallery image and mixed old/new related-card style
 - Browser automated reload still returns the previous document, so updated visual/interactive acceptance requires a manual refresh. No production deployment of these visual changes. The earlier fresh encrypted backup and isolated rollback evidence remain recorded separately; production activation remains pending browser qualification.
 
 Rollback: restore the prior release-owned module files after matching their expected hashes, or disable the respective private presentation switch. Never roll back orders, stock, prices or image assignments for this delivery-only fix.
+
+## 14 September: refreshed browser acceptance and release preparation
+
+John approved the refreshed Flow layout and continuation. Direct browser readback confirms 853/960/960px original Flow sources. Courtline's eight colour/size selections settled with enabled native purchasing controls; private cart readback showed Jujube Red/M/quantity1/₱3,300. Flow private cart readback showed Lavender/M/quantity1/₱1,500. Both samples were removed afterward, without orders or payment attempts. Mobile pages measured 375px content and scroll widths (no horizontal overflow). Courtline native dropdown fallback and size-guide dialog keyboard dismissal/focus return passed; its existing general size-help content is preserved.
+
+All five checks passed on82822ecc. Integrated newer main10636a7d (Maxim release documentation only). Authenticated production readback found the five new assets/modules absent and both release options absent; functions.php differed from main by one blank line only. Maxim file hashes match. The courier task reconfirmed its released writer window and no further host writes.
+
+Fresh exact-file package captured at12:31UTC, encrypted off-server with a separate0600key. Six-file local apply, rollback and interrupted rollback passed. The full September14 backup remains separate. Deployment must install dependencies before functions.php, and rollback remove the loader before deleting newly added dependencies. Browser cart evidence is private-clone evidence; no visual production release yet.

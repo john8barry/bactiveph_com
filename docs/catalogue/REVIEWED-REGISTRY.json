@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "version": "catalogue-reviewed-20260912",
+  "enabled": false,
+  "products": {
+    "677": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "brown": {
+            "term_id": 88,
+            "approved": true,
+            "hex": "#61483D"
+          },
+          "powder": {
+            "term_id": 28,
+            "approved": true,
+            "hex": "#A4C8EC"
+          },
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#242426"
+          },
+          "purple": {
+            "term_id": 94,
+            "approved": true,
+            "hex": "#8A6BE7"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "660": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "dusty-mauve": {
+            "term_id": 91,
+            "approved": true,
+            "hex": "#95718B"
+          },
+          "light-pink": {
+            "term_id": 92,
+            "approved": true,
+            "hex": "#F1D4E2"
+          },
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#242428"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "573": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "magenta": {
+            "term_id": 89,
+            "approved": true,
+            "hex": "#B80B72"
+          },
+          "champagne": {
+            "term_id": 90,
+            "approved": true,
+            "hex": "#D6C9B5"
+          },
+          "cloud-gray": {
+            "term_id": 72,
+            "approved": true,
+            "hex": "#85858E"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "565": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "powder": {
+            "term_id": 28,
+            "approved": true,
+            "hex": "#B3CAEC"
+          },
+          "navy-blue": {
+            "term_id": 69,
+            "approved": true,
+            "hex": "#202740"
+          },
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "238": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {}
+      },
+      "reviewed": false
+    },
+    "217": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "yellow": {
+            "term_id": 96,
+            "approved": true,
+            "hex": "#F8EFA7"
+          },
+          "powder": {
+            "term_id": 28,
+            "approved": true,
+            "hex": "#75BCF0"
+          },
+          "purple": {
+            "term_id": 94,
+            "approved": true,
+            "hex": "#57346E"
+          },
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          },
+          "gray": {
+            "term_id": 82,
+            "approved": true,
+            "hex": "#A8B4BC"
+          },
+          "steelblue": {
+            "term_id": 97,
+            "approved": true,
+            "hex": "#718B9A"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "211": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {}
+      },
+      "reviewed": false
+    },
+    "185": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "yellow": {
+            "term_id": 96,
+            "approved": true,
+            "hex": "#F6E978"
+          },
+          "gray": {
+            "term_id": 82,
+            "approved": true,
+            "hex": "#DDDCD9"
+          },
+          "limegreen": {
+            "term_id": 100,
+            "approved": true,
+            "hex": "#DDEDAC"
+          },
+          "blushpink": {
+            "term_id": 109,
+            "approved": true,
+            "hex": "#EDCBC8"
+          },
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          },
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#202124"
+          },
+          "powder": {
+            "term_id": 28,
+            "approved": true,
+            "hex": "#96BCEC"
+          },
+          "forestgreen": {
+            "term_id": 108,
+            "approved": true,
+            "hex": "#415E55"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "160": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {}
+      },
+      "reviewed": false
+    },
+    "154": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#202124"
+          },
+          "lavender": {
+            "term_id": 83,
+            "approved": true,
+            "hex": "#CEC5D6"
+          },
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "128": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "sakura": {
+            "term_id": 27,
+            "approved": true,
+            "hex": "#B997AA"
+          },
+          "gray": {
+            "term_id": 82,
+            "approved": true,
+            "hex": "#A5A1AD"
+          },
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          },
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#202124"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "117": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          },
+          "jujube-red": {
+            "term_id": 79,
+            "approved": true,
+            "hex": "#763844"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "111": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "green": {
+            "term_id": 78,
+            "approved": true,
+            "hex": "#203D2D"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "95": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "powder": {
+            "term_id": 28,
+            "approved": true,
+            "hex": "#B3CAEC"
+          },
+          "purewhite": {
+            "term_id": 65,
+            "approved": true,
+            "hex": "#F4F3EF"
+          },
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#202124"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "89": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "sakura": {
+            "term_id": 27,
+            "approved": true,
+            "hex": "#F0CFD4"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "83": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "white": {
+            "term_id": 80,
+            "approved": true,
+            "hex": "#F4F3EF"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "56": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {}
+      },
+      "reviewed": false
+    },
+    "50": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "navy-blue": {
+            "term_id": 69,
+            "approved": true,
+            "hex": "#283D67"
+          },
+          "gray": {
+            "term_id": 82,
+            "approved": true,
+            "hex": "#B8B8BF"
+          },
+          "beige": {
+            "term_id": 81,
+            "approved": true,
+            "hex": "#EEE9DA"
+          },
+          "mocha": {
+            "term_id": 74,
+            "approved": true,
+            "hex": "#A58775"
+          }
+        }
+      },
+      "reviewed": true
+    },
+    "36": {
+      "enabled": false,
+      "palette": {
+        "attribute_pa_colour": {
+          "turquoise-blue": {
+            "term_id": 70,
+            "approved": true,
+            "hex": "#04AED9"
+          },
+          "purewhite": {
+            "term_id": 65,
+            "approved": true,
+            "hex": "#F4F3EF"
+          },
+          "navy-blue": {
+            "term_id": 69,
+            "approved": true,
+            "hex": "#202740"
+          },
+          "black": {
+            "term_id": 66,
+            "approved": true,
+            "hex": "#202124"
+          }
+        }
+      },
+      "reviewed": true
+    }
+  }
+}

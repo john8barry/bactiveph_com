@@ -1,0 +1,3900 @@
+{
+  "schema_version": 1,
+  "version": "catalogue-reviewed-20260912",
+  "snapshot_date": "2026-09-12",
+  "source": "Authenticated WooCommerce catalogue and individually inspected current AI image originals",
+  "review_basis": "Visual approximations of user-accepted AI images; not physically calibrated fabric colours",
+  "product_count": 19,
+  "variation_count": 253,
+  "unique_attachment_count": 96,
+  "provider_writes": false,
+  "excluded_trashed_product_ids": [
+    148,
+    347
+  ],
+  "held_product_ids": [
+    56,
+    160,
+    238,
+    211
+  ],
+  "attachments": [
+    {
+      "attachment_id": 58,
+      "sha256": "d35f2923e210aec19b3f2e17669a6dfbcc7c1e56c78d52e5fc0a9549bece9397",
+      "neutral_reference": "attachment-58",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 60,
+      "sha256": "d44fa5a4a0447f7111dde22290c418c2c1e3f6642ed0813a20517e7ba2798f0c",
+      "neutral_reference": "attachment-60",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 61,
+      "sha256": "22670f754886557a70985f69f832cae80ea8085514bfa6286a5a0d3c6fc02f8f",
+      "neutral_reference": "attachment-61",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 164,
+      "sha256": "08f3dccfd1d8c1072a45c9616ebfd42de10fd8d7f7eb3dabe4134369787c0b94",
+      "neutral_reference": "attachment-164",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 373,
+      "sha256": "5fcf20b51b786ddc037985552e100e7aeb1ca51d2708e0830278a1148f3720fe",
+      "neutral_reference": "attachment-373",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 374,
+      "sha256": "586862363ca0dc6d86d63aa825037a0b5cd052b0f248d4d2f9650db9643faa61",
+      "neutral_reference": "attachment-374",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 375,
+      "sha256": "e6b2cf6d277166a01179f4fbbb81119758ec786b88ae66c5c536104b21e3b1dd",
+      "neutral_reference": "attachment-375",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 376,
+      "sha256": "016caa07def1695accc620c8941107f5e09babd835397a8a123de4d4e07e961b",
+      "neutral_reference": "attachment-376",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 377,
+      "sha256": "a5986920957e7d0790b6332c5d015cc1a9662bffe0d419bc9f7e9e2a831965a7",
+      "neutral_reference": "attachment-377",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 378,
+      "sha256": "a5986920957e7d0790b6332c5d015cc1a9662bffe0d419bc9f7e9e2a831965a7",
+      "neutral_reference": "attachment-378",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 381,
+      "sha256": "49fb0b24cc875ecb3e44ac44a24a62266f665f2b5c7eb06d180daf5abfeeba75",
+      "neutral_reference": "attachment-381",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 384,
+      "sha256": "5fcf20b51b786ddc037985552e100e7aeb1ca51d2708e0830278a1148f3720fe",
+      "neutral_reference": "attachment-384",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 386,
+      "sha256": "5fcf20b51b786ddc037985552e100e7aeb1ca51d2708e0830278a1148f3720fe",
+      "neutral_reference": "attachment-386",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 387,
+      "sha256": "dfaaa503634463500f0147a8f071a8d05cb01e272eb1b2914de7586aff61895d",
+      "neutral_reference": "attachment-387",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 388,
+      "sha256": "b5f2de90f7ebf3ea4a7a2b5439dc817564275c6c510e5abbb624c9f899b0ce69",
+      "neutral_reference": "attachment-388",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 390,
+      "sha256": "4e859e03209c05b11f4273c8e398f2fbc5382766ba1293310a6ff1dde5b01800",
+      "neutral_reference": "attachment-390",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 391,
+      "sha256": "447ff91067344a6ec105632f56e066737f41bfc3726f9d37731929dfaa7ffaca",
+      "neutral_reference": "attachment-391",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 394,
+      "sha256": "27801d0fa1d18939e6d873f1727edff6a925a720019df59c33713557d870a69e",
+      "neutral_reference": "attachment-394",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 395,
+      "sha256": "5fa0a93a33c945656a8af9dfe84bd03ba64b034a43ac005fa253e82b6d133a61",
+      "neutral_reference": "attachment-395",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 396,
+      "sha256": "85398b6dd3012a945dfdb031612b3a441c42d62f6de4844791e5b2c15a298d1d",
+      "neutral_reference": "attachment-396",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 397,
+      "sha256": "a52857ccd72121f997cd36f1bcdc7e309e6fe020ecf817ce2f8a4eda32ec110e",
+      "neutral_reference": "attachment-397",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 449,
+      "sha256": "d1a1fa976c95b45e10f412701f87e156f0214e46fd00248de560a6091edc7560",
+      "neutral_reference": "attachment-449",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 450,
+      "sha256": "bfb6db394866846e0f010768e4259e35f8f75c8463406fb8e6056886672e3225",
+      "neutral_reference": "attachment-450",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 451,
+      "sha256": "4ca15c8070b958dddaa74b4108acd0eb9083105ec9018b79e1aa2aa0190a93f2",
+      "neutral_reference": "attachment-451",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 453,
+      "sha256": "5d6fbf07498dcf77d693540a531c47c17f0ad24edcf29fb440421c0ac9262c0a",
+      "neutral_reference": "attachment-453",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 454,
+      "sha256": "d42136492cef5867fe3df6eb01b31e43a05efa9315285ecce3029f9597be9257",
+      "neutral_reference": "attachment-454",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 455,
+      "sha256": "48e7d7f2e8d3dde31bfc932777b96a899745f2f44fb93a21d97960979df0b961",
+      "neutral_reference": "attachment-455",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 456,
+      "sha256": "f5a7027a2d1e7809af4e33c113a1660a0c18776fe6a72901c2af4878bd159fc7",
+      "neutral_reference": "attachment-456",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 460,
+      "sha256": "fb02c0edc974fc098b769c89dc0f8307645188a8a6f43a5c0a374873c0c5ff05",
+      "neutral_reference": "attachment-460",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 462,
+      "sha256": "9b2d38a4274ab878bf6756d1ed4c2ca201ab30f4aaf1316480f5900634e5674f",
+      "neutral_reference": "attachment-462",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 463,
+      "sha256": "491ceeca73805cceb4b62b7fb159a8457c0150c7b7826eb2e7ceb978506b0f16",
+      "neutral_reference": "attachment-463",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 472,
+      "sha256": "717f7a721971cd930c1f34f17b413be123cd75b2f0e05afadf338dfa74955871",
+      "neutral_reference": "attachment-472",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 473,
+      "sha256": "3e1ead2aef51e5c1c5c92d9ec40c261df384507292c96f5b34a6d5bdf9c330f7",
+      "neutral_reference": "attachment-473",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 474,
+      "sha256": "a52857ccd72121f997cd36f1bcdc7e309e6fe020ecf817ce2f8a4eda32ec110e",
+      "neutral_reference": "attachment-474",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 475,
+      "sha256": "85398b6dd3012a945dfdb031612b3a441c42d62f6de4844791e5b2c15a298d1d",
+      "neutral_reference": "attachment-475",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 477,
+      "sha256": "5fa0a93a33c945656a8af9dfe84bd03ba64b034a43ac005fa253e82b6d133a61",
+      "neutral_reference": "attachment-477",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 502,
+      "sha256": "73eeeb62f36832fefebb52dbfac034798a1c772609a688d10415fafcea06900c",
+      "neutral_reference": "attachment-502",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 503,
+      "sha256": "792cb368415f7e6b9b7c1682adea098d98d32c49e0c2b8c2ab53909dc3814e14",
+      "neutral_reference": "attachment-503",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 504,
+      "sha256": "f3c9c3dc88b4ec794f24003e39ebf0c20697c4a779ccb185b8f5e8b2dbb3a72f",
+      "neutral_reference": "attachment-504",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 505,
+      "sha256": "9bb9b5c5755fd79f31ab538309007c0dfe38ba7e41b54f7dc54d20b99c03d01f",
+      "neutral_reference": "attachment-505",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 541,
+      "sha256": "222dba3d2b171a70ad9b6ed55e2c8f43facd7b050599fd3b1e5aae0927afc2c0",
+      "neutral_reference": "attachment-541",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 543,
+      "sha256": "4fcc9fdc47b3529e3b4e73898bb807480e46d860ab8499a8c07e1735957d9cf8",
+      "neutral_reference": "attachment-543",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 554,
+      "sha256": "3113e877532309d26e67e7551ee16adc0e4ce0d067173c07c75d3cad2169fd59",
+      "neutral_reference": "attachment-554",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 560,
+      "sha256": "0104bb650e5adcf54fecb50bf41c954c10e0514d8c44d0aa5ae06cf7c79b4df5",
+      "neutral_reference": "attachment-560",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 561,
+      "sha256": "89ca62716b3bbc54496bc219c69169e14b4cc75a8ab75718c71cf505c49351e6",
+      "neutral_reference": "attachment-561",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 562,
+      "sha256": "9b0ddb5d85e9e3edea8f65e02aa80a8c07987c8dee9fef6f10fb0286d36459a6",
+      "neutral_reference": "attachment-562",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 563,
+      "sha256": "1236df9b254680ecd04b32fd5272a93b5c1a11a0a76579644f5a7f8ee6739565",
+      "neutral_reference": "attachment-563",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 564,
+      "sha256": "14f9d96f00fe017a5992f8e66cba5c89bb72aa79c1976a51bedf231b4d3a8968",
+      "neutral_reference": "attachment-564",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 566,
+      "sha256": "ab6599b300dfa6d0d2cb349bf19a4ca0eeee0c409ac83568661b904ead410ff0",
+      "neutral_reference": "attachment-566",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 568,
+      "sha256": "9ab8449280c03e283ec8f961391f6010e55ea6cd61cc62bed711492485e43a53",
+      "neutral_reference": "attachment-568",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 574,
+      "sha256": "fbf13adde97a67d6b4c9a584c2de96f59c450fcbaa2a2c5bd2395c91e697fb62",
+      "neutral_reference": "attachment-574",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 575,
+      "sha256": "0f4d5fe1fe98f8868d78eed7aa1d40fdc45d0abce261f5591b7a4e634ab34c07",
+      "neutral_reference": "attachment-575",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 576,
+      "sha256": "7d02841bf3c0c419d037600ad0a7c5309a871c94821d663f03d98ee983859730",
+      "neutral_reference": "attachment-576",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 577,
+      "sha256": "3b23ff4a77b7fbfea7f63ad74a148d7887aeff939baffad2781bf1ea84d74f24",
+      "neutral_reference": "attachment-577",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 583,
+      "sha256": "4da9bb2cf94a3f237ba43d5fc31c4acbea02785198b8f1a12627700f8902fe6f",
+      "neutral_reference": "attachment-583",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 584,
+      "sha256": "7ca8b6369eb430ddc2cf62b6c8bfb776ca2745a539e52d318f025692b19a0ab5",
+      "neutral_reference": "attachment-584",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 585,
+      "sha256": "efebceb54cae6401a4d224df23b62d9a9fa7dc9e6127424150b8c7e10f7b833d",
+      "neutral_reference": "attachment-585",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 592,
+      "sha256": "0ad925509d18d31658ae981975201e0e7a690847dc55ccec12803b6d0084b382",
+      "neutral_reference": "attachment-592",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 593,
+      "sha256": "a0fc047df0c916d3f177b59690f129e27e5ed7fe39cb588ac905619829755790",
+      "neutral_reference": "attachment-593",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 594,
+      "sha256": "97666ff5a3bb23ffd20d1024ef2471425eda69fd936ccd4dc2bcaaabcf13d06d",
+      "neutral_reference": "attachment-594",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 595,
+      "sha256": "851cf22a0f32fe1687591597a9832f9b6510304f66a2c548d4af5e98bbff9783",
+      "neutral_reference": "attachment-595",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 596,
+      "sha256": "fb833650023b02b35e70929ca17e41e4923b5e02fa4f69391f0cc98ff8cee0d1",
+      "neutral_reference": "attachment-596",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 597,
+      "sha256": "2823b2bdcf6f1d2bbbbb5a2e912f688d7ea19494718d60d26dca6a6793915ade",
+      "neutral_reference": "attachment-597",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 598,
+      "sha256": "823c4f8bac8ac2b6d29e6ffe93a728703966d74bec55f1f83f2ed66492499847",
+      "neutral_reference": "attachment-598",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 599,
+      "sha256": "6805ab0e435bd79b8c43c56f6e50d692c959f46730ae0069afa5c789f2d62ab4",
+      "neutral_reference": "attachment-599",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 600,
+      "sha256": "c30b7d0f269700c2480e7641df70354b44bdc76d848631cc284e52e6ed63e0b8",
+      "neutral_reference": "attachment-600",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 601,
+      "sha256": "9ecb8f336015f3f1ccc77f48836bad2b51278b647b664395b63d8f27effba093",
+      "neutral_reference": "attachment-601",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 602,
+      "sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "neutral_reference": "attachment-602",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 603,
+      "sha256": "acf52632a8fcd57dc93fe001daf81c64f5b8137352d8a64b0d4d612b11d8fd8c",
+      "neutral_reference": "attachment-603",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 605,
+      "sha256": "8b5665189e4186bb9b33269bf16109bff4b9b71c1621350055172e1c70e2662e",
+      "neutral_reference": "attachment-605",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 606,
+      "sha256": "9b1a0412d543306ec41ea27b906008c09f0c70e220d9053013110b76916bcebb",
+      "neutral_reference": "attachment-606",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 607,
+      "sha256": "6a073b54addca089a84b64de56eea4990c82f4a971d4bc33c10e915d8d1a8291",
+      "neutral_reference": "attachment-607",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 608,
+      "sha256": "d951a2257fca968ccc6e7e201a837ab37f2c8113976bc238302f3ed6cfd74ae6",
+      "neutral_reference": "attachment-608",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 609,
+      "sha256": "df4d5173e33e11a4ee0e2ba87a6fd0ee1a29625cdb04bb258d74286d9e5be04f",
+      "neutral_reference": "attachment-609",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 611,
+      "sha256": "851cf22a0f32fe1687591597a9832f9b6510304f66a2c548d4af5e98bbff9783",
+      "neutral_reference": "attachment-611",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 662,
+      "sha256": "e7ed1e7c79fdee4f2b7592fba5fb496544a3c640ab92cc8c0740bfb9ac6a66cc",
+      "neutral_reference": "attachment-662",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 663,
+      "sha256": "c96bae006a9f94e0bda9b3e476a942e8b0bcfe4879c64e3a01f9a21071b8228b",
+      "neutral_reference": "attachment-663",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 664,
+      "sha256": "5d2d750b06874d8979517229e43021a53f6982159452da339e7576d500aae412",
+      "neutral_reference": "attachment-664",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 687,
+      "sha256": "56c55faeccfdcd84cb3a868e8df06935df5265815acd390452005e3afc00c1ce",
+      "neutral_reference": "attachment-687",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 691,
+      "sha256": "5bf169d9e74976a60eb4284728eea48b626b6f0530dd53a639e421b4da996de7",
+      "neutral_reference": "attachment-691",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 692,
+      "sha256": "0d5e97b0ad0b2d3e28140eda2d08283d55ee33daeafc6a9f45386350f6fa04ef",
+      "neutral_reference": "attachment-692",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 693,
+      "sha256": "0334bccf2f309a3d0f5a0b80b1fa7c435a032996d36869105945b6ea4f29cd07",
+      "neutral_reference": "attachment-693",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 708,
+      "sha256": "3f6debc66713850b7e11c80a0e70bb445f70c12f90eef5cc10b4a328487497f0",
+      "neutral_reference": "attachment-708",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 710,
+      "sha256": "a92a7b81ef49c6c56ed402f415a7b4b73f28330289607b48e06f4843d00a9c29",
+      "neutral_reference": "attachment-710",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 711,
+      "sha256": "bea8627ffef83fc7ab823feb958859412f669798722767e6f0f484bedd94029d",
+      "neutral_reference": "attachment-711",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 730,
+      "sha256": "cf41e85e40a84725a26298acca88f24ef9ba0b3b13de9ab6d1d6b6abe807eb08",
+      "neutral_reference": "attachment-730",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 731,
+      "sha256": "16123bedaeca2ea2dc20879d40f3f32da2ed87ae093323b153028b15fde2ed47",
+      "neutral_reference": "attachment-731",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 743,
+      "sha256": "c62d10b5ae3a34d0f5eeec59007a7952608e582b0394a3035c252bbcdaa454f4",
+      "neutral_reference": "attachment-743",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 744,
+      "sha256": "823a94411e703a4464e67f8331801119c16dca07ccf770d611619baecd78b3b5",
+      "neutral_reference": "attachment-744",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 746,
+      "sha256": "a4f4eb5630f5e15a662ce482122924356cbd200047b3e40344240c0458e2796b",
+      "neutral_reference": "attachment-746",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 747,
+      "sha256": "e7d7e9afd2c171e0d32702406ebb3adfcf8194be21d1a40a298df05c40a59ed4",
+      "neutral_reference": "attachment-747",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 748,
+      "sha256": "ad916505d1cb20f96c9f909bb8eacce7870e5dc8cd5ce2702e053f60c269d331",
+      "neutral_reference": "attachment-748",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 749,
+      "sha256": "a18c553d55b4a05d945e63dc8f3beebd64521a07a52d1ed2b868722fbd905a62",
+      "neutral_reference": "attachment-749",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 750,
+      "sha256": "2f0a1c0c67d487331103ce98e68c5d66c20d3e5c36386411aa2d6194e3837a4f",
+      "neutral_reference": "attachment-750",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 751,
+      "sha256": "69b5ad5b59545a9900f229ed861fb56a9e337adfd9d8e7c22a5eb23d12cf6d47",
+      "neutral_reference": "attachment-751",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    },
+    {
+      "attachment_id": 752,
+      "sha256": "00fde631bbdbc69e63411ee41d4669579d7462bf73dc2173e6cea77b77c295e6",
+      "neutral_reference": "attachment-752",
+      "review": "individually visually inspected",
+      "source": "existing WordPress media attachment"
+    }
+  ],
+  "products": [
+    {
+      "product_id": 677,
+      "name": "The Sculpt Romper",
+      "gallery_ids": [
+        687,
+        691,
+        692,
+        693
+      ],
+      "reviewed_attachment_ids": [
+        687,
+        691,
+        692,
+        693
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "All four colours have separate diptych images. Brown/Black front and back, Powder/Purple side and back. Preserve adjustable cross straps, curved waist seam, short leg. Contain diptychs; do not crop away back or fabricate front for Powder/Purple.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 660,
+      "name": "The Everyday Tee",
+      "gallery_ids": [
+        663,
+        664,
+        662
+      ],
+      "reviewed_attachment_ids": [
+        662,
+        663,
+        664
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Three separate matched front portraits, white background, full tee visible. Preserve small chest B and hem. Reuse originals.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 573,
+      "name": "The Warm-Up Jacket",
+      "gallery_ids": [
+        598,
+        575,
+        576,
+        577
+      ],
+      "reviewed_attachment_ids": [
+        574,
+        575,
+        576,
+        577,
+        598
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "All three sellable colours have separate photos. Magenta574/598 different background/framing, same garment. Black577 gallery only, not a sellable option; do not add black swatch.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 565,
+      "name": "The Match Polo",
+      "gallery_ids": [
+        583,
+        584,
+        585
+      ],
+      "reviewed_attachment_ids": [
+        566,
+        568,
+        583,
+        584,
+        585
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Navy566/584 and White568/585 different crops of same garment. Powder583 correct. Preserve contrasting collar stripes and zipper colours.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 238,
+      "name": "The Sculpt Leggings",
+      "gallery_ids": [
+        602,
+        560,
+        561,
+        562,
+        563,
+        564
+      ],
+      "reviewed_attachment_ids": [
+        560,
+        561,
+        562,
+        563,
+        564,
+        602
+      ],
+      "image_review_status": "HOLD_CATALOGUE_MAPPING",
+      "notes": "Deferred Almond and Stone both map dusty-pink image602; gallery does not establish label-to-shade correspondence. No suggested swatches.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 217,
+      "name": "The Strappy Bra",
+      "gallery_ids": [
+        601,
+        708,
+        711,
+        710,
+        730,
+        731
+      ],
+      "reviewed_attachment_ids": [
+        601,
+        708,
+        710,
+        711,
+        730,
+        731
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Six colours now mapped distinctly. Yellow601 front/back diptych; other five front images. Preserve double crossing straps only where visible; do not invent other rear views. White/Purple front neckline differs subtly across accepted AI references; no new generation required.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 211,
+      "name": "The Ribbed Tank",
+      "gallery_ids": [
+        597,
+        592,
+        593,
+        594,
+        595,
+        596
+      ],
+      "reviewed_attachment_ids": [
+        592,
+        593,
+        594,
+        595,
+        596,
+        597,
+        611
+      ],
+      "image_review_status": "HOLD_CATALOGUE_MAPPING",
+      "notes": "Deferred XL646 missing Colour (image596). Preserve all mappings; do not infer Dusty Lavender from image.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 185,
+      "name": "The Court Skort",
+      "gallery_ids": [
+        746,
+        751,
+        750,
+        749,
+        748,
+        747,
+        744,
+        743,
+        752
+      ],
+      "reviewed_attachment_ids": [
+        743,
+        744,
+        746,
+        747,
+        748,
+        749,
+        750,
+        751,
+        752
+      ],
+      "image_review_status": "REUSE_WITH_LAVENDER_TEXT_FALLBACK",
+      "notes": "Nine separately mapped images, 37 actual variations, numeric sizes preserved. Lavender750 looks bright pink, unlike Flow Lavender554; root confirmed text fallback, so omit its swatch and preserve the label/image mapping. Gray751 very pale gray distinct from White747. Shoes cropped in some images; garment fully visible. Retain existing framing.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 160,
+      "name": "The Rally Skort",
+      "gallery_ids": [
+        453,
+        454,
+        455,
+        456
+      ],
+      "reviewed_attachment_ids": [
+        164,
+        453,
+        454,
+        455,
+        456
+      ],
+      "image_review_status": "HOLD_CATALOGUE_MAPPING",
+      "notes": "Deferred orphan Onyx177-180 and Court Ivory181. Court Ivory181 maps black image164. Preserve all mappings.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 154,
+      "name": "The Flow Skort",
+      "gallery_ids": [
+        543,
+        554,
+        541
+      ],
+      "reviewed_attachment_ids": [
+        541,
+        543,
+        554
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Black543 and Lavender554 have white piping; White541 has black piping. Reuse originals; no generation.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 128,
+      "name": "The Everyday Skort",
+      "gallery_ids": [
+        609,
+        503,
+        504,
+        505
+      ],
+      "reviewed_attachment_ids": [
+        502,
+        503,
+        504,
+        505,
+        609
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Four separately mapped colours. Sakura502 close crop vs primary609 full-body; both same pink garment. Reuse, contain, do not invent footwear.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 117,
+      "name": "Courtline Dress",
+      "gallery_ids": [
+        599,
+        463
+      ],
+      "reviewed_attachment_ids": [
+        462,
+        463,
+        599
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "White primary599 and variation462 are same source scene with different framing. Jujube463 dark green trim differs from White burgundy trim. Reuse originals; no generation.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 111,
+      "name": "The Varsity Dress",
+      "gallery_ids": [
+        606
+      ],
+      "reviewed_attachment_ids": [
+        460,
+        606
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Green460 and primary606 same garment different framing. Preserve white neckline and double hem stripe.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 95,
+      "name": "The Elite Dress",
+      "gallery_ids": [
+        608,
+        450,
+        451
+      ],
+      "reviewed_attachment_ids": [
+        449,
+        450,
+        451,
+        608
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Three colours with lace overlay and sheer scalloped edge. Preserve lace; no invented texture macros. Primary608/variation449 different framing.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 89,
+      "name": "The Serve Dress",
+      "gallery_ids": [
+        605
+      ],
+      "reviewed_attachment_ids": [
+        472,
+        605
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Primary605 and variation472 same pale-pink narrow-pleat dress. Reuse.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 83,
+      "name": "The Match Dress",
+      "gallery_ids": [
+        600
+      ],
+      "reviewed_attachment_ids": [
+        473,
+        600
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Primary600 and variation473 same white ribbed dress; preserve pink/black waist/neck trim.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 56,
+      "name": "Bubble Dress",
+      "gallery_ids": [
+        373,
+        376,
+        375,
+        378,
+        374,
+        384,
+        381
+      ],
+      "reviewed_attachment_ids": [
+        58,
+        60,
+        61,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        381,
+        384,
+        386
+      ],
+      "image_review_status": "HOLD_CATALOGUE_MAPPING",
+      "notes": "Deferred duplicate Black XL, missing-colour M80 with wrong pleated image61, and unlisted Onyx82. Preserve all mappings.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 50,
+      "name": "The Rally Dress",
+      "gallery_ids": [
+        607,
+        395,
+        396,
+        397
+      ],
+      "reviewed_attachment_ids": [
+        394,
+        395,
+        396,
+        397,
+        474,
+        475,
+        477,
+        607
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Four colours independently mapped; Beige474 ivory garment also in397, Gray477 in395, Mocha475 in396. Preserve side tie/bow.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    },
+    {
+      "product_id": 36,
+      "name": "The Court Dress",
+      "gallery_ids": [
+        603,
+        390,
+        388,
+        391
+      ],
+      "reviewed_attachment_ids": [
+        387,
+        388,
+        390,
+        391,
+        603
+      ],
+      "image_review_status": "REUSE_READY_FOR_UI_QA",
+      "notes": "Four correctly coloured images. Navy391 close crop/sheeredged hem differs from fullbody others. Preserve source details; CSS contain, no inferred Navy fullbody.",
+      "generation_required_now": false,
+      "ui_verification": "NOT_TESTED",
+      "live_verification": "NOT_TESTED"
+    }
+  ],
+  "variations": [
+    {
+      "product_id": 677,
+      "variation_id": 705,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "XL",
+      "source_attachment_id": 693,
+      "reference_sha256": "0334bccf2f309a3d0f5a0b80b1fa7c435a032996d36869105945b6ea4f29cd07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 704,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "L",
+      "source_attachment_id": 693,
+      "reference_sha256": "0334bccf2f309a3d0f5a0b80b1fa7c435a032996d36869105945b6ea4f29cd07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 703,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "M",
+      "source_attachment_id": 693,
+      "reference_sha256": "0334bccf2f309a3d0f5a0b80b1fa7c435a032996d36869105945b6ea4f29cd07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 702,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "S",
+      "source_attachment_id": 693,
+      "reference_sha256": "0334bccf2f309a3d0f5a0b80b1fa7c435a032996d36869105945b6ea4f29cd07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 701,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "XL",
+      "source_attachment_id": 691,
+      "reference_sha256": "5bf169d9e74976a60eb4284728eea48b626b6f0530dd53a639e421b4da996de7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 700,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "L",
+      "source_attachment_id": 691,
+      "reference_sha256": "5bf169d9e74976a60eb4284728eea48b626b6f0530dd53a639e421b4da996de7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 699,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "M",
+      "source_attachment_id": 691,
+      "reference_sha256": "5bf169d9e74976a60eb4284728eea48b626b6f0530dd53a639e421b4da996de7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 698,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "S",
+      "source_attachment_id": 691,
+      "reference_sha256": "5bf169d9e74976a60eb4284728eea48b626b6f0530dd53a639e421b4da996de7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 697,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 692,
+      "reference_sha256": "0d5e97b0ad0b2d3e28140eda2d08283d55ee33daeafc6a9f45386350f6fa04ef",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 696,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 692,
+      "reference_sha256": "0d5e97b0ad0b2d3e28140eda2d08283d55ee33daeafc6a9f45386350f6fa04ef",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 695,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 692,
+      "reference_sha256": "0d5e97b0ad0b2d3e28140eda2d08283d55ee33daeafc6a9f45386350f6fa04ef",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 694,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 692,
+      "reference_sha256": "0d5e97b0ad0b2d3e28140eda2d08283d55ee33daeafc6a9f45386350f6fa04ef",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 690,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "XL",
+      "source_attachment_id": 687,
+      "reference_sha256": "56c55faeccfdcd84cb3a868e8df06935df5265815acd390452005e3afc00c1ce",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 689,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "L",
+      "source_attachment_id": 687,
+      "reference_sha256": "56c55faeccfdcd84cb3a868e8df06935df5265815acd390452005e3afc00c1ce",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 688,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "M",
+      "source_attachment_id": 687,
+      "reference_sha256": "56c55faeccfdcd84cb3a868e8df06935df5265815acd390452005e3afc00c1ce",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 677,
+      "variation_id": 686,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "S",
+      "source_attachment_id": 687,
+      "reference_sha256": "56c55faeccfdcd84cb3a868e8df06935df5265815acd390452005e3afc00c1ce",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 675,
+      "colour_name": "Light Pink",
+      "term_id": 92,
+      "term_slug": "light-pink",
+      "size": "XL",
+      "source_attachment_id": 664,
+      "reference_sha256": "5d2d750b06874d8979517229e43021a53f6982159452da339e7576d500aae412",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 674,
+      "colour_name": "Light Pink",
+      "term_id": 92,
+      "term_slug": "light-pink",
+      "size": "L",
+      "source_attachment_id": 664,
+      "reference_sha256": "5d2d750b06874d8979517229e43021a53f6982159452da339e7576d500aae412",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 673,
+      "colour_name": "Light Pink",
+      "term_id": 92,
+      "term_slug": "light-pink",
+      "size": "M",
+      "source_attachment_id": 664,
+      "reference_sha256": "5d2d750b06874d8979517229e43021a53f6982159452da339e7576d500aae412",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 672,
+      "colour_name": "Light Pink",
+      "term_id": 92,
+      "term_slug": "light-pink",
+      "size": "S",
+      "source_attachment_id": 664,
+      "reference_sha256": "5d2d750b06874d8979517229e43021a53f6982159452da339e7576d500aae412",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 671,
+      "colour_name": "Dusty Mauve",
+      "term_id": 91,
+      "term_slug": "dusty-mauve",
+      "size": "XL",
+      "source_attachment_id": 663,
+      "reference_sha256": "c96bae006a9f94e0bda9b3e476a942e8b0bcfe4879c64e3a01f9a21071b8228b",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 670,
+      "colour_name": "Dusty Mauve",
+      "term_id": 91,
+      "term_slug": "dusty-mauve",
+      "size": "L",
+      "source_attachment_id": 663,
+      "reference_sha256": "c96bae006a9f94e0bda9b3e476a942e8b0bcfe4879c64e3a01f9a21071b8228b",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 669,
+      "colour_name": "Dusty Mauve",
+      "term_id": 91,
+      "term_slug": "dusty-mauve",
+      "size": "S",
+      "source_attachment_id": 663,
+      "reference_sha256": "c96bae006a9f94e0bda9b3e476a942e8b0bcfe4879c64e3a01f9a21071b8228b",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 668,
+      "colour_name": "Dusty Mauve",
+      "term_id": 91,
+      "term_slug": "dusty-mauve",
+      "size": "M",
+      "source_attachment_id": 663,
+      "reference_sha256": "c96bae006a9f94e0bda9b3e476a942e8b0bcfe4879c64e3a01f9a21071b8228b",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 667,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 662,
+      "reference_sha256": "e7ed1e7c79fdee4f2b7592fba5fb496544a3c640ab92cc8c0740bfb9ac6a66cc",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 666,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 662,
+      "reference_sha256": "e7ed1e7c79fdee4f2b7592fba5fb496544a3c640ab92cc8c0740bfb9ac6a66cc",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 665,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 662,
+      "reference_sha256": "e7ed1e7c79fdee4f2b7592fba5fb496544a3c640ab92cc8c0740bfb9ac6a66cc",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 660,
+      "variation_id": 661,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 662,
+      "reference_sha256": "e7ed1e7c79fdee4f2b7592fba5fb496544a3c640ab92cc8c0740bfb9ac6a66cc",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 658,
+      "colour_name": "Cloud Gray",
+      "term_id": 72,
+      "term_slug": "cloud-gray",
+      "size": "XL",
+      "source_attachment_id": 576,
+      "reference_sha256": "7d02841bf3c0c419d037600ad0a7c5309a871c94821d663f03d98ee983859730",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 657,
+      "colour_name": "Cloud Gray",
+      "term_id": 72,
+      "term_slug": "cloud-gray",
+      "size": "S",
+      "source_attachment_id": 576,
+      "reference_sha256": "7d02841bf3c0c419d037600ad0a7c5309a871c94821d663f03d98ee983859730",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 656,
+      "colour_name": "Champagne",
+      "term_id": 90,
+      "term_slug": "champagne",
+      "size": "XL",
+      "source_attachment_id": 575,
+      "reference_sha256": "0f4d5fe1fe98f8868d78eed7aa1d40fdc45d0abce261f5591b7a4e634ab34c07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 655,
+      "colour_name": "Champagne",
+      "term_id": 90,
+      "term_slug": "champagne",
+      "size": "M",
+      "source_attachment_id": 575,
+      "reference_sha256": "0f4d5fe1fe98f8868d78eed7aa1d40fdc45d0abce261f5591b7a4e634ab34c07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 654,
+      "colour_name": "Champagne",
+      "term_id": 90,
+      "term_slug": "champagne",
+      "size": "S",
+      "source_attachment_id": 575,
+      "reference_sha256": "0f4d5fe1fe98f8868d78eed7aa1d40fdc45d0abce261f5591b7a4e634ab34c07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 653,
+      "colour_name": "Magenta",
+      "term_id": 89,
+      "term_slug": "magenta",
+      "size": "XL",
+      "source_attachment_id": 598,
+      "reference_sha256": "823c4f8bac8ac2b6d29e6ffe93a728703966d74bec55f1f83f2ed66492499847",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 652,
+      "colour_name": "Magenta",
+      "term_id": 89,
+      "term_slug": "magenta",
+      "size": "L",
+      "source_attachment_id": 598,
+      "reference_sha256": "823c4f8bac8ac2b6d29e6ffe93a728703966d74bec55f1f83f2ed66492499847",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 651,
+      "colour_name": "Magenta",
+      "term_id": 89,
+      "term_slug": "magenta",
+      "size": "S",
+      "source_attachment_id": 598,
+      "reference_sha256": "823c4f8bac8ac2b6d29e6ffe93a728703966d74bec55f1f83f2ed66492499847",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 621,
+      "colour_name": "Magenta",
+      "term_id": 89,
+      "term_slug": "magenta",
+      "size": "M",
+      "source_attachment_id": 574,
+      "reference_sha256": "fbf13adde97a67d6b4c9a584c2de96f59c450fcbaa2a2c5bd2395c91e697fb62",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 620,
+      "colour_name": "Cloud Gray",
+      "term_id": 72,
+      "term_slug": "cloud-gray",
+      "size": "L",
+      "source_attachment_id": 576,
+      "reference_sha256": "7d02841bf3c0c419d037600ad0a7c5309a871c94821d663f03d98ee983859730",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 619,
+      "colour_name": "Cloud Gray",
+      "term_id": 72,
+      "term_slug": "cloud-gray",
+      "size": "M",
+      "source_attachment_id": 576,
+      "reference_sha256": "7d02841bf3c0c419d037600ad0a7c5309a871c94821d663f03d98ee983859730",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 573,
+      "variation_id": 618,
+      "colour_name": "Champagne",
+      "term_id": 90,
+      "term_slug": "champagne",
+      "size": "L",
+      "source_attachment_id": 575,
+      "reference_sha256": "0f4d5fe1fe98f8868d78eed7aa1d40fdc45d0abce261f5591b7a4e634ab34c07",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 634,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "XL",
+      "source_attachment_id": 568,
+      "reference_sha256": "9ab8449280c03e283ec8f961391f6010e55ea6cd61cc62bed711492485e43a53",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 633,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 568,
+      "reference_sha256": "9ab8449280c03e283ec8f961391f6010e55ea6cd61cc62bed711492485e43a53",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 632,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 568,
+      "reference_sha256": "9ab8449280c03e283ec8f961391f6010e55ea6cd61cc62bed711492485e43a53",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 631,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "S",
+      "source_attachment_id": 568,
+      "reference_sha256": "9ab8449280c03e283ec8f961391f6010e55ea6cd61cc62bed711492485e43a53",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 630,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "XL",
+      "source_attachment_id": 566,
+      "reference_sha256": "ab6599b300dfa6d0d2cb349bf19a4ca0eeee0c409ac83568661b904ead410ff0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 629,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "L",
+      "source_attachment_id": 566,
+      "reference_sha256": "ab6599b300dfa6d0d2cb349bf19a4ca0eeee0c409ac83568661b904ead410ff0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 628,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "M",
+      "source_attachment_id": 566,
+      "reference_sha256": "ab6599b300dfa6d0d2cb349bf19a4ca0eeee0c409ac83568661b904ead410ff0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 627,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "S",
+      "source_attachment_id": 566,
+      "reference_sha256": "ab6599b300dfa6d0d2cb349bf19a4ca0eeee0c409ac83568661b904ead410ff0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 626,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "XL",
+      "source_attachment_id": 583,
+      "reference_sha256": "4da9bb2cf94a3f237ba43d5fc31c4acbea02785198b8f1a12627700f8902fe6f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 625,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "L",
+      "source_attachment_id": 583,
+      "reference_sha256": "4da9bb2cf94a3f237ba43d5fc31c4acbea02785198b8f1a12627700f8902fe6f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 624,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "M",
+      "source_attachment_id": 583,
+      "reference_sha256": "4da9bb2cf94a3f237ba43d5fc31c4acbea02785198b8f1a12627700f8902fe6f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 565,
+      "variation_id": 623,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "S",
+      "source_attachment_id": 583,
+      "reference_sha256": "4da9bb2cf94a3f237ba43d5fc31c4acbea02785198b8f1a12627700f8902fe6f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 247,
+      "colour_name": "Stone",
+      "term_id": 31,
+      "term_slug": "stone",
+      "size": "XL",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 246,
+      "colour_name": "Stone",
+      "term_id": 31,
+      "term_slug": "stone",
+      "size": "L",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 245,
+      "colour_name": "Stone",
+      "term_id": 31,
+      "term_slug": "stone",
+      "size": "M",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 244,
+      "colour_name": "Stone",
+      "term_id": 31,
+      "term_slug": "stone",
+      "size": "S",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 243,
+      "colour_name": "Almond",
+      "term_id": 33,
+      "term_slug": "almond",
+      "size": "XL",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 242,
+      "colour_name": "Almond",
+      "term_id": 33,
+      "term_slug": "almond",
+      "size": "L",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 241,
+      "colour_name": "Almond",
+      "term_id": 33,
+      "term_slug": "almond",
+      "size": "M",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 238,
+      "variation_id": 240,
+      "colour_name": "Almond",
+      "term_id": 33,
+      "term_slug": "almond",
+      "size": "S",
+      "source_attachment_id": 602,
+      "reference_sha256": "8e67e70d877787862f29eddc826b1f194fc720d6ebcea9c0884011e9318976d3",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 739,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "XL",
+      "source_attachment_id": 730,
+      "reference_sha256": "cf41e85e40a84725a26298acca88f24ef9ba0b3b13de9ab6d1d6b6abe807eb08",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 738,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "L",
+      "source_attachment_id": 730,
+      "reference_sha256": "cf41e85e40a84725a26298acca88f24ef9ba0b3b13de9ab6d1d6b6abe807eb08",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 737,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "M",
+      "source_attachment_id": 730,
+      "reference_sha256": "cf41e85e40a84725a26298acca88f24ef9ba0b3b13de9ab6d1d6b6abe807eb08",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 736,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "S",
+      "source_attachment_id": 730,
+      "reference_sha256": "cf41e85e40a84725a26298acca88f24ef9ba0b3b13de9ab6d1d6b6abe807eb08",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 735,
+      "colour_name": "Steel Blue",
+      "term_id": 97,
+      "term_slug": "steelblue",
+      "size": "XL",
+      "source_attachment_id": 731,
+      "reference_sha256": "16123bedaeca2ea2dc20879d40f3f32da2ed87ae093323b153028b15fde2ed47",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 734,
+      "colour_name": "Steel Blue",
+      "term_id": 97,
+      "term_slug": "steelblue",
+      "size": "L",
+      "source_attachment_id": 731,
+      "reference_sha256": "16123bedaeca2ea2dc20879d40f3f32da2ed87ae093323b153028b15fde2ed47",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 733,
+      "colour_name": "Steel Blue",
+      "term_id": 97,
+      "term_slug": "steelblue",
+      "size": "M",
+      "source_attachment_id": 731,
+      "reference_sha256": "16123bedaeca2ea2dc20879d40f3f32da2ed87ae093323b153028b15fde2ed47",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 732,
+      "colour_name": "Steel Blue",
+      "term_id": 97,
+      "term_slug": "steelblue",
+      "size": "S",
+      "source_attachment_id": 731,
+      "reference_sha256": "16123bedaeca2ea2dc20879d40f3f32da2ed87ae093323b153028b15fde2ed47",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 729,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "XL",
+      "source_attachment_id": 601,
+      "reference_sha256": "9ecb8f336015f3f1ccc77f48836bad2b51278b647b664395b63d8f27effba093",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 728,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "L",
+      "source_attachment_id": 601,
+      "reference_sha256": "9ecb8f336015f3f1ccc77f48836bad2b51278b647b664395b63d8f27effba093",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 727,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "M",
+      "source_attachment_id": 601,
+      "reference_sha256": "9ecb8f336015f3f1ccc77f48836bad2b51278b647b664395b63d8f27effba093",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 726,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "S",
+      "source_attachment_id": 601,
+      "reference_sha256": "9ecb8f336015f3f1ccc77f48836bad2b51278b647b664395b63d8f27effba093",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 725,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "XL",
+      "source_attachment_id": 710,
+      "reference_sha256": "a92a7b81ef49c6c56ed402f415a7b4b73f28330289607b48e06f4843d00a9c29",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 724,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 710,
+      "reference_sha256": "a92a7b81ef49c6c56ed402f415a7b4b73f28330289607b48e06f4843d00a9c29",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 723,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 710,
+      "reference_sha256": "a92a7b81ef49c6c56ed402f415a7b4b73f28330289607b48e06f4843d00a9c29",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 722,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "S",
+      "source_attachment_id": 710,
+      "reference_sha256": "a92a7b81ef49c6c56ed402f415a7b4b73f28330289607b48e06f4843d00a9c29",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 721,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "XL",
+      "source_attachment_id": 711,
+      "reference_sha256": "bea8627ffef83fc7ab823feb958859412f669798722767e6f0f484bedd94029d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 720,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "L",
+      "source_attachment_id": 711,
+      "reference_sha256": "bea8627ffef83fc7ab823feb958859412f669798722767e6f0f484bedd94029d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 719,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "M",
+      "source_attachment_id": 711,
+      "reference_sha256": "bea8627ffef83fc7ab823feb958859412f669798722767e6f0f484bedd94029d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 718,
+      "colour_name": "Purple",
+      "term_id": 94,
+      "term_slug": "purple",
+      "size": "S",
+      "source_attachment_id": 711,
+      "reference_sha256": "bea8627ffef83fc7ab823feb958859412f669798722767e6f0f484bedd94029d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 715,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "XL",
+      "source_attachment_id": 708,
+      "reference_sha256": "3f6debc66713850b7e11c80a0e70bb445f70c12f90eef5cc10b4a328487497f0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 714,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "L",
+      "source_attachment_id": 708,
+      "reference_sha256": "3f6debc66713850b7e11c80a0e70bb445f70c12f90eef5cc10b4a328487497f0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 713,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "M",
+      "source_attachment_id": 708,
+      "reference_sha256": "3f6debc66713850b7e11c80a0e70bb445f70c12f90eef5cc10b4a328487497f0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 217,
+      "variation_id": 712,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "S",
+      "source_attachment_id": 708,
+      "reference_sha256": "3f6debc66713850b7e11c80a0e70bb445f70c12f90eef5cc10b4a328487497f0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 650,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "XL",
+      "source_attachment_id": 594,
+      "reference_sha256": "97666ff5a3bb23ffd20d1024ef2471425eda69fd936ccd4dc2bcaaabcf13d06d",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 649,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "S",
+      "source_attachment_id": 594,
+      "reference_sha256": "97666ff5a3bb23ffd20d1024ef2471425eda69fd936ccd4dc2bcaaabcf13d06d",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 648,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 594,
+      "reference_sha256": "97666ff5a3bb23ffd20d1024ef2471425eda69fd936ccd4dc2bcaaabcf13d06d",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 647,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 594,
+      "reference_sha256": "97666ff5a3bb23ffd20d1024ef2471425eda69fd936ccd4dc2bcaaabcf13d06d",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 646,
+      "colour_name": null,
+      "term_id": null,
+      "term_slug": null,
+      "size": "XL",
+      "source_attachment_id": 596,
+      "reference_sha256": "fb833650023b02b35e70929ca17e41e4923b5e02fa4f69391f0cc98ff8cee0d1",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 645,
+      "colour_name": "Dusty Lavender",
+      "term_id": 87,
+      "term_slug": "dusty-lavender",
+      "size": "S",
+      "source_attachment_id": 596,
+      "reference_sha256": "fb833650023b02b35e70929ca17e41e4923b5e02fa4f69391f0cc98ff8cee0d1",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 644,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "XL",
+      "source_attachment_id": 595,
+      "reference_sha256": "851cf22a0f32fe1687591597a9832f9b6510304f66a2c548d4af5e98bbff9783",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 643,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "L",
+      "source_attachment_id": 595,
+      "reference_sha256": "851cf22a0f32fe1687591597a9832f9b6510304f66a2c548d4af5e98bbff9783",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 642,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "M",
+      "source_attachment_id": 595,
+      "reference_sha256": "851cf22a0f32fe1687591597a9832f9b6510304f66a2c548d4af5e98bbff9783",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 641,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 593,
+      "reference_sha256": "a0fc047df0c916d3f177b59690f129e27e5ed7fe39cb588ac905619829755790",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 640,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 593,
+      "reference_sha256": "a0fc047df0c916d3f177b59690f129e27e5ed7fe39cb588ac905619829755790",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 639,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "XL",
+      "source_attachment_id": 597,
+      "reference_sha256": "2823b2bdcf6f1d2bbbbb5a2e912f688d7ea19494718d60d26dca6a6793915ade",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 638,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "S",
+      "source_attachment_id": 597,
+      "reference_sha256": "2823b2bdcf6f1d2bbbbb5a2e912f688d7ea19494718d60d26dca6a6793915ade",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 637,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "XL",
+      "source_attachment_id": 592,
+      "reference_sha256": "0ad925509d18d31658ae981975201e0e7a690847dc55ccec12803b6d0084b382",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 636,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "S",
+      "source_attachment_id": 592,
+      "reference_sha256": "0ad925509d18d31658ae981975201e0e7a690847dc55ccec12803b6d0084b382",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 617,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "L",
+      "source_attachment_id": 592,
+      "reference_sha256": "0ad925509d18d31658ae981975201e0e7a690847dc55ccec12803b6d0084b382",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 616,
+      "colour_name": "Brown",
+      "term_id": 88,
+      "term_slug": "brown",
+      "size": "M",
+      "source_attachment_id": 592,
+      "reference_sha256": "0ad925509d18d31658ae981975201e0e7a690847dc55ccec12803b6d0084b382",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 615,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 593,
+      "reference_sha256": "a0fc047df0c916d3f177b59690f129e27e5ed7fe39cb588ac905619829755790",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 614,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 593,
+      "reference_sha256": "a0fc047df0c916d3f177b59690f129e27e5ed7fe39cb588ac905619829755790",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 613,
+      "colour_name": "Dusty Lavender",
+      "term_id": 87,
+      "term_slug": "dusty-lavender",
+      "size": "L",
+      "source_attachment_id": 596,
+      "reference_sha256": "fb833650023b02b35e70929ca17e41e4923b5e02fa4f69391f0cc98ff8cee0d1",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 612,
+      "colour_name": "Dusty Lavender",
+      "term_id": 87,
+      "term_slug": "dusty-lavender",
+      "size": "M",
+      "source_attachment_id": 596,
+      "reference_sha256": "fb833650023b02b35e70929ca17e41e4923b5e02fa4f69391f0cc98ff8cee0d1",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 610,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "S",
+      "source_attachment_id": 611,
+      "reference_sha256": "851cf22a0f32fe1687591597a9832f9b6510304f66a2c548d4af5e98bbff9783",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 216,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "M",
+      "source_attachment_id": 597,
+      "reference_sha256": "2823b2bdcf6f1d2bbbbb5a2e912f688d7ea19494718d60d26dca6a6793915ade",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 211,
+      "variation_id": 215,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "L",
+      "source_attachment_id": 597,
+      "reference_sha256": "2823b2bdcf6f1d2bbbbb5a2e912f688d7ea19494718d60d26dca6a6793915ade",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 793,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "12",
+      "source_attachment_id": 751,
+      "reference_sha256": "69b5ad5b59545a9900f229ed861fb56a9e337adfd9d8e7c22a5eb23d12cf6d47",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 792,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "10",
+      "source_attachment_id": 751,
+      "reference_sha256": "69b5ad5b59545a9900f229ed861fb56a9e337adfd9d8e7c22a5eb23d12cf6d47",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 791,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "8",
+      "source_attachment_id": 751,
+      "reference_sha256": "69b5ad5b59545a9900f229ed861fb56a9e337adfd9d8e7c22a5eb23d12cf6d47",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 790,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "6",
+      "source_attachment_id": 751,
+      "reference_sha256": "69b5ad5b59545a9900f229ed861fb56a9e337adfd9d8e7c22a5eb23d12cf6d47",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 789,
+      "colour_name": "Lime Green",
+      "term_id": 100,
+      "term_slug": "limegreen",
+      "size": "12",
+      "source_attachment_id": 749,
+      "reference_sha256": "a18c553d55b4a05d945e63dc8f3beebd64521a07a52d1ed2b868722fbd905a62",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 788,
+      "colour_name": "Lime Green",
+      "term_id": 100,
+      "term_slug": "limegreen",
+      "size": "10",
+      "source_attachment_id": 749,
+      "reference_sha256": "a18c553d55b4a05d945e63dc8f3beebd64521a07a52d1ed2b868722fbd905a62",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 786,
+      "colour_name": "Lime Green",
+      "term_id": 100,
+      "term_slug": "limegreen",
+      "size": "8",
+      "source_attachment_id": 749,
+      "reference_sha256": "a18c553d55b4a05d945e63dc8f3beebd64521a07a52d1ed2b868722fbd905a62",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 785,
+      "colour_name": "Lime Green",
+      "term_id": 100,
+      "term_slug": "limegreen",
+      "size": "6",
+      "source_attachment_id": 749,
+      "reference_sha256": "a18c553d55b4a05d945e63dc8f3beebd64521a07a52d1ed2b868722fbd905a62",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 784,
+      "colour_name": "Lime Green",
+      "term_id": 100,
+      "term_slug": "limegreen",
+      "size": "4",
+      "source_attachment_id": 749,
+      "reference_sha256": "a18c553d55b4a05d945e63dc8f3beebd64521a07a52d1ed2b868722fbd905a62",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 783,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "12",
+      "source_attachment_id": 747,
+      "reference_sha256": "e7d7e9afd2c171e0d32702406ebb3adfcf8194be21d1a40a298df05c40a59ed4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 782,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "10",
+      "source_attachment_id": 747,
+      "reference_sha256": "e7d7e9afd2c171e0d32702406ebb3adfcf8194be21d1a40a298df05c40a59ed4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 781,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "8",
+      "source_attachment_id": 747,
+      "reference_sha256": "e7d7e9afd2c171e0d32702406ebb3adfcf8194be21d1a40a298df05c40a59ed4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 780,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "6",
+      "source_attachment_id": 747,
+      "reference_sha256": "e7d7e9afd2c171e0d32702406ebb3adfcf8194be21d1a40a298df05c40a59ed4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 779,
+      "colour_name": "Blush Pink",
+      "term_id": 109,
+      "term_slug": "blushpink",
+      "size": "12",
+      "source_attachment_id": 748,
+      "reference_sha256": "ad916505d1cb20f96c9f909bb8eacce7870e5dc8cd5ce2702e053f60c269d331",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 778,
+      "colour_name": "Blush Pink",
+      "term_id": 109,
+      "term_slug": "blushpink",
+      "size": "10",
+      "source_attachment_id": 748,
+      "reference_sha256": "ad916505d1cb20f96c9f909bb8eacce7870e5dc8cd5ce2702e053f60c269d331",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 777,
+      "colour_name": "Blush Pink",
+      "term_id": 109,
+      "term_slug": "blushpink",
+      "size": "8",
+      "source_attachment_id": 748,
+      "reference_sha256": "ad916505d1cb20f96c9f909bb8eacce7870e5dc8cd5ce2702e053f60c269d331",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 776,
+      "colour_name": "Blush Pink",
+      "term_id": 109,
+      "term_slug": "blushpink",
+      "size": "6",
+      "source_attachment_id": 748,
+      "reference_sha256": "ad916505d1cb20f96c9f909bb8eacce7870e5dc8cd5ce2702e053f60c269d331",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 775,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "12",
+      "source_attachment_id": 743,
+      "reference_sha256": "c62d10b5ae3a34d0f5eeec59007a7952608e582b0394a3035c252bbcdaa454f4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 774,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "10",
+      "source_attachment_id": 743,
+      "reference_sha256": "c62d10b5ae3a34d0f5eeec59007a7952608e582b0394a3035c252bbcdaa454f4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 773,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "8",
+      "source_attachment_id": 743,
+      "reference_sha256": "c62d10b5ae3a34d0f5eeec59007a7952608e582b0394a3035c252bbcdaa454f4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 772,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "6",
+      "source_attachment_id": 743,
+      "reference_sha256": "c62d10b5ae3a34d0f5eeec59007a7952608e582b0394a3035c252bbcdaa454f4",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 771,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "12",
+      "source_attachment_id": 750,
+      "reference_sha256": "2f0a1c0c67d487331103ce98e68c5d66c20d3e5c36386411aa2d6194e3837a4f",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 770,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "10",
+      "source_attachment_id": 750,
+      "reference_sha256": "2f0a1c0c67d487331103ce98e68c5d66c20d3e5c36386411aa2d6194e3837a4f",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 769,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "8",
+      "source_attachment_id": 750,
+      "reference_sha256": "2f0a1c0c67d487331103ce98e68c5d66c20d3e5c36386411aa2d6194e3837a4f",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 768,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "6",
+      "source_attachment_id": 750,
+      "reference_sha256": "2f0a1c0c67d487331103ce98e68c5d66c20d3e5c36386411aa2d6194e3837a4f",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 767,
+      "colour_name": "Forest Green",
+      "term_id": 108,
+      "term_slug": "forestgreen",
+      "size": "12",
+      "source_attachment_id": 752,
+      "reference_sha256": "00fde631bbdbc69e63411ee41d4669579d7462bf73dc2173e6cea77b77c295e6",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 766,
+      "colour_name": "Forest Green",
+      "term_id": 108,
+      "term_slug": "forestgreen",
+      "size": "10",
+      "source_attachment_id": 752,
+      "reference_sha256": "00fde631bbdbc69e63411ee41d4669579d7462bf73dc2173e6cea77b77c295e6",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 765,
+      "colour_name": "Forest Green",
+      "term_id": 108,
+      "term_slug": "forestgreen",
+      "size": "8",
+      "source_attachment_id": 752,
+      "reference_sha256": "00fde631bbdbc69e63411ee41d4669579d7462bf73dc2173e6cea77b77c295e6",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 764,
+      "colour_name": "Forest Green",
+      "term_id": 108,
+      "term_slug": "forestgreen",
+      "size": "6",
+      "source_attachment_id": 752,
+      "reference_sha256": "00fde631bbdbc69e63411ee41d4669579d7462bf73dc2173e6cea77b77c295e6",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 763,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "12",
+      "source_attachment_id": 746,
+      "reference_sha256": "a4f4eb5630f5e15a662ce482122924356cbd200047b3e40344240c0458e2796b",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 762,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "10",
+      "source_attachment_id": 746,
+      "reference_sha256": "a4f4eb5630f5e15a662ce482122924356cbd200047b3e40344240c0458e2796b",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 761,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "8",
+      "source_attachment_id": 746,
+      "reference_sha256": "a4f4eb5630f5e15a662ce482122924356cbd200047b3e40344240c0458e2796b",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 760,
+      "colour_name": "Yellow",
+      "term_id": 96,
+      "term_slug": "yellow",
+      "size": "6",
+      "source_attachment_id": 746,
+      "reference_sha256": "a4f4eb5630f5e15a662ce482122924356cbd200047b3e40344240c0458e2796b",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 758,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "12",
+      "source_attachment_id": 744,
+      "reference_sha256": "823a94411e703a4464e67f8331801119c16dca07ccf770d611619baecd78b3b5",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 757,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "10",
+      "source_attachment_id": 744,
+      "reference_sha256": "823a94411e703a4464e67f8331801119c16dca07ccf770d611619baecd78b3b5",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 756,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "8",
+      "source_attachment_id": 744,
+      "reference_sha256": "823a94411e703a4464e67f8331801119c16dca07ccf770d611619baecd78b3b5",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 185,
+      "variation_id": 755,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "6",
+      "source_attachment_id": 744,
+      "reference_sha256": "823a94411e703a4464e67f8331801119c16dca07ccf770d611619baecd78b3b5",
+      "review_status": "REUSE_WITH_SHADE_REVIEW"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 457,
+      "colour_name": "Night Indigo",
+      "term_id": 36,
+      "term_slug": "night-indigo",
+      "size": "S",
+      "source_attachment_id": 456,
+      "reference_sha256": "f5a7027a2d1e7809af4e33c113a1660a0c18776fe6a72901c2af4878bd159fc7",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 184,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 455,
+      "reference_sha256": "48e7d7f2e8d3dde31bfc932777b96a899745f2f44fb93a21d97960979df0b961",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 183,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 455,
+      "reference_sha256": "48e7d7f2e8d3dde31bfc932777b96a899745f2f44fb93a21d97960979df0b961",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 182,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 455,
+      "reference_sha256": "48e7d7f2e8d3dde31bfc932777b96a899745f2f44fb93a21d97960979df0b961",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 181,
+      "colour_name": "Court Ivory",
+      "term_id": 24,
+      "term_slug": "court-ivory",
+      "size": "S",
+      "source_attachment_id": 164,
+      "reference_sha256": "08f3dccfd1d8c1072a45c9616ebfd42de10fd8d7f7eb3dabe4134369787c0b94",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 180,
+      "colour_name": "Onyx",
+      "term_id": 26,
+      "term_slug": "onyx",
+      "size": "XL",
+      "source_attachment_id": 164,
+      "reference_sha256": "08f3dccfd1d8c1072a45c9616ebfd42de10fd8d7f7eb3dabe4134369787c0b94",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 179,
+      "colour_name": "Onyx",
+      "term_id": 26,
+      "term_slug": "onyx",
+      "size": "L",
+      "source_attachment_id": 164,
+      "reference_sha256": "08f3dccfd1d8c1072a45c9616ebfd42de10fd8d7f7eb3dabe4134369787c0b94",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 178,
+      "colour_name": "Onyx",
+      "term_id": 26,
+      "term_slug": "onyx",
+      "size": "M",
+      "source_attachment_id": 164,
+      "reference_sha256": "08f3dccfd1d8c1072a45c9616ebfd42de10fd8d7f7eb3dabe4134369787c0b94",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 177,
+      "colour_name": "Onyx",
+      "term_id": 26,
+      "term_slug": "onyx",
+      "size": "S",
+      "source_attachment_id": 164,
+      "reference_sha256": "08f3dccfd1d8c1072a45c9616ebfd42de10fd8d7f7eb3dabe4134369787c0b94",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 176,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "XL",
+      "source_attachment_id": 454,
+      "reference_sha256": "d42136492cef5867fe3df6eb01b31e43a05efa9315285ecce3029f9597be9257",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 175,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "L",
+      "source_attachment_id": 454,
+      "reference_sha256": "d42136492cef5867fe3df6eb01b31e43a05efa9315285ecce3029f9597be9257",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 174,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "M",
+      "source_attachment_id": 454,
+      "reference_sha256": "d42136492cef5867fe3df6eb01b31e43a05efa9315285ecce3029f9597be9257",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 173,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "S",
+      "source_attachment_id": 454,
+      "reference_sha256": "d42136492cef5867fe3df6eb01b31e43a05efa9315285ecce3029f9597be9257",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 172,
+      "colour_name": "Meadow Green",
+      "term_id": 37,
+      "term_slug": "meadow-green",
+      "size": "XL",
+      "source_attachment_id": 453,
+      "reference_sha256": "5d6fbf07498dcf77d693540a531c47c17f0ad24edcf29fb440421c0ac9262c0a",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 171,
+      "colour_name": "Meadow Green",
+      "term_id": 37,
+      "term_slug": "meadow-green",
+      "size": "L",
+      "source_attachment_id": 453,
+      "reference_sha256": "5d6fbf07498dcf77d693540a531c47c17f0ad24edcf29fb440421c0ac9262c0a",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 170,
+      "colour_name": "Meadow Green",
+      "term_id": 37,
+      "term_slug": "meadow-green",
+      "size": "M",
+      "source_attachment_id": 453,
+      "reference_sha256": "5d6fbf07498dcf77d693540a531c47c17f0ad24edcf29fb440421c0ac9262c0a",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 169,
+      "colour_name": "Meadow Green",
+      "term_id": 37,
+      "term_slug": "meadow-green",
+      "size": "S",
+      "source_attachment_id": 453,
+      "reference_sha256": "5d6fbf07498dcf77d693540a531c47c17f0ad24edcf29fb440421c0ac9262c0a",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 168,
+      "colour_name": "Night Indigo",
+      "term_id": 36,
+      "term_slug": "night-indigo",
+      "size": "XL",
+      "source_attachment_id": 456,
+      "reference_sha256": "f5a7027a2d1e7809af4e33c113a1660a0c18776fe6a72901c2af4878bd159fc7",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 167,
+      "colour_name": "Night Indigo",
+      "term_id": 36,
+      "term_slug": "night-indigo",
+      "size": "L",
+      "source_attachment_id": 456,
+      "reference_sha256": "f5a7027a2d1e7809af4e33c113a1660a0c18776fe6a72901c2af4878bd159fc7",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 166,
+      "colour_name": "Night Indigo",
+      "term_id": 36,
+      "term_slug": "night-indigo",
+      "size": "M",
+      "source_attachment_id": 456,
+      "reference_sha256": "f5a7027a2d1e7809af4e33c113a1660a0c18776fe6a72901c2af4878bd159fc7",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 160,
+      "variation_id": 165,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 455,
+      "reference_sha256": "48e7d7f2e8d3dde31bfc932777b96a899745f2f44fb93a21d97960979df0b961",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 557,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "XL",
+      "source_attachment_id": 554,
+      "reference_sha256": "3113e877532309d26e67e7551ee16adc0e4ce0d067173c07c75d3cad2169fd59",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 556,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "L",
+      "source_attachment_id": 554,
+      "reference_sha256": "3113e877532309d26e67e7551ee16adc0e4ce0d067173c07c75d3cad2169fd59",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 555,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "M",
+      "source_attachment_id": 554,
+      "reference_sha256": "3113e877532309d26e67e7551ee16adc0e4ce0d067173c07c75d3cad2169fd59",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 553,
+      "colour_name": "Lavender",
+      "term_id": 83,
+      "term_slug": "lavender",
+      "size": "S",
+      "source_attachment_id": 554,
+      "reference_sha256": "3113e877532309d26e67e7551ee16adc0e4ce0d067173c07c75d3cad2169fd59",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 552,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 543,
+      "reference_sha256": "4fcc9fdc47b3529e3b4e73898bb807480e46d860ab8499a8c07e1735957d9cf8",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 550,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 543,
+      "reference_sha256": "4fcc9fdc47b3529e3b4e73898bb807480e46d860ab8499a8c07e1735957d9cf8",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 544,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 543,
+      "reference_sha256": "4fcc9fdc47b3529e3b4e73898bb807480e46d860ab8499a8c07e1735957d9cf8",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 542,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 543,
+      "reference_sha256": "4fcc9fdc47b3529e3b4e73898bb807480e46d860ab8499a8c07e1735957d9cf8",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 159,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "XL",
+      "source_attachment_id": 541,
+      "reference_sha256": "222dba3d2b171a70ad9b6ed55e2c8f43facd7b050599fd3b1e5aae0927afc2c0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 158,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 541,
+      "reference_sha256": "222dba3d2b171a70ad9b6ed55e2c8f43facd7b050599fd3b1e5aae0927afc2c0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 157,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 541,
+      "reference_sha256": "222dba3d2b171a70ad9b6ed55e2c8f43facd7b050599fd3b1e5aae0927afc2c0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 154,
+      "variation_id": 156,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "S",
+      "source_attachment_id": 541,
+      "reference_sha256": "222dba3d2b171a70ad9b6ed55e2c8f43facd7b050599fd3b1e5aae0927afc2c0",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 508,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 505,
+      "reference_sha256": "9bb9b5c5755fd79f31ab538309007c0dfe38ba7e41b54f7dc54d20b99c03d01f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 507,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 505,
+      "reference_sha256": "9bb9b5c5755fd79f31ab538309007c0dfe38ba7e41b54f7dc54d20b99c03d01f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 147,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "S",
+      "source_attachment_id": 502,
+      "reference_sha256": "73eeeb62f36832fefebb52dbfac034798a1c772609a688d10415fafcea06900c",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 146,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "M",
+      "source_attachment_id": 502,
+      "reference_sha256": "73eeeb62f36832fefebb52dbfac034798a1c772609a688d10415fafcea06900c",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 145,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "L",
+      "source_attachment_id": 502,
+      "reference_sha256": "73eeeb62f36832fefebb52dbfac034798a1c772609a688d10415fafcea06900c",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 144,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "XL",
+      "source_attachment_id": 502,
+      "reference_sha256": "73eeeb62f36832fefebb52dbfac034798a1c772609a688d10415fafcea06900c",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 142,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 504,
+      "reference_sha256": "f3c9c3dc88b4ec794f24003e39ebf0c20697c4a779ccb185b8f5e8b2dbb3a72f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 137,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "XL",
+      "source_attachment_id": 503,
+      "reference_sha256": "792cb368415f7e6b9b7c1682adea098d98d32c49e0c2b8c2ab53909dc3814e14",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 136,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 504,
+      "reference_sha256": "f3c9c3dc88b4ec794f24003e39ebf0c20697c4a779ccb185b8f5e8b2dbb3a72f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 135,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "L",
+      "source_attachment_id": 503,
+      "reference_sha256": "792cb368415f7e6b9b7c1682adea098d98d32c49e0c2b8c2ab53909dc3814e14",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 134,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "M",
+      "source_attachment_id": 503,
+      "reference_sha256": "792cb368415f7e6b9b7c1682adea098d98d32c49e0c2b8c2ab53909dc3814e14",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 128,
+      "variation_id": 133,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "S",
+      "source_attachment_id": 503,
+      "reference_sha256": "792cb368415f7e6b9b7c1682adea098d98d32c49e0c2b8c2ab53909dc3814e14",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 127,
+      "colour_name": "Jujube Red",
+      "term_id": 79,
+      "term_slug": "jujube-red",
+      "size": "XL",
+      "source_attachment_id": 463,
+      "reference_sha256": "491ceeca73805cceb4b62b7fb159a8457c0150c7b7826eb2e7ceb978506b0f16",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 126,
+      "colour_name": "Jujube Red",
+      "term_id": 79,
+      "term_slug": "jujube-red",
+      "size": "L",
+      "source_attachment_id": 463,
+      "reference_sha256": "491ceeca73805cceb4b62b7fb159a8457c0150c7b7826eb2e7ceb978506b0f16",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 125,
+      "colour_name": "Jujube Red",
+      "term_id": 79,
+      "term_slug": "jujube-red",
+      "size": "M",
+      "source_attachment_id": 463,
+      "reference_sha256": "491ceeca73805cceb4b62b7fb159a8457c0150c7b7826eb2e7ceb978506b0f16",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 124,
+      "colour_name": "Jujube Red",
+      "term_id": 79,
+      "term_slug": "jujube-red",
+      "size": "S",
+      "source_attachment_id": 463,
+      "reference_sha256": "491ceeca73805cceb4b62b7fb159a8457c0150c7b7826eb2e7ceb978506b0f16",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 123,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "XL",
+      "source_attachment_id": 462,
+      "reference_sha256": "9b2d38a4274ab878bf6756d1ed4c2ca201ab30f4aaf1316480f5900634e5674f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 122,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 462,
+      "reference_sha256": "9b2d38a4274ab878bf6756d1ed4c2ca201ab30f4aaf1316480f5900634e5674f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 121,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 462,
+      "reference_sha256": "9b2d38a4274ab878bf6756d1ed4c2ca201ab30f4aaf1316480f5900634e5674f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 117,
+      "variation_id": 120,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "S",
+      "source_attachment_id": 462,
+      "reference_sha256": "9b2d38a4274ab878bf6756d1ed4c2ca201ab30f4aaf1316480f5900634e5674f",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 111,
+      "variation_id": 116,
+      "colour_name": "Green",
+      "term_id": 78,
+      "term_slug": "green",
+      "size": "XL",
+      "source_attachment_id": 460,
+      "reference_sha256": "fb02c0edc974fc098b769c89dc0f8307645188a8a6f43a5c0a374873c0c5ff05",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 111,
+      "variation_id": 115,
+      "colour_name": "Green",
+      "term_id": 78,
+      "term_slug": "green",
+      "size": "L",
+      "source_attachment_id": 460,
+      "reference_sha256": "fb02c0edc974fc098b769c89dc0f8307645188a8a6f43a5c0a374873c0c5ff05",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 111,
+      "variation_id": 114,
+      "colour_name": "Green",
+      "term_id": 78,
+      "term_slug": "green",
+      "size": "M",
+      "source_attachment_id": 460,
+      "reference_sha256": "fb02c0edc974fc098b769c89dc0f8307645188a8a6f43a5c0a374873c0c5ff05",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 111,
+      "variation_id": 113,
+      "colour_name": "Green",
+      "term_id": 78,
+      "term_slug": "green",
+      "size": "S",
+      "source_attachment_id": 460,
+      "reference_sha256": "fb02c0edc974fc098b769c89dc0f8307645188a8a6f43a5c0a374873c0c5ff05",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 110,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "XL",
+      "source_attachment_id": 449,
+      "reference_sha256": "d1a1fa976c95b45e10f412701f87e156f0214e46fd00248de560a6091edc7560",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 109,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "L",
+      "source_attachment_id": 449,
+      "reference_sha256": "d1a1fa976c95b45e10f412701f87e156f0214e46fd00248de560a6091edc7560",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 108,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "M",
+      "source_attachment_id": 449,
+      "reference_sha256": "d1a1fa976c95b45e10f412701f87e156f0214e46fd00248de560a6091edc7560",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 107,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "S",
+      "source_attachment_id": 449,
+      "reference_sha256": "d1a1fa976c95b45e10f412701f87e156f0214e46fd00248de560a6091edc7560",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 106,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "XL",
+      "source_attachment_id": 451,
+      "reference_sha256": "4ca15c8070b958dddaa74b4108acd0eb9083105ec9018b79e1aa2aa0190a93f2",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 105,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "L",
+      "source_attachment_id": 451,
+      "reference_sha256": "4ca15c8070b958dddaa74b4108acd0eb9083105ec9018b79e1aa2aa0190a93f2",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 104,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "M",
+      "source_attachment_id": 451,
+      "reference_sha256": "4ca15c8070b958dddaa74b4108acd0eb9083105ec9018b79e1aa2aa0190a93f2",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 103,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "S",
+      "source_attachment_id": 451,
+      "reference_sha256": "4ca15c8070b958dddaa74b4108acd0eb9083105ec9018b79e1aa2aa0190a93f2",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 102,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 450,
+      "reference_sha256": "bfb6db394866846e0f010768e4259e35f8f75c8463406fb8e6056886672e3225",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 101,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 450,
+      "reference_sha256": "bfb6db394866846e0f010768e4259e35f8f75c8463406fb8e6056886672e3225",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 100,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 450,
+      "reference_sha256": "bfb6db394866846e0f010768e4259e35f8f75c8463406fb8e6056886672e3225",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 95,
+      "variation_id": 99,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 450,
+      "reference_sha256": "bfb6db394866846e0f010768e4259e35f8f75c8463406fb8e6056886672e3225",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 89,
+      "variation_id": 94,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "XL",
+      "source_attachment_id": 472,
+      "reference_sha256": "717f7a721971cd930c1f34f17b413be123cd75b2f0e05afadf338dfa74955871",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 89,
+      "variation_id": 93,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "L",
+      "source_attachment_id": 472,
+      "reference_sha256": "717f7a721971cd930c1f34f17b413be123cd75b2f0e05afadf338dfa74955871",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 89,
+      "variation_id": 92,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "M",
+      "source_attachment_id": 472,
+      "reference_sha256": "717f7a721971cd930c1f34f17b413be123cd75b2f0e05afadf338dfa74955871",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 89,
+      "variation_id": 91,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "S",
+      "source_attachment_id": 472,
+      "reference_sha256": "717f7a721971cd930c1f34f17b413be123cd75b2f0e05afadf338dfa74955871",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 83,
+      "variation_id": 87,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "L",
+      "source_attachment_id": 473,
+      "reference_sha256": "3e1ead2aef51e5c1c5c92d9ec40c261df384507292c96f5b34a6d5bdf9c330f7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 83,
+      "variation_id": 86,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "M",
+      "source_attachment_id": 473,
+      "reference_sha256": "3e1ead2aef51e5c1c5c92d9ec40c261df384507292c96f5b34a6d5bdf9c330f7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 83,
+      "variation_id": 85,
+      "colour_name": "White",
+      "term_id": 80,
+      "term_slug": "white",
+      "size": "S",
+      "source_attachment_id": 473,
+      "reference_sha256": "3e1ead2aef51e5c1c5c92d9ec40c261df384507292c96f5b34a6d5bdf9c330f7",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 385,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 386,
+      "reference_sha256": "5fcf20b51b786ddc037985552e100e7aeb1ca51d2708e0830278a1148f3720fe",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 383,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "XL",
+      "source_attachment_id": 374,
+      "reference_sha256": "586862363ca0dc6d86d63aa825037a0b5cd052b0f248d4d2f9650db9643faa61",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 382,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "M",
+      "source_attachment_id": 374,
+      "reference_sha256": "586862363ca0dc6d86d63aa825037a0b5cd052b0f248d4d2f9650db9643faa61",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 82,
+      "colour_name": "Onyx",
+      "term_id": 26,
+      "term_slug": "onyx",
+      "size": "XL",
+      "source_attachment_id": 373,
+      "reference_sha256": "5fcf20b51b786ddc037985552e100e7aeb1ca51d2708e0830278a1148f3720fe",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 81,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "M",
+      "source_attachment_id": 373,
+      "reference_sha256": "5fcf20b51b786ddc037985552e100e7aeb1ca51d2708e0830278a1148f3720fe",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 80,
+      "colour_name": null,
+      "term_id": null,
+      "term_slug": null,
+      "size": "M",
+      "source_attachment_id": 61,
+      "reference_sha256": "22670f754886557a70985f69f832cae80ea8085514bfa6286a5a0d3c6fc02f8f",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 78,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "XL",
+      "source_attachment_id": 60,
+      "reference_sha256": "d44fa5a4a0447f7111dde22290c418c2c1e3f6642ed0813a20517e7ba2798f0c",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 76,
+      "colour_name": "Maroon",
+      "term_id": 68,
+      "term_slug": "maroon",
+      "size": "XXL",
+      "source_attachment_id": 381,
+      "reference_sha256": "49fb0b24cc875ecb3e44ac44a24a62266f665f2b5c7eb06d180daf5abfeeba75",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 75,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "XL",
+      "source_attachment_id": 378,
+      "reference_sha256": "a5986920957e7d0790b6332c5d015cc1a9662bffe0d419bc9f7e9e2a831965a7",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 74,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "XL",
+      "source_attachment_id": 375,
+      "reference_sha256": "e6b2cf6d277166a01179f4fbbb81119758ec786b88ae66c5c536104b21e3b1dd",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 72,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "M",
+      "source_attachment_id": 375,
+      "reference_sha256": "e6b2cf6d277166a01179f4fbbb81119758ec786b88ae66c5c536104b21e3b1dd",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 71,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "S",
+      "source_attachment_id": 375,
+      "reference_sha256": "e6b2cf6d277166a01179f4fbbb81119758ec786b88ae66c5c536104b21e3b1dd",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 70,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "M",
+      "source_attachment_id": 58,
+      "reference_sha256": "d35f2923e210aec19b3f2e17669a6dfbcc7c1e56c78d52e5fc0a9549bece9397",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 69,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "S",
+      "source_attachment_id": 58,
+      "reference_sha256": "d35f2923e210aec19b3f2e17669a6dfbcc7c1e56c78d52e5fc0a9549bece9397",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 68,
+      "colour_name": "Sakura Pink",
+      "term_id": 27,
+      "term_slug": "sakura",
+      "size": "L",
+      "source_attachment_id": 377,
+      "reference_sha256": "a5986920957e7d0790b6332c5d015cc1a9662bffe0d419bc9f7e9e2a831965a7",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 67,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "S",
+      "source_attachment_id": 376,
+      "reference_sha256": "016caa07def1695accc620c8941107f5e09babd835397a8a123de4d4e07e961b",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 66,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "XL",
+      "source_attachment_id": 376,
+      "reference_sha256": "016caa07def1695accc620c8941107f5e09babd835397a8a123de4d4e07e961b",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 65,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "M",
+      "source_attachment_id": 376,
+      "reference_sha256": "016caa07def1695accc620c8941107f5e09babd835397a8a123de4d4e07e961b",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 56,
+      "variation_id": 63,
+      "colour_name": "Powder Blue",
+      "term_id": 28,
+      "term_slug": "powder",
+      "size": "L",
+      "source_attachment_id": 375,
+      "reference_sha256": "e6b2cf6d277166a01179f4fbbb81119758ec786b88ae66c5c536104b21e3b1dd",
+      "review_status": "HOLD_CATALOGUE_MAPPING"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 479,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "XL",
+      "source_attachment_id": 477,
+      "reference_sha256": "5fa0a93a33c945656a8af9dfe84bd03ba64b034a43ac005fa253e82b6d133a61",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 478,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "M",
+      "source_attachment_id": 477,
+      "reference_sha256": "5fa0a93a33c945656a8af9dfe84bd03ba64b034a43ac005fa253e82b6d133a61",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 476,
+      "colour_name": "Gray",
+      "term_id": 82,
+      "term_slug": "gray",
+      "size": "S",
+      "source_attachment_id": 477,
+      "reference_sha256": "5fa0a93a33c945656a8af9dfe84bd03ba64b034a43ac005fa253e82b6d133a61",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 55,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "XL",
+      "source_attachment_id": 394,
+      "reference_sha256": "27801d0fa1d18939e6d873f1727edff6a925a720019df59c33713557d870a69e",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 54,
+      "colour_name": "Beige",
+      "term_id": 81,
+      "term_slug": "beige",
+      "size": "L",
+      "source_attachment_id": 474,
+      "reference_sha256": "a52857ccd72121f997cd36f1bcdc7e309e6fe020ecf817ce2f8a4eda32ec110e",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 53,
+      "colour_name": "Beige",
+      "term_id": 81,
+      "term_slug": "beige",
+      "size": "M",
+      "source_attachment_id": 474,
+      "reference_sha256": "a52857ccd72121f997cd36f1bcdc7e309e6fe020ecf817ce2f8a4eda32ec110e",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 50,
+      "variation_id": 52,
+      "colour_name": "Mocha",
+      "term_id": 74,
+      "term_slug": "mocha",
+      "size": "L",
+      "source_attachment_id": 475,
+      "reference_sha256": "85398b6dd3012a945dfdb031612b3a441c42d62f6de4844791e5b2c15a298d1d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 36,
+      "variation_id": 49,
+      "colour_name": "Turquoise Blue",
+      "term_id": 70,
+      "term_slug": "turquoise-blue",
+      "size": "M",
+      "source_attachment_id": 387,
+      "reference_sha256": "dfaaa503634463500f0147a8f071a8d05cb01e272eb1b2914de7586aff61895d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 36,
+      "variation_id": 48,
+      "colour_name": "Turquoise Blue",
+      "term_id": 70,
+      "term_slug": "turquoise-blue",
+      "size": "L",
+      "source_attachment_id": 387,
+      "reference_sha256": "dfaaa503634463500f0147a8f071a8d05cb01e272eb1b2914de7586aff61895d",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 36,
+      "variation_id": 47,
+      "colour_name": "Pure White",
+      "term_id": 65,
+      "term_slug": "purewhite",
+      "size": "L",
+      "source_attachment_id": 388,
+      "reference_sha256": "b5f2de90f7ebf3ea4a7a2b5439dc817564275c6c510e5abbb624c9f899b0ce69",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 36,
+      "variation_id": 46,
+      "colour_name": "Navy Blue",
+      "term_id": 69,
+      "term_slug": "navy-blue",
+      "size": "S",
+      "source_attachment_id": 391,
+      "reference_sha256": "447ff91067344a6ec105632f56e066737f41bfc3726f9d37731929dfaa7ffaca",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 36,
+      "variation_id": 45,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "S",
+      "source_attachment_id": 390,
+      "reference_sha256": "4e859e03209c05b11f4273c8e398f2fbc5382766ba1293310a6ff1dde5b01800",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    },
+    {
+      "product_id": 36,
+      "variation_id": 44,
+      "colour_name": "Black",
+      "term_id": 66,
+      "term_slug": "black",
+      "size": "L",
+      "source_attachment_id": 390,
+      "reference_sha256": "4e859e03209c05b11f4273c8e398f2fbc5382766ba1293310a6ff1dde5b01800",
+      "review_status": "REUSE_READY_FOR_UI_QA"
+    }
+  ]
+}

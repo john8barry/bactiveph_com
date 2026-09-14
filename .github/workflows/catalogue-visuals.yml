@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - '**/catalog-visuals.*'
+      - 'tests/catalog-gallery-startup.test.cjs'
       - '**/collection-visuals.*'
       - 'tools/catalog_visuals.py'
       - 'tools/catalog-recovery/**'
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - '**/catalog-visuals.*'
+      - 'tests/catalog-gallery-startup.test.cjs'
       - '**/collection-visuals.*'
       - 'tools/catalog_visuals.py'
       - 'tools/catalog-recovery/**'
@@ -38,7 +40,7 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/tests/catalogue-runtime/node_modules
         run: |
-          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs
+          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs tests/catalog-gallery-startup.test.cjs
           php tests/catalog-visuals.php
           php tests/collection-visuals.php
           python3 -m unittest discover -s tests -p 'test_catalog*.py' -v

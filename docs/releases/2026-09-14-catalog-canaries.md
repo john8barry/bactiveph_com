@@ -44,3 +44,29 @@ Card price alignment follow-up integrated as cec68468 (reviewed source8b5f1d15);
 Elite95, Varsity111 and Serve89 completed their private keyboard, native fallback and existing size-help dialog checks. Match83, Rally Dress50 and Court Dress36 passed available combination checks and bounded private carts (White/L/₱2,700; Beige/M/₱2,250; Turquoise Blue/M/₱2,800), all quantity1 and removed. Rally's sold-out Gray and S options remain disabled; Navy Blue/M and Court Dress Black/M correctly remain unavailable. Remaining per-product visual evidence is tracked in the checklist.
 
 The editorial WebP derivative is91,130bytes at1448×1086, independently reviewed against its source. The original master is retained. Private desktop/mobile composition, unchanged copy and actual sizing-link destination passed. Shared homepage card prices align in the private preview. Editorial and shared presentation are not yet live.
+
+## Shared presentation live
+
+The shared card presentation and existing homepage editorial section are now enabled as shared-20260914 after the follow-up20-minute canary monitor passed46 checks over1,205.59 seconds. New editorial attachment799 is separately imported; no product image assignments changed. Ordinary homepage and exact asset-hash readback pass. Desktop card action rows align; mobile remains two columns without horizontal overflow. Desktop/mobile editorial render and preserved factual copy pass. New shared20-minute monitoring and next-day verification remain pending.
+
+Shared rollback conditionally removes only this release-owned collection option and retains the unreferenced new editorial asset. It rejects later option/product-registry edits. Actual private activation, rollback, idempotence and competing-writer rejection passed with product, variation and order records unchanged.
+
+## Remaining-product qualification progress
+
+Warm-Up Jacket, Everyday Tee, Sculpt Romper and Strappy Bra completed private colour/size availability, keyboard, dropdown fallback, size-help and isolated cart samples; every sample was removed. Court Skort preserves numeric labels and its illustrated chart; White size 10 cart sample passed and was removed. Its complete AJAX browser matrix remains pending.
+
+The first batch stage stopped before provider writes because Woo returned the main attachment ID as a string while the reviewed manifest uses integers. Normalizing attachment IDs preserves the exact gallery ordering and hash checks. Fresh production readback then passed and an encrypted before-option backup was created for first-v2-20260914. Actual private compare-and-swap activation/rollback, later-writer refusal and unchanged commerce checks passed.
+
+A transient gallery mismatch during viewport switching was rechecked. Settled Court Skort resizing and a fresh Strappy Bra White/M immediate resize both preserved the matching slide. No production code change has been made for this observation.
+
+## First product batch live
+
+The shared presentation monitor passed at 13:56:33 UTC: 84 ordinary GET checks over 1205.43 seconds, zero failures. Elite 95, Varsity 111 and Serve 89 were then enabled through the guarded option compare-and-swap. Fresh encrypted backup SHA-256: `a41b0b925d0f10d2afb187440b7fa5e98a26d6f60553795e41976b5ffe8280c7`. Effective registry readback passed; image assignments and commerce fields were not written.
+
+All three passed independent anonymous live cart checks: Elite variation 100 / Black M / PHP 3000; Varsity 114 / Green M / PHP 3300; Serve 92 / Sakura Pink M / PHP 2300. Each cart contained quantity one and the exact native variation ID; all test items were removed without orders or payments. Desktop/mobile browser checks confirmed original images, matching selected colours, enabled purchase controls, no horizontal overflow at 375 pixels and SKU privacy. The first-batch 20-minute monitor remains running; next-day verification remains pending.
+
+Fresh Strappy Bra immediate resizing tests passed in both directions after settlement. The earlier transient observation did not reproduce; no code change was made. Court Skort full AJAX browser matrix remains pending because rapid test clicks can precede the native lookup completion. Its numeric chart and White 10 isolated cart sample passed; do not infer a catalogue defect from the harness timing.
+
+## Image performance follow-up
+
+A bounded public asset audit confirmed full source URLs/dimensions and no scaled gallery srcsets on the five live enhanced products. Flow originals total about 133 KB. Some other accepted PNGs are 1.61–2.30 MB each; potential unique originals total about 4.48 MB for Courtline, 1.65 MB Serve, 6.87 MB Elite and 2.30 MB Varsity. These are potential asset totals, not measured browser transfers or Core Web Vitals. First gallery images retain lazy loading without explicit fetch priority. Follow-up: produce reviewed optimized derivatives at the same dimensions while retaining masters, and assess first-image loading priority. Do not reduce gallery resolution to the former 600-pixel variants. This optimization remains unfinished.

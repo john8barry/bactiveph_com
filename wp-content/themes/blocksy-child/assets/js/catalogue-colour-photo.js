@@ -62,7 +62,9 @@
     product?.addEventListener('click', event => {
       const gallery = event.target.closest('.woocommerce-product-gallery');
       if (!gallery) return;
-      if (event.target.closest('.flexy-pills, .flexy-arrow-prev, .flexy-arrow-next')) {
+      // Blocksy also clicks pills when committing/resetting a variation. Only
+      // customer navigation suspends the colour-only representative preview.
+      if (event.isTrusted && event.target.closest('.flexy-pills, .flexy-arrow-prev, .flexy-arrow-next')) {
         browsingGallery = true; clear(); return;
       }
       if (overlay && event.target.closest('.flexy-view, .woocommerce-product-gallery__trigger')) {
@@ -70,6 +72,12 @@
       }
     }, true);
     product?.addEventListener('keydown', event => {
+      if (!event.target.closest('.woocommerce-product-gallery')) return;
+      // Capture keyboard intent before the accessible thumbnail handler emits
+      // its synthetic click, which must remain distinct from a native update.
+      if (event.isTrusted && ['Enter', ' '].includes(event.key) && event.target.closest('.flexy-pills, .flexy-arrow-prev, .flexy-arrow-next')) {
+        browsingGallery = true; clear(); return;
+      }
       if (overlay && ['Enter', ' '].includes(event.key) && event.target.closest('.flexy-view, .woocommerce-product-gallery__trigger')) {
         event.preventDefault(); event.stopImmediatePropagation();
       }

@@ -8,9 +8,13 @@ function fixture(){
  const w=dom.window;w.eval(fs.readFileSync('wordpress/wp-includes/js/jquery/jquery.js','utf8'));const $=w.jQuery;
  w.bactiveCatalogVisuals={productId:1,previews:{attribute_pa_colour:{black:{src:'https://bactiveph.com/black.jpg',alt:'Black skort'},white:{src:'https://bactiveph.com/white.jpg',alt:'White skort'}}}};
  const pending=[];w.Image=function(){const image=w.document.createElement('img');Object.defineProperty(image,'naturalWidth',{value:1200});Object.defineProperty(image,'naturalHeight',{value:1600});pending.push(image);return image;};
+ // jsdom cannot produce trusted input. Invoke the actual registered capture
+ // handlers for that boundary; normal synthetic clicks still use DOM dispatch.
+ const handlers=[],product=w.document.querySelector('.product'),add=product.addEventListener.bind(product);
+ product.addEventListener=(type,handler,options)=>{handlers.push({type,handler});add(type,handler,options);};
  w.eval(script);w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
  const form=w.document.querySelector('form'),selects=[...form.querySelectorAll('select')];
- return {dom,w,$,pending,form,selects,choose(i,v){selects[i].value=v;$(selects[i]).trigger('change');},overlay(){return w.document.querySelector('.bactive-colour-photo');}};
+ return {dom,w,$,pending,form,selects,choose(i,v){selects[i].value=v;$(selects[i]).trigger('change');},overlay(){return w.document.querySelector('.bactive-colour-photo');},manual(type,target,key){const event={isTrusted:true,type,target,key,preventDefault(){},stopImmediatePropagation(){}};handlers.filter(row=>row.type===type).forEach(row=>row.handler.call(product,event));}};
 }
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 test('latest colour wins; full variation and reset remove the representative without editing native image',async()=>{
@@ -30,9 +34,15 @@ test('manual thumbnails suspend overlay until a selection changes; wrong native 
  const f=fixture();f.choose(0,'black');f.pending.at(-1).onload();const media=f.w.document.querySelector('.ct-media-container');assert.equal(media.inert,true);
  const click=new f.w.MouseEvent('click',{bubbles:true,cancelable:true});f.overlay().dispatchEvent(click);assert.equal(click.defaultPrevented,true);
  const key=new f.w.KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true});media.dispatchEvent(key);assert.equal(key.defaultPrevented,true);
- f.w.document.querySelector('.flexy-pills span').click();await settle();assert.equal(f.overlay(),null);assert.ok(!media.inert);
+ const thumb=f.w.document.querySelector('.flexy-pills span');f.manual('click',thumb);thumb.click();await settle();assert.equal(f.overlay(),null);assert.ok(!media.inert);
  f.w.document.querySelector('.flexy-view').append(f.w.document.createElement('span'));await settle();assert.equal(f.overlay(),null);
  f.choose(0,'white');f.pending.at(-1).onload();assert.ok(f.overlay());f.dom.window.close();
+});
+test('native synthetic pill clicks preserve a partial preview while trusted keyboard navigation clears it',async()=>{
+ const f=fixture();f.choose(0,'black');f.pending.at(-1).onload();const preview=f.overlay();
+ const thumb=f.w.document.querySelector('.flexy-pills span');thumb.click();await settle();assert.equal(f.overlay(),preview);
+ f.manual('keydown',thumb,'Enter');thumb.click();await settle();assert.equal(f.overlay(),null);
+ f.dom.window.close();
 });
 test('failed and external photos leave the original usable; styling does not depend on layout switch',()=>{
  const f=fixture();f.choose(0,'black');f.pending.at(-1).onerror();assert.equal(f.overlay(),null);assert.ok(!f.w.document.querySelector('.ct-media-container').inert);

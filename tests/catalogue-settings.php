@@ -45,6 +45,7 @@ class WC_Product_Variation extends WC_Product {
     function get_image_id( $context ) { if ( 'edit' !== $context ) { throw new Exception( 'Explicit images required' ); } return $this->image; }
 }
 require __DIR__ . '/../wordpress/wp-content/themes/blocksy-child/inc/catalogue-settings.php';
+require __DIR__ . '/../wordpress/wp-content/themes/blocksy-child/inc/catalog-visuals.php';
 function check( $v, $reason ) { if ( ! $v ) { throw new RuntimeException( $reason ); } }
 $directory = sys_get_temp_dir() . '/bactive-model-' . bin2hex( random_bytes( 8 ) ); mkdir( $directory, 0700 ); $directory = realpath( $directory );
 $png = base64_decode( 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aN0cAAAAASUVORK5CYII=' );
@@ -65,6 +66,9 @@ try {
     check( 1 === bactive_catalogue_preview( $product, $row )['id'], 'Representative image chosen explicitly' );
     $options['bactive_catalogue_defaults']['selectors'] = true;
     $variations[900] = $product;
+    $config = bactive_catalog_visuals_config( null, 900 );
+    check( 1 === $config['schemaVersion'] && 900 === $config['productId'] && 'test' === $config['version'], 'New variable product receives the gallery bridge config without a release allowlist' );
+    check( isset( ( (array) $config['previews'] )['attribute_pa_colour']['lavender'] ), 'Automatic config preserves the approved representative alongside the native gallery' );
     check( 2 === bactive_catalogue_variation_image( 2, $variations[902] ), 'An explicit size photo always wins' );
     $variations[902]->image = 0; bactive_catalogue_forget(900);
     $product->meta['_bactive_colour_settings']['colours']['pa_colour:7']['review'] = bactive_catalogue_review_fingerprint( $product, $row, 1 );

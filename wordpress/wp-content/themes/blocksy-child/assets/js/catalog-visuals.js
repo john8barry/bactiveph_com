@@ -7,6 +7,106 @@
         config.productId < 1 || typeof config.version !== 'string' ||
         !/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(config.version)) return;
 
+    // Blocksy's default gallery otherwise clicks a captured thumbnail after a
+    // fixed 500ms, even when its lazy slider has not finished mounting. Delay
+    // only that native image operation; Woo still resolves price/stock/cart now.
+    function prepareGallery(form, product, cleanup, failed) {
+        const variations = $(form).data('product_variations');
+        if (!Array.isArray(variations) || !variations.length ||
+            !variations.every(item => item.blocksy_gallery_source === 'default')) return;
+        let active = true;
+        let sequence = 0;
+        let wrapper;
+        let original;
+        const pendingMounts = new WeakMap();
+        const attributes = () => JSON.stringify([...form.querySelectorAll('.variations select')]
+            .map(select => [select.name, select.value]));
+        const cancel = () => { sequence++; };
+        function manual(event) {
+            if (event.isTrusted && event.target.closest('.woocommerce-product-gallery')) cancel();
+        }
+        function install() {
+            if (!active || typeof $.fn.wc_variations_image_update !== 'function' ||
+                $.fn.wc_variations_image_update === wrapper) return;
+            original = $.fn.wc_variations_image_update;
+            const nativeUpdate = original;
+            wrapper = function (variation) {
+                if (!active || this[0] !== form) return nativeUpdate.apply(this, arguments);
+                const generation = ++sequence;
+                const slider = product.querySelector('.woocommerce-product-gallery .flexy-container');
+                const context = this;
+                const args = arguments;
+                const chosen = attributes();
+                const expectedId = variation && variation.variation_id ? String(variation.variation_id) : '';
+                const current = () => active && generation === sequence && form.isConnected &&
+                    slider && slider.isConnected &&
+                    product.querySelector('.woocommerce-product-gallery .flexy-container') === slider &&
+                    attributes() === chosen;
+                function applyNative() {
+                    const result = nativeUpdate.apply(context, args);
+                    if (!expectedId || !slider || !window.requestAnimationFrame) return result;
+                    // Native same-image short-circuiting can leave a manually
+                    // chosen slide visible. Reconcile once after native commit,
+                    // using fresh nodes; a subsequent manual action always wins.
+                    window.requestAnimationFrame(() => {
+                        if (!current() || !slider.flexy) return;
+                        const nativeId = form.querySelector('input[name="variation_id"], input.variation_id');
+                        if (!nativeId || nativeId.value !== expectedId) return;
+                        const image = variation.image && variation.image.src ? variation.image : variation.blocksy_original_image;
+                        if (!image) return;
+                        const normalized = value => {
+                            try { return value ? new URL(value, document.baseURI).href : ''; } catch (_) { return ''; }
+                        };
+                        const urls = [image.src, image.full_src].map(normalized).filter(Boolean);
+                        const items = slider.querySelector('.flexy-items');
+                        const pills = slider.querySelector('.flexy-pills > ol');
+                        if (!urls.length || !items || !pills) return;
+                        const matches = [...items.children].map((item, index) => {
+                            const img = item.querySelector('img:not(.zoomImg)');
+                            return img && [img.getAttribute('src'), img.currentSrc,
+                                img.parentElement.getAttribute('data-src')].map(normalized)
+                                .some(url => urls.includes(url)) ? index : -1;
+                        }).filter(index => index >= 0);
+                        if (matches.length !== 1) return;
+                        const pill = pills.children[matches[0]];
+                        if (pill && !pill.classList.contains('active')) pill.click();
+                    });
+                    return result;
+                }
+                if (!slider || slider.flexy || !String(slider.dataset.flexy || '').includes('no') ||
+                    typeof slider.forcedMount !== 'function') return applyNative();
+                let mounted = pendingMounts.get(slider);
+                if (!mounted) {
+                    mounted = Promise.resolve().then(() => slider.forcedMount());
+                    pendingMounts.set(slider, mounted);
+                }
+                mounted.then(() => {
+                    if (!current()) return;
+                    const nativeId = form.querySelector('input[name="variation_id"], input.variation_id');
+                    if (expectedId && (!nativeId || nativeId.value !== expectedId)) return;
+                    if (!slider.flexy || String(slider.dataset.flexy || '').includes('no')) return failed();
+                    applyNative();
+                }).catch(() => { if (active && generation === sequence) failed(); });
+                return this;
+            };
+            $.fn.wc_variations_image_update = wrapper;
+        }
+        // This Woo event runs before image resolution, including initial
+        // defaults. Reinstall if Blocksy loaded its own handler lazily since then.
+        $(form).on('woocommerce_update_variation_values.bactiveGallery', install);
+        $(form).on('reset_data.bactiveGallery', cancel);
+        ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(name =>
+            product.addEventListener(name, manual, true));
+        install();
+        cleanup.push(() => {
+            active = false; cancel();
+            $(form).off('.bactiveGallery');
+            ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(name =>
+                product.removeEventListener(name, manual, true));
+            if ($.fn.wc_variations_image_update === wrapper) $.fn.wc_variations_image_update = original;
+        });
+    }
+
     function enhance(form) {
         if (form.dataset.bactiveSelectors || Number(form.dataset.product_id) !== config.productId) return;
         const selects = [...form.querySelectorAll('.variations select')].filter(select =>
@@ -131,6 +231,7 @@
             // existing thumbnail click targets equivalent keyboard operation.
             const product = form.closest('.product');
             if (product) {
+                prepareGallery(form, product, layoutCleanup, restore);
                 const original = new Map();
                 const attributes = ['role', 'tabindex', 'aria-pressed'];
                 function thumbnails() {

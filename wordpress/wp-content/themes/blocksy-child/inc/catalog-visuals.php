@@ -110,9 +110,29 @@ add_filter( 'body_class', 'bactive_catalog_body_classes' );
 
 /** Serve the existing original in the large gallery; thumbnail strips stay small. */
 function bactive_catalog_gallery_originals( $html ) {
-    if ( ! function_exists( 'is_product' ) || ! is_product()
-        || ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), get_queried_object_id() )
-        || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+    $product_id = function_exists( 'is_product' ) && is_product() ? get_queried_object_id() : 0;
+    // Blocksy's native Reset endpoint renders a fresh gallery outside a product query.
+    if ( ! $product_id && function_exists( 'wp_doing_ajax' ) && wp_doing_ajax()
+        && function_exists( 'doing_action' )
+        && ( doing_action( 'wp_ajax_blocksy_get_product_view_for_variation' )
+            || doing_action( 'wp_ajax_nopriv_blocksy_get_product_view_for_variation' ) ) ) {
+        $requested_id = $_GET['product_id'] ?? null;
+        $validated_id = is_string( $requested_id ) && preg_match( '/\A[1-9][0-9]*\z/', $requested_id )
+            ? filter_var( $requested_id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) ) : false;
+        $product = $validated_id ? wc_get_product( $validated_id ) : false;
+        if ( $product && 'publish' === $product->get_status() && $product->is_type( 'variable' ) ) {
+            $product_id = $product->get_id();
+        }
+    }
+    if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product_id ) ) {
+        return $html;
+    }
+    return bactive_catalog_normalize_gallery_originals( $html );
+}
+
+/** Reuse for server-loaded Blocksy galleries, where is_product() is false. */
+function bactive_catalog_normalize_gallery_originals( $html ) {
+    if ( ! is_string( $html ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
         return $html;
     }
     $tags = new WP_HTML_Tag_Processor( $html );
@@ -141,6 +161,10 @@ add_filter( 'woocommerce_single_product_image_thumbnail_html', 'bactive_catalog_
 function bactive_catalog_variation_original( $data, $product ) {
     if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product->get_id() ) ) {
         return $data;
+    }
+    // The product object supplies the release gate even during native AJAX lookups.
+    if ( isset( $data['blocksy_gallery_html'] ) && is_string( $data['blocksy_gallery_html'] ) ) {
+        $data['blocksy_gallery_html'] = bactive_catalog_normalize_gallery_originals( $data['blocksy_gallery_html'] );
     }
     // Blocksy restores its separate original payload when returning to a gallery slide.
     foreach ( array( 'image', 'blocksy_original_image' ) as $key ) {

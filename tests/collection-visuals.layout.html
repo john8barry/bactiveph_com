@@ -11,7 +11,7 @@
 </style>
 <h1>Collection card row regression fixture</h1>
 <p>Synthetic content, not catalogue data. The native Blocksy type-2 card structure and shipped CSS/font files are used. Each frame has its own viewport; browser settings are unchanged.</p>
-<p>Serve the repository locally and open this file. All results must pass. Add <code>?baseline</code> to restore the previous flex/auto-margin behavior and demonstrate the regression.</p>
+<p>Serve the repository locally and open this file. All results must pass. Add <code>?baseline</code> to simulate the previous flex/auto-margin behavior and demonstrate the regression; this diagnostic is not a full release snapshot.</p>
 <output id="results">Running…</output>
 <main id="frames"></main>
 <script>
@@ -94,7 +94,7 @@ for (const configuration of configurations) {
     document.getElementById('results').textContent = JSON.stringify({baseline, complete: results.length === configurations.length, passed: results.filter(result => result.pass).length, total: configurations.length, results}, null, 2);
   };
   frame.srcdoc = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${sheets}
-    <style>body {margin:0;padding:24px;} .products {margin:0; padding:0; list-style:none;} .ct-media-container img {display:block;} ${baseline ? '.products > .product.bactive-collection-product {display:flex;grid-row:auto;} .products .bactive-collection-product .ct-woo-card-actions {margin-top:auto;}' : ''}</style>
+    <style>body {margin:0;padding:24px;} .products {margin:0; padding:0; list-style:none;} .ct-media-container img {display:block;} ${baseline ? '.products > .product.bactive-collection-product {display:flex !important;grid-row:auto !important;} .products .bactive-collection-product .ct-woo-card-actions {margin-top:auto;}' : ''}</style>
     <body><main class="woocommerce"><ul class="products columns-4" data-products="type-2">${cases.map((entry, index) => card(entry, index, configuration.mode)).join('')}</ul></main></body></html>`;
   document.getElementById('frames').append(heading, frame);
 }

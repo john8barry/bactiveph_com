@@ -1,6 +1,6 @@
 # Maxim local-delivery footer update
 
-Status: staging deployed; production held at browser-verification gate.
+Status: staging files deployed; production held for stale staging rendering.
 Owner: B Active footer task.
 Work record: https://github.com/john8barry/bactiveph_com/issues/90.
 John approved this scoped production release on 2026-09-14.
@@ -55,21 +55,40 @@ Deployed SHA-256:
 - maxim.svg: c814e226371c46655278aad47514b6c9d93ff7b0b53b589988a09967b68c3a00
 - trust-bar.php: b8a93c633de5f392bb4b9811715ab9d9e141367328da9817d8e9d0ae7d7f00a1
 
-Direct staging GET returned 200 and v7, but browser navigation intermittently
-timed out or received Cloudflare 522 across Chromium, installed Chrome and the
-in-app browser. Subsequent direct GETs recovered to 200. Browser acceptance is
-not established; production remains unchanged (Maxim absent, v6 template hash
+Initial direct staging GET returned 200 and v7, while browser navigation
+intermittently timed out or received Cloudflare 522. Later browser evidence
+showed old v5 content despite exact deployed v7 file hashes. Browser acceptance
+has failed: ordinary HTTPS still renders stale content after both native
+`wp litespeed-purge all` (reported success) and origin-loopback HTTP PURGE on
+`/`, `/shop/` and `/shipping-returns/` (200 responses). Direct-origin HTTPS PURGE
+using the verified DNS address failed certificate verification (curl exit 51);
+no TLS bypass was attempted. The precise stale cache/PHP-rendering layer remains
+unresolved. Read-only Cloudflare DNS inspection confirmed both sites use the
+same single A record address; no DNS or configuration writes were made.
+
+Production remains unchanged (Maxim absent, v6 template hash
 18fe403de1ea0e2004ece45c90b3d195bc55749a8efb2a04598fb441df71967b).
+Final authenticated production readback preserved protected hashes and confirmed
+backup completion. Its log grew 324 bytes during backup/verification: two
+uninvestigated warnings, zero fatal/parse/uncaught events. Staging had zero new
+log bytes. This is not an all-logs-clean claim.
 
 Commit f06ac4da56b7ed49dae9d4f05a0b0c09f03245ca was pushed and independently
-read back through existing github-john8barry SSH access. HTTPS GitHub credentials
-resolve to a non-collaborator, preventing PR creation; browser GitHub recovery
-also timed out. No direct main push or security/approval bypass was attempted.
-Resume with staging browser acceptance, qualified current backup/drift checks,
-PR/check completion and the already-approved narrow live deployment. No new
-production approval is needed unless scope changes.
+read back through existing github-john8barry SSH access. The GitHub API auth gap
+was resolved through an existing isolated project GH_CONFIG_DIR; john8barry
+identity and repository write permissions were independently verified without
+global authentication changes. PR https://github.com/john8barry/bactiveph_com/pull/91
+is open and mergeable. No required status checks, branch protection or rulesets
+were reported; merge is deliberately held at the failed staging acceptance gate.
+No direct main push or security/approval bypass was attempted.
+Resume by identifying and correcting the staging stale-rendering layer, then
+verify browser acceptance, qualified current backup/drift checks, exact-head PR
+state and the already-approved narrow live deployment. No new production approval
+is needed unless scope changes. Production has not been deployed.
 Independent release review reran both mirrors' seven scenarios and four negative
 fixtures, PHP lint, mirror equality and git whitespace checks successfully.
 Remote main still matches the base above; latest five workflow results succeeded.
-Security alert APIs were unavailable to the current credential. Existing unrelated
-security work remains tracked in issues #7 and #9; no project-wide clearance claim.
+Recovered API access verified 19 open dependency alerts (10 high, 8 medium,
+1 low) and zero open secret-scanning alerts. Code scanning remained unavailable
+(no analysis found). Existing unrelated security work remains tracked in issues
+#7 and #9; no project-wide clearance claim.

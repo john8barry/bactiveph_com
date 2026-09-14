@@ -108,6 +108,66 @@ function bactive_catalog_body_classes( $classes ) {
 }
 add_filter( 'body_class', 'bactive_catalog_body_classes' );
 
+/** Private option only; disabled when absent. No attachment or inventory writes. */
+function bactive_catalog_derivative_source( $source, $product_id ) {
+    $config = get_option( 'bactive_catalog_lossless_release', array() );
+    if ( ! is_string( $source ) || ! is_int( $product_id )
+        || ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product_id )
+        || true !== ( bactive_catalog_visuals_entry( bactive_catalog_visuals_registry(), $product_id )['reviewed'] ?? false )
+        || ! is_array( $config ) || 1 !== ( $config['schema_version'] ?? null )
+        || true !== ( $config['enabled'] ?? false )
+        || ! is_array( $config['product_ids'] ?? null )
+        || ! in_array( $product_id, $config['product_ids'], true )
+        || ! is_array( $config['assets'] ?? null ) || count( $config['assets'] ) > 64 ) { return $source; }
+    $uploads = wp_upload_dir( null, false );
+    if ( ! empty( $uploads['error'] ) || ! is_string( $uploads['basedir'] ?? null )
+        || ! is_string( $uploads['baseurl'] ?? null ) ) { return $source; }
+    $scheme = parse_url( $uploads['baseurl'], PHP_URL_SCHEME );
+    // The isolated local WordPress instance uses loopback HTTP; production requires HTTPS.
+    $local = function_exists( 'wp_get_environment_type' ) && 'local' === wp_get_environment_type()
+        && in_array( parse_url( $uploads['baseurl'], PHP_URL_HOST ), array( '127.0.0.1', 'localhost', '[::1]' ), true );
+    if ( 'https' !== $scheme && ! ( 'http' === $scheme && $local ) ) { return $source; }
+    $root = realpath( $uploads['basedir'] );
+    if ( ! $root || $root !== $uploads['basedir'] || is_link( $root ) ) { return $source; }
+    foreach ( $config['assets'] as $asset ) {
+        if ( ! is_array( $asset ) || ! is_int( $asset['attachment_id'] ?? null ) || $asset['attachment_id'] < 1
+            || ! is_array( $asset['product_ids'] ?? null ) || ! in_array( $product_id, $asset['product_ids'], true )
+            || ! is_string( $asset['source_sha256'] ?? null ) || ! preg_match( '/\A[a-f0-9]{64}\z/', $asset['source_sha256'] )
+            || ! is_string( $asset['output_sha256'] ?? null ) || ! preg_match( '/\A[a-f0-9]{64}\z/', $asset['output_sha256'] )
+            || ! is_int( $asset['width'] ?? null ) || $asset['width'] < 1
+            || ! is_int( $asset['height'] ?? null ) || $asset['height'] < 1 ) { continue; }
+        $id = $asset['attachment_id'];
+        if ( wp_get_attachment_url( $id ) !== $source ) { continue; }
+        $original = get_attached_file( $id );
+        $relative = '/bactive-lossless/' . $asset['source_sha256'] . '.webp';
+        $output = $root . $relative;
+        foreach ( array( $original, $output ) as $path ) {
+            if ( ! is_string( $path ) || ! is_file( $path ) || ! is_readable( $path ) || is_link( $path )
+                || realpath( $path ) !== $path || 0 !== strpos( $path, $root . '/' ) ) { return $source; }
+        }
+        // Request-local memo only. New requests always rehash both sources. Stat identity
+        // revalidation catches ordinary replacement during a request; release files are immutable.
+        clearstatcache( true, $original ); clearstatcache( true, $output );
+        $fields = array_flip( array( 'dev', 'ino', 'mode', 'size', 'mtime', 'ctime' ) );
+        $source_stat = @stat( $original ); $output_stat = @stat( $output );
+        if ( ! $source_stat || ! $output_stat ) { return $source; }
+        $key = hash( 'sha256', serialize( array( $asset, array_intersect_key( $source_stat, $fields ), array_intersect_key( $output_stat, $fields ) ) ) );
+        static $checked = array();
+        if ( ! array_key_exists( $key, $checked ) ) {
+            $a = @getimagesize( $original ); $b = @getimagesize( $output );
+            $source_hash = @hash_file( 'sha256', $original ); $output_hash = @hash_file( 'sha256', $output );
+            $checked[ $key ] = is_string( $source_hash ) && is_string( $output_hash )
+                && hash_equals( $asset['source_sha256'], $source_hash )
+                && hash_equals( $asset['output_sha256'], $output_hash )
+                && $a && $b && 'image/webp' === ( $b['mime'] ?? '' )
+                && $a[0] === $asset['width'] && $a[1] === $asset['height']
+                && $b[0] === $asset['width'] && $b[1] === $asset['height'];
+        }
+        return $checked[ $key ] ? rtrim( $uploads['baseurl'], '/' ) . $relative : $source;
+    }
+    return $source;
+}
+
 /** Serve the existing original in the large gallery; thumbnail strips stay small. */
 function bactive_catalog_gallery_originals( $html ) {
     $product_id = function_exists( 'is_product' ) && is_product() ? get_queried_object_id() : 0;
@@ -127,11 +187,11 @@ function bactive_catalog_gallery_originals( $html ) {
     if ( ! bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), $product_id ) ) {
         return $html;
     }
-    return bactive_catalog_normalize_gallery_originals( $html );
+    return bactive_catalog_normalize_gallery_originals( $html, $product_id );
 }
 
 /** Reuse for server-loaded Blocksy galleries, where is_product() is false. */
-function bactive_catalog_normalize_gallery_originals( $html ) {
+function bactive_catalog_normalize_gallery_originals( $html, $product_id = 0 ) {
     if ( ! is_string( $html ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
         return $html;
     }
@@ -140,6 +200,19 @@ function bactive_catalog_normalize_gallery_originals( $html ) {
     while ( $tags->next_tag( array( 'tag_closers' => 'visit' ) ) ) {
         if ( 'FIGURE' === $tags->get_tag() ) {
             $original = $tags->is_tag_closer() ? null : $tags->get_attribute( 'data-src' );
+            if ( is_string( $original ) ) {
+                $resolved = bactive_catalog_derivative_source( $original, $product_id );
+                if ( $resolved !== $original ) { $tags->set_attribute( 'data-src', $resolved ); }
+                $original = $resolved;
+            }
+        }
+        // Native Woo's full-size anchor must agree with its img data-large_image.
+        if ( 'A' === $tags->get_tag() && ! $tags->is_tag_closer() ) {
+            $href = $tags->get_attribute( 'href' );
+            if ( is_string( $href ) ) {
+                $resolved = bactive_catalog_derivative_source( $href, $product_id );
+                if ( $resolved !== $href ) { $tags->set_attribute( 'href', $resolved ); }
+            }
         }
         if ( 'IMG' !== $tags->get_tag() ) {
             continue;
@@ -148,6 +221,13 @@ function bactive_catalog_normalize_gallery_originals( $html ) {
         $src = $original ?: $tags->get_attribute( 'data-large_image' );
         if ( ! is_string( $src ) || ! preg_match( '~\Ahttps?://~i', $src ) ) {
             continue;
+        }
+        $src = bactive_catalog_derivative_source( $src, $product_id );
+        foreach ( array( 'data-large_image', 'data-src' ) as $attribute ) {
+            $value = $tags->get_attribute( $attribute );
+            if ( is_string( $value ) ) {
+                $tags->set_attribute( $attribute, bactive_catalog_derivative_source( $value, $product_id ) );
+            }
         }
         $tags->set_attribute( 'src', $src );
         $tags->remove_attribute( 'srcset' );
@@ -164,7 +244,7 @@ function bactive_catalog_variation_original( $data, $product ) {
     }
     // The product object supplies the release gate even during native AJAX lookups.
     if ( isset( $data['blocksy_gallery_html'] ) && is_string( $data['blocksy_gallery_html'] ) ) {
-        $data['blocksy_gallery_html'] = bactive_catalog_normalize_gallery_originals( $data['blocksy_gallery_html'] );
+        $data['blocksy_gallery_html'] = bactive_catalog_normalize_gallery_originals( $data['blocksy_gallery_html'], $product->get_id() );
     }
     // Blocksy restores its separate original payload when returning to a gallery slide.
     foreach ( array( 'image', 'blocksy_original_image' ) as $key ) {
@@ -176,7 +256,12 @@ function bactive_catalog_variation_original( $data, $product ) {
             || ! is_int( $image['full_src_h'] ?? null ) || $image['full_src_h'] < 1 ) {
             continue;
         }
-        $data[ $key ]['src'] = $image['full_src'];
+        $full = bactive_catalog_derivative_source( $image['full_src'], $product->get_id() );
+        $data[ $key ]['full_src'] = $full;
+        if ( isset( $image['url'] ) && $image['url'] === $image['full_src'] ) {
+            $data[ $key ]['url'] = $full;
+        }
+        $data[ $key ]['src'] = $full;
         $data[ $key ]['src_w'] = $image['full_src_w'];
         $data[ $key ]['src_h'] = $image['full_src_h'];
         $data[ $key ]['srcset'] = '';

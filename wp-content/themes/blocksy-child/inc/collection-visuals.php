@@ -29,6 +29,12 @@ function bactive_collection_styles() {
 	if ( true !== ( $config['enabled'] ?? false ) && true !== ( $config['editorial']['enabled'] ?? false ) ) {
 		return;
 	}
+	if ( true === ( $config['enabled'] ?? false ) && function_exists( 'is_product' ) && is_product() ) {
+		$script = '/assets/js/collection-visuals.js';
+		if ( is_readable( get_stylesheet_directory() . $script ) ) {
+			wp_enqueue_script( 'bactive-collection-previews', get_stylesheet_directory_uri() . $script, array(), filemtime( get_stylesheet_directory() . $script ), true );
+		}
+	}
 	$relative = '/assets/css/collection-visuals.css';
 	$path = get_stylesheet_directory() . $relative;
 	if ( is_readable( $path ) ) {
@@ -65,6 +71,25 @@ function bactive_editorial_shortcode() {
 }
 add_shortcode( 'bactive_editorial', 'bactive_editorial_shortcode' );
 
+/** Exact colour-only preview. Ambiguous or missing variation images keep the link. */
+function bactive_collection_preview_image( $product, $taxonomy, $slug ) {
+	if ( ! function_exists( 'wc_get_loop_prop' ) || 'related' !== wc_get_loop_prop( 'name' ) ) { return ''; }
+	$images = array();
+	foreach ( $product->get_children() as $id ) {
+		$variation = wc_get_product( $id );
+		if ( ! $variation instanceof WC_Product_Variation || $variation->get_parent_id() !== $product->get_id() || 'publish' !== $variation->get_status() ) { continue; }
+		$attributes = $variation->get_attributes();
+		if ( empty( $attributes[ $taxonomy ] ) ) { return ''; }
+		if ( ( $attributes[ $taxonomy ] ?? null ) !== $slug ) { continue; }
+		$image_id = $variation->get_image_id( 'edit' );
+		if ( ! $image_id ) { return ''; }
+		$image = wp_get_attachment_image_src( $image_id, 'large' );
+		if ( ! $image || empty( $image[0] ) || empty( $image[1] ) || empty( $image[2] ) ) { return ''; }
+		$images[ $image_id ] = $image[0];
+	}
+	return 1 === count( $images ) ? (string) reset( $images ) : '';
+}
+
 /** Add approved, named previews after native card content; never changes cart actions. */
 function bactive_collection_colour_previews() {
 	global $product;
@@ -86,7 +111,9 @@ function bactive_collection_colour_previews() {
 				|| ! in_array( $slug, $attributes[ $taxonomy ] ?? array(), true ) ) { continue; }
 			$term = get_term_by( 'slug', $slug, $taxonomy );
 			if ( ! $term || is_wp_error( $term ) ) { continue; }
-			$links[] = '<a class="bactive-colour-preview" href="' . esc_url( add_query_arg( $attribute, $slug, $product->get_permalink() ) ) . '"><span class="bactive-colour-dot" style="--bactive-preview:' . esc_attr( $hex ) . '" aria-hidden="true"></span><span>' . esc_html( $term->name ) . '</span></a>';
+			$preview = bactive_collection_preview_image( $product, $taxonomy, $slug );
+			$preview_attribute = $preview ? ' data-preview-src="' . esc_url( $preview ) . '"' : '';
+			$links[] = '<a class="bactive-colour-preview"' . $preview_attribute . ' href="' . esc_url( add_query_arg( $attribute, $slug, $product->get_permalink() ) ) . '"><span class="bactive-colour-dot" style="--bactive-preview:' . esc_attr( $hex ) . '" aria-hidden="true"></span><span>' . esc_html( $term->name ) . '</span></a>';
 		}
 	}
 	if ( $links ) { echo '<div class="bactive-colour-previews" aria-label="' . esc_attr__( 'Product colours', 'blocksy-child' ) . '">' . implode( '', $links ) . '</div>'; }

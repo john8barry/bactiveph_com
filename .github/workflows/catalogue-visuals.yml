@@ -38,7 +38,7 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/tests/catalogue-runtime/node_modules
         run: |
-          node --test tests/catalog-visuals.test.cjs
+          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs
           php tests/catalog-visuals.php
           php tests/collection-visuals.php
           python3 -m unittest discover -s tests -p 'test_catalog*.py' -v
@@ -51,3 +51,5 @@ jobs:
           done
           node --check wordpress/wp-content/themes/blocksy-child/assets/js/catalog-visuals.js
           cmp wordpress/wp-content/themes/blocksy-child/assets/js/catalog-visuals.js wp-content/themes/blocksy-child/assets/js/catalog-visuals.js
+          node --check wordpress/wp-content/themes/blocksy-child/assets/js/collection-visuals.js
+          cmp wordpress/wp-content/themes/blocksy-child/assets/js/collection-visuals.js wp-content/themes/blocksy-child/assets/js/collection-visuals.js

@@ -32,6 +32,7 @@ foreach (['class-wp-html-attribute-token','class-wp-html-text-replacement','clas
  require __DIR__.'/../wordpress/wp-includes/html-api/'.$file.'.php';
 }
 class WC_Product {
+ public function get_children() { return [1,2]; }
  public function get_id() { return 36; }
  public function is_type($t) { return $t==='variable'; }
  public function get_variation_attributes() { return ['pa_colour'=>['white']]; }
@@ -92,3 +93,25 @@ check([]===bactive_collection_product_classes([],$product),'Collection off prese
 $release['enabled']=true; $product_page=false;
 check([]===bactive_collection_product_classes([],$product),'Non-product page unchanged');
 echo "Mixed related cards preserve independent release gates: PASS\n";
+
+class WC_Product_Variation {
+ public function __construct(public $image=11, public $colour='white',public $parent=36) {}
+ public function get_status(){return 'publish';}
+ public function get_parent_id(){return $this->parent;}
+ public function get_attributes(){return ['pa_colour'=>$this->colour];}
+ public function get_image_id($context){check($context==='edit','No parent-image inheritance');return $this->image;}
+}
+$test_variations=[1=>new WC_Product_Variation(),2=>new WC_Product_Variation()];
+function wc_get_product($id){global $test_variations;return $test_variations[$id]??null;}
+function wp_get_attachment_image_src($id,$size){return ['https://bactiveph.com/'.$id.'.jpg',800,1200];}
+$loop_name='related';
+check(bactive_collection_preview_image($product,'pa_colour','white')==='https://bactiveph.com/11.jpg','Same exact colour image previews');
+$test_variations[2]->image=12;
+check(bactive_collection_preview_image($product,'pa_colour','white')==='','Ambiguous images preserve links');
+$test_variations[2]->image=0;
+check(bactive_collection_preview_image($product,'pa_colour','white')==='','Missing images preserve links');
+$test_variations[2]->colour='';
+check(bactive_collection_preview_image($product,'pa_colour','white')==='','Wildcard colour preserves links');
+$loop_name='upsells';
+check(bactive_collection_preview_image($product,'pa_colour','white')==='','Only related loops preview');
+echo "Related colour image ambiguity and scope guards: PASS\n";

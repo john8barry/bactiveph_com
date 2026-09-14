@@ -70,3 +70,12 @@ Fresh Strappy Bra immediate resizing tests passed in both directions after settl
 ## Image performance follow-up
 
 A bounded public asset audit confirmed full source URLs/dimensions and no scaled gallery srcsets on the five live enhanced products. Flow originals total about 133 KB. Some other accepted PNGs are 1.61–2.30 MB each; potential unique originals total about 4.48 MB for Courtline, 1.65 MB Serve, 6.87 MB Elite and 2.30 MB Varsity. These are potential asset totals, not measured browser transfers or Core Web Vitals. First gallery images retain lazy loading without explicit fetch priority. Follow-up: produce reviewed optimized derivatives at the same dimensions while retaining masters, and assess first-image loading priority. Do not reduce gallery resolution to the former 600-pixel variants. This optimization remains unfinished.
+
+
+## Server-loaded gallery correction
+
+Court Skort has37 variations and uses native WooCommerce AJAX selection. Blocksy rebuilds its gallery outside the product-page query, so the existing original-image filter missed the returned gallery and its separate Reset endpoint. The candidate reuses the original-image normalizer for the released product object and for the exact native Reset actions with a validated published variable product. Thumbnail strips remain unchanged; held products and unrelated AJAX actions remain untouched. No new endpoint is introduced.
+
+All37 native Court variation responses passed against the isolated WordPress instance, with allnine gallery figures using original sources and all other payload fields unchanged. Reset, reselect and thumbnail checks passed on desktop and375px mobile without overflow. The new integration test requires the isolated37-variation fixture; it is not a production test or part of generic CI. Existing PHP contracts and nine selector tests passed; independent code review passed. The correction is not live at this record point. It requires a fresh encrypted file backup and conditional one-file rollback before deployment.
+
+First-batch monitoring completed13:58:23–14:18:33 UTC:75 checks over1,209.44seconds, zero failures. Elite95, Varsity111 and Serve89 remain live; next-day checks and image-delivery optimization remain pending. The next batch36/50/83 was activated after this PASS using its encrypted option backup and exact predecessor comparison. Live cart/browser checks and its20-minute monitor are underway.

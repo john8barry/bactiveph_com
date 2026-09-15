@@ -76,7 +76,7 @@
                     // chosen slide visible. Reconcile once after native movement
                     // settles: a second pill click mid-animation can change
                     // Flexy's wraparound destination. Manual browsing wins.
-                    const reconcile = () => {
+                    const reconcile = (allowCorrection = true) => {
                         if (!current() || !slider.flexy) return;
                         const nativeId = form.querySelector('input[name="variation_id"], input.variation_id');
                         if (!nativeId || nativeId.value !== expectedId) return;
@@ -103,8 +103,12 @@
                         // A resize can leave the pill active while its photo is
                         // outside the viewport. Inspect settled native geometry;
                         // ignore hidden/unmeasurable galleries and subpixel drift.
-                        const misplaced = viewport && viewport.width > 0 && target.width > 0 &&
-                            Math.abs(target.left - viewport.left) > 1;
+                        const measurable = viewport && viewport.width > 0 && target.width > 0;
+                        const misplaced = measurable && Math.abs(target.left - viewport.left) > 1;
+                        // Native resize can leave its movement flag set after the
+                        // correct photo has settled. At the failure deadline,
+                        // accept only a measured match; never click on timeout.
+                        if (!allowCorrection) return Boolean(measurable && !misplaced);
                         if (pill && (!pill.classList.contains('active') || misplaced)) pill.click();
                     };
                     // Native pill clicks commit through a zero-delay task. Queue
@@ -116,7 +120,7 @@
                             if (!current()) return;
                             awaitGalleryState(slider, () => !slider.hasAttribute('data-flexy-moving'),
                                 'data-flexy-moving', 'Gallery did not settle')
-                                .then(reconcile).catch(() => { if (current()) failed(); });
+                                .then(reconcile).catch(() => { if (current() && !reconcile(false)) failed(); });
                         });
                     }, 0);
                     return result;

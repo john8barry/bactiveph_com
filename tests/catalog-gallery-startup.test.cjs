@@ -750,3 +750,110 @@ test('native motion that never settles has a bounded deadline and no late correc
         assert.deepEqual(f.clicked, [2]); f.intact();
     } finally { f.close(); }
 });
+
+
+// Model the observed deadline boundary: the native movement attribute remains
+// set, while measured image position may already be correct. This does not
+// simulate the cause of the stuck native flag or replace browser verification.
+function deadlineGeometry(f, {viewWidth = 300, imageWidth = 300, offset = 0, index = 0} = {}) {
+    f.slider.querySelector('.flexy-view').getBoundingClientRect = () => ({left: 100, width: viewWidth});
+    f.slider.querySelector('.flexy-items').children[index].getBoundingClientRect = () =>
+        ({left: 100 + offset, width: imageWidth});
+}
+
+test('native movement deadline accepts a uniquely matched visible photo without another click', async () => {
+    for (const offset of [0, 0.5, 1]) {
+        const f = await pendingMotionCorrection();
+        try {
+            deadlineGeometry(f, {offset});
+            await f.tick(4900);
+            assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+            await f.tick(200);
+            assert.equal(f.slider.hasAttribute('data-flexy-moving'), true, 'the child must not rewrite the native movement flag');
+            assert.equal(f.form.dataset.bactiveSelectors, 'ready', `visible photo at ${offset}px must retain enhanced controls`);
+            assert.equal(f.id(), '125');
+            assert.equal(f.form.querySelector('[name=attribute_pa_colour]').value, 'white');
+            assert.equal(f.form.querySelector('[name=attribute_pa_size]').value, 'l');
+            assert.match(f.form.querySelector('.single_variation').textContent, /Native 125/);
+            assert.deepEqual(f.clicked, [2], 'acceptance at the failure deadline cannot send a corrective click');
+            f.slider.removeAttribute('data-flexy-moving'); await f.tick(100);
+            assert.deepEqual(f.clicked, [2], 'the completed deadline waiter cannot replay on a later native attribute change');
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('native movement deadline still fails closed for wrong, hidden, ambiguous or mismatched photos', async () => {
+    const cases = [
+        {name: 'misplaced photo', geometry: {offset: 1.5}},
+        {name: 'hidden viewport', geometry: {viewWidth: 0}},
+        {name: 'unmeasurable image', geometry: {imageWidth: 0}},
+        {name: 'ambiguous image', mutate(f) {
+            f.slider.querySelector('.flexy-items').children[1].querySelector('img').src = f.variations[0].image.src;
+        }},
+        {name: 'missing matching image', mutate(f) {
+            const figure = f.slider.querySelector('.flexy-items').firstElementChild.querySelector('figure');
+            figure.querySelector('img').src = 'https://example.test/other.jpg';
+            figure.dataset.src = 'https://example.test/other.jpg';
+        }},
+        {name: 'different native variation ID', mutate(f) {
+            f.form.querySelector('[name=variation_id]').value = '127';
+        }}
+    ];
+    for (const sample of cases) {
+        const f = await pendingMotionCorrection();
+        try {
+            deadlineGeometry(f, sample.geometry);
+            sample.mutate?.(f);
+            await f.tick(5100);
+            assert.equal(f.form.dataset.bactiveSelectors, 'fallback', sample.name);
+            assert.ok([...f.form.querySelectorAll('.variations select')].every(select => !select.hidden), sample.name);
+            assert.deepEqual(f.clicked, [2], `${sample.name}: timeout cannot send a corrective click`);
+            f.slider.removeAttribute('data-flexy-moving'); await f.tick(100);
+            assert.deepEqual(f.clicked, [2], `${sample.name}: no late correction after fallback`);
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('a newer selected photo survives an older movement deadline without stale fallback or replay', async () => {
+    const f = await pendingMotionCorrection();
+    try {
+        // Keep the old White target out of position so accepting it would be a
+        // false pass. Only the current Navy photo has valid aligned geometry.
+        deadlineGeometry(f, {offset: 50});
+        await f.tick(100);
+        f.choose('navy'); await f.tick(30);
+        deadlineGeometry(f, {index: 2});
+        assert.equal(f.id(), '127');
+        const clicksAfterNativeSelection = [...f.clicked];
+        await f.tick(5100);
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        assert.equal(f.id(), '127');
+        assert.equal(f.form.querySelector('[name=attribute_pa_colour]').value, 'navy');
+        assert.deepEqual(f.clicked, clicksAfterNativeSelection, 'old White timeout cannot click or collapse the current selection');
+        f.slider.removeAttribute('data-flexy-moving'); await f.tick(100);
+        assert.deepEqual(f.clicked, clicksAfterNativeSelection); f.intact();
+    } finally { f.close(); }
+});
+
+test('manual intent, Reset, fallback, removal and a changed tuple make an old movement deadline inert', async () => {
+    for (const cancellation of ['manual', 'reset', 'fallback', 'remove', 'tuple']) {
+        const f = await pendingMotionCorrection();
+        try {
+            deadlineGeometry(f, {offset: 50});
+            if (cancellation === 'manual') f.manual();
+            if (cancellation === 'reset') f.reset();
+            if (cancellation === 'fallback') f.form.querySelector('.bactive-selector-fallback').click();
+            if (cancellation === 'remove') f.product.remove();
+            if (cancellation === 'tuple') f.form.querySelector('[name=attribute_pa_size]').value = '';
+            await f.tick(30);
+            const clicksAfterCancellation = [...f.clicked];
+            await f.tick(5100);
+            assert.equal(f.form.dataset.bactiveSelectors, cancellation === 'fallback' ? 'fallback' : 'ready', cancellation);
+            assert.deepEqual(f.clicked, clicksAfterCancellation, `${cancellation}: timeout cannot replay the old photo`);
+            f.slider.removeAttribute('data-flexy-moving'); await f.tick(100);
+            assert.deepEqual(f.clicked, clicksAfterCancellation); f.intact();
+        } finally { f.close(); }
+    }
+});

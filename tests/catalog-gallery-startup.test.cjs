@@ -34,25 +34,54 @@ const flush = async () => { await Promise.resolve(); await new Promise(setImmedi
 function clock(window) {
     let time = 0, id = 0;
     const tasks = new Map();
-    window.setTimeout = (callback, delay = 0, ...args) => {
+    let priorityFrames = 0, timerAfterFrame = false, alignFrames = false;
+    const schedule = (kind, callback, delay, args) => {
         const key = ++id;
-        tasks.set(key, {at: time + Math.max(0, Number(delay) || 0), callback, args});
+        tasks.set(key, {kind, at: time + Math.max(0, Number(delay) || 0), callback, args});
         return key;
     };
+    window.setTimeout = (callback, delay = 0, ...args) => schedule('timer', callback, delay, args);
     window.clearTimeout = key => tasks.delete(key);
-    window.requestAnimationFrame = callback => window.setTimeout(() => callback(time), 16);
+    window.requestAnimationFrame = callback => {
+        const next = alignFrames && [...tasks.values()].filter(task => task.kind === 'frame' && task.at > time)
+            .sort((a, b) => a.at - b.at)[0];
+        return schedule('frame', () => callback(time), next ? next.at - time : 16, []);
+    };
     window.cancelAnimationFrame = window.clearTimeout;
     return {
+        renderBeforeTimers(count) {
+            assert.ok(Number.isInteger(count) && count >= 1 && count <= 4);
+            priorityFrames = count; alignFrames = true;
+        },
         async tick(duration = 0) {
             const until = time + duration;
             await flush();
             let count = 0;
             while (true) {
-                const entry = [...tasks].filter(([, task]) => task.at <= until)
-                    .sort((a, b) => a[1].at - b[1].at || a[0] - b[0])[0];
+                const due = [...tasks].filter(([, task]) => task.at <= until)
+                    .sort((a, b) => a[1].at - b[1].at || a[0] - b[0]);
+                if (priorityFrames && !timerAfterFrame) {
+                    const frame = due.find(([, task]) => task.kind === 'frame');
+                    if (frame) {
+                        // A browser may render before an eligible zero-delay
+                        // timer. Deliver a whole rendering opportunity, then one
+                        // FIFO timer, without pretending RAF is a timer task.
+                        const callbacks = due.filter(([, task]) => task.kind === 'frame' && task.at === frame[1].at);
+                        time = Math.max(time, frame[1].at);
+                        for (const [key, task] of callbacks) {
+                            if (!tasks.has(key)) continue;
+                            assert.ok(++count < 2000, 'timer loop must remain bounded');
+                            tasks.delete(key); task.callback(...task.args); await flush();
+                        }
+                        priorityFrames--; timerAfterFrame = true;
+                        continue;
+                    }
+                }
+                const entry = (timerAfterFrame && due.find(([, task]) => task.kind === 'timer')) || due[0];
                 if (!entry) break;
+                timerAfterFrame = false;
                 assert.ok(++count < 2000, 'timer loop must remain bounded');
-                tasks.delete(entry[0]); time = entry[1].at;
+                tasks.delete(entry[0]); time = Math.max(time, entry[1].at);
                 entry[1].callback(...entry[1].args);
                 await flush();
             }
@@ -62,7 +91,7 @@ function clock(window) {
     };
 }
 
-async function fixture({patched = true, ajax = false, custom = false, defaults = false, offGallery = false, nativeFlexy = false, holdNativeFrame = false, initialItem = null} = {}) {
+async function fixture({patched = true, ajax = false, custom = false, defaults = false, offGallery = false, nativeFlexy = false, holdNativeFrame = false, initialItem = null, rally = false} = {}) {
     const dom = new JSDOM(`<div id="product-117" class="product type-product">
       <div class="woocommerce-product-gallery"><div class="ct-product-gallery-container"><div class="flexy-container" data-flexy="no">
         <div class="flexy"><div class="flexy-view"><div class="flexy-items"></div></div>
@@ -87,20 +116,42 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     w.ct_localizations = {ajax_url: 'https://example.test/wp-admin/admin-ajax.php'};
     $.fn.block = $.fn.unblock = function () { return this; };
     const form = w.document.querySelector('form'), $form = $(form), product = form.closest('.product');
+    if (rally) {
+        product.id = 'product-50'; form.dataset.product_id = '50'; w.bactiveCatalogVisuals.productId = 50;
+        form.querySelector('#colour').innerHTML = '<option value="">Choose</option><option value="beige">Beige</option><option value="mocha">Mocha</option><option value="navy-blue">Navy Blue</option>';
+        form.querySelector('#size').innerHTML = '<option value="">Choose</option><option value="m">M</option><option value="l">L</option><option value="xl">XL</option>';
+    }
     const gallery = product.querySelector('.woocommerce-product-gallery'), slider = gallery.querySelector('.flexy-container');
     const items = slider.querySelector('.flexy-items'), pills = slider.querySelector('.flexy-pills ol');
     const image = (name, id) => ({id, src: `https://example.test/${name}.jpg`, full_src: `https://example.test/${name}.jpg`, gallery_thumbnail_src: `https://example.test/${name}-thumb.jpg`, width: 1200, height: 1600, full_src_w: 1200, full_src_h: 1600, srcset: ''});
-    const images = [image('white', 543), image('red', 390), image('navy', 391)];
+    const images = rally ? [image('rally-navy-original', 607), image('rally-gray', 395), image('rally-mocha', 396), image('rally-beige', 397)] :
+        [image('white', 543), image('red', 390), image('navy', 391)];
+    if (rally) {
+        const hashes = ['5fa0a93a33c945656a8af9dfe84bd03ba64b034a43ac005fa253e82b6d133a61',
+            '85398b6dd3012a945dfdb031612b3a441c42d62f6de4844791e5b2c15a298d1d',
+            'a52857ccd72121f997cd36f1bcdc7e309e6fe020ecf817ce2f8a4eda32ec110e'];
+        images.slice(1).forEach((photo, index) => {
+            photo.src = photo.full_src = `https://example.test/lossless/${hashes[index]}.webp`;
+        });
+    }
     images.forEach((photo, index) => {
         items.insertAdjacentHTML('beforeend', `<div><figure class="ct-media-container" data-src="${photo.src}" data-width="1200" data-height="1600"><img src="${photo.src}" width="1200" height="1600"></figure></div>`);
         pills.insertAdjacentHTML('beforeend', `<li${index ? '' : ' class="active"'}><span aria-label="Slide ${index + 1}"><img src="${photo.gallery_thumbnail_src}"></span></li>`);
     });
-    const variations = ['white', 'jujube-red', 'navy'].map((colour, index) => ({
-        variation_id: 125 + index, attributes: {attribute_pa_colour: colour, attribute_pa_size: 'l'},
-        image_id: images[index].id, image: {...images[index]}, blocksy_original_image: {...images[0]},
+    // Rally's reviewed attachment 474 and fourth gallery attachment 397 have
+    // identical source bytes, hence the same lossless URL despite distinct IDs.
+    const rows = rally ? [
+        {id: 52, colour: 'mocha', size: 'l', photo: {...images[2], id: 475}},
+        {id: 53, colour: 'beige', size: 'm', photo: {...images[3], id: 474}},
+        {id: 54, colour: 'beige', size: 'l', photo: {...images[3], id: 474}},
+        {id: 55, colour: 'navy-blue', size: 'xl', photo: image('rally-navy-variation', 394)}
+    ] : ['white', 'jujube-red', 'navy'].map((colour, index) => ({id: 125 + index, colour, size: 'l', photo: images[index]}));
+    const variations = rows.map(row => ({
+        variation_id: row.id, attributes: {attribute_pa_colour: row.colour, attribute_pa_size: row.size},
+        image_id: row.photo.id, image: {...row.photo}, blocksy_original_image: {...images[0]},
         blocksy_gallery_source: custom ? 'custom' : 'default',
         is_in_stock: true, is_purchasable: true, variation_is_visible: true, variation_is_active: true,
-        min_qty: 1, max_qty: 3, price_html: `<span class="price">Native ${125 + index}</span>`
+        min_qty: 1, max_qty: 3, price_html: `<span class="price">Native ${row.id}</span>`
     }));
     if (offGallery) {
         variations[1].image_id = 989;
@@ -108,19 +159,37 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     }
     form.dataset.product_variations = JSON.stringify(ajax ? false : variations);
     $form.data('product_variations', ajax ? false : variations);
-    const payloadBefore = JSON.stringify(variations), requests = [], fetches = [], nativeCalls = [], clicked = [];
+    const payloadBefore = JSON.stringify(variations), requests = [], fetches = [], nativeCalls = [], clicked = [], clickStates = [];
     $.ajax = options => { requests.push(options); return {abort() {}}; };
     w.ctEvents = {trigger() {}};
     w.cachedFetch = url => { fetches.push(url); return Promise.resolve({json: () => Promise.resolve({success: false})}); };
     const heldNativeFrames = [];
+    let galleryWidth = 300;
     if (nativeFlexy) {
         // The real library needs layout measurements. Geometry alone is fixed;
         // its constructor, first RAF, native attributes and pill handlers are real.
         w.Element.prototype.getBoundingClientRect = function () {
-            return {left: 0, top: 0, width: 300, height: 400, right: 300, bottom: 400};
+            let left = 0;
+            if (rally) {
+                // Model native CSS flex ordering and the transform actually
+                // written by Flexy; do not infer visibility from its active pill.
+                const item = this.closest('.flexy-items > div');
+                if (item && item.parentElement === items) {
+                    const ordered = [...items.children].sort((a, b) => (Number(a.style.order) || 0) - (Number(b.style.order) || 0));
+                    const translation = Number((item.style.transform.match(/translate3d\((-?[\d.]+)px/) || [])[1] || 0);
+                    left = ordered.indexOf(item) * galleryWidth + translation;
+                }
+            }
+            return {left, top: 0, width: galleryWidth, height: 400, right: left + galleryWidth, bottom: 400};
         };
-        const computed = w.getComputedStyle.bind(w);
+        const nativeComputed = w.getComputedStyle.bind(w), computedCache = new WeakMap();
+        const computed = element => {
+            if (!rally) return nativeComputed(element);
+            if (!computedCache.has(element)) computedCache.set(element, nativeComputed(element));
+            return computedCache.get(element);
+        };
         w.getComputedStyle = (element) => new Proxy(computed(element), {get(target, key) {
+            if (rally && key === 'transform') return element.style.transform || 'none';
             if (key === 'content') return '""';
             if (typeof key === 'string' && /^(padding|margin|border)/.test(key)) return '0px';
             const value = target[key];
@@ -163,7 +232,9 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
                 const raf = w.requestAnimationFrame;
                 if (holdNativeFrame) w.requestAnimationFrame = callback => { heldNativeFrames.push(callback); return 0; };
                 try { w.mountBlocksyFlexy(slider); } finally { w.requestAnimationFrame = raf; }
-                [...pills.children].forEach((pill, index) => pill.addEventListener('click', () => clicked.push(index)));
+                [...pills.children].forEach((pill, index) => pill.addEventListener('click', () => {
+                    clicked.push(index); clickStates.push({index, moving: slider.hasAttribute('data-flexy-moving')});
+                }));
             } else {
                 slider.flexy = {}; slider.dataset.flexy = '';
                 [...pills.children].forEach((pill, index) => pill.addEventListener('click', event => {
@@ -199,8 +270,10 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     await timer.tick(100);
     nativeCalls.length = 0;
     return {
-        w, $, form, $form, product, gallery, slider, variations, nativeCalls, clicked, requests, fetches,
-        tick: timer.tick, mount: async () => { commitMount(); await timer.tick(0); },
+        w, $, form, $form, product, gallery, slider, variations, nativeCalls, clicked, clickStates, requests, fetches,
+        resize(width) { galleryWidth = width; },
+        tick: timer.tick, renderBeforeTimers: timer.renderBeforeTimers,
+        mount: async () => { commitMount(); await timer.tick(0); },
         reject: async () => { rejectMount(new Error('synthetic mount failure')); await timer.tick(0); },
         mountCalls: () => mountCalls,
         releaseNativeFrame() { heldNativeFrames.splice(0).forEach(callback => w.requestAnimationFrame(callback)); },
@@ -476,5 +549,204 @@ test('native readiness that never commits has a bounded deadline and no late ima
         assert.equal(f.nativeCalls.filter(call => call.args[0]?.variation_id).length, 0);
         f.releaseNativeFrame(); await f.tick(100);
         assert.equal(f.form.dataset.bactiveSelectors, 'fallback'); f.intact();
+    } finally { f.close(); }
+});
+
+test('native Flexy alone handles the explicit initial-index zero edge in a four-slide gallery', async () => {
+    const f = await fixture({patched: false, nativeFlexy: true, initialItem: 0, rally: true});
+    try {
+        f.choose('beige', 'm'); await f.mount(); await f.tick(2500);
+        const items = [...f.slider.querySelector('.flexy-items').children];
+        assert.equal(f.id(), '53'); assert.deepEqual(f.clicked, [3]);
+        assert.equal(f.slider.hasAttribute('data-flexy-moving'), false);
+        assert.equal(items[3].getBoundingClientRect().left, 0);
+        assert.equal(items[3].querySelector('img').src, f.variations[1].image.src);
+        f.intact();
+    } finally { f.close(); }
+});
+
+test('explicit initial-index zero edge waits for native movement without a duplicate thumbnail click', async () => {
+    // This deliberately supplied zero is a separate native initialization edge.
+    // The current public Rally response does not supply that initial inline value.
+    for (const prewarmed of [false, true]) {
+        const f = await fixture({nativeFlexy: true, initialItem: 0, rally: true});
+        try {
+            if (prewarmed) { await f.mount(); await f.tick(50); }
+            f.choose('beige', 'm');
+            if (!prewarmed) await f.mount();
+            await f.tick(2500);
+            const items = [...f.slider.querySelector('.flexy-items').children];
+            const visible = items.filter(item => Math.abs(item.getBoundingClientRect().left) < 0.5);
+            assert.equal(f.id(), '53');
+            assert.equal(f.variations[1].image_id, 474);
+            assert.equal(f.variations[1].blocksy_original_image.id, 607);
+            assert.match(f.form.querySelector('.single_variation').textContent, /Native 53/);
+            assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+            assert.equal(f.slider.hasAttribute('data-flexy-moving'), false, 'assert settled output rather than a transient pill class');
+            assert.equal(visible.length, 1);
+            assert.equal(visible[0], items[3], 'the fourth Beige image must occupy the gallery viewport');
+            assert.equal(visible[0].querySelector('img').src, f.variations[1].image.src);
+            assert.deepEqual(f.clicked, [3], 'the child must not interrupt native wraparound with a second pill click');
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('no-inline Rally gallery corrects a mid-animation resize after native movement settles', async () => {
+    for (const resizeAfter of [16, 100]) {
+        const f = await fixture({nativeFlexy: true, rally: true});
+        try {
+            await f.mount(); await f.tick(50);
+            assert.equal(f.slider.style.getPropertyValue('--current-item'), '', 'match the current native first-slide markup');
+            f.choose('beige', 'm'); await f.tick(resizeAfter);
+            assert.equal(f.slider.hasAttribute('data-flexy-moving'), true);
+            // Geometry change, not a rewritten Flexy state: its own draw loop
+            // detects the new width and applies its native position rounding.
+            f.resize(343.1875); await f.tick(2500);
+            const items = [...f.slider.querySelector('.flexy-items').children];
+            assert.equal(f.id(), '53'); assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+            assert.equal(f.slider.hasAttribute('data-flexy-moving'), false);
+            assert.equal(items[3].getBoundingClientRect().left, 0);
+            assert.equal(items[3].querySelector('img').src, f.variations[1].image.src);
+            assert.deepEqual(f.clicked, [3, 3], 'one native selection and one correction after its interrupted movement settles');
+            assert.deepEqual(f.clickStates.map(click => click.moving), [false, false]);
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('no-inline Rally gallery corrects a width change before the first selection frame even when its pill is active', async () => {
+    for (const resizeBeforeSelect of [true, false]) {
+        const f = await fixture({nativeFlexy: true, rally: true});
+        try {
+            await f.mount(); await f.tick(50);
+            assert.equal(f.slider.style.getPropertyValue('--current-item'), '');
+            if (resizeBeforeSelect) f.resize(343.1875);
+            f.choose('beige', 'm');
+            if (!resizeBeforeSelect) { await f.tick(0); f.resize(343.1875); }
+            await f.tick(2500);
+            const items = [...f.slider.querySelector('.flexy-items').children];
+            assert.equal(f.id(), '53'); assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+            assert.equal(f.slider.hasAttribute('data-flexy-moving'), false);
+            assert.equal(items[3].getBoundingClientRect().left, 0, 'an active Beige pill alone does not prove its photo is visible');
+            assert.equal(items[3].querySelector('img').src, f.variations[1].image.src);
+            assert.deepEqual(f.clicked, [3, 3]);
+            assert.deepEqual(f.clickStates.map(click => click.moving), [false, false]);
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('a render opportunity before the native pill timer cannot trigger an early second click', async () => {
+    const f = await fixture({nativeFlexy: true, rally: true});
+    try {
+        await f.mount(); await f.tick(50);
+        // The native click schedules a zero-delay timer. Real browsers may
+        // render before that timer, and render again before the next FIFO task.
+        // A RAF alone must not be mistaken for the native target commit.
+        f.renderBeforeTimers(2); f.choose('beige', 'm'); await f.tick(2500);
+        const items = [...f.slider.querySelector('.flexy-items').children];
+        assert.equal(f.id(), '53'); assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        assert.equal(f.slider.hasAttribute('data-flexy-moving'), false);
+        assert.equal(items[3].getBoundingClientRect().left, 0);
+        assert.equal(items[3].querySelector('img').src, f.variations[1].image.src);
+        assert.deepEqual(f.clicked, [3], 'only the native selection click is needed when its timer and movement finish');
+        f.intact();
+    } finally { f.close(); }
+});
+
+test('new selection, manual input, Reset, fallback and removal cancel the queued native-task boundary', async () => {
+    for (const cancellation of ['selection', 'manual', 'reset', 'fallback', 'remove']) {
+        const f = await fixture();
+        try {
+            f.choose('jujube-red'); await f.tick(20); f.manual();
+            await f.mount(); f.click(2); await f.tick(20);
+            f.choose('white'); // Native same-image return; child task is queued.
+            if (cancellation === 'selection') f.choose('navy');
+            if (cancellation === 'manual') f.manual();
+            if (cancellation === 'reset') f.reset();
+            if (cancellation === 'fallback') f.form.querySelector('.bactive-selector-fallback').click();
+            if (cancellation === 'remove') f.product.remove();
+            await f.tick(100);
+            assert.equal(f.clicked.includes(0), false, `${cancellation} must prevent the queued White correction`);
+            assert.equal(f.form.dataset.bactiveSelectors, cancellation === 'fallback' ? 'fallback' : 'ready');
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('geometry correction ignores unmeasurable active slides and one-pixel drift', async () => {
+    const cases = [
+        {viewWidth: 0, imageWidth: 300, offset: 50, clicks: 0},
+        {viewWidth: 300, imageWidth: 0, offset: 50, clicks: 0},
+        {viewWidth: 300, imageWidth: 300, offset: 0.5, clicks: 0},
+        {viewWidth: 300, imageWidth: 300, offset: 1, clicks: 0},
+        {viewWidth: 300, imageWidth: 300, offset: 1.5, clicks: 1}
+    ];
+    for (const sample of cases) {
+        const f = await fixture();
+        try {
+            f.choose('white'); await f.mount(); await f.tick(50);
+            assert.equal(f.active(), 0); assert.deepEqual(f.clicked, []);
+            const view = f.slider.querySelector('.flexy-view');
+            const item = f.slider.querySelector('.flexy-items').firstElementChild;
+            view.getBoundingClientRect = () => ({left: 100, width: sample.viewWidth});
+            item.getBoundingClientRect = () => ({left: 100 + sample.offset, width: sample.imageWidth});
+            f.choose('white'); await f.tick(50);
+            assert.deepEqual(f.clicked, Array(sample.clicks).fill(0));
+            assert.equal(f.id(), '125'); assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+async function pendingMotionCorrection() {
+    const f = await fixture();
+    f.choose('jujube-red'); await f.tick(20); f.manual();
+    await f.mount(); f.click(2); await f.tick(20);
+    f.slider.setAttribute('data-flexy-moving', '');
+    f.choose('white'); await f.tick(30);
+    assert.equal(f.id(), '125');
+    assert.deepEqual(f.clicked, [2], 'same-image correction must wait while native movement is active');
+    return f;
+}
+
+test('same-image correction waits for native idle, then resolves once using current gallery nodes', async () => {
+    const f = await pendingMotionCorrection();
+    try {
+        f.slider.removeAttribute('data-flexy-moving'); await f.tick(30);
+        assert.deepEqual(f.clicked, [2, 0]); assert.equal(f.active(), 0);
+        await f.tick(5100);
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready', 'successful settlement clears its failure deadline');
+        f.intact();
+    } finally { f.close(); }
+});
+
+test('manual input, Reset, fallback and removal cancel the pending motion correction', async () => {
+    for (const cancellation of ['manual', 'reset', 'fallback', 'remove']) {
+        const f = await pendingMotionCorrection();
+        try {
+            if (cancellation === 'manual') f.manual();
+            if (cancellation === 'reset') f.reset();
+            if (cancellation === 'fallback') f.form.querySelector('.bactive-selector-fallback').click();
+            if (cancellation === 'remove') f.product.remove();
+            await f.tick(30);
+            const clicksAfterNativeCancellation = [...f.clicked];
+            f.slider.removeAttribute('data-flexy-moving'); await f.tick(5200);
+            assert.deepEqual(f.clicked, clicksAfterNativeCancellation, `${cancellation} must prevent a stale corrective click`);
+            assert.equal(f.form.dataset.bactiveSelectors, cancellation === 'fallback' ? 'fallback' : 'ready');
+            f.intact();
+        } finally { f.close(); }
+    }
+});
+
+test('native motion that never settles has a bounded deadline and no late corrective click', async () => {
+    const f = await pendingMotionCorrection();
+    try {
+        await f.tick(4900); assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        await f.tick(200); assert.equal(f.form.dataset.bactiveSelectors, 'fallback');
+        assert.ok([...f.form.querySelectorAll('.variations select')].every(select => !select.hidden));
+        f.slider.removeAttribute('data-flexy-moving'); await f.tick(100);
+        assert.deepEqual(f.clicked, [2]); f.intact();
     } finally { f.close(); }
 });

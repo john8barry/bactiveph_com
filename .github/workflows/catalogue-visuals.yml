@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - '**/catalog-visuals.*'
+      - '**/catalogue-*'
+      - '**/catalogue_*'
+      - '**/blocksy-child/functions.php'
       - 'tests/catalog-gallery-startup.test.cjs'
       - '**/collection-visuals.*'
       - 'tools/catalog_visuals.py'
@@ -14,6 +17,9 @@ on:
     branches: [main]
     paths:
       - '**/catalog-visuals.*'
+      - '**/catalogue-*'
+      - '**/catalogue_*'
+      - '**/blocksy-child/functions.php'
       - 'tests/catalog-gallery-startup.test.cjs'
       - '**/collection-visuals.*'
       - 'tools/catalog_visuals.py'
@@ -40,12 +46,26 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/tests/catalogue-runtime/node_modules
         run: |
-          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs tests/catalog-gallery-startup.test.cjs
+          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs tests/catalogue-colour-photo.test.cjs tests/catalog-gallery-startup.test.cjs
+          php tests/catalogue-settings.php
+          php tests/catalogue-editor.php
+          php tests/catalogue-migration.php
           php tests/catalog-visuals.php
           php tests/collection-visuals.php
           python3 -m unittest discover -s tests -p 'test_catalog*.py' -v
       - name: Syntax and mirrored source
         run: |
+          php -l tools/catalogue_settings_migration.php
+          cmp wordpress/wp-content/themes/blocksy-child/functions.php wp-content/themes/blocksy-child/functions.php
+          for module in catalogue-settings catalogue-editor; do
+            php -l "wordpress/wp-content/themes/blocksy-child/inc/$module.php"
+            cmp "wordpress/wp-content/themes/blocksy-child/inc/$module.php" "wp-content/themes/blocksy-child/inc/$module.php"
+          done
+          for module in catalogue-layout catalogue-colour-photo catalogue-editor; do
+            node --check "wordpress/wp-content/themes/blocksy-child/assets/js/$module.js"
+            cmp "wordpress/wp-content/themes/blocksy-child/assets/js/$module.js" "wp-content/themes/blocksy-child/assets/js/$module.js"
+          done
+          cmp wordpress/wp-content/themes/blocksy-child/assets/css/catalogue-editor.css wp-content/themes/blocksy-child/assets/css/catalogue-editor.css
           for module in catalog-visuals collection-visuals; do
             php -l "wordpress/wp-content/themes/blocksy-child/inc/$module.php"
             cmp "wordpress/wp-content/themes/blocksy-child/inc/$module.php" "wp-content/themes/blocksy-child/inc/$module.php"

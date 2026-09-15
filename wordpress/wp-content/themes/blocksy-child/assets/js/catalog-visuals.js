@@ -300,7 +300,7 @@
                     });
                 }
                 function thumbnailKey(event) {
-                    if (!['Enter', ' '].includes(event.key)) return;
+                    if (!['Enter', ' '].includes(event.key) || event.defaultPrevented) return;
                     const target = event.target.closest('.woocommerce-product-gallery .flexy-pills li > span');
                     if (!target || !product.contains(target)) return;
                     event.preventDefault();

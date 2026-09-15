@@ -9,6 +9,8 @@ function bactive_collection_release() {
 
 function bactive_collection_product_classes( $classes, $product ) {
 	$config = bactive_collection_release();
+	if ( function_exists( 'bactive_catalogue_defaults' ) && true === ( bactive_catalogue_defaults()['enabled'] ?? false ) && ! bactive_catalogue_feature( 'cards' ) ) { return $classes; }
+	$automatic = function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'cards' );
 	$ids = isset( $config['product_ids'] ) && is_array( $config['product_ids'] ) ? $config['product_ids'] : array();
 	// A related grid shares one presentation even while product rollouts are staged.
 	// This does not release the related products' selectors or colour mappings.
@@ -16,8 +18,8 @@ function bactive_collection_product_classes( $classes, $product ) {
 		&& function_exists( 'wc_get_loop_prop' ) && 'related' === wc_get_loop_prop( 'name' )
 		&& function_exists( 'bactive_catalog_visuals_config' ) && function_exists( 'bactive_catalog_visuals_registry' )
 		&& bactive_catalog_visuals_config( bactive_catalog_visuals_registry(), get_queried_object_id() );
-	if ( true === ( $config['enabled'] ?? false ) && $product instanceof WC_Product
-		&& ( in_array( $product->get_id(), $ids, true ) || $shared_related ) ) {
+	if ( ( true === ( $config['enabled'] ?? false ) || $automatic ) && $product instanceof WC_Product
+		&& ( $automatic || in_array( $product->get_id(), $ids, true ) || $shared_related ) ) {
 		$classes[] = 'bactive-collection-product';
 	}
 	return $classes;
@@ -26,10 +28,11 @@ add_filter( 'woocommerce_post_class', 'bactive_collection_product_classes', 20, 
 
 function bactive_collection_styles() {
 	$config = bactive_collection_release();
-	if ( true !== ( $config['enabled'] ?? false ) && true !== ( $config['editorial']['enabled'] ?? false ) ) {
+	$automatic = function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'cards' );
+	if ( ! $automatic && true !== ( $config['enabled'] ?? false ) && true !== ( $config['editorial']['enabled'] ?? false ) ) {
 		return;
 	}
-	if ( true === ( $config['enabled'] ?? false ) && function_exists( 'is_product' ) && is_product() ) {
+	if ( ( true === ( $config['enabled'] ?? false ) || $automatic ) && function_exists( 'is_product' ) && is_product() ) {
 		$script = '/assets/js/collection-visuals.js';
 		if ( is_readable( get_stylesheet_directory() . $script ) ) {
 			wp_enqueue_script( 'bactive-collection-previews', get_stylesheet_directory_uri() . $script, array(), filemtime( get_stylesheet_directory() . $script ), true );
@@ -73,6 +76,15 @@ add_shortcode( 'bactive_editorial', 'bactive_editorial_shortcode' );
 
 /** Exact colour-only preview. Ambiguous or missing variation images keep the link. */
 function bactive_collection_preview_image( $product, $taxonomy, $slug ) {
+	if ( function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'cards' ) ) {
+		foreach ( bactive_catalogue_product_colours( $product ) as $row ) {
+			if ( $row['taxonomy'] === $taxonomy && $row['slug'] === $slug ) {
+				$image = bactive_catalogue_preview( $product, $row );
+				return $image ? $image['url'] : '';
+			}
+		}
+		return '';
+	}
 	if ( ! function_exists( 'wc_get_loop_prop' ) || 'related' !== wc_get_loop_prop( 'name' ) ) { return ''; }
 	$images = array();
 	foreach ( $product->get_children() as $id ) {
@@ -94,12 +106,13 @@ function bactive_collection_preview_image( $product, $taxonomy, $slug ) {
 function bactive_collection_colour_previews() {
 	global $product;
 	$release = bactive_collection_release();
+	$automatic = function_exists( 'bactive_catalogue_feature' ) && bactive_catalogue_feature( 'cards' );
 	$ids = is_array( $release['product_ids'] ?? null ) ? $release['product_ids'] : array();
-	if ( ! $product instanceof WC_Product || ! in_array( $product->get_id(), $ids, true ) || ! in_array( 'bactive-collection-product', bactive_collection_product_classes( array(), $product ), true )
+	if ( ! $product instanceof WC_Product || ( ! $automatic && ! in_array( $product->get_id(), $ids, true ) ) || ! in_array( 'bactive-collection-product', bactive_collection_product_classes( array(), $product ), true )
 		|| ! function_exists( 'bactive_catalog_visuals_registry' ) || ! function_exists( 'bactive_catalog_visuals_palette' ) || ! $product->is_type( 'variable' ) ) {
 		return;
 	}
-	$palette = bactive_catalog_visuals_palette( bactive_catalog_visuals_registry(), $product->get_id() );
+	$palette = $automatic ? bactive_catalogue_palette( $product ) : bactive_catalog_visuals_palette( bactive_catalog_visuals_registry(), $product->get_id() );
 	if ( ! $palette ) { return; }
 	$attributes = $product->get_variation_attributes();
 	$links = array();

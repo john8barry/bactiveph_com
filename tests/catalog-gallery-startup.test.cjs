@@ -23,6 +23,8 @@ const wpUtil = source(`${wordpress}/wp-includes/js/wp-util.js`);
 const woo = source(process.env.WC_VARIATION_ENGINE_PATH || `${wordpress}/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.js`);
 const parent = source(process.env.BLOCKSY_VARIATION_ENGINE_PATH || `${wordpress}/wp-content/themes/blocksy/static/js/frontend/woocommerce/variable-products.js`);
 const child = source(process.env.CATALOG_GALLERY_CHILD_PATH || `${wordpress}/wp-content/themes/blocksy-child/assets/js/catalog-visuals.js`);
+const colourPhoto = source(`${wordpress}/wp-content/themes/blocksy-child/assets/js/catalogue-colour-photo.js`);
+const layout = source(`${wordpress}/wp-content/themes/blocksy-child/assets/js/catalogue-layout.js`);
 const flexyEngine = source(process.env.BLOCKSY_FLEXY_ENGINE_PATH || `${wordpress}/wp-content/themes/blocksy/static/bundle/71.c54d2d99d2996e1be440.js`);
 const flexyMount = source(process.env.BLOCKSY_FLEXY_MOUNT_PATH || `${wordpress}/wp-content/themes/blocksy/static/js/frontend/flexy.js`);
 assert.equal(require('node:crypto').createHash('sha256').update(flexyEngine).digest('hex'), 'b0355ac2f1727c55d30c028115c35785797fe521059dc353c9b97fd6f871fcc8', 'review a changed native Flexy implementation');
@@ -91,13 +93,13 @@ function clock(window) {
     };
 }
 
-async function fixture({patched = true, ajax = false, custom = false, defaults = false, offGallery = false, nativeFlexy = false, holdNativeFrame = false, initialItem = null, rally = false} = {}) {
-    const dom = new JSDOM(`<div id="product-117" class="product type-product">
+async function fixture({patched = true, ajax = false, custom = false, defaults = false, offGallery = false, integrated = false, productId = 117, nativeFlexy = false, holdNativeFrame = false, initialItem = null, rally = false} = {}) {
+    const dom = new JSDOM(`<div id="product-${productId}" class="product type-product product-entry-wrapper">
       <div class="woocommerce-product-gallery"><div class="ct-product-gallery-container"><div class="flexy-container" data-flexy="no">
         <div class="flexy"><div class="flexy-view"><div class="flexy-items"></div></div>
         <button class="flexy-arrow-prev">Previous</button><button class="flexy-arrow-next">Next</button></div>
         <div class="flexy-pills"><ol></ol></div></div></div></div>
-      <div class="summary"><form class="variations_form" data-product_id="117">
+      <div class="summary"><form class="variations_form" data-product_id="${productId}">
         <table class="variations"><tr><th><label for="colour">Colour</label></th><td><select id="colour" name="attribute_pa_colour" data-attribute_name="attribute_pa_colour"><option value="">Choose</option><option value="white">White</option><option value="jujube-red">Jujube Red</option><option value="navy">Navy</option></select></td></tr>
         <tr><th><label for="size">Size</label></th><td><select id="size" name="attribute_pa_size" data-attribute_name="attribute_pa_size"><option value="">Choose</option><option value="l">L</option></select></td></tr></table>
         <a class="reset_variations" href="#">Clear</a><div class="reset_variations_alert"></div>
@@ -111,7 +113,21 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     w.eval(jquery); const $ = w.jQuery;
     $.fx.off = true;
     w.eval(underscore); w.eval(wpUtil);
-    w.bactiveCatalogVisuals = {schemaVersion: 1, version: 'startup-test', productId: 117, palette: {}};
+    w.bactiveCatalogVisuals = {schemaVersion: 1, version: 'startup-test', productId, palette: {}};
+    const pendingPhotos = [];
+    if (integrated) {
+        w.document.body.classList.add('bactive-product-page');
+        w.bactiveCatalogVisuals.previews = {attribute_pa_colour: {
+            'jujube-red': {src: 'https://example.test/red-representative.jpg', alt: 'Red representative'},
+            white: {src: 'https://example.test/white-representative.jpg', alt: 'White representative'}
+        }};
+        w.Image = function () {
+            const image = w.document.createElement('img');
+            Object.defineProperty(image, 'naturalWidth', {value: 1200});
+            Object.defineProperty(image, 'naturalHeight', {value: 1600});
+            pendingPhotos.push(image); return image;
+        };
+    }
     w.wc_add_to_cart_variation_params = {wc_ajax_url: 'https://example.test/?wc-ajax=%%endpoint%%', i18n_no_matching_variations_text: 'No match', i18n_make_a_selection_text: 'Select', i18n_unavailable_text: 'Unavailable'};
     w.ct_localizations = {ajax_url: 'https://example.test/wp-admin/admin-ajax.php'};
     $.fn.block = $.fn.unblock = function () { return this; };
@@ -256,7 +272,9 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
         if (nativeFlexy) gallery.dataset.currentVariation = '126';
     }
     w.eval(woo);
+    if (integrated) w.eval(layout);
     if (patched) w.eval(child);
+    if (integrated) w.eval(colourPhoto);
     await timer.tick(0); // Ready callbacks create Woo and child form handlers.
     // The parent installs lazily AFTER the child; the wrapper must reinstall on
     // Woo's synchronous update event before found_variation/default matching.
@@ -270,7 +288,7 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
     await timer.tick(100);
     nativeCalls.length = 0;
     return {
-        w, $, form, $form, product, gallery, slider, variations, nativeCalls, clicked, clickStates, requests, fetches,
+        w, $, form, $form, product, gallery, slider, variations, nativeCalls, clicked, clickStates, requests, fetches, pendingPhotos,
         resize(width) { galleryWidth = width; },
         tick: timer.tick, renderBeforeTimers: timer.renderBeforeTimers,
         mount: async () => { commitMount(); await timer.tick(0); },
@@ -283,9 +301,13 @@ async function fixture({patched = true, ajax = false, custom = false, defaults =
             $form.find('[name=attribute_pa_size]').val(size).trigger('change');
         },
         reset() { $form.find('.reset_variations').trigger('click'); },
-        manual(type = 'pointerdown') {
-            const event = {isTrusted: true, target: pills.children[2], type, key: 'ArrowRight', preventDefault() {}, stopPropagation() {}, stopImmediatePropagation() {}};
-            gestureHandlers.filter(row => row.type === type).forEach(row => row.handler.call(product, event));
+        manual(type = 'pointerdown', options = {}) {
+            const event = {isTrusted: true, target: options.target || pills.children[2], type, key: options.key || 'ArrowRight', defaultPrevented: false,
+                preventDefault() { this.defaultPrevented = true; }, stopPropagation() {}, stopImmediatePropagation() { this.stopped = true; }};
+            const capture = row => row.options === true || row.options?.capture;
+            gestureHandlers.filter(row => row.type === type).sort((a, b) => Number(!!capture(b)) - Number(!!capture(a)))
+                .forEach(row => { if (!event.stopped) row.handler.call(product, event); });
+            return event;
         },
         click(index) { pills.children[index].click(); },
         id: () => form.querySelector('[name=variation_id]').value,
@@ -457,6 +479,89 @@ test('native AJAX and custom-gallery products pass through without starting a ch
             assert.equal(f.fetches.length, 1); f.intact();
         } finally { f.close(); }
     }
+});
+
+test('new-product selector, representative overlay, gallery, keyboard, and fallback share one lifecycle', async () => {
+    const f = await fixture({integrated: true, productId: 802});
+    const overlay = () => f.gallery.querySelector('.bactive-colour-photo');
+    const media = () => [...f.gallery.querySelectorAll('.ct-media-container')];
+    try {
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready', 'new IDs must not need a JS allowlist');
+        f.choose('jujube-red', ''); await f.tick(0);
+        f.pendingPhotos.at(-1).onload(); await f.tick(0);
+        assert.equal(f.id(), ''); assert.equal(overlay().querySelector('img').src, 'https://example.test/red-representative.jpg');
+        assert.ok(media().every(item => item.inert));
+        assert.equal(f.slider.querySelector('.flexy-items img').src, 'https://example.test/white.jpg');
+
+        f.choose('jujube-red'); await f.tick(600);
+        assert.equal(f.id(), '126'); assert.equal(overlay(), null);
+        assert.ok(media().every(item => !item.inert));
+        await f.mount(); await f.tick(600);
+        assert.equal(f.active(), 1); assert.equal(overlay(), null);
+        assert.deepEqual(f.clicked, [1]);
+
+        f.choose('jujube-red', ''); await f.tick(0);
+        f.pendingPhotos.at(-1).onload(); await f.tick(0);
+        assert.ok(overlay()); assert.equal(f.id(), '');
+        const before = f.clicked.length;
+        const thumb = f.slider.querySelectorAll('.flexy-pills li > span')[2];
+        const key = f.manual('keydown', {key: 'Enter', target: thumb}); await f.tick(30);
+        assert.equal(key.defaultPrevented, true);
+        assert.equal(f.clicked.length, before + 1, 'shared layout and selector handlers must activate once');
+        assert.equal(f.active(), 2); assert.equal(overlay(), null);
+        assert.ok(media().every(item => !item.inert));
+
+        f.choose('white', ''); await f.tick(0);
+        f.pendingPhotos.at(-1).onload(); await f.tick(0);
+        assert.ok(overlay());
+        f.form.querySelector('.bactive-selector-fallback').click(); await f.tick(0);
+        assert.equal(f.form.dataset.bactiveSelectors, 'fallback'); assert.equal(overlay(), null);
+        assert.ok([...f.form.querySelectorAll('.variations select')].every(select => !select.hidden));
+        assert.ok(media().every(item => !item.inert));
+        f.choose('jujube-red'); await f.tick(600);
+        assert.equal(f.id(), '126'); assert.equal(f.active(), 1); assert.equal(overlay(), null); f.intact();
+    } finally { f.close(); }
+});
+
+test('new-product representative preview survives native Reset during first Flexy render', async () => {
+    const f = await fixture({integrated: true, productId: 802, nativeFlexy: true, defaults: true, initialItem: 1});
+    const overlay = () => f.gallery.querySelector('.bactive-colour-photo');
+    try {
+        await f.mount();
+        assert.equal(f.slider.dataset.flexy, 'no');
+        f.choose('jujube-red', ''); await f.tick(0);
+        f.pendingPhotos.at(-1).onload(); await f.tick(0);
+        assert.equal(f.id(), ''); assert.ok(overlay());
+        await f.tick(100);
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready');
+        assert.equal(f.slider.dataset.flexy, '');
+        assert.equal(f.active(), 0, 'native Reset restores the underlying original photo');
+        assert.equal(overlay().querySelector('img').src, 'https://example.test/red-representative.jpg');
+        assert.ok([...f.gallery.querySelectorAll('.ct-media-container')].every(item => item.inert));
+        f.intact();
+    } finally { f.close(); }
+});
+
+test('new-product representative Reset remains compatible with native task and render ordering', async () => {
+    const f = await fixture({integrated: true, productId: 802, nativeFlexy: true});
+    const overlay = () => f.gallery.querySelector('.bactive-colour-photo');
+    try {
+        await f.mount(); await f.tick(50);
+        f.renderBeforeTimers(2); f.choose('jujube-red'); await f.tick(2500);
+        assert.equal(f.id(), '126'); assert.equal(f.active(), 1); assert.equal(overlay(), null);
+        assert.deepEqual(f.clicked, [1], 'complete native variation must not receive a duplicate correction');
+
+        f.choose('jujube-red', ''); await f.tick(0);
+        f.pendingPhotos.at(-1).onload(); await f.tick(2500);
+        assert.equal(f.id(), ''); assert.equal(f.active(), 0);
+        assert.equal(overlay().querySelector('img').src, 'https://example.test/red-representative.jpg');
+        assert.ok([...f.gallery.querySelectorAll('.ct-media-container')].every(item => item.inert));
+
+        f.choose('jujube-red'); await f.tick(2500);
+        assert.equal(f.id(), '126'); assert.equal(f.active(), 1); assert.equal(overlay(), null);
+        assert.ok([...f.gallery.querySelectorAll('.ct-media-container')].every(item => !item.inert));
+        assert.equal(f.form.dataset.bactiveSelectors, 'ready'); f.intact();
+    } finally { f.close(); }
 });
 
 test('real Flexy first RAF completes default selection without collapsing selectors', async () => {

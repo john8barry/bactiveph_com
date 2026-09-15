@@ -69,3 +69,8 @@ Routine rollback disables only the exact owned defaults option, reconciles uncer
 - Four existing parent-theme vendor dependency findings remain tracked separately; this release does not claim overall security clearance.
 
 Merchant workflow: [catalogue defaults](../catalogue/CATALOGUE-DEFAULTS.md). Per-product evidence: [verification ledger](../catalogue/PRODUCT-VERIFICATION.csv). Image and gallery details: [lossless delivery](../catalogue/LOSSLESS-DELIVERY.md), [gallery startup](../catalogue/GALLERY-STARTUP.md).
+
+
+## Next-day follow-up completed
+
+The bounded September 15 checks passed after 14:00 UTC. See [the next-day report](2026-09-15-catalogue-nextday.md) for current evidence, later catalogue changes and remaining holds. Earlier pending statements above describe the release-time checkpoint.

@@ -94,3 +94,10 @@ Final defaults monitor receipt: **PASS**, SHA-256 `3d5962fc835eb115c47b0c5035ddd
 Next-day receipt: **PENDING — September 15 after 14:00 UTC.**
 
 The production installation, native readback, browser samples and cart samples are verified. Next-day verification and the recorded product/photo questions remain unfinished.
+
+
+## Next-day follow-up completed
+
+The bounded September 15 checks passed after 14:00 UTC. See [the next-day report](../releases/2026-09-15-catalogue-nextday.md) for current evidence, later catalogue changes and remaining holds. Earlier pending statements above describe the release-time checkpoint.
+
+The verification CSV retains its September 12 catalogue, variation-count and photo-reference columns as a historical baseline. This follow-up updates status, monitoring and next control points only. Use the next-day report for observed later colour changes; do not use old CSV colours as instructions to restore product data.

@@ -21,12 +21,8 @@
         const pendingMounts = new WeakMap();
         const mountWaiters = new Set();
         const ready = slider => slider.flexy && !String(slider.dataset.flexy || '').includes('no');
-        function awaitFirstRender(slider) {
-            if (ready(slider)) return Promise.resolve();
-            if (!slider.flexy) return Promise.reject(new Error('Gallery did not mount'));
-            // Flexy assigns its instance before its first animation-frame draw.
-            // Wait for the native readiness attribute, rather than treating that
-            // ordinary intermediate state as an enhancement failure.
+        function awaitGalleryState(slider, settled, attribute, failureMessage) {
+            if (settled()) return Promise.resolve();
             return new Promise((resolve, reject) => {
                 let observer;
                 let timer;
@@ -36,14 +32,19 @@
                     mountWaiters.delete(finish);
                     if (error) reject(error); else resolve();
                 };
-                observer = new MutationObserver(() => { if (ready(slider)) finish(); });
+                observer = new MutationObserver(() => { if (settled()) finish(); });
                 mountWaiters.add(finish);
-                observer.observe(slider, {attributes: true, attributeFilter: ['data-flexy']});
+                observer.observe(slider, {attributes: true, attributeFilter: [attribute]});
                 // A failure deadline only: successful native rendering proceeds
                 // immediately, with no polling or delayed selection replay.
-                timer = window.setTimeout(() => finish(new Error('Gallery did not render')), 5000);
-                if (ready(slider)) finish();
+                timer = window.setTimeout(() => finish(new Error(failureMessage)), 5000);
+                if (settled()) finish();
             });
+        }
+        function awaitFirstRender(slider) {
+            if (!slider.flexy) return Promise.reject(new Error('Gallery did not mount'));
+            // Flexy assigns its instance before its first animation-frame draw.
+            return awaitGalleryState(slider, () => ready(slider), 'data-flexy', 'Gallery did not render');
         }
         const attributes = () => JSON.stringify([...form.querySelectorAll('.variations select')]
             .map(select => [select.name, select.value]));
@@ -72,9 +73,10 @@
                     const result = nativeUpdate.apply(context, args);
                     if (!expectedId || !slider || !window.requestAnimationFrame) return result;
                     // Native same-image short-circuiting can leave a manually
-                    // chosen slide visible. Reconcile once after native commit,
-                    // using fresh nodes; a subsequent manual action always wins.
-                    window.requestAnimationFrame(() => {
+                    // chosen slide visible. Reconcile once after native movement
+                    // settles: a second pill click mid-animation can change
+                    // Flexy's wraparound destination. Manual browsing wins.
+                    const reconcile = () => {
                         if (!current() || !slider.flexy) return;
                         const nativeId = form.querySelector('input[name="variation_id"], input.variation_id');
                         if (!nativeId || nativeId.value !== expectedId) return;
@@ -95,8 +97,28 @@
                         }).filter(index => index >= 0);
                         if (matches.length !== 1) return;
                         const pill = pills.children[matches[0]];
-                        if (pill && !pill.classList.contains('active')) pill.click();
-                    });
+                        const view = slider.querySelector('.flexy-view');
+                        const viewport = view && view.getBoundingClientRect();
+                        const target = items.children[matches[0]].getBoundingClientRect();
+                        // A resize can leave the pill active while its photo is
+                        // outside the viewport. Inspect settled native geometry;
+                        // ignore hidden/unmeasurable galleries and subpixel drift.
+                        const misplaced = viewport && viewport.width > 0 && target.width > 0 &&
+                            Math.abs(target.left - viewport.left) > 1;
+                        if (pill && (!pill.classList.contains('active') || misplaced)) pill.click();
+                    };
+                    // Native pill clicks commit through a zero-delay task. Queue
+                    // behind that task, then let its first animation frame run
+                    // before interpreting an absent movement attribute as idle.
+                    window.setTimeout(() => {
+                        if (!current()) return;
+                        window.requestAnimationFrame(() => {
+                            if (!current()) return;
+                            awaitGalleryState(slider, () => !slider.hasAttribute('data-flexy-moving'),
+                                'data-flexy-moving', 'Gallery did not settle')
+                                .then(reconcile).catch(() => { if (current()) failed(); });
+                        });
+                    }, 0);
                     return result;
                 }
                 if (!slider || !String(slider.dataset.flexy || '').includes('no') ||

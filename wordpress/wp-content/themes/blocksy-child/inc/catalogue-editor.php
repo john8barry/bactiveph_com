@@ -7,24 +7,28 @@ function bactive_catalogue_editor_error( $message ) {
 }
 
 /** All-or-nothing validation; no stock, price, attribute or variation writes. */
-function bactive_catalogue_editor_validate( $product, $input ) {
+function bactive_catalogue_editor_validate( $product, $input, $pending = null ) {
     if ( ! is_array( $input ) || ! is_string( $input['stamp'] ?? null )
         || ! preg_match( '/\A[a-f0-9]{64}\z/', $input['stamp'] )
-        || ! hash_equals( bactive_catalogue_product_stamp( $product ), $input['stamp'] ) ) {
+        || ( isset( $input['settings_stamp'] )
+            ? ( ! is_string( $input['settings_stamp'] ) || ! hash_equals( bactive_catalogue_editor_stamp( $product ), $input['settings_stamp'] ) )
+            : ! hash_equals( bactive_catalogue_product_stamp( $product ), $input['stamp'] ) ) ) {
         return new WP_Error( 'stale', __( 'Colours and photos were not saved because the product changed. Reload this page and review again.', 'blocksy-child' ) );
     }
-    if ( '' === ( $input['colours'] ?? null ) && ! bactive_catalogue_product_colours( $product ) ) { $input['colours'] = array(); }
+    if ( '' === ( $input['colours'] ?? null ) ) { $input['colours'] = array(); }
     if ( ! in_array( $input['layout'] ?? null, array( 'auto', 'native' ), true ) || ! is_array( $input['colours'] ?? null ) ) {
         return new WP_Error( 'invalid', __( 'Colours and photos were not saved. Check the submitted settings.', 'blocksy-child' ) );
     }
-    $allowed = bactive_catalogue_product_colours( $product );
-    if ( array_diff( array_keys( $input['colours'] ), array_keys( $allowed ) ) || array_diff( array_keys( $allowed ), array_keys( $input['colours'] ) ) ) {
+    $target = $pending ?: $product;
+    $allowed = bactive_catalogue_product_colours( $target );
+    $mapping_changed = ! hash_equals( bactive_catalogue_product_stamp( $target ), $input['stamp'] );
+    if ( ! $mapping_changed && ( array_diff( array_keys( $input['colours'] ), array_keys( $allowed ) ) || array_diff( array_keys( $allowed ), array_keys( $input['colours'] ) ) ) ) {
         return new WP_Error( 'terms', __( 'The colour list changed. Reload before saving colours and photos.', 'blocksy-child' ) );
     }
     $old = bactive_catalogue_product_settings( $product );
     $settings = array( 'schema_version' => 1, 'colours' => array() );
     foreach ( $allowed as $key => $row ) {
-        $value = $input['colours'][ $key ];
+        $value = $input['colours'][ $key ] ?? $old['colours'][ $key ] ?? array( 'mode' => 'inherit', 'hex' => '', 'preview_image_id' => '0' );
         if ( ! is_array( $value ) || ! in_array( $value['mode'] ?? null, array( 'inherit', 'custom', 'none' ), true )
             || ! is_string( $value['hex'] ?? null ) || ( ! is_int( $value['preview_image_id'] ?? null ) && ! is_string( $value['preview_image_id'] ?? null ) ) ) {
             return new WP_Error( 'row', __( 'A colour setting is invalid. No colour settings were saved.', 'blocksy-child' ) );
@@ -39,15 +43,15 @@ function bactive_catalogue_editor_validate( $product, $input ) {
             return new WP_Error( 'image', __( 'Choose an existing image from the media library.', 'blocksy-child' ) );
         }
         $next = array( 'mode' => $value['mode'], 'hex' => strtolower( $hex ), 'preview_image_id' => $id, 'review' => '' );
-        $fingerprint = bactive_catalogue_review_fingerprint( $product, $row, $id );
+        $fingerprint = bactive_catalogue_review_fingerprint( $target, $row, $id );
         $previous = $old['colours'][ $key ] ?? array();
         $same = $next['mode'] === ( $previous['mode'] ?? null ) && $next['hex'] === strtolower( $previous['hex'] ?? '' ) && $id === ( $previous['preview_image_id'] ?? 0 );
         if ( ! bactive_catalogue_held( $product->get_id() ) && preg_match( '/\A[a-f0-9]{64}\z/', $fingerprint ) ) {
-            if ( '1' === ( $value['confirm'] ?? null ) || ( $same && hash_equals( $fingerprint, $previous['review'] ?? '' ) ) ) { $next['review'] = $fingerprint; }
+            if ( ( ! $mapping_changed && '1' === ( $value['confirm'] ?? null ) ) || ( $same && hash_equals( $fingerprint, $previous['review'] ?? '' ) ) ) { $next['review'] = $fingerprint; }
         }
         $settings['colours'][ $key ] = $next;
     }
-    return array( 'settings' => $settings, 'layout' => $input['layout'] );
+    return array( 'settings' => $settings, 'layout' => $input['layout'], 'mapping_changed' => $mapping_changed );
 }
 
 function bactive_catalogue_editor_save( $product ) {
@@ -59,10 +63,13 @@ function bactive_catalogue_editor_save( $product ) {
     bactive_catalogue_forget( $id );
     $persisted = wc_get_product( $id );
     if ( ! $persisted ) { return; }
-    $result = bactive_catalogue_editor_validate( $persisted, wp_unslash( $_POST['bactive_catalogue'] ) );
+    $result = bactive_catalogue_editor_validate( $persisted, wp_unslash( $_POST['bactive_catalogue'] ), $product );
     if ( is_wp_error( $result ) ) { bactive_catalogue_editor_error( $result->get_error_message() ); return; }
     $product->update_meta_data( '_bactive_colour_settings', $result['settings'] );
     $product->update_meta_data( '_bactive_layout_mode', $result['layout'] );
+    if ( $result['mapping_changed'] ) {
+        bactive_catalogue_editor_error( __( 'Your colour settings were saved. Colours or size photos changed during editing, so new photo confirmations were not applied. Reopen Colours & photos, check the current photos, and confirm again.', 'blocksy-child' ) );
+    }
     bactive_catalogue_invalidate( $id );
 }
 add_action( 'woocommerce_admin_process_product_object', 'bactive_catalogue_editor_save' );
@@ -82,6 +89,7 @@ function bactive_catalogue_editor_panel() {
     echo '<div id="bactive_catalogue_panel" class="panel woocommerce_options_panel hidden"><div class="bactive-catalogue-editor">';
     wp_nonce_field( 'bactive_catalogue_' . $product->get_id(), 'bactive_catalogue_nonce' );
     echo '<input type="hidden" name="bactive_catalogue[stamp]" value="' . esc_attr( bactive_catalogue_product_stamp( $product ) ) . '">';
+    echo '<input type="hidden" name="bactive_catalogue[settings_stamp]" value="' . esc_attr( bactive_catalogue_editor_stamp( $product ) ) . '">';
     echo '<h2>' . esc_html__( 'Colours & photos', 'blocksy-child' ) . '</h2><p>' . esc_html__( 'Set one shade for each colour. Sizes can keep different model photos. Preview photos do not replace variation photos.', 'blocksy-child' ) . '</p>';
     echo '<label for="bactive-layout">' . esc_html__( 'Product layout', 'blocksy-child' ) . '</label> <select id="bactive-layout" name="bactive_catalogue[layout]">';
     foreach ( array( 'auto' => __( 'Automatic enhancements', 'blocksy-child' ), 'native' => __( 'Native WooCommerce controls', 'blocksy-child' ) ) as $value => $label ) {
@@ -97,13 +105,14 @@ function bactive_catalogue_editor_panel() {
         $fingerprint = bactive_catalogue_review_fingerprint( $product, $row, $value['preview_image_id'] );
         $reviewed = ! empty( $value['review'] ) && hash_equals( $fingerprint, $value['review'] );
         $review_status = bactive_catalogue_held( $product->get_id() ) ? __( 'Catalogue hold — approval unavailable.', 'blocksy-child' ) : ( '' === $fingerprint ? __( 'Missing or invalid photo — choose a preview and check the size photos.', 'blocksy-child' ) : ( $reviewed ? __( 'Current photo mapping reviewed.', 'blocksy-child' ) : __( 'Photo mapping needs review.', 'blocksy-child' ) ) );
-        echo '<section class="bactive-colour-row"><h3>' . esc_html( $row['name'] ) . '</h3><p>' . esc_html( $review_status ) . '</p><div class="bactive-colour-controls"><label for="' . esc_attr( $uid ) . '">' . esc_html__( 'Colour circle', 'blocksy-child' ) . '</label><select id="' . esc_attr( $uid ) . '" name="' . esc_attr( $prefix . '[mode]' ) . '">';
+        echo '<section class="bactive-colour-row" data-global-shade="' . esc_attr( bactive_catalogue_hex( get_term_meta( $row['term_id'], '_bactive_colour_hex', true ) ) ) . '" data-held="' . ( bactive_catalogue_held( $product->get_id() ) ? '1' : '0' ) . '"><h3>' . esc_html( $row['name'] ) . '</h3><p>' . esc_html( $review_status ) . '</p><div class="bactive-colour-controls"><label for="' . esc_attr( $uid ) . '">' . esc_html__( 'Colour circle', 'blocksy-child' ) . '</label><select id="' . esc_attr( $uid ) . '" name="' . esc_attr( $prefix . '[mode]' ) . '">';
         foreach ( array( 'inherit' => __( 'Use global shade', 'blocksy-child' ), 'custom' => __( 'Custom shade for this product', 'blocksy-child' ), 'none' => __( 'Name only', 'blocksy-child' ) ) as $mode => $label ) {
             echo '<option value="' . esc_attr( $mode ) . '" ' . selected( $value['mode'], $mode, false ) . '>' . esc_html( $label ) . '</option>';
         }
         echo '</select><label class="screen-reader-text" for="' . esc_attr( $uid . '-hex' ) . '">' . esc_html__( 'Custom shade', 'blocksy-child' ) . '</label><input id="' . esc_attr( $uid . '-hex' ) . '" class="bactive-colour-picker" name="' . esc_attr( $prefix . '[hex]' ) . '" value="' . esc_attr( $value['hex'] ) . '" placeholder="#A4C8EC">';
         $effective = bactive_catalogue_effective_hex( $product, $row );
-        echo '<span>' . esc_html( $effective ? sprintf( __( 'Current shade: %s', 'blocksy-child' ), $effective ) : __( 'No approved circle', 'blocksy-child' ) ) . '</span></div>';
+        $shade_status = bactive_catalogue_held( $product->get_id() ) ? __( 'Catalogue hold: saved shades cannot display yet.', 'blocksy-child' ) : ( $effective ? sprintf( __( 'Current shade: %s', 'blocksy-child' ), $effective ) : ( 'none' === $value['mode'] ? __( 'Name only: no circle will display.', 'blocksy-child' ) : __( 'No shade set. Choose a custom shade here or set the global colour default.', 'blocksy-child' ) ) );
+        echo '<span class="bactive-shade-status" aria-live="polite">' . esc_html( $shade_status ) . '</span></div>';
         $image = bactive_catalogue_attachment( $value['preview_image_id'] );
         echo '<div class="bactive-preview"><img alt="' . esc_attr__( 'Colour preview', 'blocksy-child' ) . '" ' . ( $image ? 'src="' . esc_url( $image['url'] ) . '"' : 'hidden' ) . '><input type="hidden" class="bactive-preview-id" name="' . esc_attr( $prefix . '[preview_image_id]' ) . '" value="' . esc_attr( $value['preview_image_id'] ) . '"><button type="button" class="button bactive-select-preview">' . esc_html__( 'Choose preview photo', 'blocksy-child' ) . '</button> <button type="button" class="button-link bactive-clear-preview">' . esc_html__( 'Remove preview photo', 'blocksy-child' ) . '</button></div>';
         echo '<details><summary>' . esc_html__( 'Size photos — edit individually in Variations', 'blocksy-child' ) . '</summary><ul class="bactive-size-photos">';
@@ -129,7 +138,12 @@ function bactive_catalogue_editor_assets() {
     $base = get_stylesheet_directory();
     wp_enqueue_style( 'bactive-catalogue-editor', get_stylesheet_directory_uri() . '/assets/css/catalogue-editor.css', array( 'wp-color-picker' ), filemtime( $base . '/assets/css/catalogue-editor.css' ) );
     wp_enqueue_script( 'bactive-catalogue-editor', get_stylesheet_directory_uri() . '/assets/js/catalogue-editor.js', array( 'jquery', 'wp-color-picker', 'media-editor' ), filemtime( $base . '/assets/js/catalogue-editor.js' ), true );
-    wp_localize_script( 'bactive-catalogue-editor', 'bactiveCatalogueEditor', array( 'title' => __( 'Choose colour preview photo', 'blocksy-child' ), 'button' => __( 'Use this photo', 'blocksy-child' ) ) );
+    wp_localize_script( 'bactive-catalogue-editor', 'bactiveCatalogueEditor', array( 'title' => __( 'Choose colour preview photo', 'blocksy-child' ), 'button' => __( 'Use this photo', 'blocksy-child' ),
+        'held' => __( 'Catalogue hold: saved shades cannot display yet.', 'blocksy-child' ),
+        'nameOnly' => __( 'Name only: no circle will display.', 'blocksy-child' ),
+        'missingGlobal' => __( 'No global shade set. Choose Custom shade for this product, or set the global colour default.', 'blocksy-child' ),
+        'missingCustom' => __( 'Choose a six-digit custom shade, then Update.', 'blocksy-child' ),
+        'shade' => __( 'Selected shade: %s. Use Update to save changes.', 'blocksy-child' ) ) );
 }
 add_action( 'admin_enqueue_scripts', 'bactive_catalogue_editor_assets' );
 

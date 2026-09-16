@@ -1,0 +1,32 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const { JSDOM } = require('jsdom');
+const root = path.resolve(__dirname, '..');
+
+test('picker selects custom mode, while global, name-only and held states stay explicit', async () => {
+    const dom = new JSDOM('<section class="bactive-colour-row" data-global-shade="#faf9f6" data-held="0"><select><option value="inherit">Global</option><option value="custom">Custom</option><option value="none">Name only</option></select><input class="bactive-colour-picker" value=""><label class="bactive-review"><input type="checkbox" checked></label><span class="bactive-shade-status"></span></section>', { runScripts: 'outside-only' });
+    const w = dom.window;
+    w.eval(fs.readFileSync(path.join(root, 'wordpress/wp-includes/js/jquery/jquery.js'), 'utf8'));
+    const $ = w.jQuery;
+    let picker;
+    $.fn.wpColorPicker = function (options) { picker = options; return this; };
+    w.bactiveCatalogueEditor = { held: 'Held', nameOnly: 'Name only', missingGlobal: 'Set global shade', missingCustom: 'Set custom shade', shade: 'Selected %s' };
+    w.eval(fs.readFileSync(path.join(root, 'wordpress/wp-content/themes/blocksy-child/assets/js/catalogue-editor.js'), 'utf8'));
+    await new Promise(resolve => $(resolve));
+    const input = $('.bactive-colour-picker')[0];
+    picker.change.call(input, {}, { color: { toString: () => '#123456' } });
+    assert.equal($('select').val(), 'custom');
+    assert.equal($('.bactive-review input').prop('checked'), false);
+    assert.equal($('.bactive-shade-status').text(), 'Selected #123456');
+    $('select').val('inherit').trigger('change');
+    assert.equal($('.bactive-shade-status').text(), 'Selected #faf9f6');
+    $('section').attr('data-global-shade', ''); $('select').trigger('change');
+    assert.equal($('.bactive-shade-status').text(), 'Set global shade');
+    $('select').val('none').trigger('change');
+    assert.equal($('.bactive-shade-status').text(), 'Name only');
+    $('section').attr('data-held','1'); $('select').trigger('change');
+    assert.equal($('.bactive-shade-status').text(), 'Held');
+    dom.window.close();
+});

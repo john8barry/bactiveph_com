@@ -6,8 +6,9 @@ function __( $s, $domain = '' ) { return $s; }
 function add_action( ...$args ) {}
 function add_filter( ...$args ) {}
 function is_wp_error( $x ) { return $x instanceof WP_Error; }
-function bactive_catalogue_product_stamp( $p ) { return str_repeat( 'a', 64 ); }
-function bactive_catalogue_product_colours( $p ) { return array( 'pa_colour:83' => array( 'key' => 'pa_colour:83', 'taxonomy' => 'pa_colour', 'term_id' => 83, 'slug' => 'lavender', 'name' => 'Lavender' ) ); }
+function bactive_catalogue_product_stamp( $p ) { return $GLOBALS['mapping_stamp'] ?? str_repeat( 'a', 64 ); }
+function bactive_catalogue_editor_stamp( $p ) { return $GLOBALS['settings_stamp'] ?? str_repeat( 'd', 64 ); }
+function bactive_catalogue_product_colours( $p ) { return $GLOBALS['rows'] ?? array( 'pa_colour:83' => array( 'key' => 'pa_colour:83', 'taxonomy' => 'pa_colour', 'term_id' => 83, 'slug' => 'lavender', 'name' => 'Lavender' ) ); }
 function bactive_catalogue_product_settings( $p ) { return $GLOBALS['previous']; }
 function bactive_catalogue_attachment( $id ) { return 750 === $id ? array( 'id' => 750 ) : null; }
 function bactive_catalogue_review_fingerprint( ...$args ) { return str_repeat( 'b', 64 ); }
@@ -63,3 +64,26 @@ $_POST['bactive_colour_hex'] = array(); bactive_catalogue_term_save( 83, 83, 'pa
 $_POST['bactive_colour_hex'] = '#AbCdEf'; bactive_catalogue_term_save( 83, 83, 'pa_colour' ); check( $term_writes === array( array( 83, '_bactive_colour_hex', '#abcdef' ) ), 'Scoped global shade write' );
 check( $term_invalidated === array( 83, 'pa_colour' ), 'Invalidate products inheriting global colour' );
 echo "Catalogue editor auth, stale form, validation, review and scoped-write checks PASS\n";
+
+// Woo saves variations over AJAX before submitting the main product form.
+$previous = array( 'schema_version'=>1, 'colours'=>array() );
+$modern = $confirmed; $modern['settings_stamp'] = str_repeat('d',64);
+$mapping_stamp = str_repeat('e',64);
+$saved = bactive_catalogue_editor_validate($product,$modern);
+check(!is_wp_error($saved) && $saved['settings']['colours']['pa_colour:83']['hex']==='#aabbcc', 'Variation save retains submitted custom shade');
+check($saved['mapping_changed'] && $saved['settings']['colours']['pa_colour:83']['review']==='', 'Changed mapping cannot approve unseen photos');
+$settings_stamp = str_repeat('f',64);
+check(is_wp_error(bactive_catalogue_editor_validate($product,$modern)), 'Competing owned-settings save still rejected');
+unset($settings_stamp);
+$previous = $saved['settings'];
+$modern['colours'] = array();
+$saved = bactive_catalogue_editor_validate($product,$modern);
+check($saved['settings']['colours']['pa_colour:83']['hex']==='#aabbcc' && $saved['settings']['colours']['pa_colour:83']['preview_image_id']===750, 'Missing row during mapping change preserves persisted settings');
+$previous = array('schema_version'=>1,'colours'=>array());
+$modern['colours'] = '';
+$saved = bactive_catalogue_editor_validate($product,$modern);
+check(!is_wp_error($saved) && $saved['settings']['colours']['pa_colour:83']['mode']==='inherit', 'First AJAX attribute save initializes a new product colour');
+$rows = array(); $modern['colours']=$confirmed['colours'];
+$saved = bactive_catalogue_editor_validate($product,$modern);
+check($saved['settings']['colours']===array(), 'Removed terms are not reintroduced by an older form');
+echo "Catalogue editor variation-save, conflict, new-product and removed-term regressions PASS\n";

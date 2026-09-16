@@ -57,6 +57,10 @@ try {
     check( bactive_catalogue_feature( 'layout' ) && ! bactive_catalogue_feature( 'selectors' ), 'Strict switches' );
     $product = new WC_Product(); $row = bactive_catalogue_product_colours( $product )['pa_colour:7'];
     check( '#aabbcc' === bactive_catalogue_effective_hex( $product, $row ), 'New product inherits colour term' );
+    $options['bactive_catalog_visuals_release'] = array( 'schema_version'=>1, 'version'=>'legacy', 'products'=>array(900=>array('reviewed'=>true,'palette'=>array())) );
+    check( '' === bactive_catalogue_effective_hex( $product, $row ), 'Unmigrated legacy omissions remain name only' );
+    $product->meta['_bactive_colour_settings'] = array( 'schema_version'=>1, 'colours'=>array() );
+    check( '#aabbcc' === bactive_catalogue_effective_hex( $product, $row ), 'New term on migrated product inherits its global shade despite old palette omission' );
     $product->meta['_bactive_colour_settings'] = array( 'schema_version'=>1, 'colours'=>array( 'pa_colour:7'=>array( 'mode'=>'custom','hex'=>'#112233','preview_image_id'=>1,'review'=>'' ) ) );
     check( '#112233' === bactive_catalogue_effective_hex( $product, $row ), 'Product shade overrides global default' );
     $variations = array( 901=>new WC_Product_Variation(1,'s'), 902=>new WC_Product_Variation(2,'l') );
@@ -107,9 +111,14 @@ try {
     check( 1 === bactive_catalogue_preview( $product, $row )['id'], 'Authorized editor can review protected product' );
     $password_required = false; $capabilities = array();
     $stamp = bactive_catalogue_product_stamp( $product );
+    $editor_stamp = bactive_catalogue_editor_stamp( $product );
     $variations[902]->image = 1; bactive_catalogue_forget(900);
     check( null === bactive_catalogue_preview( $product, $row ), 'Changing one size photo invalidates review' );
     check( $stamp !== bactive_catalogue_product_stamp( $product ), 'Stale editor sees changed variation photos' );
+    check( $editor_stamp === bactive_catalogue_editor_stamp( $product ), 'Woo variation AJAX does not create an owned-settings conflict' );
+    $product->meta['_bactive_layout_mode'] = 'native';
+    check( $editor_stamp !== bactive_catalogue_editor_stamp( $product ), 'Competing layout edit changes the owned-settings stamp' );
+    unset($product->meta['_bactive_layout_mode']);
     $variations[902]->image = 2; bactive_catalogue_forget(900);
     check( $review === bactive_catalogue_review_fingerprint( $product, $row, 1 ), 'Restored mappings recover original identity' );
     file_put_contents( $files[2], $png . 'replacement' ); bactive_catalogue_forget(900);
@@ -121,6 +130,9 @@ try {
     check( '' === bactive_catalogue_effective_hex( $product, $row ), 'Name only suppresses global default' );
     $product->id=56;
     check( '' === bactive_catalogue_review_fingerprint( $product, $row, 1 ) && '' === bactive_catalogue_effective_hex( $product, $row ), 'Held products cannot release through metadata' );
+    $product->id=238; $product->meta['_bactive_colour_settings']['colours']['pa_colour:7']['mode']='inherit';
+    check(!bactive_catalogue_held(238) && '#aabbcc'===bactive_catalogue_effective_hex($product,$row), 'Repaired Sculpt uses merchant global shades without the historical hold');
+    foreach(array(56,160,211,148,347) as $held_id) { check(bactive_catalogue_held($held_id), 'Other protected products remain held'); }
     foreach ( array('http://example.test/uploads/one.png','https://example.test:8443/uploads/one.png','https://example.test/other/one.png','https://example.test/uploads/one.png?remote=1') as $bad ) {
         $urls[1]=$bad; check( null === bactive_catalogue_attachment(1), 'Reject unbound attachment URL' );
     }

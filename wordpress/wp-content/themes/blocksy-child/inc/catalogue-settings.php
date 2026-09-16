@@ -185,13 +185,35 @@ function bactive_catalogue_can_view( $product ) {
     return ! post_password_required( $id ) || current_user_can( 'edit_post', $id );
 }
 
-function bactive_catalogue_preview( $product, $row ) {
-    // Public theme AJAX can request private IDs; never expose a new derived photo there.
-    if ( ! bactive_catalogue_can_view( $product ) ) { return null; }
+function bactive_catalogue_reviewed_preview( $product, $row ) {
+    if ( bactive_catalogue_held( $product->get_id() ) || ! bactive_catalogue_can_view( $product ) ) { return null; }
     $entry = bactive_catalogue_product_settings( $product )['colours'][ $row['key'] ] ?? null;
     if ( ! $entry || ! $entry['review'] ) { return null; }
     $current = bactive_catalogue_review_fingerprint( $product, $row, $entry['preview_image_id'] );
     return $current && hash_equals( $entry['review'], $current ) ? bactive_catalogue_attachment( $entry['preview_image_id'] ) : null;
+}
+
+/** A colour has an automatic preview only when every published size has one exact photo. */
+function bactive_catalogue_automatic_preview( $product, $row ) {
+    if ( bactive_catalogue_held( $product->get_id() ) || ! bactive_catalogue_can_view( $product )
+        || ! $product->is_type( 'variable' ) || ! isset( bactive_catalogue_product_colours( $product )[ $row['key'] ] ) ) { return null; }
+    $image_id = 0;
+    $matches = 0;
+    foreach ( bactive_catalogue_variations( $product ) as $variation ) {
+        if ( 'publish' !== $variation['status'] ) { continue; }
+        $colour = $variation['attributes'][ $row['taxonomy'] ] ?? '';
+        if ( '' === $colour ) { return null; }
+        if ( $colour !== $row['slug'] ) { continue; }
+        if ( ! $variation['image_id'] || ( $image_id && $image_id !== $variation['image_id'] ) ) { return null; }
+        $image_id = $variation['image_id'];
+        ++$matches;
+    }
+    return $matches ? bactive_catalogue_attachment( $image_id ) : null;
+}
+
+/** One resolver serves product galleries, listing cards and related products. */
+function bactive_catalogue_preview( $product, $row ) {
+    return bactive_catalogue_reviewed_preview( $product, $row ) ?: bactive_catalogue_automatic_preview( $product, $row );
 }
 
 function bactive_catalogue_palette( $product ) {

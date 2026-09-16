@@ -32,7 +32,7 @@ function bactive_collection_styles() {
 	if ( ! $automatic && true !== ( $config['enabled'] ?? false ) && true !== ( $config['editorial']['enabled'] ?? false ) ) {
 		return;
 	}
-	if ( ( true === ( $config['enabled'] ?? false ) || $automatic ) && function_exists( 'is_product' ) && is_product() ) {
+	if ( true === ( $config['enabled'] ?? false ) || $automatic ) {
 		$script = '/assets/js/collection-visuals.js';
 		if ( is_readable( get_stylesheet_directory() . $script ) ) {
 			wp_enqueue_script( 'bactive-collection-previews', get_stylesheet_directory_uri() . $script, array(), filemtime( get_stylesheet_directory() . $script ), true );

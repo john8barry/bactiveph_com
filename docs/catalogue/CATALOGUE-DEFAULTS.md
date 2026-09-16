@@ -1,5 +1,9 @@
 # Automatic product presentation and colour editing
 
+## Colour-only photo previews (September 16 candidate)
+
+A colour can preview its photo before a size is chosen when all published sizes for that colour use the same valid image. A reviewed custom preview takes priority. Different or missing size photos require a representative preview chosen and confirmed in Product data → Colours & photos. The editor states whether a photo is automatic, reviewed custom, or needs review. This rule also applies to shop and collection cards; a complete colour-and-size choice continues to use its assigned variation image. See the [repair record](../work-records/2026-09-16-colour-photo-preview-repair.md).
+
 ## Colour editor repair (September 15 live release)
 
 New colours on a product already using native settings inherit the global shade even when the historical release palette did not contain that colour. Explicit Name only and custom shades remain authoritative. Choosing a colour in the picker automatically selects Custom shade for this product; the status explains missing global shades, intentional name-only choices and catalogue holds separately.

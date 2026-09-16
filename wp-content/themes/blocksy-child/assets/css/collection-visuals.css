@@ -164,15 +164,15 @@
   .woocommerce ul.products li.bactive-collection-product .woocommerce-loop-product__title { font-size: 23px; }
 }
 
-.related .bactive-colour-preview[aria-pressed="true"] .bactive-colour-dot {
+.bactive-collection-product .bactive-colour-preview[aria-pressed="true"] .bactive-colour-dot {
   outline: 2px solid #40543c;
   outline-offset: 3px;
 }
-.related .bactive-colour-preview[aria-busy="true"] { cursor: progress; }
+.bactive-collection-product .bactive-colour-preview[aria-busy="true"] { cursor: progress; }
 
-.related .bactive-card-preview-selected .ct-media-container > img.ct-swap { display: none !important; }
-.related .bactive-card-preview-selected .ct-media-container > img:not(.ct-swap) { opacity: 1 !important; }
-.related .bactive-collection-product .bactive-colour-preview:is(:link, :visited, :hover, :focus, :active) {
+.bactive-card-preview-selected .ct-media-container > img.ct-swap { display: none !important; }
+.bactive-card-preview-selected .ct-media-container > img:not(.ct-swap) { opacity: 1 !important; }
+.bactive-collection-product .bactive-colour-preview:is(:link, :visited, :hover, :focus, :active) {
   color: #40543c;
 }
 @media (max-width: 999px) {

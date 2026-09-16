@@ -87,3 +87,5 @@ $rows = array(); $modern['colours']=$confirmed['colours'];
 $saved = bactive_catalogue_editor_validate($product,$modern);
 check($saved['settings']['colours']===array(), 'Removed terms are not reintroduced by an older form');
 echo "Catalogue editor variation-save, conflict, new-product and removed-term regressions PASS\n";
+check(bactive_catalogue_editor_display_photo(750,['id'=>751])['id']===750, 'Editor displays the exact custom image its checkbox would approve');
+check(bactive_catalogue_editor_display_photo(0,['id'=>751])['id']===751, 'Editor displays derived image when no custom image is selected');

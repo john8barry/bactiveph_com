@@ -1,13 +1,14 @@
-# GCash footer badge
+# GCash and direct-debit footer badges
 
 Owner: footer task. Work record: https://github.com/john8barry/bactiveph_com/issues/112.
 Base: ce131500. Branch: codex/gcash-footer.
 
 ## Scope
 
-John confirmed GCash approval and requested matching payment branding. Add the
-official PayMongo GCash badge after QR Ph. Preserve Maya, GrabPay, ShopeePay,
-eligible COD, PayMongo, and all four delivery partners. Six desktop columns and
+John confirmed GCash approval and that BPI/UBP Direct Debit work, and requested
+matching payment branding. Add GCash after QR Ph plus BPI Direct Debit and UBP
+Direct Debit using the existing matching bank SVG assets. Preserve Maya, GrabPay, ShopeePay,
+eligible COD, PayMongo, and all four delivery partners. Four desktop columns and
 three mobile columns preserve proportional matching badges. No gateway, checkout,
 provider, order, or payment settings are changed.
 
@@ -21,7 +22,27 @@ Payment owner reported September 16 that GCash activation is not verified and th
 current integration lacks GCash selection/readiness/source recognition. Merchant
 approval is not checkout activation. Production publication is held pending the
 payment lane's verified activation (issue #2). This task prepares and verifies
-staging presentation only until that dependency is satisfied.
+staging presentation only until that dependency is satisfied. Fresh authenticated
+production readback after the bank request confirms enabled=yes but selected
+issuance_methods are only qrph, paymaya, shopee_pay, grab_pay; dob and dob_ubp are
+not selected. This is distinct from John's confirmation the bank methods work.
+No gateway changes were made; the payment task received this current evidence.
+
+The v9 extension reuses the same-session six-component verified backup (still
+within four hours) and captures new exact v8 beforeimages before staging writes.
+The BPI and UnionBank assets already exist on staging with hashes matching source;
+their original artwork is unchanged.
+
+V9 acceptance passed on six ordinary URL/viewport checks (home 1440/768/390/320,
+shop 390, shipping/returns 1280): HTTP 200, all eight badges loaded, equal sizes
+within rounding, original aspect ratios, no overflow. Desktop/mobile screenshots
+visually accepted. Exact partial SHA256:
+7ba9e91f65e4cb7cacf47ca303fd49714cb3569e8b275293a19dc4eb39b5b2a6.
+Independent destination readback preserves all protected files and payment-setting
+hashes, with zero new log bytes. Bank extension evidence and exact v8 rollback
+preimage: /private/tmp/bactive-banks-8ceyNK, retained privately under BactivePH
+Application Support/footer-releases/2026-09-16-banks. The below v8 evidence is the
+preceding GCash-only stage, superseded by v9 for the visual release candidate.
 
 Both authenticated environments have the expected home/site URL, blocksy-child,
 separate databases, and staging noindex. Exact live trust-bar beforeimage matches

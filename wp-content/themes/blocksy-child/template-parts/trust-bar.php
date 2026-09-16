@@ -20,6 +20,8 @@ $bactive_payment_marks = array(
     'maya' => 'Maya',
     'grabpay' => 'GrabPay',
     'shopeepay' => 'ShopeePay',
+    'bpi' => 'BPI Direct Debit',
+    'unionbank' => 'UBP Direct Debit',
 );
 $bactive_theme_url = get_stylesheet_directory_uri();
 ?>
@@ -154,10 +156,10 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         .bactive-custom-footer .bactive-trust__group--shipping { align-items: flex-start; }
         .bactive-custom-footer .bactive-trust__group--payments { align-items: flex-end; }
     }
-    /* Fit the five approved methods and optional COD; retain three columns on phones. */
+    /* Two balanced desktop rows for seven approved methods and optional COD. */
     @media (min-width: 768px) {
         .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments {
-            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
         }
     }
     @media (max-width: 767px) {
@@ -166,7 +168,7 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         }
     }
 </style>
-<div class="bactive-trust" data-bactive-trust-version="2026-09-16-v8">
+<div class="bactive-trust" data-bactive-trust-version="2026-09-16-v9">
     <div class="bactive-trust__shipping">
         <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
             <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>

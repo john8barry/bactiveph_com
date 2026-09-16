@@ -213,20 +213,39 @@ function bactive_catalogue_photo_request_guard( $response, $handler, $request ) 
             if ( is_array( $variation ) ) { $rows[] = $variation; }
         }
     }
-    $uses_position = (bool) preg_match( '~\A/wc/v[12]/products(?:/|\z)~', $request->get_route() );
+    preg_match( '~\A/wc/v([0-9]+)/products(?:/|\z)~', $request->get_route(), $version_match );
+    $version = (int) ( $version_match[1] ?? 3 );
     foreach ( $rows as $row ) {
         $id = (int) ( $row['id'] ?? 0 );
-        $images = $row['images'] ?? ( isset( $row['image'] ) ? array( $row['image'] ) : array() );
+        $single = isset( $row['image'] ) || isset( $row['featured_media'] );
+        $single_image = $row['image'] ?? array();
+        if ( 1 === $version && is_array( $single_image ) && array_is_list( $single_image ) && $single_image ) { $single_image = reset( $single_image ); }
+        $images = $row['images'] ?? ( isset( $row['image'] ) ? array( $single_image ) : array() );
         if ( isset( $row['featured_media'] ) ) { $images = array( array( 'id' => $row['featured_media'] ) ); }
         if ( ! is_array( $images ) ) { return bactive_catalogue_photo_error( 0, 'Images must be a list of Media Library attachment IDs.' ); }
+        $assignments = array(); $positions = array();
         foreach ( $images as $index => $image ) {
             $raw = is_array( $image ) ? ( $image['id'] ?? null ) : null;
             if ( ! is_scalar( $raw ) || ! preg_match( '/\A[0-9]+\z/', (string) $raw ) || ( 0 === (int) $raw && ! empty( $image['src'] ) ) ) {
                 return bactive_catalogue_photo_error( 0, 'Upload and review the photo in Media Library first, then assign its numeric attachment ID.' );
             }
-            $position = $uses_position ? (int) ( $image['position'] ?? $index ) : (int) $index;
-            $key = 0 === $position ? '_thumbnail_id' : '_product_image_gallery';
-            $value = '_thumbnail_id' === $key ? (int) $raw : (string) $raw;
+            if ( 2 === $version && ! $single ) {
+                // v2 deduplicates by ID (last position wins), then sorts; the first ID is main.
+                $positions[ (int) $raw ] = absint( $image['position'] ?? $index );
+            } else {
+                $main = $single || ( 1 === $version ? isset( $image['position'] ) && 0 === absint( $image['position'] ) : 0 === (int) $index );
+                $assignments[] = array( (int) $raw, $main ? '_thumbnail_id' : '_product_image_gallery' );
+            }
+        }
+        if ( $positions ) {
+            asort( $positions );
+            $ordered = array_keys( $positions );
+            foreach ( $ordered as $index => $image_id ) {
+                $assignments[] = array( $image_id, 0 === $index ? '_thumbnail_id' : '_product_image_gallery' );
+            }
+        }
+        foreach ( $assignments as list( $image_id, $key ) ) {
+            $value = '_thumbnail_id' === $key ? $image_id : (string) $image_id;
             $error = bactive_catalogue_photo_assignment_error( $key, $value, $id ? get_post_meta( $id, $key, true ) : '' );
             if ( $error ) { return $error; }
         }

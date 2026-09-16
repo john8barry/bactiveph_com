@@ -46,7 +46,7 @@ jobs:
         env:
           NODE_PATH: ${{ github.workspace }}/tests/catalogue-runtime/node_modules
         run: |
-          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs tests/catalogue-colour-photo.test.cjs tests/catalog-gallery-startup.test.cjs
+          node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs tests/catalogue-colour-photo.test.cjs tests/catalog-gallery-startup.test.cjs tests/catalogue-editor.test.cjs
           php tests/catalogue-settings.php
           php tests/catalogue-editor.php
           php tests/catalogue-migration.php

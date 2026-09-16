@@ -17,7 +17,9 @@ function bactive_catalogue_feature( $feature ) {
 
 function bactive_catalogue_held( $id ) {
     // Removing a hold requires a separate catalogue repair and review, never an editor save.
-    return in_array( (int) $id, array( 56, 160, 211, 238, 148, 347 ), true );
+    // Sculpt 238 now uses explicit merchant-assigned colours; the obsolete
+    // Almond/Stone hold must not suppress those colours or future editor work.
+    return in_array( (int) $id, array( 56, 160, 211, 148, 347 ), true );
 }
 
 function bactive_catalogue_native( $id ) {
@@ -65,7 +67,9 @@ function bactive_catalogue_effective_hex( $product, $row ) {
     if ( $entry && 'none' === $entry['mode'] ) { return ''; }
     if ( $entry && 'custom' === $entry['mode'] ) { return $entry['hex']; }
     // Preserve old approved shades until the journalled metadata migration is applied.
-    if ( ! $entry && function_exists( 'bactive_catalog_visuals_registry' ) ) {
+    $stored = $product->get_meta( '_bactive_colour_settings', true );
+    $migrated = is_array( $stored ) && 1 === ( $stored['schema_version'] ?? null ) && is_array( $stored['colours'] ?? null );
+    if ( ! $entry && ! $migrated && function_exists( 'bactive_catalog_visuals_registry' ) ) {
         $legacy = bactive_catalog_visuals_entry( bactive_catalog_visuals_registry(), $product->get_id() );
         $shade = $legacy['palette'][ 'attribute_' . $row['taxonomy'] ][ $row['slug'] ] ?? null;
         if ( true === ( $legacy['reviewed'] ?? false ) && true === ( $shade['approved'] ?? false )
@@ -145,6 +149,13 @@ function bactive_catalogue_review_fingerprint( $product, $row, $preview_id ) {
     if ( $product->is_type( 'variable' ) && ! $entries ) { return ''; }
     return hash( 'sha256', wp_json_encode( array( 'product_id' => $product->get_id(), 'colour' => $row,
         'preview_id' => $preview_id, 'preview_sha' => $preview['sha256'], 'variations' => $entries ) ) );
+}
+
+/** Owned settings conflict independently of WooCommerce's AJAX variation saves. */
+function bactive_catalogue_editor_stamp( $product ) {
+    return hash( 'sha256', wp_json_encode( array( 'id' => $product->get_id(),
+        'settings' => $product->get_meta( '_bactive_colour_settings', true ),
+        'layout' => $product->get_meta( '_bactive_layout_mode', true ) ) ) );
 }
 
 function bactive_catalogue_product_stamp( $product ) {

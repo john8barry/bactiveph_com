@@ -122,4 +122,11 @@ check(null===bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['
 check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>3,'position'=>0]]],'/wc/v1/products/100'))),'V1 explicit zero requires portrait');
 check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'variations'=>[['id'=>101,'image'=>[['id'=>3,'position'=>8]]]]],'/wc/v1/products/100'))),'V1 nested variation image is always portrait despite supplied position');
 check(null===bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'variations'=>[['id'=>101,'image'=>[['id'=>1]]]]],'/wc/v1/products/100')),'V1 nested reviewed variation portrait supported');
+
+// A tiny compressed image must not allocate the entire 32 MiB maximum read buffer.
+$previous_limit=ini_get('memory_limit');ini_set('memory_limit','64M');
+$GLOBALS['bactive_photo_decoded']=[];
+$ballast=str_repeat('x',64*1024*1024-memory_get_usage(true)-26*1024*1024);
+check(!is_wp_error(bactive_catalogue_photo_validate(7)),'A small valid PNG decodes with less than 32 MiB available memory');
+unset($ballast);ini_set('memory_limit',$previous_limit);
 echo $GLOBALS['checks']." assertions PASS\n";

@@ -95,11 +95,13 @@
     background: #f2f1eb;
     border-radius: 2px;
 }
-.bactive-product-page .woocommerce-product-gallery .flexy-view .ct-media-container {
+.bactive-product-page .woocommerce-product-gallery .flexy-view .ct-media-container,
+.bactive-product-page .woocommerce-product-gallery .ct-product-gallery-container > .ct-media-container {
     display: block;
     aspect-ratio: auto !important;
 }
-.bactive-product-page .woocommerce-product-gallery .flexy-view img {
+.bactive-product-page .woocommerce-product-gallery .flexy-view img,
+.bactive-product-page .woocommerce-product-gallery .ct-product-gallery-container > .ct-media-container > img:not(.zoomImg) {
     display: block;
     width: 100%;
     height: auto;

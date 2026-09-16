@@ -11,3 +11,7 @@ Rollback: restore the four CSS/JavaScript files from the pre-release backup only
 ## Lazy-image geometry correction
 
 Native browser review found an unloaded lazy image had no intrinsic ratio and collapsed to zero height. Image rules now use `aspect-ratio: auto 2 / 3`: the fallback reserves portrait space before loading, while the loaded image’s natural ratio still controls detail/comparison geometry. Containers retain `auto` so they do not force landscape exceptions into portrait boxes. `tests/product-photo-layout.html` is an actual-browser geometry regression fixture covering initial unloaded images and loaded landscape exceptions for gallery and collection frames.
+
+## Single-photo galleries
+
+The all-route browser audit also found Blocksy's single-photo gallery bypasses `.flexy-view` and retains its inline 9:16 image style. The same natural-image sizing now covers only direct media/image children of `.ct-product-gallery-container`; thumbnail strips and their square crops remain outside that selector. The browser fixture now checks this direct-gallery structure and preserves thumbnail geometry.

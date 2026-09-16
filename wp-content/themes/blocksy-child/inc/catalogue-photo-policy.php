@@ -22,7 +22,11 @@ function bactive_catalogue_photo_decode( $id, $image ) {
     }
     // Bound decoder memory before touching the pixel payload, including images with huge headers.
     $pixels = $image['width'] * $image['height'];
-    $bytes = filesize( $path );
+    clearstatcache( true, $path );
+    $bytes = @filesize( $path );
+    if ( ! is_int( $bytes ) || $bytes < 1 ) {
+        return bactive_catalogue_photo_error( $id, __( 'The file changed during validation. Try again.', 'blocksy-child' ) );
+    }
     $limit = wp_convert_hr_to_bytes( ini_get( 'memory_limit' ) );
     if ( $pixels > 24000000 || $bytes > 32 * 1024 * 1024
         || ( $limit > 0 && memory_get_usage( true ) + $pixels * 8 + $bytes * 2 + 16 * 1024 * 1024 > $limit ) ) {
@@ -31,8 +35,8 @@ function bactive_catalogue_photo_decode( $id, $image ) {
     if ( ! function_exists( 'imagecreatefromstring' ) ) {
         return bactive_catalogue_photo_error( $id, __( 'The server image decoder is unavailable. Ask the site administrator to enable GD.', 'blocksy-child' ) );
     }
-    $bytes_data = @file_get_contents( $path, false, null, 0, 32 * 1024 * 1024 + 1 );
-    if ( ! is_string( $bytes_data ) || strlen( $bytes_data ) > 32 * 1024 * 1024 || ! hash_equals( $image['sha256'], hash( 'sha256', $bytes_data ) ) ) {
+    $bytes_data = @file_get_contents( $path, false, null, 0, $bytes + 1 );
+    if ( ! is_string( $bytes_data ) || strlen( $bytes_data ) !== $bytes || ! hash_equals( $image['sha256'], hash( 'sha256', $bytes_data ) ) ) {
         return bactive_catalogue_photo_error( $id, __( 'The file changed during validation. Try again.', 'blocksy-child' ) );
     }
     $decode_warning = false;

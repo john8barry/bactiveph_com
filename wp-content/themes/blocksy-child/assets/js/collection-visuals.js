@@ -2,6 +2,7 @@
 (() => {
   'use strict';
   const initializedLinks = new WeakSet();
+  const initializedFrames = new WeakSet();
   function init(root = document) {
     const cards = [root, ...root.querySelectorAll('.bactive-collection-product')]
       .filter(node => node.matches?.('.bactive-collection-product'));
@@ -9,6 +10,28 @@
       const images = card.querySelectorAll(':scope > figure > a.ct-media-container > img:not(.ct-swap)');
       if (images.length !== 1) return;
       const image = images[0];
+      const frame = image.parentElement;
+      if (!initializedFrames.has(frame)) {
+        initializedFrames.add(frame);
+        let hovering = false;
+        const swap = frame.querySelector('img.ct-swap');
+        function sizeFrame() {
+          const swapping = hovering && swap && frame.closest('[data-hover="swap"]') &&
+            (!window.matchMedia || window.matchMedia('(hover: hover)').matches);
+          const active = swapping && !card.classList.contains('bactive-card-preview-selected') ? swap : image;
+          const width = active.naturalWidth || Number(active.getAttribute('width'));
+          const height = active.naturalHeight || Number(active.getAttribute('height'));
+          if (!(width > 0 && height > 0)) return;
+          frame.style.aspectRatio = `${width} / ${height}`;
+          frame.classList.add('bactive-photo-frame-ready');
+        }
+        frame.addEventListener('mouseenter', () => { hovering = true; sizeFrame(); });
+        frame.addEventListener('mouseleave', () => { hovering = false; sizeFrame(); });
+        image.addEventListener('load', sizeFrame);
+        swap?.addEventListener('load', sizeFrame);
+        new MutationObserver(sizeFrame).observe(image, {attributes: true, attributeFilter: ['src', 'width', 'height']});
+        sizeFrame();
+      }
       const links = [...card.querySelectorAll('a.bactive-colour-preview[data-preview-src]')];
       let sequence = 0;
       links.forEach(link => {
@@ -37,6 +60,8 @@
             image.height = pending.naturalHeight;
             image.removeAttribute('title');
             card.classList.add('bactive-card-preview-selected');
+            frame.style.aspectRatio = `${pending.naturalWidth} / ${pending.naturalHeight}`;
+            frame.classList.add('bactive-photo-frame-ready');
             image.alt = `${card.querySelector('.woocommerce-loop-product__title')?.textContent.trim() || ''} — ${link.textContent.trim()}`;
             links.filter(item => item.getAttribute('role') === 'button').forEach(item => item.setAttribute('aria-pressed', String(item === link)));
           };

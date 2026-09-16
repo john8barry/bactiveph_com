@@ -49,3 +49,24 @@ test('failed and external photos leave the original usable; styling does not dep
  f.w.bactiveCatalogVisuals.previews.attribute_pa_colour.white.src='https://other.test/white.jpg';f.choose(0,'white');assert.equal(f.pending.length,1);
  const css=fs.readFileSync('wp-content/themes/blocksy-child/assets/css/catalog-visuals.css','utf8');assert.match(css,/^\.woocommerce-product-gallery \.bactive-colour-photo-target \{ position: relative; \}/m);f.dom.window.close();
 });
+
+test('portrait overlay resizes independently of old gallery ratio and restores exact native height',()=>{
+ const f=fixture(),view=f.w.document.querySelector('.flexy-view');let width=400;
+ view.getBoundingClientRect=()=>({width});view.style.setProperty('height','250px','important');
+ f.choose(0,'black');f.pending.at(-1).onload();
+ assert.equal(view.style.height,`${400*1600/1200}px`);assert.equal(view.style.getPropertyPriority('height'),'important');
+ width=240;f.w.dispatchEvent(new f.w.Event('resize'));assert.equal(view.style.height,'320px');
+ f.choose(1,'s');assert.equal(view.style.height,'250px');assert.equal(view.style.getPropertyPriority('height'),'important');
+ width=300;f.w.dispatchEvent(new f.w.Event('resize'));assert.equal(view.style.height,'250px');f.dom.window.close();
+});
+test('rapid previews and native reset leave no stale height override',()=>{
+ const f=fixture(),view=f.w.document.querySelector('.flexy-view');view.getBoundingClientRect=()=>({width:300});
+ f.choose(0,'black');f.choose(0,'white');f.pending[1].onload();f.pending[0].onload();
+ assert.equal(view.style.height,'400px');f.choose(0,'');f.$(f.form).trigger('reset_data');assert.equal(view.style.height,'');f.dom.window.close();
+});
+test('gallery sizing removes both old outer and inline image ratio constraints',()=>{
+ const css=fs.readFileSync('wp-content/themes/blocksy-child/assets/css/catalog-visuals.css','utf8');
+ assert.doesNotMatch(css,/aspect-ratio:\s*3\s*\/\s*4/);
+ assert.match(css,/\.flexy-view \.ct-media-container\s*\{[^}]*aspect-ratio: auto !important/s);
+ assert.match(css,/\.flexy-view img\s*\{[^}]*height: auto;[^}]*aspect-ratio: auto !important/s);
+});

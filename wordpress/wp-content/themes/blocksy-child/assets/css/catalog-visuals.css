@@ -96,11 +96,14 @@
     border-radius: 2px;
 }
 .bactive-product-page .woocommerce-product-gallery .flexy-view .ct-media-container {
-    aspect-ratio: 3 / 4;
+    display: block;
+    aspect-ratio: auto !important;
 }
 .bactive-product-page .woocommerce-product-gallery .flexy-view img {
+    display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: auto !important;
     object-fit: contain;
 }
 .bactive-product-page .product_title {

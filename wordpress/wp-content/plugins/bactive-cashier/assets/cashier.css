@@ -1,0 +1,63 @@
+@font-face { font-family: Inter; src: url('fonts/inter-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: Inter; src: url('fonts/inter-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: Inter; src: url('fonts/inter-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: Rajdhani; src: url('fonts/rajdhani-600-latin.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+/* Scoped cashier surface; inherits B Active’s Inter/Rajdhani typography and orange accent. */
+.bc-app { --bc-ink: #1f2937; --bc-muted: #536052; --bc-accent: #9c380a; --bc-line: #d8ddd5; color: var(--bc-ink); background: #f5f6f1; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 1.45; min-height: 100vh; padding: 24px; color-scheme: light; }
+.bc-app *, .bc-app *::before, .bc-app *::after { box-sizing: border-box; }
+.bc-app ::selection { background: #fbd7bc; color: #1f2937; }
+.bc-app h1, .bc-app h2, .bc-app h3, .bc-app h4, .bc-app p { margin: 0; }
+.bc-app h1, .bc-app h2 { font-family: Rajdhani, Inter, system-ui, sans-serif; line-height: 1.12; }
+.bc-app h1 { font-size: clamp(27px, 3vw, 38px); font-weight: 600; }
+.bc-app h2 { font-size: 28px; margin-bottom: 20px; }
+.bc-app h3 { font-size: 19px; line-height: 1.3; }
+.bc-app h4 { font-size: 19px; }
+.bc-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 4px 0 24px; border-bottom: 2px solid #ed792f; margin-bottom: 24px; }
+.bc-header p { color: var(--bc-muted); margin-top: 8px; }
+.bc-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 390px); gap: 28px; max-width: 1500px; margin: 0 auto; align-items: start; }
+.bc-catalog { min-width: 0; }
+.bc-field { display: flex; flex-direction: column; gap: 8px; font-weight: 600; margin-bottom: 18px; }
+.bc-field input { width: 100%; min-height: 50px; padding: 12px 14px; border: 1px solid #879383; border-radius: 6px; font: inherit; font-weight: 400; color: var(--bc-ink); background: #fff; caret-color: var(--bc-accent); }
+.bc-app :focus-visible { outline: 3px solid #a63d0b; outline-offset: 3px; }
+.bc-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(245px, 1fr)); gap: 18px; }
+.bc-product { display: flex; align-items: stretch; gap: 14px; background: #fff; padding: 14px; border: 1px solid var(--bc-line); border-radius: 12px; overflow: hidden; }
+.bc-product img { width: 82px; height: 116px; object-fit: cover; border-radius: 5px; flex-shrink: 0; }
+.bc-product-detail { display: flex; flex-direction: column; gap: 9px; align-items: flex-start; min-width: 0; width: 100%; }
+.bc-product-detail .bc-button { margin-top: auto; }
+.bc-variant, .bc-hint { font-size: 15px; color: var(--bc-muted); }
+.bc-variant { display: block; }
+.bc-price { font-size: 16px; font-variant-numeric: tabular-nums; }
+.bc-button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 11px 17px; border: 1px solid #88937f; border-radius: 6px; background: #fff; color: var(--bc-ink); font: inherit; font-weight: 600; text-align: center; line-height: 1.25; cursor: pointer; text-decoration: none; touch-action: manipulation; }
+.bc-button:hover { background: #eef2e9; color: #1f2937; }
+.bc-button:disabled { background: #eef0eb; color: #6a7367; border-color: #ccd2c8; cursor: not-allowed; }
+.bc-primary { background: #a23a0a; border-color: #a23a0a; color: #fff; }
+.bc-primary:hover { background: #812d07; color: #fff; }
+.bc-secondary { background: #edf3e8; border-color: #566b47; color: #253b1a; }
+.bc-quiet { border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 4px; }
+.bc-basket { padding: 24px; background: #fff; border: 1px solid var(--bc-line); border-radius: 12px; position: sticky; top: 16px; }
+.bc-basket-body { display: flex; flex-direction: column; gap: 17px; }
+.bc-basket-body .bc-field { margin-bottom: 0; }
+.bc-basket-row { padding-bottom: 16px; border-bottom: 1px solid var(--bc-line); }
+.bc-basket-row strong { display: block; margin-bottom: 4px; }
+.bc-quantity { display: flex; align-items: center; gap: 16px; margin-top: 12px; font-variant-numeric: tabular-nums; }
+.bc-quantity .bc-button { min-width: 48px; padding: 8px; font-size: 23px; }
+.bc-line-total { margin-left: auto; font-weight: 600; }
+.bc-total { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; padding-top: 4px; }
+.bc-sale-row { display: flex; gap: 12px; justify-content: space-between; border-bottom: 1px solid var(--bc-line); padding-bottom: 12px; }
+.bc-sale-row strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bc-order { color: var(--bc-muted); font-size: 16px; }
+.bc-app .bc-status { font-size: 25px; }
+.bc-status-paid, .bc-status-completed, .bc-change { color: #25512b; }
+.bc-status-pending, .bc-status-review { color: #80501b; }
+.bc-tender { display: flex; flex-direction: column; gap: 14px; padding-top: 16px; border-top: 1px solid var(--bc-line); }
+.bc-qr { display: block; max-width: 100%; width: 280px; height: auto; align-self: center; image-rendering: pixelated; }
+.bc-warning, .bc-training, .bc-error { padding: 16px; border-radius: 6px; }
+.bc-warning { background: #fff0ce; color: #624008; }
+.bc-training { background: #dfecf8; color: #183e63; margin-bottom: 20px !important; font-weight: 600; }
+.bc-error { background: #fae7e2; color: #7f271b; margin-bottom: 20px; }
+.bc-error[hidden] { display: none; }
+.bc-empty { grid-column: 1 / -1; padding: 20px 0; color: var(--bc-muted); }
+.bc-footer { max-width: 1500px; margin: 28px auto 0; padding: 18px 0; color: var(--bc-muted); font-size: 15px; border-top: 1px solid var(--bc-line); }
+@media (max-width: 1000px) { .bc-app { padding: 20px; } .bc-layout { grid-template-columns: minmax(0, 1fr) minmax(310px, 350px); gap: 20px; } .bc-basket { padding: 20px; } .bc-products { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .bc-app { padding: 16px; } .bc-layout { display: flex; flex-direction: column; } .bc-catalog, .bc-basket { width: 100%; } .bc-basket { position: static; } .bc-header { margin-bottom: 20px; } .bc-product img { width: 90px; } .bc-products { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .bc-app *, .bc-app *::before, .bc-app *::after { scroll-behavior: auto !important; } }

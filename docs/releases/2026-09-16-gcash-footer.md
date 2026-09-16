@@ -2,6 +2,8 @@
 
 Owner: footer task. Work record: https://github.com/john8barry/bactiveph_com/issues/112.
 Base: ce131500. Branch: codex/gcash-footer.
+Status: production branding deployed and independently verified.
+Released source: c3ace104a1655c87bdb4856a0ffed26a1c448299 (PR #113).
 
 ## Scope
 
@@ -20,8 +22,8 @@ Only passive vector elements and one internal clipping reference are present.
 
 Payment owner reported September 16 that GCash activation is not verified and the
 current integration lacks GCash selection/readiness/source recognition. Merchant
-approval is not checkout activation. Production publication is held pending the
-payment lane's verified activation (issue #2). This was the initial branding hold.
+approval is not checkout activation. Production publication was initially held
+pending the payment lane's verified activation (issue #2).
 After reviewing the staging presentation and the activation gap, John explicitly
 directed: "great, get into production now". That current approval lifts the
 presentation-only merge/deployment hold for all three badges. It does not activate
@@ -74,12 +76,38 @@ target hashes, preserved protected files/payment settings and zero new log bytes
 - gcash.svg: 3f947f3d5cc4ac5cbb44c0c2c720bc8e36d7d6bc5c254923146e37943c721623
 - trust-bar.php: ab683aafa1af7c0f2b6d1411d46e6843be3123a2e19b417c45c3846a796fa64a
 
-Production remains v7 without GCash; ordinary homepage readback confirmed this.
-There were no production writes. Native gateway activation and end-to-end GCash
-checkout acceptance are UNVERIFIED and outside this presentation-only change.
-Private backup/rollback evidence retained under BactivePH Application Support,
-footer-releases/2026-09-16-gcash. Production needs fresh backup and drift checks
-when the payment dependency is satisfied, not reuse of today's staging backup.
+The preceding v8 verification was staging-only; production remained v7 at that
+checkpoint. It is superseded by the approved v9 production release below.
+
+## Production release
+
+PR #113 merged normally as c3ace104a1655c87bdb4856a0ffed26a1c448299 after
+explicit presentation approval and fresh exact-head tests/readback. A fresh
+production six-component Updraft backup passed off-server SHA256, ZIP CRC and
+gzip integrity checks before writes; exact production beforeimages were retained.
+Actual writes were only gcash.svg and trust-bar.php; identical existing BPI and
+UnionBank SVGs were verified and skipped. Independent SSH readback confirmed:
+
+- gcash.svg: 3f947f3d5cc4ac5cbb44c0c2c720bc8e36d7d6bc5c254923146e37943c721623
+- trust-bar.php: 7ba9e91f65e4cb7cacf47ca303fd49714cb3569e8b275293a19dc4eb39b5b2a6
+
+Existing bank hashes and all protected file/payment-setting hashes remained
+unchanged; zero new log bytes were observed. Six ordinary production browser
+checks (home 1440/768/390/320, shop 390, shipping/returns 1280) returned HTTP 200
+and v9 with loaded images, equal proportional badges and no overflow. Main
+visually accepted desktop 1440px and mobile 390px screenshots. The payment marks
+remain arranged as four desktop columns and three mobile columns, with existing
+PayMongo branding and all delivery partners preserved.
+
+Native gateway activation and end-to-end GCash/BPI/UBP checkout acceptance remain
+UNVERIFIED and outside this presentation-only change, tracked in issue #2.
+Publishing logos does not establish payment activation. Durable production
+backup/rollback evidence is retained under BactivePH Application Support,
+footer-releases/2026-09-16-banks. Independent review confirmed fresh ordinary
+homepage and product responses at HTTP 200/v9 with all three new payment marks
+and Maxim preserved; actual desktop/mobile production screenshots passed visual
+review. Issue #112 can close for branding only after this final record merges;
+payment activation remains a separate issue #2 acceptance requirement.
 
 ## Rollback
 

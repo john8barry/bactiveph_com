@@ -6,7 +6,7 @@ Owner: B Active catalogue repair. Severity: medium, customer-facing product imag
 
 On the Sculpt Leggings listing card, clicking a colour navigated to the product while the card photo stayed pink. The same colour-plus-size selection on the product page did change its image, so that earlier check did not cover colour-only previews. Current Sculpt assignments have seven colours, each with one exact published variation image and no saved photo approval. The listing script was enqueued only on product pages and initialized only related cards. The existing catalogue preview resolver required a separate approval even where all matching sizes already used one photo.
 
-The broader live audit found the same missing approval for Eyelet Off White and Court Classic Set Lavender. Warm-Up Jacket Magenta uses two different published size photos; it requires a merchant-chosen representative and is intentionally not inferred. Held products remain held.
+The pre-release audit found the same missing approval for Eyelet Off White and Court Classic Set Lavender. At final live readback, Court Classic Lavender has a valid reviewed preview, so it does not rely on automatic inference. Warm-Up Jacket Magenta uses two different published size photos; it requires a merchant-chosen representative and is intentionally not inferred. Held products remain held.
 
 ## Acceptance and safeguards
 

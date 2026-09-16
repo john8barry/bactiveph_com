@@ -1,12 +1,12 @@
 # Automatic product presentation and colour editing
 
-## Colour editor repair (September 15 candidate)
+## Colour editor repair (September 15 live release)
 
 New colours on a product already using native settings inherit the global shade even when the historical release palette did not contain that colour. Explicit Name only and custom shades remain authoritative. Choosing a colour in the picker automatically selects Custom shade for this product; the status explains missing global shades, intentional name-only choices and catalogue holds separately.
 
 WooCommerce may save attributes/variations before the main Update action. These changes now preserve valid entered colour settings, initialize newly added colours and discard removed rows. New photo confirmations are withheld when their review context changed: reopen Colours & photos, inspect the current photos and confirm again. A different editor changing the owned colour/layout settings still refuses the stale form.
 
-Sculpt Leggings 238 is qualified for removal from its obsolete Almond/Stone hold based on the current explicit merchant colour assignments. This repair does not add Blue back to its parent colour list or change any variation/photo assignment. Photo previews still need explicit review. Other product holds remain in place. See the [repair record](../work-records/2026-09-15-colour-editor-repair.md) for deployment status; the historical release checkpoints below retain their original hold lists.
+PR #108 is deployed and verified. Sculpt Leggings 238 is removed from its obsolete Almond/Stone hold based on the current explicit merchant colour assignments. This repair does not add Blue back to its parent colour list or change any variation/photo assignment. Eyelet URL product 95 now has a scoped Off White shade reusing its existing white dress setting; the global term had no shade saved. Photo previews still need explicit review. Other product holds remain in place. See the [repair record](../work-records/2026-09-15-colour-editor-repair.md) for evidence and editor instructions; historical release checkpoints below retain their original hold lists.
 
 Status at the September 15 checkpoint: **automatic defaults, the colour editor and the reviewed metadata are enabled in production** from PR #101, merge `8461d1832749047f39078a9b8ed4dced47adb40a`, reviewed source `b37b04dc4ae1dfaed03f3b409050292b9fccc94f`. Independent readback verified all eleven installed files, the metadata after-state, all five enabled switches and 342 protected files. All 272 captured product/variation row hashes stayed unchanged.
 

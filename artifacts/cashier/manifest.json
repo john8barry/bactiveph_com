@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "status": "authorized-for-live-release-testing",
+  "base_revision": "5cb35011afa1dd6f0baa03181360d89f08ece833",
+  "archive_sha256": "3d810c3ec370393ba5ff51d5667c817c94c8b975959fed72914cf25ff66ad540",
+  "files": {
+    "README.md": "43f24df145a7cb238159f3299f26f21549b75b474acdd43e7cb9955a3acda81e",
+    "assets/LICENSE.qrcode.txt": "0bc682ff83b4f274c50370f4e20787d30fe2b8a051abab2abd86d65de3dc3656",
+    "assets/cashier.css": "70cae9381557982ce035ef3bfa50a9d001923c6bbc0d2e48a504d0b94d73a3b9",
+    "assets/cashier.js": "339fb3e135c883c5f0f0afa9f3f4c280fcf4a0cc09ae232871b67a05357c4e74",
+    "assets/fonts/LICENSE.inter.txt": "6f54397328f91ac5afdde303c1fcd95337fb6ec3eb02e5d8e14ba9b7d8b82642",
+    "assets/fonts/LICENSE.rajdhani.txt": "793bdd8538a0c03afb5bc10906be27ad1dc76f143cfeac8c55cd9075a5b3a55c",
+    "assets/fonts/inter-400.woff2": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd",
+    "assets/fonts/inter-500.woff2": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd",
+    "assets/fonts/inter-600.woff2": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd",
+    "assets/fonts/rajdhani-600-latin.woff2": "35f7e628ec8e7dd3bf434e95ce28289803401f12d8605c56ca83db2b4b301d33",
+    "assets/qrcode.js": "18ae399f81182bc9de916e9c77b195df20cc58d6f2d55a62b085a299f1bf1780",
+    "bactive-cashier.php": "d623fb16dd899ddf387ebdde393f8d91d2089f96da3f37a19a42d612190a5a22",
+    "includes/class-cash-gateway.php": "9137f202a32f9519f8132a52dd506a64b6e49e04b4a80093444d9c40240e1176",
+    "includes/class-plugin.php": "5295e37b0e06191bb69aac1964bbbb905088237b24a37f1de6e3e6e890b638d4",
+    "includes/class-stock.php": "75a1e4ed24c67a8b2722d098ba9dcad1496d917e377bf3227a0568e0724daaf5"
+  }
+}

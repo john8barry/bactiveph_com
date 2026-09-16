@@ -1,0 +1,49 @@
+name: In-store cashier
+on:
+  pull_request:
+    paths:
+      - 'wordpress/wp-content/plugins/bactive-cashier/**'
+      - 'wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout/**'
+      - 'tools/cashier/**'
+      - '.github/workflows/cashier.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'wordpress/wp-content/plugins/bactive-cashier/**'
+      - 'wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout/**'
+      - 'tools/cashier/**'
+      - '.github/workflows/cashier.yml'
+permissions:
+  contents: read
+jobs:
+  cashier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - name: Lint and frontend regression
+        run: |
+          find wordpress/wp-content/plugins/bactive-cashier -name '*.php' -print0 | xargs -0 -n1 php -l
+          node wordpress/wp-content/plugins/bactive-cashier/tests/frontend.test.cjs
+          php wordpress/wp-content/plugins/bactive-paymongo-hosted-checkout/tests/run.php
+      - name: Pull pinned synthetic runtime
+        run: |
+          docker pull mariadb:11.4@sha256:611a2fcc5fa7c6ceb8644c6f74b25ede004ff6c3a6b38c8f8c23d3bbf6c26430
+          docker pull wordpress:cli-php8.2@sha256:837d55d02196b5f4c92d236317c6d089ab1471348b31d1708888d444a0390979
+      - name: Test real WooCommerce with synthetic provider
+        run: |
+          python3 tools/cashier/runtime.py start
+          python3 tools/cashier/runtime.py wp plugin activate bactive-cashier
+          python3 tools/cashier/runtime.py wp option update bactive_cashier_enabled yes
+          python3 tools/cashier/runtime.py wp eval-file /fixture-tools/setup-provider.php
+          python3 tools/cashier/runtime.py wp eval-file /fixture-tools/seed.php
+          python3 tools/cashier/runtime.py wp eval-file /reference/wp-content/plugins/bactive-cashier/tests/integration.php
+          python3 tools/cashier/run-http-tests.py
+          python3 tools/cashier/run-concurrency-tests.py
+      - name: Remove synthetic runtime
+        if: always()
+        run: python3 tools/cashier/runtime.py stop

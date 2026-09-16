@@ -1,21 +1,24 @@
 /* Colour previews never select a purchasable variation or change cart actions. */
 (() => {
   'use strict';
+  const initializedLinks = new WeakSet();
   function init(root = document) {
-    root.querySelectorAll('.related .bactive-collection-product').forEach(card => {
+    const cards = [root, ...root.querySelectorAll('.bactive-collection-product')]
+      .filter(node => node.matches?.('.bactive-collection-product'));
+    cards.forEach(card => {
       const images = card.querySelectorAll(':scope > figure > a.ct-media-container > img:not(.ct-swap)');
       if (images.length !== 1) return;
       const image = images[0];
       const links = [...card.querySelectorAll('a.bactive-colour-preview[data-preview-src]')];
       let sequence = 0;
       links.forEach(link => {
-        if (link.dataset.previewReady) return;
+        if (initializedLinks.has(link)) return;
         let source;
         try {
           source = new URL(link.dataset.previewSrc, location.href);
           if (source.origin !== location.origin || !/^https?:$/.test(source.protocol)) return;
         } catch (_) { return; }
-        link.dataset.previewReady = 'true';
+        initializedLinks.add(link);
         link.setAttribute('role', 'button');
         link.setAttribute('aria-pressed', 'false');
         function preview(event) {
@@ -56,6 +59,14 @@
       });
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => init());
-  else init();
+  function start() {
+    init();
+    new MutationObserver(records => {
+      records.forEach(record => record.addedNodes.forEach(node => {
+        if (node.nodeType === 1) init(node);
+      }));
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
 })();

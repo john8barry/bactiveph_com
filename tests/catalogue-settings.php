@@ -64,6 +64,12 @@ try {
     $product->meta['_bactive_colour_settings'] = array( 'schema_version'=>1, 'colours'=>array( 'pa_colour:7'=>array( 'mode'=>'custom','hex'=>'#112233','preview_image_id'=>1,'review'=>'' ) ) );
     check( '#112233' === bactive_catalogue_effective_hex( $product, $row ), 'Product shade overrides global default' );
     $variations = array( 901=>new WC_Product_Variation(1,'s'), 902=>new WC_Product_Variation(2,'l') );
+    check( null === bactive_catalogue_automatic_preview( $product, $row ), 'Different size photos do not generate an automatic preview' );
+    $variations[902]->image = 1; bactive_catalogue_forget(900);
+    check( 1 === bactive_catalogue_preview( $product, $row )['id'], 'New colour uses its exact shared variation photo without metadata approval' );
+    $variations[902]->image = 0; bactive_catalogue_forget(900);
+    check( null === bactive_catalogue_automatic_preview( $product, $row ), 'A missing size photo blocks automatic preview' );
+    $variations[902]->image = 2; bactive_catalogue_forget(900);
     $review = bactive_catalogue_review_fingerprint( $product, $row, 1 );
     check( 64 === strlen( $review ), 'Different models for sizes are valid' );
     $product->meta['_bactive_colour_settings']['colours']['pa_colour:7']['review'] = $review;
@@ -113,7 +119,8 @@ try {
     $stamp = bactive_catalogue_product_stamp( $product );
     $editor_stamp = bactive_catalogue_editor_stamp( $product );
     $variations[902]->image = 1; bactive_catalogue_forget(900);
-    check( null === bactive_catalogue_preview( $product, $row ), 'Changing one size photo invalidates review' );
+    check( null === bactive_catalogue_reviewed_preview( $product, $row ), 'Changing one size photo invalidates custom review' );
+    check( 1 === bactive_catalogue_preview( $product, $row )['id'], 'Current shared size photo remains available automatically' );
     check( $stamp !== bactive_catalogue_product_stamp( $product ), 'Stale editor sees changed variation photos' );
     check( $editor_stamp === bactive_catalogue_editor_stamp( $product ), 'Woo variation AJAX does not create an owned-settings conflict' );
     $product->meta['_bactive_layout_mode'] = 'native';
@@ -126,10 +133,11 @@ try {
     check( null === bactive_catalogue_preview( $product, $row ), 'Replaced attachment invalidates preview approval' );
     $variations[902]->colour = ''; bactive_catalogue_forget(900);
     check( '' === bactive_catalogue_review_fingerprint( $product, $row, 1 ), 'Wildcard colour is not a reviewed mapping' );
+    check( null === bactive_catalogue_automatic_preview( $product, $row ), 'Wildcard colour blocks automatic preview' );
     $product->meta['_bactive_colour_settings']['colours']['pa_colour:7']['mode']='none';
     check( '' === bactive_catalogue_effective_hex( $product, $row ), 'Name only suppresses global default' );
     $product->id=56;
-    check( '' === bactive_catalogue_review_fingerprint( $product, $row, 1 ) && '' === bactive_catalogue_effective_hex( $product, $row ), 'Held products cannot release through metadata' );
+    check( '' === bactive_catalogue_review_fingerprint( $product, $row, 1 ) && '' === bactive_catalogue_effective_hex( $product, $row ) && null === bactive_catalogue_preview( $product, $row ), 'Held products cannot release through metadata or automatic photos' );
     $product->id=238; $product->meta['_bactive_colour_settings']['colours']['pa_colour:7']['mode']='inherit';
     check(!bactive_catalogue_held(238) && '#aabbcc'===bactive_catalogue_effective_hex($product,$row), 'Repaired Sculpt uses merchant global shades without the historical hold');
     foreach(array(56,160,211,148,347) as $held_id) { check(bactive_catalogue_held($held_id), 'Other protected products remain held'); }

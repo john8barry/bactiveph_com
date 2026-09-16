@@ -80,6 +80,10 @@ function bactive_catalogue_editor_tabs( $tabs ) {
 }
 add_filter( 'woocommerce_product_data_tabs', 'bactive_catalogue_editor_tabs' );
 
+function bactive_catalogue_editor_display_photo( $selected_id, $automatic ) {
+    return $selected_id ? bactive_catalogue_attachment( $selected_id ) : $automatic;
+}
+
 function bactive_catalogue_editor_panel() {
     global $product_object;
     $product = $product_object;
@@ -104,7 +108,11 @@ function bactive_catalogue_editor_panel() {
         $uid = 'bactive-colour-' . sanitize_html_class( $key );
         $fingerprint = bactive_catalogue_review_fingerprint( $product, $row, $value['preview_image_id'] );
         $reviewed = ! empty( $value['review'] ) && hash_equals( $fingerprint, $value['review'] );
-        $review_status = bactive_catalogue_held( $product->get_id() ) ? __( 'Catalogue hold — approval unavailable.', 'blocksy-child' ) : ( '' === $fingerprint ? __( 'Missing or invalid photo — choose a preview and check the size photos.', 'blocksy-child' ) : ( $reviewed ? __( 'Current photo mapping reviewed.', 'blocksy-child' ) : __( 'Photo mapping needs review.', 'blocksy-child' ) ) );
+        $automatic = bactive_catalogue_automatic_preview( $product, $row );
+        $review_status = bactive_catalogue_held( $product->get_id() ) ? __( 'Catalogue hold — approval unavailable.', 'blocksy-child' )
+            : ( $reviewed ? __( 'Reviewed custom preview.', 'blocksy-child' )
+            : ( $automatic ? ( $value['preview_image_id'] ? __( 'Automatic photo from variations. The selected custom preview needs review.', 'blocksy-child' ) : __( 'Automatic photo from variations.', 'blocksy-child' ) )
+            : __( 'Choose and review a preview — size photos differ or are missing.', 'blocksy-child' ) ) );
         echo '<section class="bactive-colour-row" data-global-shade="' . esc_attr( bactive_catalogue_hex( get_term_meta( $row['term_id'], '_bactive_colour_hex', true ) ) ) . '" data-held="' . ( bactive_catalogue_held( $product->get_id() ) ? '1' : '0' ) . '"><h3>' . esc_html( $row['name'] ) . '</h3><p>' . esc_html( $review_status ) . '</p><div class="bactive-colour-controls"><label for="' . esc_attr( $uid ) . '">' . esc_html__( 'Colour circle', 'blocksy-child' ) . '</label><select id="' . esc_attr( $uid ) . '" name="' . esc_attr( $prefix . '[mode]' ) . '">';
         foreach ( array( 'inherit' => __( 'Use global shade', 'blocksy-child' ), 'custom' => __( 'Custom shade for this product', 'blocksy-child' ), 'none' => __( 'Name only', 'blocksy-child' ) ) as $mode => $label ) {
             echo '<option value="' . esc_attr( $mode ) . '" ' . selected( $value['mode'], $mode, false ) . '>' . esc_html( $label ) . '</option>';
@@ -113,7 +121,8 @@ function bactive_catalogue_editor_panel() {
         $effective = bactive_catalogue_effective_hex( $product, $row );
         $shade_status = bactive_catalogue_held( $product->get_id() ) ? __( 'Catalogue hold: saved shades cannot display yet.', 'blocksy-child' ) : ( $effective ? sprintf( __( 'Current shade: %s', 'blocksy-child' ), $effective ) : ( 'none' === $value['mode'] ? __( 'Name only: no circle will display.', 'blocksy-child' ) : __( 'No shade set. Choose a custom shade here or set the global colour default.', 'blocksy-child' ) ) );
         echo '<span class="bactive-shade-status" aria-live="polite">' . esc_html( $shade_status ) . '</span></div>';
-        $image = bactive_catalogue_attachment( $value['preview_image_id'] );
+        // Always show the photo that the confirmation checkbox would approve.
+        $image = bactive_catalogue_editor_display_photo( $value['preview_image_id'], $automatic );
         echo '<div class="bactive-preview"><img alt="' . esc_attr__( 'Colour preview', 'blocksy-child' ) . '" ' . ( $image ? 'src="' . esc_url( $image['url'] ) . '"' : 'hidden' ) . '><input type="hidden" class="bactive-preview-id" name="' . esc_attr( $prefix . '[preview_image_id]' ) . '" value="' . esc_attr( $value['preview_image_id'] ) . '"><button type="button" class="button bactive-select-preview">' . esc_html__( 'Choose preview photo', 'blocksy-child' ) . '</button> <button type="button" class="button-link bactive-clear-preview">' . esc_html__( 'Remove preview photo', 'blocksy-child' ) . '</button></div>';
         echo '<details><summary>' . esc_html__( 'Size photos — edit individually in Variations', 'blocksy-child' ) . '</summary><ul class="bactive-size-photos">';
         foreach ( bactive_catalogue_variations( $product ) as $variation ) {

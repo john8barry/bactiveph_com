@@ -16,6 +16,7 @@ if (function_exists('WC')) {
 }
 $bactive_payment_marks = array(
     'qrph' => 'QR Ph',
+    'gcash' => 'GCash',
     'maya' => 'Maya',
     'grabpay' => 'GrabPay',
     'shopeepay' => 'ShopeePay',
@@ -153,10 +154,10 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         .bactive-custom-footer .bactive-trust__group--shipping { align-items: flex-start; }
         .bactive-custom-footer .bactive-trust__group--payments { align-items: flex-end; }
     }
-    /* Fit the four qualified methods and optional COD without empty bank columns. */
+    /* Fit the five approved methods and optional COD; retain three columns on phones. */
     @media (min-width: 768px) {
         .bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments {
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
         }
     }
     @media (max-width: 767px) {
@@ -165,7 +166,7 @@ $bactive_theme_url = get_stylesheet_directory_uri();
         }
     }
 </style>
-<div class="bactive-trust" data-bactive-trust-version="2026-09-14-v7">
+<div class="bactive-trust" data-bactive-trust-version="2026-09-16-v8">
     <div class="bactive-trust__shipping">
         <div class="bactive-trust__group bactive-trust__group--shipping" role="group" aria-labelledby="bactive-shipping-label">
             <span class="bactive-trust__label" id="bactive-shipping-label">Ships nationwide via</span>

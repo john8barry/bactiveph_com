@@ -36,7 +36,7 @@ namespace {
     function assert_sage_payment_layout($html) {
         $selector = preg_quote('.bactive-custom-footer.bactive-footer--sage .bactive-trust__list--payments', '~');
         $desktop = '~@media\s*\(min-width:\s*768px\)\s*\{\s*' . $selector
-            . '\s*\{\s*grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\);\s*\}\s*\}~';
+            . '\s*\{\s*grid-template-columns:\s*repeat\(6,\s*minmax\(0,\s*1fr\)\);\s*\}\s*\}~';
         $mobile = '~@media\s*\(max-width:\s*767px\)\s*\{\s*' . $selector
             . '\s*\{\s*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);\s*\}\s*\}~';
         // Both rules must share a gap-free boundary, not merely exist somewhere in CSS.
@@ -54,22 +54,22 @@ namespace {
         ob_start();
         include $template;
         $html = ob_get_clean();
-        foreach (array('QR Ph','Maya','GrabPay','ShopeePay','PayMongo') as $name) {
+        foreach (array('QR Ph','GCash','Maya','GrabPay','ShopeePay','PayMongo') as $name) {
             if (!str_contains($html, 'alt="'.$name.'"')) {
                 throw new \RuntimeException($scenario . ': wrong payment mark ' . $name);
             }
         }
         $cod = !in_array($scenario, array('manager-error','all-disabled','no-commerce'), true);
         if (str_contains($html, 'alt="Cash on Delivery"') !== $cod) { throw new \RuntimeException($scenario . ': wrong COD availability'); }
-        preg_match_all('/alt="(QR Ph|Maya|GrabPay|ShopeePay|BPI Online|UnionBank Online|Cash on Delivery|PayMongo)"/', $html, $marks);
-        $expected_marks = array('QR Ph', 'Maya', 'GrabPay', 'ShopeePay');
+        preg_match_all('/alt="(QR Ph|GCash|Maya|GrabPay|ShopeePay|BPI Online|UnionBank Online|Cash on Delivery|PayMongo)"/', $html, $marks);
+        $expected_marks = array('QR Ph', 'GCash', 'Maya', 'GrabPay', 'ShopeePay');
         if ($cod) { $expected_marks[] = 'Cash on Delivery'; }
         $expected_marks[] = 'PayMongo';
         if ($marks[1] !== $expected_marks) { throw new \RuntimeException($scenario . ': wrong payment count or order'); }
         foreach (array('Online payments are being set up.', 'Eligibility and fees shown at checkout.') as $removed_note) {
             if (str_contains($html, $removed_note)) { throw new \RuntimeException($scenario . ': redundant footer note'); }
         }
-        foreach (array('Visa','Mastercard','GCash','BPI','UnionBank','Ninja Van','Bank transfer') as $forbidden) {
+        foreach (array('Visa','Mastercard','BPI','UnionBank','Ninja Van','Bank transfer') as $forbidden) {
             if (stripos($html, $forbidden) !== false) { throw new \RuntimeException('Forbidden mark ' . $forbidden); }
         }
         if (!str_contains($html, 'LBC Express') || !str_contains($html, 'J&T Express')) { throw new \RuntimeException('Courier missing'); }
@@ -97,9 +97,10 @@ namespace {
         if (empty($grabpay[0]) || !str_contains($grabpay[0], 'width="121" height="49" alt="GrabPay"')) {
             throw new \RuntimeException($scenario . ': GrabPay must use the matching local asset and dimensions');
         }
-        if (substr_count($html, '<img ') !== ($cod ? 10 : 9)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
+        if (!str_contains($html, '/assets/images/payments/gcash.svg" width="121" height="49" alt="GCash"')) { throw new \RuntimeException('GCash must use the matching local asset and dimensions'); }
+        if (substr_count($html, '<img ') !== ($cod ? 11 : 10)) { throw new \RuntimeException($scenario . ': wrong total logo count'); }
         assert_sage_payment_layout($html);
-        if (!str_contains($html, 'data-bactive-trust-version="2026-09-14-v7"')) { throw new \RuntimeException('Wrong combined release version'); }
+        if (!str_contains($html, 'data-bactive-trust-version="2026-09-16-v8"')) { throw new \RuntimeException('Wrong combined release version'); }
         $checks[] = $scenario;
         if ($scenario === $render_scenario) { $render_html = $html; }
     }
@@ -108,7 +109,7 @@ namespace {
         'missing-mobile-three-columns' => array('repeat(3, minmax(0, 1fr))', 'repeat(6, minmax(0, 1fr))'),
         'mobile-breakpoint-gap' => array('max-width: 767px', 'max-width: 599px'),
         'desktop-breakpoint-gap' => array('min-width: 768px', 'min-width: 769px'),
-        'stale-bank-columns' => array('repeat(5, minmax(0, 1fr))', 'repeat(7, minmax(0, 1fr))'),
+        'missing-gcash-column' => array('repeat(6, minmax(0, 1fr))', 'repeat(5, minmax(0, 1fr))'),
     ) as $name => $mutation) {
         $rejected = false;
         try { assert_sage_payment_layout(str_replace($mutation[0], $mutation[1], $html)); }

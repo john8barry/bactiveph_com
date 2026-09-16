@@ -67,6 +67,13 @@ test('rapid previews and native reset leave no stale height override',()=>{
 test('gallery sizing removes both old outer and inline image ratio constraints',()=>{
  const css=fs.readFileSync('wp-content/themes/blocksy-child/assets/css/catalog-visuals.css','utf8');
  assert.doesNotMatch(css,/aspect-ratio:\s*3\s*\/\s*4/);
- assert.match(css,/\.flexy-view \.ct-media-container\s*\{[^}]*aspect-ratio: auto !important/s);
- assert.match(css,/\.flexy-view img\s*\{[^}]*height: auto;[^}]*aspect-ratio: auto 2 \/ 3 !important/s);
+ assert.match(css,/\.flexy-view \.ct-media-container,[^{]*\{[^}]*aspect-ratio: auto !important/s);
+ assert.match(css,/\.flexy-view img,[^{]*\{[^}]*height: auto;[^}]*aspect-ratio: auto 2 \/ 3 !important/s);
+});
+
+test('single-image gallery uses native photo sizing without selecting thumbnail images',()=>{
+ const css=fs.readFileSync('wp-content/themes/blocksy-child/assets/css/catalog-visuals.css','utf8');
+ assert.ok(css.includes('.woocommerce-product-gallery .ct-product-gallery-container > .ct-media-container {'));
+ assert.ok(css.includes('.woocommerce-product-gallery .ct-product-gallery-container > .ct-media-container > img:not(.zoomImg) {'));
+ assert.doesNotMatch(css,/flexy-pills[^}]*aspect-ratio/);
 });

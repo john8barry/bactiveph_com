@@ -7,6 +7,7 @@ function __($s,$domain=''){return $s;}
 function absint($n){return abs((int)$n);}
 function add_filter($name,$fn,$priority=10,$argc=1){$GLOBALS['hooks'][$name][]=$fn;}
 function add_action(...$args){add_filter(...$args);}
+function remove_action(...$args){}
 function get_post_meta($id,$key,$single=true){return $GLOBALS['meta'][$id][$key]??'';}
 function get_post_type($id){return $GLOBALS['types'][$id]??'attachment';}
 function get_post_status($id){return $GLOBALS['statuses'][$id]??'draft';}
@@ -75,7 +76,7 @@ $p=new PhotoProduct();$p->id=103;$p->image=1;$p->gallery=[2];$meta[103]['_produc
 check(isset(bactive_catalogue_photo_object_errors($p)['publication']),'Invalid unchanged draft gallery blocks publication');
 $p->gallery=[];$p->settings=['colours'=>['red'=>['preview_image_id'=>2]]];$meta[103]['_bactive_colour_settings']=$p->settings;
 check(isset(bactive_catalogue_photo_object_errors($p)['publication']),'Invalid unchanged draft preview blocks publication');
-class PhotoRequest {public function __construct(public $params){} public function get_params(){return $this->params;}public function get_method(){return 'POST';}public function get_route(){return '/wc/v3/products/100';}}
+class PhotoRequest {public function __construct(public $params,public $route='/wc/v3/products/100'){} public function get_params(){return $this->params;}public function get_method(){return 'POST';}public function get_route(){return $this->route;}}
 check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>2]]]))),'Raw REST invalid image rejects before callback/other writes');
 check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>'bogus']]]))),'Raw REST nonnumeric ID rejected');
 check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>999]]]))),'Raw REST missing image rejected');
@@ -87,4 +88,29 @@ check(false===bactive_catalogue_photo_meta_guard(null,100,'_thumbnail_id',[1]),'
 echo "Photo policy publication and raw REST atomic rejection regressions PASS\n";
 
 check(null===bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>1,'src'=>'https://example.test/photo.jpg']]])),'REST may echo a URL when assigning an existing reviewed ID');
+
+$rejected=false;try{bactive_catalogue_photo_import_preflight(['id'=>100,'raw_image_id'=>'2','name'=>'Should not save','regular_price'=>'23']);}catch(Exception $e){$rejected=true;}
+check($rejected,'CSV invalid main rejected in earliest row preflight before intermediate save');
+$rejected=false;try{bactive_catalogue_photo_import_preflight(['id'=>100,'raw_image_id'=>'1','raw_gallery_image_ids'=>['2']]);}catch(Exception $e){$rejected=true;}
+check($rejected,'CSV invalid gallery rejected even when main photo is valid');
+$row=bactive_catalogue_photo_import_preflight(['id'=>100,'raw_image_id'=>'1','raw_gallery_image_ids'=>['3'],'name'=>'Allowed']);
+check($row['image_id']===1&&$row['gallery_image_ids']===[3]&&!isset($row['raw_image_id'],$row['raw_gallery_image_ids']),'CSV approved choices use setters without intermediate image-helper save');
+check(bactive_catalogue_photo_import_preflight(['id'=>100,'regular_price'=>'27'])===['id'=>100,'regular_price'=>'27'],'CSV unrelated maintenance unchanged');
+check(bactive_catalogue_photo_import_preflight(['id'=>100,'raw_image_id'=>'99'])['image_id']===99,'CSV unchanged legacy assignment permitted');
+
+check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['update'=>[['id'=>100,'regular_price'=>'123'],['id'=>101,'images'=>[['src'=>'https://external.test/photo.jpg']]]]],'/wc/v3/products/batch'))),'Batch preflight rejects remote image before any earlier row saves');
+check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['update'=>[['id'=>100,'images'=>[['id'=>2]]]]],'/wc/v3/products/batch'))),'Batch preflight rejects invalid image before dispatch');
+check(is_wp_error(bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>3,'position'=>1,'alt'=>'Should not save']]]))),'Modern REST first image remains main regardless of forged position');
+check(null===bactive_catalogue_photo_request_guard(null,null,new PhotoRequest(['id'=>100,'images'=>[['id'=>3,'position'=>1]]],'/wc/v2/products/100')),'Legacy v2 explicit gallery positions match actual Woo save semantics');
+$statuses[103]='future';$p->settings=[];$p->gallery=[2];$p->status='publish';
+check(isset(bactive_catalogue_photo_object_errors($p)['publication']),'Future-to-publish revalidates assigned images');
+function wc_get_product($id){return $GLOBALS['products'][$id]??null;}
+function wp_update_post($row){$GLOBALS['statuses'][$row['ID']]=$row['post_status'];return $row['ID'];}
+$types[103]='product';$products[103]=$p;bactive_catalogue_photo_scheduled_guard(103);
+check($statuses[103]==='draft'&&!empty($meta[103]['_bactive_photo_publication_error']),'Cron invalid scheduled product is draft before core publication callback');
+$statuses[103]='future';$p->gallery=[];bactive_catalogue_photo_scheduled_guard(103);check($statuses[103]==='future','Cron approved scheduled product remains eligible for core publication');
+
+function check_and_publish_future_post($id){$GLOBALS['core_publications'][]=$id;}
+$statuses[103]='future';$p->gallery=[2];$core_publications=[];bactive_catalogue_photo_scheduled_publish(103);check(!$core_publications,'Scheduled wrapper never invokes core publish for rejected photos');
+$statuses[103]='future';$p->gallery=[];bactive_catalogue_photo_scheduled_publish(103);check($core_publications===[103],'Scheduled wrapper delegates valid product to original WordPress schedule checks');
 echo $GLOBALS['checks']." assertions PASS\n";

@@ -146,7 +146,7 @@ function bactive_catalogue_photo_object_errors( $product ) {
         if ( $error ) { $errors[ $key ] = $error; }
     }
     if ( ! $product->is_type( 'variation' ) && in_array( $product->get_status( 'edit' ), array( 'publish', 'future' ), true )
-        && ( ! empty( $GLOBALS['bactive_photo_new_publication'][ $id ] ) || ! in_array( $id ? get_post_status( $id ) : '', array( 'publish', 'future' ), true ) ) ) {
+        && ( ! empty( $GLOBALS['bactive_photo_new_publication'][ $id ] ) || 'publish' !== ( $id ? get_post_status( $id ) : '' ) ) ) {
         $required = bactive_catalogue_photo_publication_error( $product );
         if ( $required ) { $errors['publication'] = $required; }
     }
@@ -197,8 +197,23 @@ function bactive_catalogue_photo_request_guard( $response, $handler, $request ) 
         || ! preg_match( '~\A/(?:wc/v[1-9][0-9]*/products|wp/v2/products?)(?:/|\z)~', $request->get_route() ) ) { return $response; }
     $params = $request->get_params();
     $rows = array( $params );
-    // v1 embeds variations in the parent request. Validate them before any parent save.
-    foreach ( $params['variations'] ?? array() as $variation ) { if ( is_array( $variation ) ) { $rows[] = $variation; } }
+    // Preflight the entire envelope, before batch dispatch can mutate an earlier valid row.
+    if ( str_ends_with( $request->get_route(), '/batch' ) ) {
+        $rows = array();
+        foreach ( array( 'create', 'update' ) as $operation ) {
+            foreach ( is_array( $params[ $operation ] ?? null ) ? $params[ $operation ] : array() as $row ) {
+                if ( is_array( $row ) ) { $rows[] = $row; }
+            }
+        }
+    }
+    $parents = $rows;
+    // v1 embeds variations in the parent request. Check them before any parent save.
+    foreach ( $parents as $parent ) {
+        foreach ( is_array( $parent['variations'] ?? null ) ? $parent['variations'] : array() as $variation ) {
+            if ( is_array( $variation ) ) { $rows[] = $variation; }
+        }
+    }
+    $uses_position = (bool) preg_match( '~\A/wc/v[12]/products(?:/|\z)~', $request->get_route() );
     foreach ( $rows as $row ) {
         $id = (int) ( $row['id'] ?? 0 );
         $images = $row['images'] ?? ( isset( $row['image'] ) ? array( $row['image'] ) : array() );
@@ -209,7 +224,8 @@ function bactive_catalogue_photo_request_guard( $response, $handler, $request ) 
             if ( ! is_scalar( $raw ) || ! preg_match( '/\A[0-9]+\z/', (string) $raw ) || ( 0 === (int) $raw && ! empty( $image['src'] ) ) ) {
                 return bactive_catalogue_photo_error( 0, 'Upload and review the photo in Media Library first, then assign its numeric attachment ID.' );
             }
-            $key = 0 === (int) ( $image['position'] ?? $index ) ? '_thumbnail_id' : '_product_image_gallery';
+            $position = $uses_position ? (int) ( $image['position'] ?? $index ) : (int) $index;
+            $key = 0 === $position ? '_thumbnail_id' : '_product_image_gallery';
             $value = '_thumbnail_id' === $key ? (int) $raw : (string) $raw;
             $error = bactive_catalogue_photo_assignment_error( $key, $value, $id ? get_post_meta( $id, $key, true ) : '' );
             if ( $error ) { return $error; }
@@ -235,6 +251,54 @@ function bactive_catalogue_photo_rest_guard( $product ) {
 }
 add_filter( 'woocommerce_rest_pre_insert_product_object', 'bactive_catalogue_photo_rest_guard', 90 );
 add_filter( 'woocommerce_rest_pre_insert_product_variation_object', 'bactive_catalogue_photo_rest_guard', 90 );
+/** CSV rows must be checked before Woo's image helper performs an intermediate save. */
+function bactive_catalogue_photo_import_attachment( $value ) {
+    if ( ! is_scalar( $value ) ) { throw new Exception( 'Choose an existing reviewed Media Library image.', 400 ); }
+    $value = trim( (string) $value );
+    if ( '' === $value ) { return 0; }
+    if ( preg_match( '/\A[0-9]+\z/', $value ) ) { return (int) $value; }
+    if ( false !== strpos( $value, '://' ) ) {
+        $id = attachment_url_to_postid( $value );
+        $image = $id ? bactive_catalogue_attachment( (int) $id ) : null;
+        if ( $image && $image['url'] === $value ) { return (int) $id; }
+    } else {
+        // Exact metadata comparison, never the importer's regex/suffix match.
+        $ids = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'fields' => 'ids',
+            'posts_per_page' => 2, 'meta_key' => '_wp_attached_file', 'meta_value' => $value ) );
+        if ( 1 === count( $ids ) ) { return (int) $ids[0]; }
+    }
+    throw new Exception( 'CSV photos must already exist in Media Library. Upload and review them first; use their exact local URL, upload-relative path, or attachment ID.', 400 );
+}
+
+function bactive_catalogue_photo_import_preflight( $data ) {
+    $id = (int) ( $data['id'] ?? 0 );
+    if ( ! $id && ! empty( $data['sku'] ) ) { $id = (int) wc_get_product_id_by_sku( $data['sku'] ); }
+    if ( array_key_exists( 'raw_image_id', $data ) ) {
+        $data['image_id'] = bactive_catalogue_photo_import_attachment( $data['raw_image_id'] );
+        unset( $data['raw_image_id'] );
+    }
+    if ( array_key_exists( 'raw_gallery_image_ids', $data ) ) {
+        if ( ! is_array( $data['raw_gallery_image_ids'] ) ) { throw new Exception( 'CSV gallery photos must be a list of existing Media Library images.', 400 ); }
+        $data['gallery_image_ids'] = array_map( 'bactive_catalogue_photo_import_attachment', $data['raw_gallery_image_ids'] );
+        unset( $data['raw_gallery_image_ids'] );
+    }
+    $changes = array();
+    if ( isset( $data['image_id'] ) ) { $changes['_thumbnail_id'] = $data['image_id']; }
+    if ( isset( $data['gallery_image_ids'] ) ) { $changes['_product_image_gallery'] = implode( ',', $data['gallery_image_ids'] ); }
+    foreach ( $data['meta_data'] ?? array() as $meta ) {
+        if ( is_array( $meta ) && isset( $meta['key'], $meta['value'] ) ) {
+            $error = bactive_catalogue_photo_assignment_error( $meta['key'], $meta['value'], $id ? get_post_meta( $id, $meta['key'], true ) : '' );
+            if ( $error ) { throw new Exception( $error->get_error_message(), 400 ); }
+        }
+    }
+    foreach ( $changes as $key => $value ) {
+        $error = bactive_catalogue_photo_assignment_error( $key, $value, $id ? get_post_meta( $id, $key, true ) : '' );
+        if ( $error ) { throw new Exception( $error->get_error_message(), 400 ); }
+    }
+    return $data;
+}
+add_filter( 'woocommerce_product_import_process_item_data', 'bactive_catalogue_photo_import_preflight', 90 );
+
 add_filter( 'woocommerce_product_import_pre_insert_product_object', function ( $product ) {
     $errors = bactive_catalogue_photo_object_errors( $product );
     // Woo's importer catches Exception and reports a failed CSV row. Native saves never throw.
@@ -246,7 +310,7 @@ add_filter( 'woocommerce_product_import_pre_insert_product_object', function ( $
 function bactive_catalogue_photo_publish_guard( $data, $postarr ) {
     if ( 'product' !== ( $data['post_type'] ?? '' ) || ! in_array( $data['post_status'] ?? '', array( 'publish', 'future' ), true ) ) { return $data; }
     $id = (int) ( $postarr['ID'] ?? 0 );
-    if ( $id && in_array( get_post_status( $id ), array( 'publish', 'future' ), true ) ) { return $data; }
+    if ( $id && 'publish' === get_post_status( $id ) ) { return $data; }
     $GLOBALS['bactive_photo_new_publication'][ $id ] = true;
     $candidate = $GLOBALS['bactive_photo_saving_product'] ?? null;
     $image_id = $candidate && $candidate->get_id() === $id ? $candidate->get_image_id( 'edit' ) : get_post_meta( $id, '_thumbnail_id', true );
@@ -269,6 +333,25 @@ function bactive_catalogue_photo_publish_guard( $data, $postarr ) {
     return $data;
 }
 add_filter( 'wp_insert_post_data', 'bactive_catalogue_photo_publish_guard', 90, 2 );
+
+/** Cron publishes with direct SQL; validate before delegating to the core callback. */
+function bactive_catalogue_photo_scheduled_guard( $post_id ) {
+    $id = is_object( $post_id ) ? (int) $post_id->ID : (int) $post_id;
+    if ( 'product' !== get_post_type( $id ) || 'future' !== get_post_status( $id ) ) { return true; }
+    $product = wc_get_product( $id );
+    $error = $product ? bactive_catalogue_photo_publication_error( $product ) : bactive_catalogue_photo_error( 0, 'The scheduled product could not be validated.' );
+    if ( ! $error ) { return true; }
+    // Return false even if the status update fails: never call core publication on an error.
+    wp_update_post( array( 'ID' => $id, 'post_status' => 'draft' ) );
+    update_post_meta( $id, '_bactive_photo_publication_error', $error->get_error_message() );
+    bactive_catalogue_photo_notice( $error );
+    return false;
+}
+function bactive_catalogue_photo_scheduled_publish( $post_id ) {
+    if ( bactive_catalogue_photo_scheduled_guard( $post_id ) ) { check_and_publish_future_post( $post_id ); }
+}
+remove_action( 'publish_future_post', 'check_and_publish_future_post', 10 );
+add_action( 'publish_future_post', 'bactive_catalogue_photo_scheduled_publish', 10 );
 
 /** Uses WordPress's attachment form nonce plus a separate photo-review nonce and capability. */
 function bactive_catalogue_photo_fields( $fields, $post ) {

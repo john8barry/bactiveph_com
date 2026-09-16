@@ -1,8 +1,8 @@
 # Automatic product presentation and colour editing
 
-## Colour-only photo previews (September 16 candidate)
+## Colour-only photo previews (September 16 live release)
 
-A colour can preview its photo before a size is chosen when all published sizes for that colour use the same valid image. A reviewed custom preview takes priority. Different or missing size photos require a representative preview chosen and confirmed in Product data → Colours & photos. The editor states whether a photo is automatic, reviewed custom, or needs review. This rule also applies to shop and collection cards; a complete colour-and-size choice continues to use its assigned variation image. See the [repair record](../work-records/2026-09-16-colour-photo-preview-repair.md).
+A colour can preview its photo before a size is chosen when all published sizes for that colour use the same valid image. A reviewed custom preview takes priority. Different or missing size photos require a representative preview chosen and confirmed in Product data → Colours & photos. The editor states whether a photo is automatic, reviewed custom, or needs review. This rule also applies to shop and collection cards; a complete colour-and-size choice continues to use its assigned variation image. PR #110 is deployed and independently verified on live pages. See the [repair record](../work-records/2026-09-16-colour-photo-preview-repair.md).
 
 ## Colour editor repair (September 15 live release)
 
@@ -31,8 +31,8 @@ This release preserves the approved header, footer, sage/ivory palette, typograp
 1. In **Products → Attributes → Colour → Configure terms**, add the colour name and its default colour circle with the colour picker. A blank value gives a name-only option. Keep Bloom and Sakura Pink separate.
 2. Edit a product, choose the global Colour attribute, select its colours and save. For a variable product, use WooCommerce's Variations tab to create only the actual sizes/colours offered, with their prices and stock.
 3. Open the product's **Colours & photos** tab. For each colour choose **Use global shade**, **Custom shade for this product**, or **Name only**. The shade applies across its sizes.
-4. Choose a representative photo from the media library. Review the size photos shown below it. Different sizes may use different models/photos; edit those individually in the normal Variations tab.
-5. Check the confirmation box for each reviewed colour and use Publish or Update. Updating a product alone never approves a new photo mapping.
+4. Review the size photos shown in **Colours & photos**; edit each actual size image in the normal Variations tab. If all published sizes of a colour share one valid photo, the editor shows **Automatic photo from variations** and no separate photo approval is needed. If they differ or a photo is missing, choose a representative from the media library.
+5. For a chosen custom representative, check its confirmation box and use Publish or Update. Updating a product alone never approves a custom photo mapping.
 6. Check the published product at desktop and mobile widths, including a real colour/size selection, reset and size guidance.
 
 The global editor reports how many products inherit that shade. Existing migrated products retain their reviewed product-specific values, so a global change does not silently recolour them. Explicit product overrides always win. Renaming or replacing an image/variation mapping requires fresh photo review. An outdated product editing tab is refused rather than overwriting newer settings; reload it and review again.
@@ -43,12 +43,12 @@ The current editor integrates with the incumbent classic WooCommerce product edi
 
 | Situation | Behaviour |
 |---|---|
-| Colour selected, size incomplete | Show the explicitly reviewed representative photo. |
+| Colour selected, size incomplete | Show the explicitly reviewed representative, or the shared valid variation photo when all published sizes agree. |
 | Complete valid variation with its own photo | Show that variation's photo, including its different model. |
-| Complete valid variation without its own photo | Use the reviewed representative in WooCommerce and the theme's gallery. No attachment assignment is written. |
-| No valid reviewed representative | Preserve the native original/gallery fallback. |
-| Related-card colour with a reviewed photo | Preview it in the card without navigating or changing cart/primary links. |
-| Related-card colour without a reviewed photo | Keep the ordinary product link. |
+| Complete valid variation without its own photo | Use a reviewed representative when one exists; otherwise retain WooCommerce's native fallback. No attachment assignment is written. |
+| No reviewed or unambiguous representative | Preserve the native original/gallery fallback. |
+| Listing or related-card colour with a reviewed or unambiguous photo | Preview it in the card without navigating or changing cart/primary links. |
+| Listing or related-card colour without a valid preview | Keep the ordinary product link. |
 | Reset, native dropdown fallback, or manual gallery browsing | Clear the temporary colour preview and retain native gallery operation. |
 
 A temporary colour preview cannot open the different image underneath it. Native gallery zoom is suppressed while that preview covers the gallery; selecting a size or deliberately browsing thumbnails restores native behaviour. Existing configured lightbox behaviour remains unchanged.

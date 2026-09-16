@@ -21,8 +21,13 @@ Only passive vector elements and one internal clipping reference are present.
 Payment owner reported September 16 that GCash activation is not verified and the
 current integration lacks GCash selection/readiness/source recognition. Merchant
 approval is not checkout activation. Production publication is held pending the
-payment lane's verified activation (issue #2). This task prepares and verifies
-staging presentation only until that dependency is satisfied. Fresh authenticated
+payment lane's verified activation (issue #2). This was the initial branding hold.
+After reviewing the staging presentation and the activation gap, John explicitly
+directed: "great, get into production now". That current approval lifts the
+presentation-only merge/deployment hold for all three badges. It does not activate
+payment methods or authorize this task to alter gateway/provider settings.
+Native payment activation and end-to-end acceptance remain owned by issue #2;
+visible branding is not evidence of working checkout support. Fresh authenticated
 production readback after the bank request confirms enabled=yes but selected
 issuance_methods are only qrph, paymaya, shopee_pay, grab_pay; dob and dob_ubp are
 not selected. This is distinct from John's confirmation the bank methods work.

@@ -1,0 +1,21 @@
+{
+  "installed": true,
+  "enabled": true,
+  "file_count": 15,
+  "archive_sha256": "3d810c3ec370393ba5ff51d5667c817c94c8b975959fed72914cf25ff66ad540",
+  "source_commit": "635a719a",
+  "backup_verified": true,
+  "release_merge_commit": "deb0b7e6119d3d57b17e97e668ebcc7ca1e9c992",
+  "target": "https://bactiveph.com",
+  "plugin_version": "1.0.0",
+  "wp_version": "7.1",
+  "woocommerce_version": "11.1.0",
+  "php_version": "8.2.33",
+  "remote_file_hashes_match": true,
+  "ci_run": 35163264407,
+  "mail_transport_inbox_verified": true,
+  "live_payment_test_order": 942,
+  "live_payment_test_status": "awaiting_wallet_payment",
+  "failed_test_order": 941,
+  "failed_test_cancelled_and_hold_released": true
+}

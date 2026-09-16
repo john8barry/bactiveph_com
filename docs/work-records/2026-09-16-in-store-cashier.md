@@ -65,3 +65,21 @@ Closeout remote readback: origin/main remains `5cb35011afa1dd6f0baa03181360d89f0
 John authorized getting this live, payment testing and inbox-delivery testing; stated stock counts are verified and explicitly removed the accountant/RDO confirmation requirement. Removed that setup checkbox and its enablement dependency. Existing handwritten invoice procedure remains. Current release instructions in docs/cashier/RUNBOOK.md supersede the earlier launch-control list above.
 
 Authenticated production preflight: WordPress 7.1, WooCommerce 11.1.0, PHP 8.2.33, existing four PayMongo rails live, cashier absent, gateway source hash unchanged. Email delivery test through production SMTP2GO reached the authorized connected Gmail inbox; SPF, DKIM and DMARC passed. This confirms the mail transport; the actual paid-order confirmation still awaits the real payment test.
+
+## Production deployment and payment tests — 16 September 2026 UTC
+
+This section supersedes the earlier local-only status and outstanding launch controls. The accountant/RDO acknowledgment was removed as instructed. Stock counts are owner-confirmed; the software still rejects products with missing tracked quantities rather than inventing numbers.
+
+- Release issue: #116. Implementation PR #117 merged as `deb0b7e6119d3d57b17e97e668ebcc7ca1e9c992`; exact-head CI run `35163264407` passed the full fresh Woo fixture, gateway, HTTP, concurrency and browser-script tests.
+- Installed and activated cashier 1.0.0 on `https://bactiveph.com`. Independently verified all 15 runtime file hashes against the release manifest. Existing gateway code was unchanged. Production uses WordPress 7.1, WooCommerce 11.1.0 and PHP 8.2.33.
+- Pre-deployment database backup verified by SHA256 both on the server and in private off-server storage. Rollback pauses new sales while retaining callbacks, workers, outstanding orders and stock protection.
+- Home, shop and cart responded successfully. Anonymous cashier access redirects to login; anonymous API access is denied. Authenticated product lookup works. The paused new-sale control returned 503 as intended before enabling.
+- Actual PayMongo test pages and API readback confirmed successful QRPh, Maya, ShopeePay and GrabPay test payments. Maya failure/retry passed. A cancelled ShopeePay test remained processing and could not be expired; this provider-only test holds no Woo stock. See `docs/cashier/PROVIDER-TEST-RESULTS.md` for exact evidence and limits.
+- Live test order 941 exposed missing stored PayMongo readiness verification. No provider attempt or charge was created. The configured provider capabilities and existing live webhook were correct. Normal `Readiness::verify_and_provision` repaired verification and independently returned ready. The cause of the earlier missing state is not established.
+- The standard manager recovery action verified order 941 unpaid, cancelled it, released its reservation and cleared the active register claim. No digital marker was manually removed.
+- New live order 942 is PHP 1.00 for one private, hidden, non-merchandise test product. Its hosted payment link was created successfully. Cashier new sales are enabled. Wallet payment is awaiting the owner's action; no paid-order, stock-reduction or receipt-delivery success is claimed yet.
+- Production email transport test reached the authorized connected inbox with SPF/DKIM/DMARC passing. This is separate from the actual paid-order confirmation, which awaits payment.
+- Individual associate accounts await staff names/email addresses; existing authorized administrators can access the cashier. No shared staff credential was created.
+- Separate product-photo work owns the next serialized theme/attachment deployment window. Cashier deployment and payment-link creation finished before that window was returned. Canonical unrelated local work remains preserved.
+
+Next step: owner completes the prepared PHP 1.00 payment; verify authoritative provider/order payment, exactly-once inventory processing and the actual payment-confirmation inbox message. Then record the result. Issue #116 remains open for these checks and individual associate provisioning.

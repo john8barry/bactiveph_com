@@ -42,6 +42,10 @@ function bactive_catalogue_editor_validate( $product, $input, $pending = null ) 
         if ( false === $id || ( $id && ! bactive_catalogue_attachment( $id ) ) ) {
             return new WP_Error( 'image', __( 'Choose an existing image from the media library.', 'blocksy-child' ) );
         }
+        if ( $id && $id !== (int) ( $old['colours'][ $key ]['preview_image_id'] ?? 0 ) && function_exists( 'bactive_catalogue_photo_validate' ) ) {
+            $photo = bactive_catalogue_photo_validate( $id );
+            if ( is_wp_error( $photo ) ) { return $photo; }
+        }
         $next = array( 'mode' => $value['mode'], 'hex' => strtolower( $hex ), 'preview_image_id' => $id, 'review' => '' );
         $fingerprint = bactive_catalogue_review_fingerprint( $target, $row, $id );
         $previous = $old['colours'][ $key ] ?? array();

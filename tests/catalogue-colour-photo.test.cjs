@@ -68,5 +68,5 @@ test('gallery sizing removes both old outer and inline image ratio constraints',
  const css=fs.readFileSync('wp-content/themes/blocksy-child/assets/css/catalog-visuals.css','utf8');
  assert.doesNotMatch(css,/aspect-ratio:\s*3\s*\/\s*4/);
  assert.match(css,/\.flexy-view \.ct-media-container\s*\{[^}]*aspect-ratio: auto !important/s);
- assert.match(css,/\.flexy-view img\s*\{[^}]*height: auto;[^}]*aspect-ratio: auto !important/s);
+ assert.match(css,/\.flexy-view img\s*\{[^}]*height: auto;[^}]*aspect-ratio: auto 2 \/ 3 !important/s);
 });

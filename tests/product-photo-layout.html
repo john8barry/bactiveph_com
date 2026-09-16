@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Product photo lazy geometry regression</title>
+<link rel="stylesheet" href="../wp-content/themes/blocksy-child/assets/css/catalog-visuals.css">
+<link rel="stylesheet" href="../wp-content/themes/blocksy-child/assets/css/collection-visuals.css">
+<body class="bactive-product-page">
+<div class="woocommerce-product-gallery" style="width:240px"><div class="flexy-view"><figure class="ct-media-container" style="margin:0"><img loading="lazy" width="1200" height="800" style="aspect-ratio:3/4" alt="Gallery test"></figure></div></div>
+<div class="products" style="width:240px"><div class="product bactive-collection-product"><figure><a class="ct-media-container"><img loading="lazy" width="1200" height="800" style="aspect-ratio:3/4" alt="Card test"></a></figure></div></div>
+<pre id="result">Running…</pre>
+<script>
+(async () => {
+ const results = [];
+ function check(condition, message) { if (!condition) throw Error(message); results.push(message); }
+ try {
+  await new Promise(requestAnimationFrame);
+  for (const img of document.querySelectorAll('img')) {
+   const box = img.getBoundingClientRect();
+   check(!img.naturalWidth && box.width > 0 && box.height > 0, 'Unloaded lazy image reserves nonzero geometry');
+   check(Math.abs(box.width / box.height - 2 / 3) < .01, 'Unloaded image reserves the portrait fallback');
+   await new Promise((resolve, reject) => {
+    img.onload = resolve; img.onerror = reject;
+    img.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="1200" height="800" fill="white"/></svg>');
+   });
+   await new Promise(requestAnimationFrame);
+   const loaded = img.getBoundingClientRect();
+   check(Math.abs(loaded.width / loaded.height - 1.5) < .01, 'Loaded gallery exception uses its native ratio');
+   const frame = img.parentElement.getBoundingClientRect();
+   check(Math.abs(frame.height - loaded.height) < 1, 'Frame follows loaded image without letterboxing');
+  }
+  document.querySelector('#result').textContent = 'PASS\n' + results.join('\n');
+  document.body.dataset.result = 'pass';
+ } catch (error) { document.querySelector('#result').textContent = 'FAIL ' + error.message; document.body.dataset.result = 'fail'; }
+})();
+</script></body></html>

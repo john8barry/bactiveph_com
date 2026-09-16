@@ -50,5 +50,5 @@ test('hover exception uses its native ratio, then selected portrait wins over ho
 });
 test('collection CSS cannot impose old 3:4 ratio on a delivered portrait',()=>{
  const css=fs.readFileSync('wp-content/themes/blocksy-child/assets/css/collection-visuals.css','utf8');
- assert.doesNotMatch(css,/aspect-ratio:\s*3\s*\/\s*4/);assert.match(css,/aspect-ratio: auto !important/);
+ assert.doesNotMatch(css,/aspect-ratio:\s*3\s*\/\s*4/);assert.match(css,/aspect-ratio: auto 2 \/ 3 !important/);
 });

@@ -7,3 +7,7 @@ Product galleries override both container and image ratio constraints while pres
 Validation: 52 JavaScript tests passed across catalogue-colour-photo, collection-visuals and catalog-gallery-startup, including real Flexy lifecycle fixtures, legacy-ratio regression assertions, hover/detail swaps, preview resize, exact height restoration and rapid selection/reset. Both theme mirrors match. Browser geometry and production verification remain the integrating release owner's responsibility; these tests are not live-delivery evidence.
 
 Rollback: restore the four CSS/JavaScript files from the pre-release backup only after confirming their current hashes still match this release. This layout change does not alter image assets, product assignments, variation identity or image validation policy.
+
+## Lazy-image geometry correction
+
+Native browser review found an unloaded lazy image had no intrinsic ratio and collapsed to zero height. Image rules now use `aspect-ratio: auto 2 / 3`: the fallback reserves portrait space before loading, while the loaded image’s natural ratio still controls detail/comparison geometry. Containers retain `auto` so they do not force landscape exceptions into portrait boxes. `tests/product-photo-layout.html` is an actual-browser geometry regression fixture covering initial unloaded images and loaded landscape exceptions for gallery and collection frames.

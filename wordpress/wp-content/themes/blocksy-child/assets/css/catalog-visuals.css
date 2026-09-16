@@ -103,7 +103,7 @@
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: auto !important;
+    aspect-ratio: auto 2 / 3 !important;
     object-fit: contain;
 }
 .bactive-product-page .product_title {

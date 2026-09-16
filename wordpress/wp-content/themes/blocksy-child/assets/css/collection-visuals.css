@@ -18,9 +18,10 @@
   border-radius: 0 !important;
 }
 .products .bactive-collection-product .ct-media-container img {
+  display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: auto !important;
+  aspect-ratio: auto 2 / 3 !important;
   object-fit: contain;
   border-radius: 0 !important;
 }

@@ -49,6 +49,7 @@ jobs:
           node --test tests/catalog-visuals.test.cjs tests/collection-visuals.test.cjs tests/catalogue-colour-photo.test.cjs tests/catalog-gallery-startup.test.cjs tests/catalogue-editor.test.cjs
           php tests/catalogue-settings.php
           php tests/catalogue-editor.php
+          php tests/catalogue-photo-policy.php
           php tests/catalogue-migration.php
           php tests/catalog-visuals.php
           php tests/collection-visuals.php
@@ -57,7 +58,7 @@ jobs:
         run: |
           php -l tools/catalogue_settings_migration.php
           cmp wordpress/wp-content/themes/blocksy-child/functions.php wp-content/themes/blocksy-child/functions.php
-          for module in catalogue-settings catalogue-editor; do
+          for module in catalogue-settings catalogue-editor catalogue-photo-policy; do
             php -l "wordpress/wp-content/themes/blocksy-child/inc/$module.php"
             cmp "wordpress/wp-content/themes/blocksy-child/inc/$module.php" "wp-content/themes/blocksy-child/inc/$module.php"
           done

@@ -14,8 +14,10 @@
     let previewTarget;
     let browsingGallery = false;
     let hiddenMedia = [];
+    let restoreFrame = () => {};
     function clear() {
       sequence++; current = '';
+      restoreFrame(); restoreFrame = () => {};
       overlay?.remove(); overlay = null;
       previewTarget?.classList.remove('bactive-colour-photo-target'); previewTarget = null;
       hiddenMedia.forEach(([media, inert]) => { media.inert = inert; });
@@ -42,6 +44,25 @@
         if (request !== sequence || !target.isConnected || browsingGallery || form.dataset.bactiveSelectors === 'fallback') return;
         // Recheck values after loading; never cover a selected native variation.
         if (selects.every(select => select.value) || config.previews[colour.name]?.[colour.value]?.src !== source.href) { clear(); return; }
+        if (!(pending.naturalWidth > 0 && pending.naturalHeight > 0)) { clear(); return; }
+        // Flexy retains its own live slide height underneath this temporary
+        // override. Remove only our override when native variation/gallery wins.
+        const previousHeight = target.style.getPropertyValue('height');
+        const previousPriority = target.style.getPropertyPriority('height');
+        const resize = () => {
+          const width = target.getBoundingClientRect().width;
+          if (width > 0) target.style.setProperty('height', `${width * pending.naturalHeight / pending.naturalWidth}px`, 'important');
+        };
+        const observer = window.ResizeObserver ? new ResizeObserver(resize) : null;
+        observer?.observe(target);
+        window.addEventListener('resize', resize);
+        restoreFrame = () => {
+          observer?.disconnect();
+          window.removeEventListener('resize', resize);
+          if (previousHeight) target.style.setProperty('height', previousHeight, previousPriority);
+          else target.style.removeProperty('height');
+        };
+        resize();
         overlay = document.createElement('div');
         overlay.className = 'bactive-colour-photo';
         previewTarget = target; target.classList.add('bactive-colour-photo-target');

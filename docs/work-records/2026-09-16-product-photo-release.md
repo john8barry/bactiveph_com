@@ -1,6 +1,6 @@
 # Product photo release and remaining asset work
 
-Work item: [#115](https://github.com/john8barry/bactiveph_com/issues/115). Owner: B Active product-photo task; merchant decisions and replacement originals belong to John. Severity: medium storefront image presentation and future catalogue-input integrity.
+Work item: [#115](https://github.com/john8barry/bactiveph_com/issues/115). Owner: B Active product-photo task; merchant decisions and replacement originals belong to John. Severity: medium storefront image presentation and future catalogue-input integrity. This records the 2026-09-16 code release; see the [2026-09-17 crop migration](2026-09-17-product-photo-crop-migration.md) for subsequent attachment changes.
 
 ## Delivered
 

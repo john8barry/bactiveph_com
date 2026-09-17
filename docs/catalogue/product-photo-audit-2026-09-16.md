@@ -1,12 +1,14 @@
 # Product photo audit — 2026-09-16
 
-Work item: [#115](https://github.com/john8barry/bactiveph_com/issues/115). Owner: current B Active task.
+Work item: [#115](https://github.com/john8barry/bactiveph_com/issues/115). Owner: current B Active task. This is the source baseline; the [2026-09-17 crop migration](../work-records/2026-09-17-product-photo-crop-migration.md) records later attachment changes.
 
 ## Scope and source findings
 
 Audited 111 unique attached source files across 22 published products and one private internal product. Originals were downloaded and verified against server SHA-256 hashes. All 111 were visually inspected in contact sheets.
 
 The reported grey side strips are caused by a 3:4 display frame containing 2:3 photographs. The screenshot’s pink All-Size Pleated Skort original has no embedded side strips. Shared frames must follow the displayed image ratio, including colour previews and gallery exceptions, and reserve geometry before lazy loading.
+
+[WooCommerce recommends uploads of at least 800 × 800 pixels](https://woocommerce.com/document/adding-product-images-and-galleries/). The 1024 × 1536 portrait cited in the earlier assessment exceeds that general recommendation; the observed side strips were a storefront framing problem, not evidence that this source needed more pixels. This catalogue uses a stricter 800 × 1200 minimum for new portrait assignments.
 
 63 source files meet the proposed portrait dimensions; 42 larger files have other proportions; two comparison images need an explicit gallery role or a separately reviewed portrait derivative for variation use; four originals are below the minimum resolution. Dimension counts do not constitute framing approval. A subsequent full-size inspection of all 63 dimension-passing originals found embedded top/bottom grey padding in attachment 600 only; its review was revoked. The other 62 passed that full-size visual review.
 
@@ -128,12 +130,12 @@ The reported grey side strips are caused by a 3:4 display frame containing 2:3 p
 
 ## Remaining asset decisions
 
-- Attachment 600 (Match Dress) has embedded top/bottom grey padding. Attachment 473 is a larger clean version of the same photograph; prepare a safe portrait crop from 473 and map both uses to the reviewed derivative. The original 600 remains unapproved.
+- Attachment 600 (Match Dress) has embedded top/bottom grey padding. Attachment 473 is a larger clean version of the same photograph; a pixel-exact portrait crop from 473 was mapped to both uses as attachment 979. The original 600 remains unapproved.
 - Low-resolution originals: attachment 164 (Rally Skort), 58, 60 and 61 (Bubble Dress). Do not upscale them and claim recovered detail. Existing product holds and ambiguous colour mappings remain in force.
 - Preserve originals and assign new attachment IDs for approved derivatives; do not overwrite shared source files.
 - Background-extension candidates for comparison images and a background-band repair for attachment 600 were not accepted: generated subjects/details were subtly altered. No generated image has been installed.
-- Full-size crop review: 40 of the 42 larger originals accept the proposed centered crop. Attachment 593 needs a left-offset crop `[70, 0, 935, 1402]` (left, top, width, height). Attachment 592 cannot fit a portrait crop without clipping arms and requires background extension or another portrait source; it is used by variations as well as the gallery.
-- Exact crop/resize processing is awaiting the user’s response to the editing-method question. The display correction does not depend on replacing these originals.
+- Full-size crop review: 40 of the 42 larger originals accepted and received the proposed centered crop. Attachment 593 received a left-offset crop `[70, 0, 935, 1402]` (left, top, width, height). Attachment 592 cannot fit a portrait crop without clipping arms and requires background extension or another portrait source; it is used by variations as well as the gallery.
+- John authorized exact pixel processing; the 41 safe crops were imported and assigned on 2026-09-17. See the migration record for IDs and remaining source holds.
 
 ## Release verification
 

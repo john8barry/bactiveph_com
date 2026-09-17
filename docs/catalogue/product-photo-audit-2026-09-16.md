@@ -8,7 +8,7 @@ Audited 111 unique attached source files across 22 published products and one pr
 
 The reported grey side strips are caused by a 3:4 display frame containing 2:3 photographs. The screenshot’s pink All-Size Pleated Skort original has no embedded side strips. Shared frames must follow the displayed image ratio, including colour previews and gallery exceptions, and reserve geometry before lazy loading.
 
-63 source files meet the proposed portrait dimensions; 42 larger files have other proportions; two comparison images need an explicit gallery role or a separately reviewed portrait derivative for variation use; four originals are below the minimum resolution. Dimension counts do not constitute framing approval.
+63 source files meet the proposed portrait dimensions; 42 larger files have other proportions; two comparison images need an explicit gallery role or a separately reviewed portrait derivative for variation use; four originals are below the minimum resolution. Dimension counts do not constitute framing approval. A subsequent full-size inspection of all 63 dimension-passing originals found embedded top/bottom grey padding in attachment 600 only; its review was revoked. The other 62 passed that full-size visual review.
 
 ## Per-attachment inventory
 
@@ -77,7 +77,7 @@ The reported grey side strips are caused by a 3:4 display frame containing 2:3 p
 | 597 | 853 × 1280 | 211 | Portrait dimensions pass |
 | 598 | 853 × 1280 | 573 | Portrait dimensions pass |
 | 599 | 853 × 1280 | 117 | Portrait dimensions pass |
-| 600 | 853 × 1280 | 83 | Portrait dimensions pass |
+| 600 | 853 × 1280 | 83 | Framing hold: embedded top/bottom grey padding |
 | 601 | 853 × 1280 | 217 | Portrait dimensions pass |
 | 602 | 853 × 1280 | 238 | Portrait dimensions pass |
 | 603 | 853 × 1280 | 36 | Portrait dimensions pass |
@@ -128,14 +128,16 @@ The reported grey side strips are caused by a 3:4 display frame containing 2:3 p
 
 ## Remaining asset decisions
 
+- Attachment 600 (Match Dress) has embedded top/bottom grey padding. Attachment 473 is a larger clean version of the same photograph; prepare a safe portrait crop from 473 and map both uses to the reviewed derivative. The original 600 remains unapproved.
 - Low-resolution originals: attachment 164 (Rally Skort), 58, 60 and 61 (Bubble Dress). Do not upscale them and claim recovered detail. Existing product holds and ambiguous colour mappings remain in force.
 - Preserve originals and assign new attachment IDs for approved derivatives; do not overwrite shared source files.
-- Background-extension candidates for comparison images were not accepted: generated subjects were subtly altered. No generated image has been installed.
+- Background-extension candidates for comparison images and a background-band repair for attachment 600 were not accepted: generated subjects/details were subtly altered. No generated image has been installed.
+- Full-size crop review: 40 of the 42 larger originals accept the proposed centered crop. Attachment 593 needs a left-offset crop `[70, 0, 935, 1402]` (left, top, width, height). Attachment 592 cannot fit a portrait crop without clipping arms and requires background extension or another portrait source; it is used by variations as well as the gallery.
 - Exact crop/resize processing is awaiting the user’s response to the editing-method question. The display correction does not depend on replacing these originals.
 
 ## Release verification
 
-The integrated change is subject to native WooCommerce tests, browser geometry checks on desktop and mobile, exact production file hashes, and post-deployment readback. A verified full database/files Updraft backup has been saved off-server. Release and live evidence will be appended to issue #115.
+The integrated change passed native WooCommerce tests, desktop/mobile browser geometry checks, exact production file hashes and post-deployment readback. A verified full database/files Updraft backup has been saved off-server. Monitoring completed 650 checks over 1,206 seconds with zero failures. See the [release record](../work-records/2026-09-16-product-photo-release.md) and issue #115 for delivered scope and remaining asset work.
 
 ## Rollback
 

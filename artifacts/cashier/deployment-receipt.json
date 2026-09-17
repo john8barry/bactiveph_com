@@ -15,7 +15,17 @@
   "ci_run": 35163264407,
   "mail_transport_inbox_verified": true,
   "live_payment_test_order": 942,
-  "live_payment_test_status": "awaiting_wallet_payment",
+  "live_payment_test_status": "paid_verified",
   "failed_test_order": 941,
-  "failed_test_cancelled_and_hold_released": true
+  "failed_test_cancelled_and_hold_released": true,
+  "live_payment_method": "qrph",
+  "live_amount_php": "1.00",
+  "live_payment_count": 1,
+  "live_attempt_count": 1,
+  "test_stock_before": 1,
+  "test_stock_after": 0,
+  "stock_reduced_quantity": 1,
+  "stock_hold_after": 0,
+  "paid_confirmation_inbox_verified": true,
+  "paid_confirmation_sent_utc": "2026-09-17T09:56:45Z"
 }

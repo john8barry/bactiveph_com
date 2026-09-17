@@ -35,3 +35,11 @@ The ShopeePay result demonstrates why an unresolved digital checkout must not be
 - [Transaction limits](https://docs.paymongo.com/docs/payment-acceptance-key-concepts): QRPh and the three wallets have a PHP 1.00 minimum.
 
 No credentials, checkout URLs, customer details or raw provider responses are included in this record.
+
+## Live payment completed — 17 September 2026
+
+Owner completed QRPh payment for live cashier order 942. Independent PayMongo API readback confirmed exactly one paid PHP 1.00 payment, `livemode=true`, with transaction `pay_Yx1a2Y7udsUNaNPWYkwcQCJ6` matching WooCommerce. The order has one checkout attempt and the cashier API displays `paid`.
+
+The private test product stock changed from 1 to 0; the order item records reduced stock 1 and the reservation is now 0. WooCommerce remains `processing`, correctly awaiting invoice/handover. This was a non-merchandise system test; no invoice number or goods handover was fabricated.
+
+The automatic “B Active payment confirmation — Order #942” email was sent at 09:56:45 UTC and observed in the authorized Gmail INBOX. Its body contains the correct item, quantity and PHP 1.00 total. SPF, DKIM and DMARC passed. This verifies the actual paid-order confirmation, independently of the earlier generic mail test. Other three methods were verified in provider test mode, not by separate real-money payments.

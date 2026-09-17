@@ -83,3 +83,9 @@ This section supersedes the earlier local-only status and outstanding launch con
 - Separate product-photo work owns the next serialized theme/attachment deployment window. Cashier deployment and payment-link creation finished before that window was returned. Canonical unrelated local work remains preserved.
 
 Next step: owner completes the prepared PHP 1.00 payment; verify authoritative provider/order payment, exactly-once inventory processing and the actual payment-confirmation inbox message. Then record the result. Issue #116 remains open for these checks and individual associate provisioning.
+
+## Live payment and inbox verification — 17 September 2026
+
+The owner paid order 942 using QRPh. Independent provider readback confirmed one live paid PHP 1.00 transaction matching WooCommerce and one checkout attempt. Cashier status is paid; stock reduction is verified: test quantity 1 to 0, item reduced quantity 1, reservation 0. Automatic order confirmation reached the authorized INBOX at 09:56 UTC with correct contents and SPF/DKIM/DMARC passing. See PROVIDER-TEST-RESULTS.md and deployment-receipt.json.
+
+The payment, inventory and inbox checks are complete. The non-merchandise test remains processing awaiting real invoice/handover; no such event was invented. Cashier remains enabled. Individual associate account provisioning still awaits names/email addresses, so issue #116 stays open.

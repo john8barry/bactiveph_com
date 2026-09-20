@@ -199,19 +199,92 @@ function bactive_size_guide_link() {
 }
 
 /**
- * Approved charts belong to these exact products, not their categories.
- * Slugs are explicit identities; never infer sizing from a title or variation.
+ * Owner-supplied originals and their exact product identities.
+ * Measurements and labels are transcribed as supplied, without size conversions.
+ */
+function bactive_get_size_charts() {
+	static $charts = array(
+		'court-skort' => array(
+			'product_slug' => 'the-court-skort',
+			'name' => 'Court Skort',
+			'image' => 'court-skort-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Court Skort size chart with arrows showing waist, inner hip, skirt length and inner shorts length.',
+			'description' => 'Court Skort measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12, 14. Length: 35, 36, 37, 38, 39, 40. Waist: 64, 68, 72, 76, 80, 84. Inner Hip: 72, 76, 80, 84, 88, 92. Inner Leg Opening: 40, 42, 44, 46, 48, 50. Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0. How to measure: Length: Measure from the top of the waistband to the hem. Waist: Measure around the narrowest part of your waist. Inner Hip: Measure around the fullest part of your hips (below the waistband). Inner Leg Opening: Measure across the leg opening of the built-in shorts. Inner Length: Measure the length of the inner shorts (from crotch to hem). Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'strappy-bra' => array(
+			'product_slug' => 'the-strappy-bra',
+			'name' => 'Strappy Bra',
+			'image' => 'strappy-bra-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Strappy Bra size chart with arrows showing upper bust, under bust and waist, plus the criss cross straps.',
+			'description' => 'Strappy Bra measurements in centimeters (cm). Each size lists Upper Bust, Under Bust and Waist, in that order. S: 84, 69, 63. M: 91, 76, 79. L: 93, 81, 84. XL: 103, 89, 95. How to measure: Upper Bust: Measure around the fullest part of your bust, keeping the tape level. Under Bust: Measure around the ribcage directly under your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Design details: Scoop neckline, criss cross straps and supportive wide band. Please allow 1–2 cm difference due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'bubble-dress' => array(
+			'product_slug' => 'bubble-dress',
+			'name' => 'Bubble Dress',
+			'image' => 'bubble-dress-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Bubble Dress size chart with arrows showing coat length, bust, waist, hip and the inner shorts leg opening.',
+			'description' => 'Bubble Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order. S: 74, 68, 56, 80, 41. M: 76, 72, 60, 84, 43. L: 78, 76, 64, 88, 45. XL: 80, 80, 68, 92, 47. XXL: 84, 84, 72, 98, 49. How to measure: Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Bust: Measure around the fullest part of your bust. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'match-dress' => array(
+			'product_slug' => 'the-match-dress',
+			'name' => 'Match Dress',
+			'image' => 'match-dress-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Match Dress size chart with arrows showing coat length, bust, waist and hip, plus the back cutout and striped waist band.',
+			'description' => 'Match Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist and Hip, in that order. S: 77, 74, 60, 84. M: 79, 78, 64, 88. L: 81, 82, 68, 92. XL: 83, 86, 72, 96. How to measure: Bust: Measure around the fullest part of your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Design details: Clean front design, back cutout detail and signature waist band. Please allow 1–2 cm difference due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'serve-dress' => array(
+			'product_slug' => 'the-serve-dress',
+			'name' => 'Serve Dress',
+			'image' => 'serve-dress-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Serve Dress size chart with arrows showing bust, shoulder-to-hem length and hem circumference on a pleated racerback dress.',
+			'description' => 'Serve Dress measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12. Length: 71, 73, 75, 77, 79. Bust: 72, 76, 80, 84, 88. Hem Circumference: 70, 74, 78, 82, 86. Measurement guide: Bust: Measure around the fullest part of your bust, keeping the tape level. Length: Measure from the top of the shoulder to the hem. Hem Circumference: Measure around the bottom hem opening of the dress. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'elite-dress' => array(
+			'product_slug' => 'the-eyelet-dress',
+			'name' => 'Elite Dress',
+			'image' => 'elite-dress-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Elite Dress size chart with arrows showing bust, waist, hip, coat length and the built-in shorts leg opening on a blue lace dress.',
+			'description' => 'Elite Dress measurements in centimeters (cm). Each size lists Bust, Waist, Hip, Coat Length and Slack Bottom, in that order. S: 78–84, 62–68, 86–92, 78, 24. M: 84–90, 68–74, 92–98, 79, 25. L: 90–96, 74–80, 98–104, 80, 26. XL: 96–102, 80–86, 104–110, 81, 27. How to measure: Bust: Measure around the fullest part of your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Measurements may vary slightly (±1–2 cm) due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'courtline-dress' => array(
+			'product_slug' => 'the-ace-dress',
+			'name' => 'Courtline Dress',
+			'image' => 'courtline-dress-illustrated-20260919.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Courtline Dress size chart with waist, hip, pants length and thigh measurements, plus bust measuring arrows and a back cutout.',
+			'description' => 'Courtline Dress measurements in centimeters (cm). Each size lists Waist, Hip, Pants Length and Thigh, in that order. S: 63, 90, 86, 70.5. M: 67, 94, 88, 72.5. L: 71, 98, 90, 74.5. XL: 75, 102, 92, 76.5. How to measure: Bust: Measure around the fullest part of your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Pants Length: Total length from top of shoulder to bottom hem of outer skirt. Thigh: Measure around the fullest part of your thigh. Design details: Clean front design, back cutout detail and signature waist band. Please allow 1–2 cm difference due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+	);
+	return $charts;
+}
+
+/**
+ * Approved charts belong to exact products, never categories or variations.
  */
 function bactive_get_product_size_chart() {
 	if ( ! is_product() ) {
 		return '';
 	}
-	$charts = array(
-		'the-court-skort' => 'court-skort',
-		'the-bubble-dress' => 'bubble-dress',
-	);
 	$slug = get_post_field( 'post_name', get_queried_object_id() );
-	return $charts[ $slug ] ?? '';
+	foreach ( bactive_get_size_charts() as $chart => $guide ) {
+		if ( $guide['product_slug'] === $slug ) {
+			return $chart;
+		}
+	}
+	return '';
 }
 
 /**
@@ -219,30 +292,25 @@ function bactive_get_product_size_chart() {
  */
 function bactive_get_size_guide_content( $heading_id = '', $chart = '' ) {
 	$heading_attribute = $heading_id ? ' id="' . esc_attr( $heading_id ) . '"' : '';
+	$charts = bactive_get_size_charts();
+	$guide = is_string( $chart ) && isset( $charts[ $chart ] ) ? $charts[ $chart ] : null;
 
 	ob_start();
 	?>
 	<div class="bactive-size-guide-content">
-		<?php if ( 'court-skort' === $chart ) : ?>
-		<h2<?php echo $heading_attribute; ?>>Court Skort size chart</h2>
+		<?php if ( $guide ) :
+			$image_url = get_stylesheet_directory_uri() . '/assets/images/size-guides/' . $guide['image'];
+			$description_id = $chart . '-measurements-description';
+		?>
+		<h2<?php echo $heading_attribute; ?> class="bactive-size-chart-anchor"><?php echo esc_html( $guide['name'] . ' size chart' ); ?></h2>
 		<figure class="bactive-size-illustration">
-			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Court Skort illustrated size guide full size in a new tab" aria-describedby="court-skort-measurements-description">
-				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/court-skort-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Court Skort size chart with arrows showing waist, inner hip, skirt length and inner shorts length.">
+			<a href="<?php echo esc_url( $image_url ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( 'Open the ' . $guide['name'] . ' illustrated size guide full size in a new tab' ); ?>" aria-describedby="<?php echo esc_attr( $description_id ); ?>">
+				<img src="<?php echo esc_url( $image_url ); ?>" width="<?php echo esc_attr( $guide['width'] ); ?>" height="<?php echo esc_attr( $guide['height'] ); ?>" loading="lazy" alt="<?php echo esc_attr( $guide['alt'] ); ?>">
 			</a>
 			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
 		</figure>
 		<!-- Referenced text alternative, not a second visible chart. -->
-		<div id="court-skort-measurements-description" hidden>Court Skort measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12, 14. Length: 35, 36, 37, 38, 39, 40. Waist: 64, 68, 72, 76, 80, 84. Inner Hip: 72, 76, 80, 84, 88, 92. Inner Leg Opening: 40, 42, 44, 46, 48, 50. Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0. How to measure: Length: Measure from the top of the waistband to the hem. Waist: Measure around the narrowest part of your waist. Inner Hip: Measure around the fullest part of your hips (below the waistband). Inner Leg Opening: Measure across the leg opening of the built-in shorts. Inner Length: Measure the length of the inner shorts (from crotch to hem). Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</div>
-		<?php elseif ( 'bubble-dress' === $chart ) : ?>
-		<h2<?php echo $heading_attribute; ?>>Bubble Dress size chart</h2>
-		<figure class="bactive-size-illustration">
-			<a href="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" target="_blank" rel="noopener" aria-label="Open the Bubble Dress illustrated size guide full size in a new tab" aria-describedby="bubble-dress-measurements-description">
-				<img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/images/size-guides/bubble-dress-illustrated-20260911.jpg' ); ?>" width="853" height="1280" loading="lazy" alt="Bubble Dress size chart with arrows showing coat length, bust, waist, hip and the inner shorts leg opening.">
-			</a>
-			<figcaption>Tap or click the illustration to open it full size in a new tab.</figcaption>
-		</figure>
-		<!-- Referenced text alternative, not a second visible chart. -->
-		<div id="bubble-dress-measurements-description" hidden>Bubble Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order. S: 74, 68, 56, 80, 41. M: 76, 72, 60, 84, 43. L: 78, 76, 64, 88, 45. XL: 80, 80, 68, 92, 47. XXL: 84, 84, 72, 98, 49. How to measure: Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Bust: Measure around the fullest part of your bust. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.</div>
+		<div id="<?php echo esc_attr( $description_id ); ?>" hidden><?php echo esc_html( $guide['description'] ); ?></div>
 		<?php else : ?>
 		<h2<?php echo $heading_attribute; ?>>Size guidance</h2>
 		<p>Size charts vary by style. <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact us for help choosing your size</a>.</p>
@@ -261,14 +329,24 @@ function bactive_size_guide_page_content( $content ) {
 
 	// Only exact, scalar chart keys may select a product guide. Never reflect input.
 	$chart = isset( $_GET['chart'] ) && is_string( $_GET['chart'] ) ? $_GET['chart'] : '';
-	if ( in_array( $chart, array( 'court-skort', 'bubble-dress' ), true ) ) {
+	$charts = bactive_get_size_charts();
+	if ( isset( $charts[ $chart ] ) ) {
 		return bactive_get_size_guide_content( $chart . '-size-chart', $chart );
 	}
 
-	return '<section class="bactive-size-guide-content"><h2>Choose your product</h2>'
-		. '<ul><li id="court-skort-size-chart"><a href="' . esc_url( home_url( '/size-guide/?chart=court-skort#court-skort-size-chart' ) ) . '">Court Skort visual size chart</a></li>'
-		. '<li id="bubble-dress-size-chart"><a href="' . esc_url( home_url( '/size-guide/?chart=bubble-dress#bubble-dress-size-chart' ) ) . '">Bubble Dress visual size chart</a></li></ul></section>'
-		. '<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>Size charts vary by style. For other skorts, dresses, tops and styles, <a href="' . esc_url( home_url( '/contact/' ) ) . '">contact us for the right size guide</a>.</p></section>';
+	ob_start();
+	?>
+	<section class="bactive-size-guide-content">
+		<h2>Choose your product</h2>
+		<ul>
+			<?php foreach ( $charts as $key => $guide ) : ?>
+			<li id="<?php echo esc_attr( $key . '-size-chart' ); ?>" class="bactive-size-chart-anchor"><a href="<?php echo esc_url( home_url( '/size-guide/?chart=' . $key . '#' . $key . '-size-chart' ) ); ?>"><?php echo esc_html( $guide['name'] . ' visual size chart' ); ?></a></li>
+			<?php endforeach; ?>
+		</ul>
+	</section>
+	<section id="sizing-help" class="bactive-size-guide-content"><h2>Other styles</h2><p>Size charts vary by style. For other skorts, dresses, tops and styles, <a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">contact us for the right size guide</a>.</p></section>
+	<?php
+	return ob_get_clean();
 }
 
 /**

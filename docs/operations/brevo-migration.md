@@ -34,6 +34,23 @@ The suppression receiver is `POST /wp-json/bactive-brevo/v1/webhook` on the exac
 
 The read-only operator command is `wp bactive-brevo status`. During the authorized test/release window, real cron must run `wp bactive-brevo run-due` against the explicit WordPress path. Readiness requires two actual CLI ticks at least 30 seconds apart, with the latest within ten minutes. Never enable workflows or change verification flags merely to bypass a readiness failure. Record actual acceptance evidence before setting them.
 
+## Stage activation controls
+
+Every installation starts with every marketing stage disabled. The WordPress
+settings page exposes only the capability allowlist: `welcome`, `cart`,
+`care`, `review`, and `winback`. It cannot enable marketing, switch an
+environment to live, set the release cutoff, or mark provider workflows as
+verified. Those independent release gates must all pass before the selected
+stage can queue or dispatch an event.
+
+Phase 1 selects `welcome` and `cart`. Phase 2 selects all five capabilities
+after the settlement eligibility and workflow acceptance checks pass. For each
+phase, record a new release cutoff at activation; a job created before that
+cutoff is preserved as `review_required/prelaunch_job`, never replayed when a
+stage is selected later. Disable a stage before changing or pausing its Brevo
+workflow. The sanitized queue status shows the active stages, per-stage counts,
+overdue work, hold reasons, cron freshness, and only local send reservations.
+
 Due event names: ba_welcome_ready, ba_cart_reminder_ready, ba_post_purchase_ready and ba_winback_ready. Stage distinguishes cart 2h/24h and care/review. Brevo workflows send immediately after these events; delays belong to the local scheduler so eligibility is checked at dispatch. No payment/session keys, addresses, phone numbers or raw provider payloads belong in marketing events. Ambiguous event API responses are quarantined, never blindly retried.
 
 BACTIVE5 must be provisioned explicitly as a draft, bound by ID and campaign marker, and published only during verified activation. Native Woo coupon counters remain authoritative. Separate atomic identity claims prevent concurrent first-order redemptions; historical purchases/refunds and unresolved payment recovery make a customer ineligible. Configuration or activation alone must not create a public coupon.

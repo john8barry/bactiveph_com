@@ -7,6 +7,7 @@ defined('ABSPATH') || exit;
 final class Config
 {
     public const OPTION = 'bactive_brevo_settings';
+    public const CRON_FRESHNESS_SECONDS = 600;
 
     /**
      * These are marketing capabilities, rather than raw database-stage values.
@@ -214,22 +215,51 @@ final class Config
         return ['ready' => $blockers === [], 'mode' => self::mode(), 'blockers' => $blockers];
     }
 
+    /**
+     * Report CLI-cron evidence without exposing protected configuration. A future
+     * timestamp is treated as clock skew, rather than as proof that cron is ready.
+     */
+    public static function cron_status(?int $now = null): array
+    {
+        $now = $now ?? time();
+        $evidence = get_option('bactive_brevo_cron_evidence', []);
+        $count = is_array($evidence) ? max(0, (int) ($evidence['count'] ?? 0)) : 0;
+        $last = is_array($evidence) ? max(0, (int) ($evidence['last'] ?? 0)) : 0;
+        $state = 'fresh';
+        if ($last < 1) {
+            $state = 'not_recorded';
+        } elseif ($last > $now) {
+            $state = 'clock_skew';
+        } elseif ($count < 2) {
+            $state = 'insufficient_ticks';
+        } elseif ($last < $now - self::CRON_FRESHNESS_SECONDS) {
+            $state = 'stale';
+        }
+        return [
+            'state' => $state,
+            'fresh' => $state === 'fresh',
+            'observed_ticks' => $count,
+            'last_tick_at' => $last,
+            'age_seconds' => $last > 0 && $last <= $now ? $now - $last : null,
+            'freshness_window_seconds' => self::CRON_FRESHNESS_SECONDS,
+        ];
+    }
+
     public static function cron_ready(): bool
     {
-        $evidence = get_option('bactive_brevo_cron_evidence', []);
-        return is_array($evidence) && (int) ($evidence['count'] ?? 0) >= 2
-            && (int) ($evidence['last'] ?? 0) >= time() - 600;
+        return self::cron_status()['fresh'];
     }
 
     /** Only the CLI runner can establish evidence, never a public HTTP hit. */
     public static function record_cli_tick(): void
     {
         if (!defined('WP_CLI') || !WP_CLI || !self::site_allowed()) return;
+        $now = time();
         $old = get_option('bactive_brevo_cron_evidence', []);
         $last = (int) ($old['last'] ?? 0);
         $count = (int) ($old['count'] ?? 0);
-        if ($last < time() - 600) $count = 0;
-        if ($last > time() - 30) return;
-        update_option('bactive_brevo_cron_evidence', ['count' => min(2, $count + 1), 'last' => time()], false);
+        if ($last > $now || $last < $now - self::CRON_FRESHNESS_SECONDS) $count = 0;
+        if ($last > $now - 30 && $last <= $now) return;
+        update_option('bactive_brevo_cron_evidence', ['count' => min(2, $count + 1), 'last' => $now], false);
     }
 }

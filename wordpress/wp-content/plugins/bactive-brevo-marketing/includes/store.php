@@ -401,12 +401,111 @@ final class Store
         global $wpdb;
         $out = ['schema' => (int) get_option('bactive_brevo_schema', 0), 'contacts' => [], 'outbox' => [],
             'storage_error' => get_option('bactive_brevo_storage_error', []),
-            'last_cli_tick' => (int) (get_option('bactive_brevo_cron_evidence', [])['last'] ?? 0)];
+            'last_cli_tick' => (int) (Config::cron_status()['last_tick_at'] ?? 0),
+            'cron' => Config::cron_status(),
+            'queue' => [
+                'scope' => ['mode' => Config::mode(), 'site' => rtrim(home_url(), '/')],
+                'stages' => [],
+                'overdue' => ['count' => 0, 'oldest_due_at' => 0, 'oldest_age_seconds' => null],
+                'review_error_breakdown' => [],
+                'quota' => self::quota_status(),
+            ]];
+        if (!self::ready()) return $out;
         foreach (['contacts', 'outbox'] as $table) {
             foreach (($wpdb->get_results('SELECT state,COUNT(*) AS count FROM ' . self::table($table) . ' GROUP BY state', ARRAY_A) ?: []) as $row) {
                 $out[$table][$row['state']] = (int) $row['count'];
             }
         }
+        $out['queue'] = self::queue_status();
         return $out;
+    }
+
+    /**
+     * Sanitized current-environment operational diagnostics for WP-CLI and the
+     * admin screen. Never return contact, cart, order, delivery-key or provider
+     * payload data from the queue ledger.
+     */
+    private static function queue_status(): array
+    {
+        global $wpdb;
+        $now = time();
+        $mode = Config::mode();
+        $site = rtrim(home_url(), '/');
+        $table = self::table('outbox');
+        $stages = [];
+        $stageRows = $wpdb->get_results($wpdb->prepare(
+            "SELECT stage,state,COUNT(*) AS count FROM $table WHERE mode=%s AND site=%s GROUP BY stage,state",
+            $mode, $site
+        ), ARRAY_A) ?: [];
+        foreach ($stageRows as $row) {
+            $stage = self::diagnostic_label($row['stage'] ?? '', 'invalid_stage', 24);
+            $state = self::diagnostic_label($row['state'] ?? '', 'unknown', 24);
+            $stages[$stage][$state] = (int) $row['count'];
+        }
+        ksort($stages, SORT_STRING);
+
+        $overdue = $wpdb->get_row($wpdb->prepare(
+            "SELECT COUNT(*) AS count,MIN(due_at) AS oldest_due_at FROM $table WHERE mode=%s AND site=%s AND state='pending' AND due_at<%d",
+            $mode, $site, $now
+        ), ARRAY_A);
+        $oldest = is_array($overdue) ? max(0, (int) ($overdue['oldest_due_at'] ?? 0)) : 0;
+
+        $breakdown = [];
+        $errorRows = $wpdb->get_results($wpdb->prepare(
+            "SELECT state,error_code,COUNT(*) AS count FROM $table WHERE mode=%s AND site=%s AND error_code<>'' GROUP BY state,error_code ORDER BY count DESC,state,error_code LIMIT 25",
+            $mode, $site
+        ), ARRAY_A) ?: [];
+        foreach ($errorRows as $row) {
+            $breakdown[] = [
+                'state' => self::diagnostic_label($row['state'] ?? '', 'unknown', 24),
+                'reason' => self::diagnostic_label($row['error_code'] ?? '', 'invalid_reason', 64),
+                'count' => (int) $row['count'],
+            ];
+        }
+
+        return [
+            'scope' => ['mode' => $mode, 'site' => $site],
+            'stages' => $stages,
+            'overdue' => [
+                'count' => is_array($overdue) ? (int) ($overdue['count'] ?? 0) : 0,
+                'oldest_due_at' => $oldest,
+                'oldest_age_seconds' => $oldest > 0 ? max(0, $now - $oldest) : null,
+            ],
+            'review_error_breakdown' => $breakdown,
+            'quota' => self::quota_status($now),
+        ];
+    }
+
+    /**
+     * This is a local reservation ledger, not a Brevo dashboard balance. It
+     * deliberately performs no provider read and cannot reveal account secrets.
+     */
+    private static function quota_status(?int $now = null): array
+    {
+        global $wpdb;
+        $now = $now ?? time();
+        $limit = Config::limit('daily_event_cap', 200);
+        $reserved = 0;
+        if (self::ready()) {
+            $value = $wpdb->get_var($wpdb->prepare(
+                'SELECT value FROM ' . self::table('controls') . ' WHERE control_key=%s AND expires_at>=%d',
+                self::hash('event-daily|' . gmdate('Ymd', $now)), $now
+            ));
+            $reserved = max(0, (int) $value);
+        }
+        return [
+            'period_utc' => gmdate('Y-m-d', $now),
+            'local_event_limit' => $limit,
+            'local_reservations' => $reserved,
+            'local_remaining' => max(0, $limit - $reserved),
+            'reservation_excess' => max(0, $reserved - $limit),
+            'provider_quota_status' => 'not_queried',
+        ];
+    }
+
+    private static function diagnostic_label(mixed $value, string $fallback, int $length): string
+    {
+        $value = is_string($value) ? strtolower($value) : '';
+        return preg_match('/^[a-z0-9_]{1,' . $length . '}$/D', $value) ? $value : $fallback;
     }
 }

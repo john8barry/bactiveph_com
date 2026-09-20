@@ -90,15 +90,43 @@ final class Admin {
             <h2>Marketing queue</h2>
             <?php if (Store::ready()) : $queue = Store::status(); ?>
                 <table class="widefat striped" style="max-width:700px">
-                    <thead><tr><th scope="col">State</th><th scope="col">Events</th></tr></thead>
+                    <caption class="screen-reader-text">All stored queue events by state</caption>
+                    <thead><tr><th scope="col">State</th><th scope="col">All stored events</th></tr></thead>
                     <tbody>
                     <?php foreach (['pending' => 'Waiting for eligibility and schedule', 'accepted' => 'Provider acceptance', 'workflow_received' => 'Workflow intake', 'review_required' => 'Needs review before any retry', 'failed' => 'Failed', 'suppressed' => 'Suppressed'] as $state => $label) : ?>
                         <tr><th scope="row"><?php echo esc_html($label); ?></th><td><?php echo esc_html((string) (int) ($queue['outbox'][$state] ?? 0)); ?></td></tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+                <?php $operational = $queue['queue']; $cron = $queue['cron']; ?>
+                <h3>Current environment queue</h3>
+                <p><?php echo esc_html((string) ($operational['scope']['site'] ?? '')); ?> · <?php echo esc_html((string) ($operational['scope']['mode'] ?? '')); ?> mode. Contact, cart, order, provider-payload, and delivery-key data are never shown here.</p>
+                <?php if (!empty($operational['stages'])) : ?>
+                    <table class="widefat striped" style="max-width:900px">
+                        <thead><tr><th scope="col">Stage</th><th scope="col">Pending</th><th scope="col">Accepted</th><th scope="col">Workflow intake</th><th scope="col">Review held</th><th scope="col">Failed</th><th scope="col">Suppressed</th></tr></thead>
+                        <tbody>
+                        <?php foreach ($operational['stages'] as $stage => $counts) : ?>
+                            <tr><th scope="row"><?php echo esc_html($stage); ?></th><?php foreach (['pending', 'accepted', 'workflow_received', 'review_required', 'failed', 'suppressed'] as $state) : ?><td><?php echo esc_html((string) (int) ($counts[$state] ?? 0)); ?></td><?php endforeach; ?></tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else : ?>
+                    <p>No current-environment queue rows are recorded.</p>
+                <?php endif; ?>
+                <?php $overdue = $operational['overdue'] ?? []; ?>
+                <p><strong>Overdue pending jobs:</strong> <?php echo esc_html((string) (int) ($overdue['count'] ?? 0)); ?><?php if (!empty($overdue['oldest_due_at'])) : ?>; oldest due <?php echo esc_html(gmdate('Y-m-d H:i:s', (int) $overdue['oldest_due_at']) . ' UTC'); ?> (<?php echo esc_html((string) (int) ($overdue['oldest_age_seconds'] ?? 0)); ?> seconds overdue)<?php endif; ?>.</p>
+                <?php if (!empty($operational['review_error_breakdown'])) : ?>
+                    <h3>Review and error reasons</h3>
+                    <table class="widefat striped" style="max-width:700px">
+                        <thead><tr><th scope="col">State</th><th scope="col">Reason</th><th scope="col">Events</th></tr></thead>
+                        <tbody><?php foreach ($operational['review_error_breakdown'] as $entry) : ?><tr><td><?php echo esc_html((string) $entry['state']); ?></td><td><?php echo esc_html((string) $entry['reason']); ?></td><td><?php echo esc_html((string) (int) $entry['count']); ?></td></tr><?php endforeach; ?></tbody>
+                    </table>
+                <?php endif; ?>
+                <h3>Scheduler and sending allowance</h3>
+                <p><strong>CLI cron:</strong> <?php echo esc_html((string) ($cron['state'] ?? 'not_recorded')); ?>; <?php echo esc_html((string) (int) ($cron['observed_ticks'] ?? 0)); ?> observed ticks<?php if (!empty($cron['last_tick_at'])) : ?>; last tick <?php echo esc_html(gmdate('Y-m-d H:i:s', (int) $cron['last_tick_at']) . ' UTC'); ?><?php endif; ?><?php if (($cron['age_seconds'] ?? null) !== null) : ?>; age <?php echo esc_html((string) (int) $cron['age_seconds']); ?> seconds<?php endif; ?>.</p>
+                <?php $quota = $operational['quota'] ?? []; ?>
+                <p><strong>Local event allowance for <?php echo esc_html((string) ($quota['period_utc'] ?? 'today')); ?> UTC:</strong> <?php echo esc_html((string) (int) ($quota['local_remaining'] ?? 0)); ?> remaining of <?php echo esc_html((string) (int) ($quota['local_event_limit'] ?? 0)); ?> after <?php echo esc_html((string) (int) ($quota['local_reservations'] ?? 0)); ?> reservations. Brevo dashboard quota is not queried by this plugin.</p>
                 <p>Inbox delivery is verified separately in Brevo logs and the approved test inbox. Review-held events are never automatically resent.</p>
-                <p>Last scheduled-command tick: <?php echo !empty($queue['last_cli_tick']) ? esc_html(gmdate('Y-m-d H:i:s', (int) $queue['last_cli_tick']) . ' UTC') : 'Not recorded'; ?>.</p>
                 <?php if (!empty($queue['storage_error']['code'])) : ?>
                     <p><strong>Queue storage needs attention:</strong> <?php echo esc_html((string) $queue['storage_error']['code']); ?> (<?php echo esc_html(gmdate('Y-m-d H:i:s', (int) ($queue['storage_error']['at'] ?? 0)) . ' UTC'); ?>). Review storage and the affected work before activation.</p>
                 <?php endif; ?>

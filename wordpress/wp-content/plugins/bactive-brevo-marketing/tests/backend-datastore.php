@@ -339,6 +339,29 @@ function bactive_brevo_backend_integration_tests(): array
         $fake_contact['state'] = 'confirmed';
         $assert($error(Consent::check_live($fake_contact), 'consent_revoked'), 'provider blocklist readback always prevents event eligibility');
         $assert(count($http['events']) === $before, 'all fixture provider mutations remained HTTP mocks');
+
+        // Operator diagnostics aggregate only sanitized state/count data for the
+        // active site and mode; they never expose fixture identities or payloads.
+        $diagnosticHash = Store::hash('diagnostic-contact|' . $suffix);
+        $assert(Store::queue($diagnosticHash, 'ba_cart_reminder_ready', '2h', 'cart', 'diagnostic-overdue-' . $suffix, time() - 121), 'diagnostic fixture seeds an overdue pending stage');
+        $assert(Store::queue($diagnosticHash, 'ba_cart_reminder_ready', '24h', 'cart', 'diagnostic-review-' . $suffix, time() + DAY_IN_SECONDS), 'diagnostic fixture seeds a review-held stage');
+        $assert(Store::queue($diagnosticHash, 'ba_post_purchase_ready', 'care', 'order', 'diagnostic-failed-' . $suffix, time() + DAY_IN_SECONDS), 'diagnostic fixture seeds a failed stage');
+        $wpdb->update(Store::table('outbox'), ['state' => 'review_required', 'error_code' => 'provider_ambiguous'], ['entity_id' => 'diagnostic-review-' . $suffix]);
+        $wpdb->update(Store::table('outbox'), ['state' => 'failed', 'error_code' => 'provider_rejected'], ['entity_id' => 'diagnostic-failed-' . $suffix]);
+        Store::reserve('event-daily|' . gmdate('Ymd'), Config::limit('daily_event_cap', 200), time() + DAY_IN_SECONDS);
+        $diagnostics = Store::status();
+        $assert(($diagnostics['queue']['scope']['mode'] ?? '') === 'test' && ($diagnostics['queue']['scope']['site'] ?? '') === rtrim(home_url(), '/'), 'queue diagnostics bind counts to the active environment');
+        $assert((int) ($diagnostics['queue']['stages']['2h']['pending'] ?? 0) >= 1 && (int) ($diagnostics['queue']['stages']['24h']['review_required'] ?? 0) >= 1,
+            'queue diagnostics report per-stage pending and review-held counts');
+        $assert((int) ($diagnostics['queue']['overdue']['count'] ?? 0) >= 1 && (int) ($diagnostics['queue']['overdue']['oldest_age_seconds'] ?? 0) >= 121,
+            'queue diagnostics report the oldest overdue pending job age');
+        $reasons = $diagnostics['queue']['review_error_breakdown'] ?? [];
+        $reasonKeys = array_map(static fn(array $row): string => ($row['state'] ?? '') . ':' . ($row['reason'] ?? ''), $reasons);
+        $assert(in_array('review_required:provider_ambiguous', $reasonKeys, true) && in_array('failed:provider_rejected', $reasonKeys, true),
+            'queue diagnostics retain review and failure reason counts without job data');
+        $quota = $diagnostics['queue']['quota'] ?? [];
+        $assert((int) ($quota['local_reservations'] ?? 0) >= 1 && ($quota['provider_quota_status'] ?? '') === 'not_queried',
+            'quota status exposes only local reservations and never reads provider account balance');
         return ['checks' => count($checks), 'passed' => $checks, 'provider_event_calls' => count($http['events']), 'network' => 'mocked_only'];
     } finally {
         remove_filter('pre_http_request', $mock, PHP_INT_MAX);

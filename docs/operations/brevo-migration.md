@@ -14,6 +14,8 @@ B Active is replacing MailPoet with Brevo Free for consent-based marketing. SMTP
 - No historical event replay or automatic customer/order import. Zero currently eligible MailPoet subscribers.
 - Brevo handles marketing templates, unsubscribe and delivery reporting; a first-party Woo plugin checks current eligibility before each event. It does not replace wp_mail or add a third-party behavioral tracker.
 
+Campaigns are one-off, direct-authorization work. The current provider-object reference, campaign preflight, monitoring and recovery checklist is in [the campaign operations runbook](brevo-campaign-operations.md). It records only nonsecret evidence and must be refreshed from Brevo immediately before a campaign.
+
 ## Evidence and dependencies
 
 Authenticated production inventory found five MailPoet contacts: four globally unconfirmed and one unsubscribed. Four list memberships marked subscribed do not override global status. No campaigns, forms, automations, sending queues, recorded sends or confirmation sends exist. Recheck at cutover. Preserve the unsubscribed suppression; do not import the four unconfirmed contacts as marketable or send them a welcome campaign.

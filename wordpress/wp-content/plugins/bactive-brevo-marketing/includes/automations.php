@@ -96,6 +96,8 @@ final class Automations
             if (!$identity) return;
             $raw = WC()->cart->get_cart();
             if (!$raw) { self::empty_cart(); return; }
+            // Do not preserve pre-launch carts for a later configuration change.
+            if (!Config::enqueue_enabled('ba_cart_reminder_ready', '2h', 'cart')) return;
             $items = self::items($raw);
             if (!$items) return;
             $key = (string) WC()->session->get('bactive_brevo_cart', '');
@@ -211,20 +213,28 @@ final class Automations
             || !self::order_identity_matches($order, $contact)) { self::clear_order_repair($order); return; }
         $paid = $order->get_date_paid();
         if (!$paid || !$order->is_paid()) { self::clear_order_repair($order); return; }
-        // Persist the local repair signal before queue writes; retries only recreate missing rows.
-        $order->update_meta_data('_bactive_brevo_queue_pending', 'yes');
-        $order->save_meta_data();
-        $queued = true;
-        if ($paid && $order->is_paid()) {
-            $queued = Store::queue($contact['email_hash'], 'ba_post_purchase_ready', 'care', 'order', (string) $order->get_id(), $paid->getTimestamp() + 2 * DAY_IN_SECONDS) && $queued;
+        $requests = [];
+        if ($paid && $order->is_paid() && Config::enqueue_enabled('ba_post_purchase_ready', 'care', 'order')) {
+            $requests[] = ['ba_post_purchase_ready', 'care', $paid->getTimestamp() + 2 * DAY_IN_SECONDS];
         }
         $completed = $order->get_date_completed();
         if ($order->get_status() === 'completed' && $completed && $paid && $order->is_paid()) {
-            $queued = Store::queue($contact['email_hash'], 'ba_post_purchase_ready', 'review', 'order', (string) $order->get_id(), $completed->getTimestamp() + 14 * DAY_IN_SECONDS) && $queued;
-            if (!self::newer_purchase_exists($order, $email)) {
-                Store::cancel_old_winback($contact['email_hash'], $order->get_id());
-                $queued = Store::queue($contact['email_hash'], 'ba_winback_ready', '90d', 'order', (string) $order->get_id(), $completed->getTimestamp() + 90 * DAY_IN_SECONDS) && $queued;
+            if (Config::enqueue_enabled('ba_post_purchase_ready', 'review', 'order')) {
+                $requests[] = ['ba_post_purchase_ready', 'review', $completed->getTimestamp() + 14 * DAY_IN_SECONDS];
             }
+            if (Config::enqueue_enabled('ba_winback_ready', '90d', 'order') && !self::newer_purchase_exists($order, $email)) {
+                Store::cancel_old_winback($contact['email_hash'], $order->get_id());
+                $requests[] = ['ba_winback_ready', '90d', $completed->getTimestamp() + 90 * DAY_IN_SECONDS];
+            }
+        }
+        // Disabled stages are intentionally not retained for a future repair pass.
+        if (!$requests) { self::clear_order_repair($order); return; }
+        // Persist the local repair signal before queue writes; retries only recreate active-stage rows.
+        $order->update_meta_data('_bactive_brevo_queue_pending', 'yes');
+        $order->save_meta_data();
+        $queued = true;
+        foreach ($requests as [$event, $stage, $due]) {
+            $queued = Store::queue($contact['email_hash'], $event, $stage, 'order', (string) $order->get_id(), $due) && $queued;
         }
         if ($queued) self::clear_order_repair($order);
     }
@@ -306,11 +316,12 @@ final class Automations
             return new \WP_Error('event_environment_changed', 'The queued event belongs to another environment.');
         }
         if (!in_array($job['event_name'], self::EVENTS, true)) return new \WP_Error('unknown_event', 'Unknown event.');
-        $allowed = [
-            'ba_welcome_ready' => ['contact:welcome'], 'ba_cart_reminder_ready' => ['cart:2h', 'cart:24h'],
-            'ba_post_purchase_ready' => ['order:care', 'order:review'], 'ba_winback_ready' => ['order:90d'],
-        ];
-        if (!in_array($job['entity_kind'] . ':' . $job['stage'], $allowed[$job['event_name']], true)) return new \WP_Error('invalid_stage', 'Invalid marketing stage.');
+        if (Config::stage_key((string) $job['event_name'], (string) $job['stage'], (string) $job['entity_kind']) === '') {
+            return new \WP_Error('invalid_stage', 'Invalid marketing stage.');
+        }
+        if (!Config::stage_enabled((string) $job['event_name'], (string) $job['stage'], (string) $job['entity_kind'])) {
+            return new \WP_Error('stage_disabled', 'This marketing stage is not enabled.');
+        }
         if ($job['entity_kind'] === 'cart') $data = self::cart_properties($job, $contact);
         elseif ($job['entity_kind'] === 'order') $data = self::order_properties($job, $contact);
         elseif ($job['entity_kind'] === 'contact' && $job['event_name'] === 'ba_welcome_ready') {
@@ -364,6 +375,11 @@ final class Automations
         $processed = 0;
         foreach (Store::due() as $job) {
             if (microtime(true) - $start > 20 || !Config::readiness()['ready']) break;
+            $dispatch_blocker = Config::dispatch_blocker($job);
+            if ($dispatch_blocker !== '') {
+                Store::hold((int) $job['id'], $dispatch_blocker);
+                continue;
+            }
             if (!Store::claim((int) $job['id'])) continue;
             ++$processed;
             try {
@@ -379,6 +395,10 @@ final class Automations
     private static function process(array $job): void
     {
         $id = (int) $job['id'];
+        $dispatch_blocker = Config::dispatch_blocker($job);
+        if ($dispatch_blocker !== '') {
+            Store::finish($id, 'review_required', $dispatch_blocker); return;
+        }
         $contact = Store::contact($job['email_hash']);
         if (!$contact || $contact['state'] !== 'confirmed' || !Config::recipient_allowed($contact['email'])) {
             Store::finish($id, 'suppressed', 'consent_missing'); return;

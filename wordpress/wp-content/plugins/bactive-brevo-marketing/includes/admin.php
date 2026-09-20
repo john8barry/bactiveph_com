@@ -37,7 +37,7 @@ final class Admin {
                 $current[$name] = min($bounds[1], max($bounds[0], (int) $input[$name]));
             }
         }
-        // Never accept secrets, enabled, test_mode, launch_cutoff or verification flags here.
+        // Never accept secrets, enabled, test_mode, launch_cutoff, enabled stages or verification flags here.
         return $current;
     }
 

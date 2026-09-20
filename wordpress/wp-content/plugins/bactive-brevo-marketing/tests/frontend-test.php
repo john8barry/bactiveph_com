@@ -66,8 +66,8 @@ namespace Bactive\Brevo {
     $_POST = $valid;
     try { Frontend::submit(); } catch (\JsonResponse $e) { check($e->status === 200 && $e->result['ok'], 'Valid request must pass explicit consent.'); }
     check($GLOBALS['subscribe_calls'] === 1, 'One signup per valid submission.');
-    $saved = Admin::sanitize(['enabled' => true, 'test_mode' => false, 'launch_cutoff' => 0, 'api_key' => 'never-save', 'daily_event_cap' => 9999, 'test_recipients' => "valid@example.invalid\nnot-an-email"]);
-    check($saved['enabled'] === false && $saved['test_mode'] === true && $saved['launch_cutoff'] === 123 && !isset($saved['api_key']), 'Settings cannot enable live mail or accept a secret.');
+    $saved = Admin::sanitize(['enabled' => true, 'test_mode' => false, 'launch_cutoff' => 0, 'enabled_stages' => ['welcome', 'cart'], 'api_key' => 'never-save', 'daily_event_cap' => 9999, 'test_recipients' => "valid@example.invalid\nnot-an-email"]);
+    check($saved['enabled'] === false && $saved['test_mode'] === true && $saved['launch_cutoff'] === 123 && !isset($saved['enabled_stages']) && !isset($saved['api_key']), 'Settings cannot enable live mail, change stages or accept a secret.');
     check($saved['daily_event_cap'] === 100 && $saved['test_recipients'] === ['valid@example.invalid'], 'Settings enforce quota ceiling and exact valid recipients.');
     $GLOBALS['can_manage'] = false;
     check(Admin::sanitize(['coupon_id' => 123]) === $GLOBALS['options'], 'Unauthorized settings save cannot change configuration.');

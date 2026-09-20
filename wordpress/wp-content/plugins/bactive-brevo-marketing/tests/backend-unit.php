@@ -63,6 +63,19 @@ $settings(['enabled' => true]);
 $assert(!Config::recipient_allowed('allowed@example.test'), 'test mode with no allowlist cannot send');
 $settings(['enabled' => true, 'test_recipients' => ['allowed@example.test']]);
 $assert(Config::recipient_allowed('ALLOWED@example.test') && !Config::recipient_allowed('other@example.test'), 'test recipient match is exact after case normalization');
+$assert(Config::enabled_stages() === [] && !Config::stage_enabled('ba_welcome_ready', 'welcome', 'contact'), 'new installations deny every marketing stage');
+$settings(['enabled' => true, 'test_recipients' => ['allowed@example.test'], 'enabled_stages' => ['welcome', 'cart', 'invalid', 'cart']]);
+$assert(Config::enabled_stages() === ['welcome', 'cart']
+    && Config::stage_enabled('ba_welcome_ready', 'welcome', 'contact')
+    && Config::stage_enabled('ba_cart_reminder_ready', '2h', 'cart')
+    && Config::stage_enabled('ba_cart_reminder_ready', '24h', 'cart')
+    && !Config::stage_enabled('ba_post_purchase_ready', 'care', 'order'), 'phase one enables welcome and both cart delays only');
+$settings(['enabled' => true, 'test_recipients' => ['allowed@example.test'], 'enabled_stages' => ['care', 'review', 'winback']]);
+$assert(!Config::stage_enabled('ba_welcome_ready', 'welcome', 'contact')
+    && !Config::stage_enabled('ba_cart_reminder_ready', '2h', 'cart')
+    && Config::stage_enabled('ba_post_purchase_ready', 'care', 'order')
+    && Config::stage_enabled('ba_post_purchase_ready', 'review', 'order')
+    && Config::stage_enabled('ba_winback_ready', '90d', 'order'), 'phase two enables care, review and win-back only when explicit');
 foreach (['https://www.bactiveph.com', 'http://bactiveph.com', 'https://bactiveph.com:443', 'https://bactiveph.com/subdir', 'https://bactiveph.com.attacker.test'] as $site) {
     $GLOBALS['test_home'] = $GLOBALS['test_site'] = $site;
     $assert(!Config::enabled(), 'unapproved site is denied: ' . $site);
@@ -76,6 +89,7 @@ $GLOBALS['test_site'] = 'https://staging.bactiveph.com';
 $assert(!Config::enabled(), 'WordPress home and site identity must match');
 $GLOBALS['test_site'] = $GLOBALS['test_home'];
 $settings(['enabled' => true, 'test_recipients' => ['allowed@example.test'], 'confirmed_list_id' => 41, 'launch_cutoff' => time() - 3600,
+    'enabled_stages' => ['welcome', 'cart', 'care', 'review', 'winback'],
     'api_key' => 'unsafe-option-secret', 'BACTIVE_BREVO_API_KEY' => 'unsafe-option-secret']);
 $assert(Config::secret('api_key') === '' && Config::secret('unknown') === '', 'API credentials are never read from options');
 define('BACTIVE_BREVO_API_KEY', 'disposable-unit-value');
@@ -147,6 +161,14 @@ $assert(Automations::fingerprint($cart) === Automations::fingerprint($reverse), 
 $reverse[0]['quantity'] = 2;
 $assert(Automations::fingerprint($cart) !== Automations::fingerprint($reverse), 'cart quantity change invalidates previous snapshot');
 $job = ['event_name' => 'ba_welcome_ready', 'stage' => 'welcome', 'entity_kind' => 'contact', 'delivery_key' => $key, 'mode' => 'test', 'site' => home_url()];
+$prelaunch = $job + ['created_at' => time() - 3601];
+$assert(Config::dispatch_blocker($prelaunch) === 'prelaunch_job', 'pre-cutoff durable work is held before a claim');
+$assert(Config::dispatch_blocker($job + ['created_at' => time()]) === '', 'new work for an enabled stage can dispatch');
+$settings(['enabled' => true, 'test_recipients' => ['allowed@example.test'], 'confirmed_list_id' => 41, 'launch_cutoff' => time() - 3600, 'enabled_stages' => []]);
+$assert(Config::dispatch_blocker($job + ['created_at' => time()]) === 'stage_disabled'
+    && $err(Automations::properties($job, []), 'stage_disabled'), 'disabled stages are held at the dispatch boundary');
+$settings(['enabled' => true, 'test_recipients' => ['allowed@example.test'], 'confirmed_list_id' => 41, 'launch_cutoff' => time() - 3600,
+    'enabled_stages' => ['welcome', 'cart', 'care', 'review', 'winback']]);
 $assert($err(Automations::properties(array_replace($job, ['mode' => 'live']), []), 'event_environment_changed'), 'queued welcome cannot migrate between test and live mode');
 $assert($err(Automations::properties(array_replace($job, ['site' => 'https://staging.bactiveph.com']), []), 'event_environment_changed'), 'queued event cannot migrate between site identities');
 $assert($err(Automations::properties($job, []), 'welcome_offer_unavailable'), 'welcome waits until real coupon guard reports ready');

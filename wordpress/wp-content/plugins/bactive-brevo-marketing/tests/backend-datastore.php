@@ -33,6 +33,7 @@ function bactive_brevo_backend_integration_tests(): array
         'enabled' => true, 'test_mode' => true, 'test_recipients' => [$email, $second],
         'confirmed_list_id' => 41, 'doi_template_id' => 42, 'turnstile_site_key' => 'fixture-public-key',
         'launch_cutoff' => time() - 120 * DAY_IN_SECONDS, 'automations_verified' => true,
+        'enabled_stages' => ['welcome', 'cart', 'care', 'review', 'winback'],
         'daily_signup_cap' => 100, 'daily_event_cap' => 200, 'per_contact_daily_cap' => 3,
     ]);
     update_option(Config::OPTION, $settings, false);
@@ -119,6 +120,36 @@ function bactive_brevo_backend_integration_tests(): array
 
         // Keep welcome outside the worker window: coupon fixtures independently validate the offer.
         $wpdb->update(Store::table('outbox'), ['due_at' => time() + DAY_IN_SECONDS], ['event_name' => 'ba_welcome_ready']);
+        $stage_settings = get_option(Config::OPTION, []);
+        $stage_settings['enabled_stages'] = [];
+        update_option(Config::OPTION, $stage_settings, false);
+        $assert(!Store::queue($contact['email_hash'], 'ba_cart_reminder_ready', '2h', 'cart', 'stage-disabled', time()),
+            'disabled stages do not create durable queue rows');
+        $stage_settings['enabled_stages'] = ['welcome', 'cart', 'care', 'review', 'winback'];
+        update_option(Config::OPTION, $stage_settings, false);
+        $assert(Store::queue($contact['email_hash'], 'ba_cart_reminder_ready', '2h', 'cart', 'prelaunch-job', time()),
+            'enabled post-cutoff stages create a durable queue row');
+        $prelaunch = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . Store::table('outbox') . " WHERE entity_id=%s", 'prelaunch-job'), ARRAY_A);
+        $wpdb->update(Store::table('outbox'), ['created_at' => (int) Config::get('launch_cutoff') - 1, 'due_at' => time() - 1], ['id' => $prelaunch['id']]);
+        $before = count($http['events']);
+        Automations::run_due();
+        $prelaunch = Store::delivery($prelaunch['delivery_key']);
+        $assert($prelaunch['state'] === 'review_required' && $prelaunch['error_code'] === 'prelaunch_job' && count($http['events']) === $before,
+            'pre-cutoff pending jobs are held without a provider request');
+        $assert(Store::queue($contact['email_hash'], 'ba_cart_reminder_ready', '2h', 'cart', 'stage-held', time()),
+            'a fresh enabled-stage job is durable before a later configuration change');
+        $stage_held = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . Store::table('outbox') . " WHERE entity_id=%s", 'stage-held'), ARRAY_A);
+        $stage_settings['enabled_stages'] = [];
+        update_option(Config::OPTION, $stage_settings, false);
+        Automations::run_due();
+        $stage_held = Store::delivery($stage_held['delivery_key']);
+        $assert($stage_held['state'] === 'review_required' && $stage_held['error_code'] === 'stage_disabled' && count($http['events']) === $before,
+            'disabled stage is held before a provider request');
+        $stage_settings['enabled_stages'] = ['welcome', 'cart', 'care', 'review', 'winback'];
+        update_option(Config::OPTION, $stage_settings, false);
+        Automations::run_due();
+        $assert(Store::delivery($stage_held['delivery_key'])['state'] === 'review_required' && count($http['events']) === $before,
+            'enabling a stage does not replay a previously held job');
         $assert(Store::queue($contact['email_hash'], 'ba_cart_reminder_ready', '2h', 'cart', 'fixture-dedupe', time()), 'local outbox accepts a valid queued event');
         Store::queue($contact['email_hash'], 'ba_cart_reminder_ready', '2h', 'cart', 'fixture-dedupe', time());
         $rows = $wpdb->get_results('SELECT * FROM ' . Store::table('outbox') . " WHERE entity_id='fixture-dedupe'", ARRAY_A);

@@ -120,8 +120,9 @@ final class Consent
         if (!Store::ready() || $wpdb->query('START TRANSACTION') === false) {
             return new \WP_Error('confirmation_storage', 'Your confirmation could not be completed. Please try the link again.');
         }
+        $queue_welcome = Config::enqueue_enabled('ba_welcome_ready', 'welcome', 'contact');
         if (!Store::confirm($pending, (int) $data['id'], $identity_token)
-            || !Store::queue($pending['email_hash'], 'ba_welcome_ready', 'welcome', 'contact', 'welcome', time())
+            || ($queue_welcome && !Store::queue($pending['email_hash'], 'ba_welcome_ready', 'welcome', 'contact', 'welcome', time()))
             || $wpdb->query('COMMIT') === false) {
             $wpdb->query('ROLLBACK');
             return new \WP_Error('confirmation_changed', 'Your confirmation could not be completed.');

@@ -8,6 +8,20 @@ final class Config
 {
     public const OPTION = 'bactive_brevo_settings';
 
+    /**
+     * These are marketing capabilities, rather than raw database-stage values.
+     * Keeping both cart delays behind one explicit switch prevents a partial
+     * cart-reminder launch.
+     */
+    private const STAGE_KEYS = [
+        'ba_welcome_ready|contact|welcome' => 'welcome',
+        'ba_cart_reminder_ready|cart|2h' => 'cart',
+        'ba_cart_reminder_ready|cart|24h' => 'cart',
+        'ba_post_purchase_ready|order|care' => 'care',
+        'ba_post_purchase_ready|order|review' => 'review',
+        'ba_winback_ready|order|90d' => 'winback',
+    ];
+
     public static function defaults(): array
     {
         return [
@@ -20,6 +34,8 @@ final class Config
             'turnstile_site_key' => '',
             'launch_cutoff' => 0,
             'automations_verified' => false,
+            // A deployment must explicitly choose every stage it is releasing.
+            'enabled_stages' => [],
             'daily_event_cap' => 100,
             'daily_signup_cap' => 50,
             'per_contact_daily_cap' => 2,
@@ -96,6 +112,60 @@ final class Config
     public static function mode(): string
     {
         return self::flag('test_mode') ? 'test' : 'live';
+    }
+
+    /** @return list<string> */
+    public static function enabled_stages(): array
+    {
+        $configured = self::get('enabled_stages', []);
+        if (!is_array($configured)) return [];
+        $allowed = array_values(array_unique(array_values(self::STAGE_KEYS)));
+        $stages = [];
+        foreach ($configured as $stage) {
+            if (is_string($stage) && in_array($stage, $allowed, true)) $stages[] = $stage;
+        }
+        return array_values(array_unique($stages));
+    }
+
+    /** Return the configured capability for an exact event/entity/stage tuple. */
+    public static function stage_key(string $event, string $stage, string $entity_kind): string
+    {
+        return self::STAGE_KEYS[$event . '|' . $entity_kind . '|' . $stage] ?? '';
+    }
+
+    public static function stage_enabled(string $event, string $stage, string $entity_kind): bool
+    {
+        $key = self::stage_key($event, $stage, $entity_kind);
+        return $key !== '' && in_array($key, self::enabled_stages(), true);
+    }
+
+    /** The cutoff must be recorded and active before new marketing jobs exist. */
+    public static function launch_active(): bool
+    {
+        $cutoff = (int) self::get('launch_cutoff');
+        return $cutoff > 0 && $cutoff <= time();
+    }
+
+    /** Queueing requires a currently active release as well as the stage allowlist. */
+    public static function enqueue_enabled(string $event, string $stage, string $entity_kind): bool
+    {
+        return self::launch_active() && self::stage_enabled($event, $stage, $entity_kind);
+    }
+
+    /**
+     * Return a sanitized hold reason when a durable job is outside this launch.
+     * This deliberately uses job creation time, never its due time, so old held
+     * work cannot be released by changing an allowlist later.
+     */
+    public static function dispatch_blocker(array $job): string
+    {
+        $created = $job['created_at'] ?? null;
+        if (!is_scalar($created) || !preg_match('/^\d+$/D', (string) $created)
+            || (int) $created < (int) self::get('launch_cutoff') || !self::launch_active()) {
+            return 'prelaunch_job';
+        }
+        return self::stage_enabled((string) ($job['event_name'] ?? ''), (string) ($job['stage'] ?? ''), (string) ($job['entity_kind'] ?? ''))
+            ? '' : 'stage_disabled';
     }
 
     public static function limit(string $key, int $max): int

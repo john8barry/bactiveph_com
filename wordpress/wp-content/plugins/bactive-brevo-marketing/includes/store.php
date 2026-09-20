@@ -245,6 +245,7 @@ final class Store
     /** Recover only missing local jobs; previously accepted/ambiguous stages retain their dedupe row. */
     public static function repair_cart_jobs(): void
     {
+        if (!Config::enqueue_enabled('ba_cart_reminder_ready', '2h', 'cart')) return;
         global $wpdb;
         $carts = self::table('carts');
         $jobs = self::table('outbox');
@@ -278,6 +279,8 @@ final class Store
 
     public static function queue(string $hash, string $event, string $stage, string $kind, string $entity, int $due, bool $move_pending = false): bool
     {
+        // A disabled capability does not create a durable job that could later be released by configuration drift.
+        if (!Config::enqueue_enabled($event, $stage, $kind)) return false;
         global $wpdb;
         $table = self::table('outbox');
         $mode = Config::mode();
@@ -318,7 +321,16 @@ final class Store
     public static function claim(int $id): bool
     {
         global $wpdb;
-        return $wpdb->query($wpdb->prepare('UPDATE ' . self::table('outbox') . " SET state='sending',attempts=attempts+1,lease_until=%d,updated_at=%d WHERE id=%d AND state='pending' AND due_at<=%d AND mode=%s AND site=%s", time() + 120, time(), $id, time(), Config::mode(), rtrim(home_url(), '/'))) === 1;
+        return $wpdb->query($wpdb->prepare('UPDATE ' . self::table('outbox') . " SET state='sending',attempts=attempts+1,lease_until=%d,updated_at=%d WHERE id=%d AND state='pending' AND due_at<=%d AND created_at>=%d AND mode=%s AND site=%s", time() + 120, time(), $id, time(), (int) Config::get('launch_cutoff'), Config::mode(), rtrim(home_url(), '/'))) === 1;
+    }
+
+    /** Hold an unclaimed job without changing its dedupe or provider-delivery evidence. */
+    public static function hold(int $id, string $reason): bool
+    {
+        global $wpdb;
+        return $wpdb->update(self::table('outbox'), [
+            'state' => 'review_required', 'error_code' => substr($reason, 0, 64), 'updated_at' => time(),
+        ], ['id' => $id, 'state' => 'pending']) === 1;
     }
 
     public static function finish(int $id, string $state, string $code = '', int $due = 0): void

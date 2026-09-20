@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "issue": 128,
+  "label": "In-Store Pickup",
+  "targets": {
+    "production": {
+      "site": "https://bactiveph.com",
+      "database": "waypmvhk_bactwp"
+    },
+    "staging": {
+      "site": "https://staging.bactiveph.com",
+      "database": "waypmvhk_stg"
+    }
+  },
+  "shipping_method": {
+    "zone_id": 1,
+    "zone_name": "Davao City",
+    "instance_id": 14,
+    "option_name": "woocommerce_local_pickup_14_settings",
+    "before_title": "Local Pickup (Davao City)",
+    "after_title": "In-Store Pickup",
+    "before_sha256": "34df324724468001bd255989dad90d57665b83a0c65b8bf81f52443f5d013a0c",
+    "after_sha256": "0849c3bd15fde0ba930a8ad0e592a4b3f3684bc43acdb7948db8d5c9a4b1158b"
+  }
+}

@@ -184,7 +184,7 @@ final class Plugin {
                 $order->{'set_'.$address.'_postcode'}(get_option('woocommerce_store_postcode'));
             }
             foreach ($normalized as $id=>$quantity) { $order->add_product($products[$id],$quantity); }
-            $pickup=new \WC_Order_Item_Shipping();$pickup->set_method_id('local_pickup');$pickup->set_method_title('In-store pickup — Davao City');$pickup->set_total('0');$order->add_item($pickup);
+            $pickup=new \WC_Order_Item_Shipping();$pickup->set_method_id('local_pickup');$pickup->set_method_title('In-Store Pickup');$pickup->set_total('0');$order->add_item($pickup);
             $order->calculate_totals(true);$order->save();
             $order->update_meta_data('_bactive_cashier_basket_hash',self::basket_hash($order));$order->save();
             if (self::money($order->get_total())<1) { throw new \RuntimeException('The sale total must be greater than zero.'); }

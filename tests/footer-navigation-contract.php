@@ -10,9 +10,13 @@ function esc_url($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 
 function esc_attr($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function esc_html_e($value) { echo htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
 function get_template_part($slug) { $GLOBALS['template_parts'][] = $slug; }
+function shortcode_exists($tag) { $GLOBALS['shortcode_checks'][] = $tag; return true; }
+function do_shortcode($code) { $GLOBALS['shortcodes'][] = $code; return '<form class="bactive-footer__form"></form>'; }
 function check($ok, $name) { if (!$ok) throw new RuntimeException($name); echo "PASS $name\n"; }
 
 $template_parts = array();
+$shortcode_checks = array();
+$shortcodes = array();
 ob_start();
 include dirname(__DIR__) . '/wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php';
 $markup = ob_get_clean();
@@ -51,4 +55,6 @@ check(links_for($xpath, 'bactive-footer-brand-title') === array(
     'Our Store' => 'https://bactiveph.com/our-store',
 ), 'footer Brand destinations and URLs are preserved alphabetically');
 check($template_parts === array('template-parts/trust-bar'), 'trust bar include is preserved');
+check($shortcode_checks === array('bactive_newsletter_form'), 'newsletter shortcode availability is checked');
+check($shortcodes === array('[bactive_newsletter_form source="footer"]'), 'newsletter shortcode keeps the footer source');
 echo "Footer navigation checks passed.\n";

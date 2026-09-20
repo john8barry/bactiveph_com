@@ -309,6 +309,17 @@ PayMongo and WooCommerce. A redirect or thank-you page alone is not evidence.
 
 ## Settlement and review safety model
 
+### Read-only marketing eligibility
+
+`BActive\PayMongo\Payment_Eligibility::classify($order)` is the public
+read-only interface for downstream marketing. It returns only `settled`,
+`unpaid`, or `uncertain`; it makes no provider request, reconciliation,
+scheduling, or order mutation. `settled` requires the persisted WooCommerce
+paid facts and a coherent PayMongo payment, event, session, and mode tuple.
+Missing or malformed attempts, mode mismatches, refunds, dispute evidence, and
+every recovery or review marker return `uncertain`. Downstream senders must
+withhold post-purchase messages unless the result is `settled`.
+
 - Test, live, and local operational records have separate identities. Provider
   idempotency keys, event claims, payment effects, quarantine records, review
   intents, webhook-secret bindings, and cancel authorization include their

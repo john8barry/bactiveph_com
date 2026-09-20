@@ -545,6 +545,7 @@ if (!class_exists('WC_Order')) {
         public string $transaction_id = '';
         public ?DateTimeImmutable $date_paid = null;
         public array $refunds = array();
+        public float $total_refunded = 0.0;
         public bool $payment_complete_result = true;
         public int $payment_complete_calls = 0;
         public int $read_count = 0;
@@ -586,6 +587,7 @@ if (!class_exists('WC_Order')) {
         public function get_transaction_id(): string { return $this->transaction_id; }
         public function get_date_paid(string $context = 'view'): ?DateTimeImmutable { return $this->date_paid; }
         public function get_refunds(): array { return $this->refunds; }
+        public function get_total_refunded(): float { return $this->total_refunded; }
         public function get_changes(): array { return $this->changes; }
         public function get_items(string $type = 'line_item'): array { return $this->items[$type] ?? array(); }
         public function get_formatted_billing_full_name(): string { return 'Test Buyer'; }
@@ -598,6 +600,16 @@ if (!class_exists('WC_Order')) {
         public function has_status($statuses): bool { return in_array($this->status, (array) $statuses, true); }
         public function get_meta(string $key, bool $single = true) { return $this->meta[$key] ?? ''; }
         public function meta_exists(string $key): bool { return array_key_exists($key, $this->meta); }
+        public function get_meta_data(): array {
+            $metadata = array();
+            foreach ($this->meta as $key => $value) {
+                $metadata[] = new class($key, $value) {
+                    public function __construct(private string $key, private mixed $value) {}
+                    public function get_data(): array { return array('key' => $this->key, 'value' => $this->value); }
+                };
+            }
+            return $metadata;
+        }
         public function update_meta_data(string $key, $value): void { $this->meta[$key] = $value; }
         public function delete_meta_data(string $key): void { unset($this->meta[$key]); }
         public function add_order_note(string $note): void { $this->notes[] = $note; }
@@ -1142,6 +1154,7 @@ require_once dirname(__DIR__) . '/includes/class-readiness.php';
 require_once dirname(__DIR__) . '/includes/class-reconciler.php';
 require_once dirname(__DIR__) . '/includes/class-gateway.php';
 require_once dirname(__DIR__) . '/includes/class-webhook.php';
+require_once dirname(__DIR__) . '/includes/class-payment-eligibility.php';
 
 $expire_transport_url = '';
 $expire_transport_args = array();
@@ -5751,6 +5764,7 @@ same(0, $fake_hook_calls['woocommerce_order_status_on-hold'] ?? 0, 'cancel opera
 same(0, $fake_hook_calls['woocommerce_order_status_changed'] ?? 0, 'cancel operator acknowledgement emits no status-changed hook');
 
 require __DIR__ . '/recovery-boundaries.php';
+require __DIR__ . '/payment-eligibility.php';
 require __DIR__ . '/rollout-restriction.php';
 require __DIR__ . '/issuance-methods.php';
 require __DIR__ . '/grabpay.php';

@@ -63,6 +63,7 @@ function bootstrap(): void
     }
 
     require_once __DIR__ . '/includes/class-gateway.php';
+    require_once __DIR__ . '/includes/class-payment-eligibility.php';
 
     add_filter(
         'woocommerce_order_data_store_cpt_get_orders_query',

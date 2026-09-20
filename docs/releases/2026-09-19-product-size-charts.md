@@ -37,3 +37,21 @@ Acceptance requires independent authenticated readback plus anonymous checks for
 ## Rollback
 
 Restore only this release's exact PHP/CSS preimages when the live bytes still match the release. If another writer has since changed either file, reverse only this size-guide delta in a fresh readback. Retain original and newly staged images unless they are verified unreferenced. Do not restore the database over live orders, alter product options or overwrite unrelated storefront work.
+
+## Live release receipt — 2026-09-20 UTC
+
+Implementation commit `c2335f5f7f0191d6388f03055c5c9676362d3914` shipped through [PR #125](https://github.com/john8barry/bactiveph_com/pull/125), merged as `403eea2f5a3dd6184bd1ea407b6b65d29d458475`. All five project workflows passed on the PR and merged main. Independent code review found no actionable defect. The canonical dirty checkout was preserved; implementation used an isolated worktree from current upstream.
+
+The verified off-server backup comprises seven archives, 554,015,418 bytes, with server/local checksum agreement and archive integrity checks. Scoped PHP/CSS preimages are retained privately. Nine files were installed with fresh destination-hash guards, images first and PHP last, from 04:55:46 through 04:59:13 UTC. No database, shared CSS, dialog JavaScript or catalogue module was deployed. Live PHP SHA-256 is `edd4a88e93c255d50ab93e2f94093677c1eab559e617925c34ad6813a22006ce`; dedicated CSS is `bbf2e938f25d006753336b2056d921e753881225c1a3b08f1bee551f6f19b8b1`. All seven public JPEG hashes match the original provenance table.
+
+Anonymous checks passed on all 22 published product pages: seven exact charts and 15 unchanged sizing-help fallbacks. All seven standalone selections, the chooser, invalid selection and nonscalar selection passed. Ordinary public URLs served current content without cache purging. Browser checks at 1280×900 and 390×844 confirmed each of the seven dialogs and standalone pages loads one complete image within the viewport. Escape and close restore trigger focus; scrolling and backdrop dismissal also passed. Full-size link destinations and original 853×1280 rendering were verified; the in-app browser did not expose a new tab after a target-blank click, so new-tab creation itself was not independently verified. Hidden descriptions were checked in rendered markup, not with a screen reader.
+
+Authenticated file readback confirmed all nine installed hashes and retained protected files. The final log readback at 05:04:35 UTC covered 322 seconds after installation: no new bytes in the existing PHP error log, no new critical entries, and no WordPress debug log. Existing separate production shared-CSS changes remained intact. Serve Dress retained its S–XL commerce options and its supplied numeric chart without conversion.
+
+### Independently observed catalogue changes
+
+Only Bubble Dress 1010 differed from the initial catalogue fingerprint; all 21 other product fingerprints matched. Independent product-only investigation found Black variations created 04:45:40–04:47:00, Pure White variations created 04:49:44–04:51:12, and the parent modified at 04:52:53, before sizing deployment began. Gallery IDs expanded from `375` to `375,386,376`; Black and Pure White colour/variation options were added alongside Powder Blue and Sakura Pink. Featured image 1011 and existing Sakura/Powder variations were preserved. The responsible person or process is unverified; John/B Active owns any follow-up on these separate catalogue edits. The sizing source and deployment helper have no catalogue write path, and no catalogue rollback was performed.
+
+The full backup captured these catalogue edits in progress; it is a verified archive, not a transactionally consistent point-in-time catalogue snapshot. Do not use it to undo commerce data. This release's recovery uses only guarded theme-file preimages. The private rollback helper refuses changed destination hashes, restores scoped PHP/CSS preimages, and removes only exact matching release assets after reverting their references. Preserve all later writers and live orders.
+
+This seven-chart batch is complete. Issue #74 remains open for the other 15 published products' chart inputs; those remaining associations require their own confirmed source charts and release record.

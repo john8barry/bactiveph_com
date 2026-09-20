@@ -87,7 +87,7 @@ function enqueue_assets() {
 	wp_enqueue_script( 'bactive-in-store-pickup' );
 	wp_add_inline_script(
 		'bactive-in-store-pickup',
-		"(function($){'use strict';function syncPickupDescriptions(){document.querySelectorAll('.bactive-in-store-pickup-note[data-shipping-control]').forEach(function(note){var control=document.getElementById(note.getAttribute('data-shipping-control'));if(!control||!note.id){return;}var ids=(control.getAttribute('aria-describedby')||'').split(/\\s+/).filter(Boolean);if(ids.indexOf(note.id)===-1){ids.push(note.id);control.setAttribute('aria-describedby',ids.join(' '));}});}$(syncPickupDescriptions);$(document.body).on('updated_checkout updated_wc_div',syncPickupDescriptions);})(jQuery);"
+		"(function($){'use strict';function syncPickupDescriptions(){document.querySelectorAll('.bactive-in-store-pickup-note[data-shipping-control]').forEach(function(note){var control=document.getElementById(note.getAttribute('data-shipping-control'));if(!control||!note.id){return;}var ids=(control.getAttribute('aria-describedby')||'').split(/\\s+/).filter(Boolean);if(ids.indexOf(note.id)===-1){ids.push(note.id);control.setAttribute('aria-describedby',ids.join(' '));}});}$(syncPickupDescriptions);$(document.body).on('updated_checkout updated_wc_div updated_shipping_method updated_cart_totals',syncPickupDescriptions);})(jQuery);"
 	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_assets', 20 );

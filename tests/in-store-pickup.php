@@ -20,6 +20,8 @@ function esc_attr( $value ) { return htmlspecialchars( $value, ENT_QUOTES, 'UTF-
 function esc_html( $value ) { return htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' ); }
 
 require dirname( __DIR__ ) . '/wordpress/wp-content/mu-plugins/bactive-in-store-pickup.php';
+$plugin_source = file_get_contents( dirname( __DIR__ ) . '/wordpress/wp-content/mu-plugins/bactive-in-store-pickup.php' );
+check( str_contains( $plugin_source, 'updated_checkout updated_wc_div updated_shipping_method updated_cart_totals' ), 'AJAX refresh coverage changed' );
 
 class TestRate {
 	private $method_id;

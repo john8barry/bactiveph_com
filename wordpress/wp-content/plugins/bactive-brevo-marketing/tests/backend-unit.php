@@ -22,6 +22,7 @@ class WP_REST_Request {
     public function get_body(): string { return $this->body; }
 }
 function is_wp_error(mixed $value): bool { return $value instanceof WP_Error; }
+function current_user_can(string $capability): bool { return $capability === 'manage_options'; }
 function get_option(string $name, mixed $default = false): mixed { return $GLOBALS['test_options'][$name] ?? $default; }
 function update_option(string $name, mixed $value, mixed $autoload = null): bool { $GLOBALS['test_options'][$name] = $value; return true; }
 function delete_option(string $name): void { unset($GLOBALS['test_options'][$name]); }
@@ -44,8 +45,9 @@ function wp_salt(string $scheme): string { return 'disposable-unit-test-salt'; }
 function add_action(string $name, mixed $callback, int $priority = 10, int $accepted = 1): void { $GLOBALS['test_hooks'][] = $name; }
 function wc_get_page_permalink(string $page): string { return home_url('/shop/'); }
 
-foreach (['config', 'store', 'api', 'consent', 'automations', 'webhooks'] as $file) require dirname(__DIR__) . '/includes/' . $file . '.php';
+foreach (['config', 'store', 'api', 'consent', 'automations', 'webhooks', 'admin'] as $file) require dirname(__DIR__) . '/includes/' . $file . '.php';
 use Bactive\Brevo\Api;
+use Bactive\Brevo\Admin;
 use Bactive\Brevo\Automations;
 use Bactive\Brevo\Config;
 use Bactive\Brevo\Consent;
@@ -64,6 +66,10 @@ $assert(!Config::recipient_allowed('allowed@example.test'), 'test mode with no a
 $settings(['enabled' => true, 'test_recipients' => ['allowed@example.test']]);
 $assert(Config::recipient_allowed('ALLOWED@example.test') && !Config::recipient_allowed('other@example.test'), 'test recipient match is exact after case normalization');
 $assert(Config::enabled_stages() === [] && !Config::stage_enabled('ba_welcome_ready', 'welcome', 'contact'), 'new installations deny every marketing stage');
+$stageSettings = Admin::sanitize(['enabled_stages_present' => '1', 'enabled_stages' => ['welcome', 'cart', 'welcome', 'invalid']]);
+$assert(($stageSettings['enabled_stages'] ?? []) === ['welcome', 'cart'], 'stage activation settings allow only explicit capabilities');
+$stageSettings = Admin::sanitize(['enabled_stages_present' => '1']);
+$assert(($stageSettings['enabled_stages'] ?? null) === [], 'stage activation settings can disable every capability');
 $settings(['enabled' => true, 'test_recipients' => ['allowed@example.test'], 'enabled_stages' => ['welcome', 'cart', 'invalid', 'cart']]);
 $assert(Config::enabled_stages() === ['welcome', 'cart']
     && Config::stage_enabled('ba_welcome_ready', 'welcome', 'contact')

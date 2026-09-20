@@ -32,12 +32,21 @@ final class Admin {
             $emails = preg_split('/[\s,;]+/', strtolower(trim($input['test_recipients'])));
             $current['test_recipients'] = array_values(array_unique(array_filter(array_slice($emails ?: [], 0, 10), 'is_email')));
         }
+        if (array_key_exists('enabled_stages_present', $input)) {
+            $allowed = ['welcome', 'cart', 'care', 'review', 'winback'];
+            $requested = is_array($input['enabled_stages'] ?? null) ? $input['enabled_stages'] : [];
+            $current['enabled_stages'] = array_values(array_unique(array_filter(
+                array_slice($requested, 0, count($allowed)),
+                static fn($stage): bool => is_string($stage) && in_array($stage, $allowed, true)
+            )));
+        }
         foreach (['daily_event_cap' => [1, 100], 'daily_signup_cap' => [1, 50], 'per_contact_daily_cap' => [1, 2]] as $name => $bounds) {
             if (isset($input[$name]) && is_scalar($input[$name])) {
                 $current[$name] = min($bounds[1], max($bounds[0], (int) $input[$name]));
             }
         }
-        // Never accept secrets, enabled, test_mode, launch_cutoff, enabled stages or verification flags here.
+        // Never accept secrets, enabled, test_mode, launch_cutoff, or verification flags here.
+        // Stage selection alone cannot send: the protected release gates still apply.
         return $current;
     }
 
@@ -82,6 +91,13 @@ final class Admin {
                     }
                     ?>
                     <tr><th scope="row"><label for="ba-test-recipients">Test recipients</label></th><td><textarea id="ba-test-recipients" class="large-text" rows="3" name="bactive_brevo_settings[test_recipients]"><?php echo esc_textarea(implode("\n", (array) Config::get('test_recipients', []))); ?></textarea><p class="description">One exact approved email address per line, up to ten. Staging requires test mode and this allowlist.</p></td></tr>
+                    <tr><th scope="row">Enabled marketing stages</th><td><fieldset>
+                        <input type="hidden" name="bactive_brevo_settings[enabled_stages_present]" value="1">
+                        <?php foreach (['welcome' => 'Welcome after confirmed signup', 'cart' => 'Cart reminders at 2 and 24 hours', 'care' => 'Care advice after verified payment', 'review' => 'Review request after completion', 'winback' => 'Winback after completion'] as $stage => $label) : ?>
+                            <label style="display:block;margin-bottom:4px"><input type="checkbox" name="bactive_brevo_settings[enabled_stages][]" value="<?php echo esc_attr($stage); ?>" <?php checked(in_array($stage, Config::enabled_stages(), true)); ?>> <?php echo esc_html($label); ?></label>
+                        <?php endforeach; ?>
+                        <p class="description">A stage is still blocked until the release cutoff, provider workflow acceptance, and fresh CLI-cron checks pass. Disable a stage before changing its workflow.</p>
+                    </fieldset></td></tr>
                 </table>
                 <?php submit_button('Save configuration'); ?>
             </form>

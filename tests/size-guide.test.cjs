@@ -16,6 +16,134 @@ const functionsPath = path.join(
 );
 const scriptSource = fs.readFileSync(scriptPath, 'utf8');
 
+// Independent expectations from the owner's seven selected original images.
+// Product slugs are explicit: display names and chart IDs are not URL identities.
+const guides = [
+    {
+        chart: 'court-skort', slug: 'the-court-skort', name: 'Court Skort',
+        sha256: '341ebb2b36beefa5ac339db20f64cbf87925b06b419ddaa63a35c4ccf7f4f4dc',
+        values: [
+            'Sizes, in order: 4, 6, 8, 10, 12, 14.',
+            'Length: 35, 36, 37, 38, 39, 40.', 'Waist: 64, 68, 72, 76, 80, 84.',
+            'Inner Hip: 72, 76, 80, 84, 88, 92.',
+            'Inner Leg Opening: 40, 42, 44, 46, 48, 50.',
+            'Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0.',
+        ],
+        instructions: [
+            'Measure from the top of the waistband to the hem.',
+            'Measure around the narrowest part of your waist.',
+            'Measure around the fullest part of your hips (below the waistband).',
+            'Measure across the leg opening of the built-in shorts.',
+            'Measure the length of the inner shorts (from crotch to hem).',
+            'Please allow 1–2 cm difference due to manual measurement.',
+        ],
+    },
+    {
+        chart: 'strappy-bra', slug: 'the-strappy-bra', name: 'Strappy Bra',
+        sha256: 'db7ad53c2283b43d720c2275b29faab279f8e6d6dbf7be99d34633bcf95cf324',
+        values: [
+            'Each size lists Upper Bust, Under Bust and Waist, in that order.',
+            'S: 84, 69, 63.', 'M: 91, 76, 79.', 'L: 93, 81, 84.', 'XL: 103, 89, 95.',
+        ],
+        instructions: [
+            'Upper Bust: Measure around the fullest part of your bust, keeping the tape level.',
+            'Under Bust: Measure around the ribcage directly under your bust, keeping the tape level.',
+            'Waist: Measure around the narrowest part of your waist.',
+            'Scoop neckline, criss cross straps and supportive wide band.',
+            'Please allow 1–2 cm difference due to fabric stretch and manufacturing.',
+        ],
+    },
+    {
+        chart: 'bubble-dress', slug: 'bubble-dress', name: 'Bubble Dress',
+        sha256: '3ff8944b83406662e4f94fef60529f37172acaf26c277cea68f4ac717b585785',
+        values: [
+            'Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order.',
+            'S: 74, 68, 56, 80, 41.', 'M: 76, 72, 60, 84, 43.',
+            'L: 78, 76, 64, 88, 45.', 'XL: 80, 80, 68, 92, 47.',
+            'XXL: 84, 84, 72, 98, 49.',
+        ],
+        instructions: [
+            'Coat Length: Total length from top of shoulder to bottom hem of outer skirt.',
+            'Bust: Measure around the fullest part of your bust.',
+            'Waist: Measure around the narrowest part of your waist.',
+            'Hip: Measure around the fullest part of your hips.',
+            'Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts.',
+            'Double to get full thigh opening circumference.',
+            'This dimension tells how loose/tight the inner shorts fit around your thighs.',
+            'Please allow 1–2 cm difference due to manual measurement.',
+        ],
+    },
+    {
+        chart: 'match-dress', slug: 'the-match-dress', name: 'Match Dress',
+        sha256: 'ba42bf1d802427f80e10bc4bd24c231511f1fcfebffe6e3834292a78cca2af62',
+        values: [
+            'Each size lists Coat Length, Bust, Waist and Hip, in that order.',
+            'S: 77, 74, 60, 84.', 'M: 79, 78, 64, 88.',
+            'L: 81, 82, 68, 92.', 'XL: 83, 86, 72, 96.',
+        ],
+        instructions: [
+            'Bust: Measure around the fullest part of your bust, keeping the tape level.',
+            'Waist: Measure around the narrowest part of your waist.',
+            'Hip: Measure around the fullest part of your hips.',
+            'Coat Length: Total length from top of shoulder to bottom hem of outer skirt.',
+            'Clean front design, back cutout detail and signature waist band.',
+            'Please allow 1–2 cm difference due to fabric stretch and manufacturing.',
+        ],
+    },
+    {
+        chart: 'serve-dress', slug: 'the-serve-dress', name: 'Serve Dress',
+        sha256: '780f5994fe93e494080d10020c8225d14d0ee027288a04ff19c7c634dbd7c7f9',
+        values: [
+            'Sizes, in order: 4, 6, 8, 10, 12.',
+            'Length: 71, 73, 75, 77, 79.', 'Bust: 72, 76, 80, 84, 88.',
+            'Hem Circumference: 70, 74, 78, 82, 86.',
+        ],
+        instructions: [
+            'Bust: Measure around the fullest part of your bust, keeping the tape level.',
+            'Length: Measure from the top of the shoulder to the hem.',
+            'Hem Circumference: Measure around the bottom hem opening of the dress.',
+            'Please allow 1–2 cm difference due to manual measurement.',
+        ],
+    },
+    {
+        chart: 'elite-dress', slug: 'the-eyelet-dress', name: 'Elite Dress',
+        sha256: '2fd6f034828fb829936a3efd8f4dac1d64b304f7905032a2cd0b90e1db0cb897',
+        values: [
+            'Each size lists Bust, Waist, Hip, Coat Length and Slack Bottom, in that order.',
+            'S: 78–84, 62–68, 86–92, 78, 24.', 'M: 84–90, 68–74, 92–98, 79, 25.',
+            'L: 90–96, 74–80, 98–104, 80, 26.', 'XL: 96–102, 80–86, 104–110, 81, 27.',
+        ],
+        instructions: [
+            'Bust: Measure around the fullest part of your bust, keeping the tape level.',
+            'Waist: Measure around the narrowest part of your waist.',
+            'Hip: Measure around the fullest part of your hips.',
+            'Coat Length: Total length from top of shoulder to bottom hem of outer skirt.',
+            'Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts.',
+            'Double to get full thigh opening circumference.',
+            'This dimension tells how loose/tight the inner shorts fit around your thighs.',
+            'Measurements may vary slightly (±1–2 cm) due to fabric stretch and manufacturing.',
+        ],
+    },
+    {
+        chart: 'courtline-dress', slug: 'the-ace-dress', name: 'Courtline Dress',
+        sha256: '9d24a369872e87363460888bc4e367933c0555a222740d75bad2cd95cafcc73d',
+        values: [
+            'Each size lists Waist, Hip, Pants Length and Thigh, in that order.',
+            'S: 63, 90, 86, 70.5.', 'M: 67, 94, 88, 72.5.',
+            'L: 71, 98, 90, 74.5.', 'XL: 75, 102, 92, 76.5.',
+        ],
+        instructions: [
+            'Bust: Measure around the fullest part of your bust, keeping the tape level.',
+            'Waist: Measure around the narrowest part of your waist.',
+            'Hip: Measure around the fullest part of your hips.',
+            'Pants Length: Total length from top of shoulder to bottom hem of outer skirt.',
+            'Thigh: Measure around the fullest part of your thigh.',
+            'Clean front design, back cutout detail and signature waist band.',
+            'Please allow 1–2 cm difference due to fabric stretch and manufacturing.',
+        ],
+    },
+].map(guide => ({ ...guide, filename: `${guide.chart}-illustrated-20260919.jpg` }));
+
 function loadSizeGuide(options = {}) {
     const documentListeners = {};
     const modalListeners = {};
@@ -172,15 +300,14 @@ test('PHP markup exposes an accessible dialog and usable fallback link', () => {
     assert.match(markup, /aria-haspopup="dialog"/);
     assert.match(markup, /aria-controls="bactive-size-modal"/);
     assert.match(markup, /aria-labelledby="bactive-size-modal-title"/);
-    assert.match(markup, /aria-describedby="court-skort-measurements-description"/);
-    assert.match(markup, /id="court-skort-measurements-description" hidden/);
+    assert.match(markup, /aria-describedby=/);
     assert.match(markup, /add_filter\( 'the_content', 'bactive_size_guide_page_content' \)/);
     assert.match(markup, /is_page\( 'size-guide' \)/);
     assert.doesNotMatch(markup, /you\\'re/);
 });
 
 // Execute the actual isolated size-guide section with a minimal WordPress
-// contract. This tests rendered category routing, not just source patterns.
+// contract. This tests rendered exact-product routing, not just source patterns.
 function renderGuide({ slug = '', product = true, page = false, admin = false,
     loop = true, main = true, action = 'modal', chart = '', query = {} } = {}) {
     const source = fs.readFileSync(functionsPath, 'utf8');
@@ -210,6 +337,7 @@ function renderGuide({ slug = '', product = true, page = false, admin = false,
         function get_stylesheet_directory_uri() { return 'https://bactiveph.com/wp-content/themes/blocksy-child'; }
         function esc_url($value) { return htmlspecialchars($value, ENT_QUOTES); }
         function esc_attr($value) { return htmlspecialchars($value, ENT_QUOTES); }
+        function esc_html($value) { return htmlspecialchars($value, ENT_QUOTES); }
         eval(base64_decode('${section}'));
         switch ($config['action']) {
             case 'modal': bactive_size_guide_modal(); break;
@@ -222,61 +350,68 @@ function renderGuide({ slug = '', product = true, page = false, admin = false,
     return execFileSync('php', ['-r', php], { encoding: 'utf8' });
 }
 
-test('Court Skort displays only the visual chart with a nonvisual text alternative', () => {
-    const html = renderGuide({ slug: 'the-court-skort' });
-    assert.doesNotMatch(html, /<table|<dl|<h3/);
-    assert.match(html, /id="court-skort-measurements-description" hidden/);
-    for (const values of [
-        'Sizes, in order: 4, 6, 8, 10, 12, 14.',
-        'Length: 35, 36, 37, 38, 39, 40.',
-        'Waist: 64, 68, 72, 76, 80, 84.',
-        'Inner Hip: 72, 76, 80, 84, 88, 92.',
-        'Inner Leg Opening: 40, 42, 44, 46, 48, 50.',
-        'Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0.',
-    ]) assert.ok(html.includes(values));
-    assert.match(html, /Measure across the leg opening of the built-in shorts/);
-    assert.match(html, /Please allow 1–2 cm difference/);
-    assert.doesNotMatch(html, /Bubble Dress|Slack Bottom|follow below/);
-});
+for (const guide of guides) {
+    test(`${guide.name} displays its original chart and complete nonvisual measurements`, () => {
+        const html = renderGuide({ slug: guide.slug });
+        assert.equal([...html.matchAll(/<img /g)].length, 1);
+        assert.doesNotMatch(html, /<table|<dl|<h3/);
+        assert.ok(html.includes(guide.name + ' size chart'));
+        assert.ok(html.includes('/assets/images/size-guides/' + guide.filename));
+        const descriptionId = guide.chart + '-measurements-description';
+        assert.ok(html.includes(`aria-describedby="${descriptionId}"`));
+        const description = html.match(new RegExp(`<div id="${descriptionId}" hidden>([^<]+)</div>`))?.[1];
+        assert.ok(description, 'link references a hidden complete text alternative');
+        assert.ok(description.includes('measurements in centimeters (cm).'));
+        for (const value of [...guide.values, ...guide.instructions]) {
+            assert.ok(description.includes(value), `${guide.chart}: ${value}`);
+        }
+        assert.ok(description.includes('If you are between sizes, we recommend sizing up for a more comfortable fit.'));
+        for (const other of guides.filter(item => item.chart !== guide.chart)) {
+            assert.ok(!html.includes(other.filename), 'another product chart must not appear');
+        }
+    });
+}
 
 test('other skorts, dresses and unknown products never inherit an approved chart', () => {
     for (const slug of ['the-everyday-skort', 'the-flow-skort', 'the-breeze-skort',
-        'the-ace-dress', 'the-court-dress', 'the-ribbed-tank', 'the-strappy-bra',
-        'the-sculpt-legging', 'the-sculpt-romper', 'the-court-skort-lookalike', '']) {
+        'the-court-dress', 'the-ribbed-tank', 'the-sculpt-legging', 'the-sculpt-romper',
+        'the-bubble-dress', 'the-elite-dress', 'the-courtline-dress',
+        'the-court-skort-lookalike', 'the-eyelet-dress-lookalike', 'Bubble-Dress', '']) {
         const html = renderGuide({ slug });
         assert.match(html, /Size guidance/);
         assert.match(html, /https:\/\/bactiveph.com\/contact\//);
         assert.doesNotMatch(html, /<table|<img|Skort size chart|80 to 84|Asian fit/);
         assert.match(renderGuide({ slug, action: 'link' }), /\/size-guide\/#sizing-help/);
     }
-    assert.match(renderGuide({ slug: 'the-court-skort', action: 'link' }), /#court-skort-size-chart/);
-    assert.match(renderGuide({ slug: 'the-bubble-dress', action: 'link' }), /#bubble-dress-size-chart/);
-    assert.doesNotMatch(renderGuide({ action: 'content', chart: 'unapproved' }), /<table/);
-    assert.doesNotMatch(renderGuide({ action: 'content', chart: 'skort' }), /<table/);
+    for (const chart of ['unapproved', 'skort', ['court-skort'], null, 1]) {
+        assert.doesNotMatch(renderGuide({ action: 'content', chart }), /<img|<table/);
+    }
     assert.equal(renderGuide({ slug: 'the-court-skort', product: false }), '');
 });
 
-test('Bubble Dress displays only the visual chart with a nonvisual text alternative', () => {
-    const html = renderGuide({ slug: 'the-bubble-dress' });
-    assert.doesNotMatch(html, /<table|<dl|<h3/);
-    assert.match(html, /id="bubble-dress-measurements-description" hidden/);
-    for (const values of [
-        'S: 74, 68, 56, 80, 41.', 'M: 76, 72, 60, 84, 43.',
-        'L: 78, 76, 64, 88, 45.', 'XL: 80, 80, 68, 92, 47.',
-        'XXL: 84, 84, 72, 98, 49.',
-    ]) assert.ok(html.includes(values));
-    assert.match(html, /flat half-width of the leg opening/);
-    assert.match(html, /Double to get full thigh opening circumference/);
-    assert.doesNotMatch(html, /Court Skort|numeric labels|Inner Hip|follow below/);
+test('product charts ignore variation and chart query values', () => {
+    for (const guide of guides) {
+        const expected = renderGuide({ slug: guide.slug });
+        for (const size of ['S', 'XL', '4', '12']) {
+            const html = renderGuide({ slug: guide.slug, query: {
+                attribute_pa_size: size, attribute_pa_color: 'black', chart: 'unapproved',
+            } });
+            assert.equal(html, expected);
+        }
+    }
+    const serve = renderGuide({ slug: 'the-serve-dress' });
+    assert.doesNotMatch(serve, /4\s*=\s*S|S:\s*71|XL:\s*79/);
 });
 
 test('standalone guide offers a chooser instead of stacking charts', () => {
     const html = renderGuide({ action: 'page', page: true, product: false });
     assert.match(html, /Choose your product/);
     assert.doesNotMatch(html, /<img|<table/);
-    for (const chart of ['court-skort', 'bubble-dress']) {
+    assert.equal([...html.matchAll(/<li /g)].length, guides.length);
+    for (const { chart, name } of guides) {
         assert.ok(html.includes('/size-guide/?chart=' + chart + '#' + chart + '-size-chart'));
-        assert.ok(html.includes('id="' + chart + '-size-chart"'));
+        assert.ok(html.includes('id="' + chart + '-size-chart" class="bactive-size-chart-anchor"'));
+        assert.ok(html.includes(name + ' visual size chart'));
     }
     assert.match(html, /id="sizing-help"/);
     for (const override of [{ page: false }, { admin: true }, { loop: false }, { main: false }]) {
@@ -285,23 +420,24 @@ test('standalone guide offers a chooser instead of stacking charts', () => {
 });
 
 test('product fallback pages show only their exact selected visual chart', () => {
-    for (const chart of ['court-skort', 'bubble-dress']) {
+    for (const { chart, slug, filename } of guides) {
         const html = renderGuide({ action: 'page', page: true, product: false, query: { chart } });
         assert.equal([...html.matchAll(/<img /g)].length, 1);
         assert.doesNotMatch(html, /<table|Choose your product/);
-        assert.ok(html.includes(chart + '-illustrated-20260911.jpg'));
-        assert.ok(html.includes('id="' + chart + '-size-chart"'));
-        const link = renderGuide({ action: 'link', slug: 'the-' + chart });
+        assert.ok(html.includes(filename));
+        assert.ok(html.includes('id="' + chart + '-size-chart" class="bactive-size-chart-anchor"'));
+        const link = renderGuide({ action: 'link', slug });
         assert.ok(link.includes('/size-guide/?chart=' + chart + '#' + chart + '-size-chart'));
-        const other = chart === 'court-skort' ? 'bubble-dress' : 'court-skort';
-        assert.ok(!html.includes(other));
+        for (const other of guides.filter(item => item.chart !== chart)) {
+            assert.ok(!html.includes(other.filename));
+        }
     }
 });
 
 test('invalid chart queries fail safely to the chooser without reflecting input', () => {
     for (const chart of ['', 'skort', 'court-skort-lookalike', 'Court-skort',
         '../court-skort', '<script>alert(1)</script>', ['court-skort'],
-        { key: 'bubble-dress' }, null, 1]) {
+        { key: 'bubble-dress' }, 'the-eyelet-dress', 'elite-dress ', '__proto__', null, 1]) {
         const html = renderGuide({ action: 'page', page: true, query: { chart } });
         assert.match(html, /Choose your product/);
         assert.doesNotMatch(html, /<img|<table|<script>|\.\.\//);
@@ -310,25 +446,30 @@ test('invalid chart queries fail safely to the chooser without reflecting input'
 
 test('original illustrated guides are intact and restricted to their exact products', () => {
     const { createHash } = require('node:crypto');
-    const guides = [
-        ['court-skort', '9658c8213afa114480f5563f839fb890a93cb786bc019e374d788b6c0b6cdfaf'],
-        ['bubble-dress', '42a81babe16dea20dbeb5bf6a86cd6c8d05880a4466ebd727c78136badbac2e9'],
-    ];
-    for (const [chart, sha256] of guides) {
-        const filename = `${chart}-illustrated-20260911.jpg`;
+    for (const { chart, slug, sha256, filename } of guides) {
         const asset = fs.readFileSync(path.join(projectRoot,
             'wordpress/wp-content/themes/blocksy-child/assets/images/size-guides', filename));
         assert.equal(createHash('sha256').update(asset).digest('hex'), sha256);
         assert.equal(asset.subarray(0, 3).toString('hex'), 'ffd8ff');
-        const html = renderGuide({ slug: `the-${chart}` });
+        const html = renderGuide({ slug });
         assert.equal([...html.matchAll(/<img /g)].length, 1);
         assert.doesNotMatch(html, /<table/);
         assert.ok(html.includes(`/assets/images/size-guides/${filename}`));
         assert.match(html, /width="853" height="1280" loading="lazy" alt="[^"]+"/);
         assert.match(html, /target="_blank" rel="noopener" aria-label="Open [^"]+new tab"/);
-        for (const [other] of guides.filter(([key]) => key !== chart)) {
-            assert.ok(!html.includes(`${other}-illustrated-20260911.jpg`));
+        for (const other of guides.filter(item => item.chart !== chart)) {
+            assert.ok(!html.includes(other.filename));
         }
+    }
+    // Superseded originals remain intact for scoped rollback; they are no longer rendered.
+    for (const [chart, sha256] of [
+        ['court-skort', '9658c8213afa114480f5563f839fb890a93cb786bc019e374d788b6c0b6cdfaf'],
+        ['bubble-dress', '42a81babe16dea20dbeb5bf6a86cd6c8d05880a4466ebd727c78136badbac2e9'],
+    ]) {
+        const asset = fs.readFileSync(path.join(projectRoot,
+            'wordpress/wp-content/themes/blocksy-child/assets/images/size-guides',
+            `${chart}-illustrated-20260911.jpg`));
+        assert.equal(createHash('sha256').update(asset).digest('hex'), sha256);
     }
     assert.equal([...renderGuide({ action: 'page', page: true }).matchAll(/<img /g)].length, 0);
     assert.doesNotMatch(renderGuide({ action: 'content', chart: 'unapproved' }), /<img/);

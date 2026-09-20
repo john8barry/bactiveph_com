@@ -211,6 +211,13 @@ final class Automations
         $contact = Store::contact(Store::email_hash($email));
         if (!$contact || $contact['state'] !== 'confirmed' || !Config::recipient_allowed($email)
             || !self::order_identity_matches($order, $contact)) { self::clear_order_repair($order); return; }
+        $payment = self::payment_certainty($order);
+        if ($payment === 'unknown') {
+            Store::review_order($order->get_id(), 'payment_unknown');
+            self::clear_order_repair($order);
+            return;
+        }
+        if ($payment === 'unpaid') { self::clear_order_repair($order); return; }
         $paid = $order->get_date_paid();
         if (!$paid || !$order->is_paid()) { self::clear_order_repair($order); return; }
         $requests = [];
@@ -276,14 +283,15 @@ final class Automations
     private static function order_properties(array $job, array $contact): array|\WP_Error
     {
         $order = self::fresh_order((int) $job['entity_id']);
-        if ($order && self::payment_certainty($order) === 'unknown') {
+        $payment = $order ? self::payment_certainty($order) : 'unknown';
+        if ($payment === 'unknown') {
             return new \WP_Error('payment_unknown', 'Payment settlement needs independent verification.');
         }
         if (!self::order_allowed($order) || !self::order_identity_matches($order, $contact)) {
             return new \WP_Error('order_ineligible', 'Order is no longer eligible.');
         }
         $paid = $order->get_date_paid();
-        if (!$paid || !$order->is_paid()) return new \WP_Error('order_unpaid', 'Payment is not recorded.');
+        if ($payment === 'unpaid' || !$paid || !$order->is_paid()) return new \WP_Error('order_unpaid', 'Payment is not recorded.');
         if ($job['stage'] === 'care' && $paid->getTimestamp() + 2 * DAY_IN_SECONDS > time()) {
             return new \WP_Error('order_not_due', 'Order follow-up is not due.', ['retry_at' => $paid->getTimestamp() + 2 * DAY_IN_SECONDS]);
         }
@@ -337,6 +345,15 @@ final class Automations
     /** No payment lifecycle mutation, private Reconciler call, or inference from a cancelled/COD status. */
     public static function payment_certainty(mixed $order): string
     {
+        if (!$order || !method_exists($order, 'get_payment_method')) return 'unknown';
+        if (is_callable(['BActive\\PayMongo\\Payment_Eligibility', 'classify'])) {
+            try {
+                $state = \BActive\PayMongo\Payment_Eligibility::classify($order);
+                return in_array($state, ['settled', 'unpaid'], true) ? $state : 'unknown';
+            } catch (\Throwable $exception) {
+                return 'unknown';
+            }
+        }
         foreach (['paymongo_payment_intent_id', 'paymongo_client_key'] as $key) {
             if ($order->meta_exists($key)) return 'unknown';
         }

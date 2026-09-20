@@ -36,12 +36,12 @@ try {
         update_option($option_key, $settings);
     }
     
-    // Add Local Pickup
+    // Add In-Store Pickup
     $pickup_id = $zone_davao->add_shipping_method('local_pickup');
     if ($pickup_id) {
         $option_key = 'woocommerce_local_pickup_' . $pickup_id . '_settings';
         $settings = array(
-            'title' => 'Local Pickup',
+            'title' => 'In-Store Pickup',
             'cost' => '0',
             'tax_status' => 'none'
         );

@@ -1,0 +1,49 @@
+name: In-store pickup
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/in-store-pickup.yml'
+      - 'wordpress/wp-content/mu-plugins/bactive-in-store-pickup.php'
+      - 'wordpress/wp-content/plugins/bactive-cashier/includes/class-plugin.php'
+      - 'tools/cashier/seed.php'
+      - 'run_shipping_http.py'
+      - 'run_shipping_setup.py'
+      - 'run_shipping_wpcli.py'
+      - 'run_shipping_wpdb.py'
+      - 'content/in-store-pickup.json'
+      - 'tools/apply_in_store_pickup.php'
+      - 'tests/in-store-pickup.php'
+      - 'tests/in-store-pickup-release-helper.php'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/in-store-pickup.yml'
+      - 'wordpress/wp-content/mu-plugins/bactive-in-store-pickup.php'
+      - 'wordpress/wp-content/plugins/bactive-cashier/includes/class-plugin.php'
+      - 'tools/cashier/seed.php'
+      - 'run_shipping_http.py'
+      - 'run_shipping_setup.py'
+      - 'run_shipping_wpcli.py'
+      - 'run_shipping_wpdb.py'
+      - 'content/in-store-pickup.json'
+      - 'tools/apply_in_store_pickup.php'
+      - 'tests/in-store-pickup.php'
+      - 'tests/in-store-pickup-release-helper.php'
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Validate pickup copy and release helper
+        run: |
+          php -l wordpress/wp-content/mu-plugins/bactive-in-store-pickup.php
+          php -l wordpress/wp-content/plugins/bactive-cashier/includes/class-plugin.php
+          php -l tools/cashier/seed.php
+          php -l tools/apply_in_store_pickup.php
+          php tests/in-store-pickup.php
+          php tests/in-store-pickup-release-helper.php

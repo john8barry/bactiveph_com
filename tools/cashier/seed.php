@@ -59,7 +59,7 @@ $zone->add_location('PH', 'country');
 $zone->save();
 $ids['pickup_instance'] = $zone->add_shipping_method('local_pickup');
 update_option('woocommerce_local_pickup_' . $ids['pickup_instance'] . '_settings', array(
-    'enabled' => 'yes', 'title' => 'Local Pickup (Davao City)', 'cost' => '0', 'tax_status' => 'none',
+    'enabled' => 'yes', 'title' => 'In-Store Pickup', 'cost' => '0', 'tax_status' => 'none',
 ));
 update_option('bactive_cashier_fixture_ids', $ids, false);
 echo wp_json_encode($ids) . "\n";

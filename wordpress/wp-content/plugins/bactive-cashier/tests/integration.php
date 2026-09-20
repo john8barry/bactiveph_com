@@ -60,6 +60,11 @@ $product = item();
 [$key, $body, $view] = sale($product, 2, 'customer@example.invalid');
 $order = order_for($key);
 check($view['total'] === '1300.00' && $view['status'] === 'unpaid', 'Server price and unpaid state');
+$shipping_items = $order->get_shipping_methods();
+$shipping_item = reset($shipping_items);
+check(count($shipping_items) === 1 && $shipping_item instanceof WC_Order_Item_Shipping
+    && $shipping_item->get_method_id() === 'local_pickup' && $shipping_item->get_name() === 'In-Store Pickup',
+    'Cashier order uses the in-store pickup label');
 check(qty($product) === 5, 'Reservation does not decrement physical stock');
 check((int) wc_get_held_stock_quantity(wc_get_product($product)) === 2, 'Pending sale visible to standard Woo stock availability');
 global $wpdb;

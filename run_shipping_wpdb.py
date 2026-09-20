@@ -27,11 +27,11 @@ update_option('woocommerce_flexible_shipping_' . $method_davao_flat . '_settings
     'method_free_shipping_amount' => '2000'
 ));
 
-// Local pickup
+// In-store pickup
 $wpdb->insert("{$wpdb->prefix}woocommerce_shipping_zone_methods", array('zone_id' => $zone_davao_id, 'method_id' => 'local_pickup', 'method_order' => 2, 'is_active' => 1));
 $method_davao_pickup = $wpdb->insert_id;
 update_option('woocommerce_local_pickup_' . $method_davao_pickup . '_settings', array(
-    'title' => 'Local Pickup',
+    'title' => 'In-Store Pickup',
     'cost' => '0',
     'tax_status' => 'none'
 ));

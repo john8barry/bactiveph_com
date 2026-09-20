@@ -41,11 +41,11 @@ try {
     );
     update_option($flat_rate->get_instance_option_key(), $flat_rate->instance_settings);
     
-    // Add Local Pickup
+    // Add In-Store Pickup
     $pickup_id = $zone_davao->add_shipping_method('local_pickup');
     $pickup = new WC_Shipping_Local_Pickup($pickup_id);
     $pickup->instance_settings = array(
-        'title' => 'Local Pickup',
+        'title' => 'In-Store Pickup',
         'cost' => '0',
         'tax_status' => 'none'
     );

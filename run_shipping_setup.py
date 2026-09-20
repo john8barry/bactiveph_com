@@ -32,11 +32,11 @@ $flat_rate->instance_settings['title'] = 'Standard Delivery (Davao City)';
 $flat_rate->instance_settings['cost'] = '80';
 update_option($flat_rate->get_instance_option_key(), $flat_rate->instance_settings);
 
-// Add Local Pickup
+// Add In-Store Pickup
 $pickup_id = $zone_davao->add_shipping_method('local_pickup');
 $pickup = new WC_Shipping_Local_Pickup($pickup_id);
 $pickup->init_instance_settings();
-$pickup->instance_settings['title'] = 'Local Pickup';
+$pickup->instance_settings['title'] = 'In-Store Pickup';
 $pickup->instance_settings['cost'] = '0';
 update_option($pickup->get_instance_option_key(), $pickup->instance_settings);
 

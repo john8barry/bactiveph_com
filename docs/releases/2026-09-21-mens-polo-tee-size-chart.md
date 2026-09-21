@@ -1,6 +1,6 @@
 # Men's Polo / Tee illustrated size chart
 
-Issue [#74](https://github.com/john8barry/bactiveph_com/issues/74). Owner: John Barry / B Active. Medium storefront guidance improvement: the two men's Everyday Active tops need the supplied original sizing chart. Implementation and local checks are complete; production release and independent live verification are pending.
+Issue [#74](https://github.com/john8barry/bactiveph_com/issues/74). Owner: John Barry / B Active. Medium storefront guidance improvement: the two men's Everyday Active tops need the supplied original sizing chart. Production release and independent live verification are complete; see the receipt below.
 
 ## Exact product associations
 
@@ -30,3 +30,19 @@ The coordinator must record the reviewed commit/PR, qualified backup and fresh s
 ## Rollback
 
 Restore the scoped PHP preimage only while its live hash matches this release; otherwise reverse only this size-guide delta in the latest file. Remove the new image only after verifying no live reference remains and its bytes still match this release. Do not restore the database or modify commerce data.
+
+## Live release receipt — September 21, 2026 UTC
+
+[PR #134](https://github.com/john8barry/bactiveph_com/pull/134), implementation `bb3905a8abb27a986479ec93a70293c3a8f331aa`, merged as `378405bb8ac07031a2e466a83418fa4640f73528`. Independent review found no actionable issues. All five project workflows passed on the PR and merged main. Work used an isolated branch from upstream `4fd588c53be24efa469d1bba91f0b2f5c90819ee`, preserving the dirty canonical checkout.
+
+The fresh full backup contains seven archives across six components, 563,273,055 bytes, with server/local checksum agreement and archive integrity checks. Exact scoped PHP preimages and the two-file package are retained privately. Installation ran 23:24:05–23:27:26 UTC, publishing the image first and PHP last after fresh destination checks. Live PHP SHA-256 is `14826e1d72080b4ddbc6d4bb4ef72c315265a22cd59d7069f7650e7528beacfa`; the JPEG matches the source hash above. All 15 protected artifacts, including separate production shared-CSS changes and all previous chart images, were preserved.
+
+Ordinary product URLs initially returned stale LiteSpeed HTML while cache misses rendered the new guide. Purging the three URL tags for the two products and `/size-guide/`, then delivering queued purge headers through a fresh public HTTP request, resolved this. Both ordinary product URLs returned MISS and the new chart. Native CLI success alone did not establish invalidation. No global cache purge or cache-configuration change was used.
+
+Anonymous readback passed all 26 published product pages: nine matched products use eight unique charts; the other 17 retain sizing help. All eight selected standalone guides, original image hashes, general chooser, invalid selection and nonscalar selection passed. The men's chooser entry appears once. Authenticated before/after fingerprints confirmed all 26 products' galleries, attributes, variations, prices and stock unchanged.
+
+Live browser checks at 1280×900 and 390×844 passed for both men's dialogs: one fully loaded chart, viewport containment, complete hidden measurement description, Escape/close and restored trigger focus. Standalone desktop/mobile display, scrolling, backdrop dismissal and original full-size 853×1280 rendering passed. New-tab creation itself and screen-reader operation were not independently exercised; link attributes and accessible descriptions were verified in markup.
+
+Final file/log readback at 23:32:34 UTC covered 308 seconds after installation: zero fatal, parse, uncaught or critical PHP errors. The only new log entry was a 162-byte WP-CLI warning that `DOING_CRON` was already defined; no WordPress debug log was created. A subsequent read-only inspection confirmed that classification. Empty private deployment staging was removed after verification. No database rollback was performed.
+
+The guarded recovery helper reconciles both targets, refuses later-writer hash drift, restores the exact PHP preimage first, and removes only this unchanged image after its references are reverted. It never restores commerce data. Issue #74 remains open for the remaining 17 catalogue products' chart inputs. Existing dependency alerts remain separately tracked under issue #7; this release adds no dependencies.

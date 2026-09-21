@@ -205,7 +205,7 @@ function bactive_size_guide_link() {
 function bactive_get_size_charts() {
 	static $charts = array(
 		'court-skort' => array(
-			'product_slug' => 'the-court-skort',
+			'product_slugs' => array( 'the-court-skort' ),
 			'name' => 'Court Skort',
 			'image' => 'court-skort-illustrated-20260919.jpg',
 			'width' => 853,
@@ -214,7 +214,7 @@ function bactive_get_size_charts() {
 			'description' => 'Court Skort measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12, 14. Length: 35, 36, 37, 38, 39, 40. Waist: 64, 68, 72, 76, 80, 84. Inner Hip: 72, 76, 80, 84, 88, 92. Inner Leg Opening: 40, 42, 44, 46, 48, 50. Inner Length: 8.5, 8.8, 9.1, 9.4, 9.7, 10.0. How to measure: Length: Measure from the top of the waistband to the hem. Waist: Measure around the narrowest part of your waist. Inner Hip: Measure around the fullest part of your hips (below the waistband). Inner Leg Opening: Measure across the leg opening of the built-in shorts. Inner Length: Measure the length of the inner shorts (from crotch to hem). Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.',
 		),
 		'strappy-bra' => array(
-			'product_slug' => 'the-strappy-bra',
+			'product_slugs' => array( 'the-strappy-bra' ),
 			'name' => 'Strappy Bra',
 			'image' => 'strappy-bra-illustrated-20260919.jpg',
 			'width' => 853,
@@ -223,7 +223,7 @@ function bactive_get_size_charts() {
 			'description' => 'Strappy Bra measurements in centimeters (cm). Each size lists Upper Bust, Under Bust and Waist, in that order. S: 84, 69, 63. M: 91, 76, 79. L: 93, 81, 84. XL: 103, 89, 95. How to measure: Upper Bust: Measure around the fullest part of your bust, keeping the tape level. Under Bust: Measure around the ribcage directly under your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Design details: Scoop neckline, criss cross straps and supportive wide band. Please allow 1–2 cm difference due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
 		),
 		'bubble-dress' => array(
-			'product_slug' => 'bubble-dress',
+			'product_slugs' => array( 'bubble-dress' ),
 			'name' => 'Bubble Dress',
 			'image' => 'bubble-dress-illustrated-20260919.jpg',
 			'width' => 853,
@@ -232,7 +232,7 @@ function bactive_get_size_charts() {
 			'description' => 'Bubble Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order. S: 74, 68, 56, 80, 41. M: 76, 72, 60, 84, 43. L: 78, 76, 64, 88, 45. XL: 80, 80, 68, 92, 47. XXL: 84, 84, 72, 98, 49. How to measure: Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Bust: Measure around the fullest part of your bust. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.',
 		),
 		'match-dress' => array(
-			'product_slug' => 'the-match-dress',
+			'product_slugs' => array( 'the-match-dress' ),
 			'name' => 'Match Dress',
 			'image' => 'match-dress-illustrated-20260919.jpg',
 			'width' => 853,
@@ -241,7 +241,7 @@ function bactive_get_size_charts() {
 			'description' => 'Match Dress measurements in centimeters (cm). Each size lists Coat Length, Bust, Waist and Hip, in that order. S: 77, 74, 60, 84. M: 79, 78, 64, 88. L: 81, 82, 68, 92. XL: 83, 86, 72, 96. How to measure: Bust: Measure around the fullest part of your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Design details: Clean front design, back cutout detail and signature waist band. Please allow 1–2 cm difference due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
 		),
 		'serve-dress' => array(
-			'product_slug' => 'the-serve-dress',
+			'product_slugs' => array( 'the-serve-dress' ),
 			'name' => 'Serve Dress',
 			'image' => 'serve-dress-illustrated-20260919.jpg',
 			'width' => 853,
@@ -250,7 +250,7 @@ function bactive_get_size_charts() {
 			'description' => 'Serve Dress measurements in centimeters (cm). Sizes, in order: 4, 6, 8, 10, 12. Length: 71, 73, 75, 77, 79. Bust: 72, 76, 80, 84, 88. Hem Circumference: 70, 74, 78, 82, 86. Measurement guide: Bust: Measure around the fullest part of your bust, keeping the tape level. Length: Measure from the top of the shoulder to the hem. Hem Circumference: Measure around the bottom hem opening of the dress. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit.',
 		),
 		'elite-dress' => array(
-			'product_slug' => 'the-eyelet-dress',
+			'product_slugs' => array( 'the-eyelet-dress' ),
 			'name' => 'Elite Dress',
 			'image' => 'elite-dress-illustrated-20260919.jpg',
 			'width' => 853,
@@ -259,13 +259,22 @@ function bactive_get_size_charts() {
 			'description' => 'Elite Dress measurements in centimeters (cm). Each size lists Bust, Waist, Hip, Coat Length and Slack Bottom, in that order. S: 78–84, 62–68, 86–92, 78, 24. M: 84–90, 68–74, 92–98, 79, 25. L: 90–96, 74–80, 98–104, 80, 26. XL: 96–102, 80–86, 104–110, 81, 27. How to measure: Bust: Measure around the fullest part of your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Coat Length: Total length from top of shoulder to bottom hem of outer skirt. Slack Bottom: This is the flat half-width of the leg opening of the built-in inner shorts. Double to get full thigh opening circumference. This dimension tells how loose/tight the inner shorts fit around your thighs. Measurements may vary slightly (±1–2 cm) due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
 		),
 		'courtline-dress' => array(
-			'product_slug' => 'the-ace-dress',
+			'product_slugs' => array( 'the-ace-dress' ),
 			'name' => 'Courtline Dress',
 			'image' => 'courtline-dress-illustrated-20260919.jpg',
 			'width' => 853,
 			'height' => 1280,
 			'alt' => 'Courtline Dress size chart with waist, hip, pants length and thigh measurements, plus bust measuring arrows and a back cutout.',
 			'description' => 'Courtline Dress measurements in centimeters (cm). Each size lists Waist, Hip, Pants Length and Thigh, in that order. S: 63, 90, 86, 70.5. M: 67, 94, 88, 72.5. L: 71, 98, 90, 74.5. XL: 75, 102, 92, 76.5. How to measure: Bust: Measure around the fullest part of your bust, keeping the tape level. Waist: Measure around the narrowest part of your waist. Hip: Measure around the fullest part of your hips. Pants Length: Total length from top of shoulder to bottom hem of outer skirt. Thigh: Measure around the fullest part of your thigh. Design details: Clean front design, back cutout detail and signature waist band. Please allow 1–2 cm difference due to fabric stretch and manufacturing. If you are between sizes, we recommend sizing up for a more comfortable fit.',
+		),
+		'mens-polo-tee' => array(
+			'product_slugs' => array( 'everyday-active-tee', 'every-active-polo' ),
+			'name' => 'Men’s Polo / Tee',
+			'image' => 'mens-polo-tee-illustrated-20260921.jpg',
+			'width' => 853,
+			'height' => 1280,
+			'alt' => 'Men’s Polo / Tee size chart with arrows showing bust, shoulder width, sleeve length and cuff measurements.',
+			'description' => 'Men’s Polo / Tee measurements in centimeters (cm). Each size lists Bust, Shoulder Width, Sleeve Length and Cuff, in that order. S: 98, 43, 20.5, 34. M: 102, 44.5, 23, 35.3. L: 106, 46, 23.5, 36.6. XL: 110, 47.5, 25, 37.9. XXL: 114, 49, 26.5, 39.2. How to measure: Shoulder Width: Measure from one shoulder seam to the other. Bust: Measure around the fullest part of your chest. Sleeve Length: Measure from the shoulder seam to the end of the sleeve. Cuff: Measure around the sleeve opening. Please allow 1–2 cm difference due to manual measurement. If you are between sizes, we recommend sizing up for a more comfortable fit. Design details: Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
 		),
 	);
 	return $charts;
@@ -280,7 +289,7 @@ function bactive_get_product_size_chart() {
 	}
 	$slug = get_post_field( 'post_name', get_queried_object_id() );
 	foreach ( bactive_get_size_charts() as $chart => $guide ) {
-		if ( $guide['product_slug'] === $slug ) {
+		if ( in_array( $slug, $guide['product_slugs'], true ) ) {
 			return $chart;
 		}
 	}

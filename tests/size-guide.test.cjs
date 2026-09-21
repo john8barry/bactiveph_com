@@ -16,11 +16,11 @@ const functionsPath = path.join(
 );
 const scriptSource = fs.readFileSync(scriptPath, 'utf8');
 
-// Independent expectations from the owner's seven selected original images.
+// Independent expectations from the owner's selected original images.
 // Product slugs are explicit: display names and chart IDs are not URL identities.
 const guides = [
     {
-        chart: 'court-skort', slug: 'the-court-skort', name: 'Court Skort',
+        chart: 'court-skort', slugs: ['the-court-skort'], name: 'Court Skort',
         sha256: '341ebb2b36beefa5ac339db20f64cbf87925b06b419ddaa63a35c4ccf7f4f4dc',
         values: [
             'Sizes, in order: 4, 6, 8, 10, 12, 14.',
@@ -39,7 +39,7 @@ const guides = [
         ],
     },
     {
-        chart: 'strappy-bra', slug: 'the-strappy-bra', name: 'Strappy Bra',
+        chart: 'strappy-bra', slugs: ['the-strappy-bra'], name: 'Strappy Bra',
         sha256: 'db7ad53c2283b43d720c2275b29faab279f8e6d6dbf7be99d34633bcf95cf324',
         values: [
             'Each size lists Upper Bust, Under Bust and Waist, in that order.',
@@ -54,7 +54,7 @@ const guides = [
         ],
     },
     {
-        chart: 'bubble-dress', slug: 'bubble-dress', name: 'Bubble Dress',
+        chart: 'bubble-dress', slugs: ['bubble-dress'], name: 'Bubble Dress',
         sha256: '3ff8944b83406662e4f94fef60529f37172acaf26c277cea68f4ac717b585785',
         values: [
             'Each size lists Coat Length, Bust, Waist, Hip and Slack Bottom, in that order.',
@@ -74,7 +74,7 @@ const guides = [
         ],
     },
     {
-        chart: 'match-dress', slug: 'the-match-dress', name: 'Match Dress',
+        chart: 'match-dress', slugs: ['the-match-dress'], name: 'Match Dress',
         sha256: 'ba42bf1d802427f80e10bc4bd24c231511f1fcfebffe6e3834292a78cca2af62',
         values: [
             'Each size lists Coat Length, Bust, Waist and Hip, in that order.',
@@ -91,7 +91,7 @@ const guides = [
         ],
     },
     {
-        chart: 'serve-dress', slug: 'the-serve-dress', name: 'Serve Dress',
+        chart: 'serve-dress', slugs: ['the-serve-dress'], name: 'Serve Dress',
         sha256: '780f5994fe93e494080d10020c8225d14d0ee027288a04ff19c7c634dbd7c7f9',
         values: [
             'Sizes, in order: 4, 6, 8, 10, 12.',
@@ -106,7 +106,7 @@ const guides = [
         ],
     },
     {
-        chart: 'elite-dress', slug: 'the-eyelet-dress', name: 'Elite Dress',
+        chart: 'elite-dress', slugs: ['the-eyelet-dress'], name: 'Elite Dress',
         sha256: '2fd6f034828fb829936a3efd8f4dac1d64b304f7905032a2cd0b90e1db0cb897',
         values: [
             'Each size lists Bust, Waist, Hip, Coat Length and Slack Bottom, in that order.',
@@ -125,7 +125,7 @@ const guides = [
         ],
     },
     {
-        chart: 'courtline-dress', slug: 'the-ace-dress', name: 'Courtline Dress',
+        chart: 'courtline-dress', slugs: ['the-ace-dress'], name: 'Courtline Dress',
         sha256: '9d24a369872e87363460888bc4e367933c0555a222740d75bad2cd95cafcc73d',
         values: [
             'Each size lists Waist, Hip, Pants Length and Thigh, in that order.',
@@ -142,7 +142,27 @@ const guides = [
             'Please allow 1–2 cm difference due to fabric stretch and manufacturing.',
         ],
     },
-].map(guide => ({ ...guide, filename: `${guide.chart}-illustrated-20260919.jpg` }));
+    {
+        chart: 'mens-polo-tee', slugs: ['everyday-active-tee', 'every-active-polo'],
+        name: 'Men’s Polo / Tee', filename: 'mens-polo-tee-illustrated-20260921.jpg',
+        sha256: '6abaa6fe70448b00c60110129f6f20a966aa465ffe28572c1fc96e86f84c2c92',
+        values: [
+            'Each size lists Bust, Shoulder Width, Sleeve Length and Cuff, in that order.',
+            'S: 98, 43, 20.5, 34.', 'M: 102, 44.5, 23, 35.3.',
+            'L: 106, 46, 23.5, 36.6.', 'XL: 110, 47.5, 25, 37.9.',
+            'XXL: 114, 49, 26.5, 39.2.',
+        ],
+        instructions: [
+            'Shoulder Width: Measure from one shoulder seam to the other.',
+            'Bust: Measure around the fullest part of your chest.',
+            'Sleeve Length: Measure from the shoulder seam to the end of the sleeve.',
+            'Cuff: Measure around the sleeve opening.',
+            'Please allow 1–2 cm difference due to manual measurement.',
+            'Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
+        ],
+    },
+].map(guide => ({ ...guide, filename: guide.filename ?? `${guide.chart}-illustrated-20260919.jpg` }));
+const productGuides = guides.flatMap(guide => guide.slugs.map(slug => ({ ...guide, slug })));
 
 function loadSizeGuide(options = {}) {
     const documentListeners = {};
@@ -350,9 +370,9 @@ function renderGuide({ slug = '', product = true, page = false, admin = false,
     return execFileSync('php', ['-r', php], { encoding: 'utf8' });
 }
 
-for (const guide of guides) {
-    test(`${guide.name} displays its original chart and complete nonvisual measurements`, () => {
-        const html = renderGuide({ slug: guide.slug });
+for (const { slug, ...guide } of productGuides) {
+    test(`${slug} displays its original chart and complete nonvisual measurements`, () => {
+        const html = renderGuide({ slug });
         assert.equal([...html.matchAll(/<img /g)].length, 1);
         assert.doesNotMatch(html, /<table|<dl|<h3/);
         assert.ok(html.includes(guide.name + ' size chart'));
@@ -376,6 +396,8 @@ test('other skorts, dresses and unknown products never inherit an approved chart
     for (const slug of ['the-everyday-skort', 'the-flow-skort', 'the-breeze-skort',
         'the-court-dress', 'the-ribbed-tank', 'the-sculpt-legging', 'the-sculpt-romper',
         'the-bubble-dress', 'the-elite-dress', 'the-courtline-dress',
+        'the-match-polo', 'the-everyday-tee', 'unrelated-mens-polo', 'mens-training-shorts',
+        'everyday-active-polo', 'everyday-active-tee-lookalike', 'every-active-polo-lookalike',
         'the-court-skort-lookalike', 'the-eyelet-dress-lookalike', 'Bubble-Dress', '']) {
         const html = renderGuide({ slug });
         assert.match(html, /Size guidance/);
@@ -390,10 +412,10 @@ test('other skorts, dresses and unknown products never inherit an approved chart
 });
 
 test('product charts ignore variation and chart query values', () => {
-    for (const guide of guides) {
-        const expected = renderGuide({ slug: guide.slug });
+    for (const { slug } of productGuides) {
+        const expected = renderGuide({ slug });
         for (const size of ['S', 'XL', '4', '12']) {
-            const html = renderGuide({ slug: guide.slug, query: {
+            const html = renderGuide({ slug, query: {
                 attribute_pa_size: size, attribute_pa_color: 'black', chart: 'unapproved',
             } });
             assert.equal(html, expected);
@@ -414,20 +436,24 @@ test('standalone guide offers a chooser instead of stacking charts', () => {
         assert.ok(html.includes(name + ' visual size chart'));
     }
     assert.match(html, /id="sizing-help"/);
+    assert.equal([...html.matchAll(/id="mens-polo-tee-size-chart"/g)].length, 1,
+        'both exact men’s products share one chooser entry');
     for (const override of [{ page: false }, { admin: true }, { loop: false }, { main: false }]) {
         assert.equal(renderGuide({ action: 'page', page: true, ...override }), 'original content');
     }
 });
 
 test('product fallback pages show only their exact selected visual chart', () => {
-    for (const { chart, slug, filename } of guides) {
+    for (const { chart, slugs, filename } of guides) {
         const html = renderGuide({ action: 'page', page: true, product: false, query: { chart } });
         assert.equal([...html.matchAll(/<img /g)].length, 1);
         assert.doesNotMatch(html, /<table|Choose your product/);
         assert.ok(html.includes(filename));
         assert.ok(html.includes('id="' + chart + '-size-chart" class="bactive-size-chart-anchor"'));
-        const link = renderGuide({ action: 'link', slug });
-        assert.ok(link.includes('/size-guide/?chart=' + chart + '#' + chart + '-size-chart'));
+        for (const slug of slugs) {
+            const link = renderGuide({ action: 'link', slug });
+            assert.ok(link.includes('/size-guide/?chart=' + chart + '#' + chart + '-size-chart'));
+        }
         for (const other of guides.filter(item => item.chart !== chart)) {
             assert.ok(!html.includes(other.filename));
         }
@@ -437,7 +463,8 @@ test('product fallback pages show only their exact selected visual chart', () =>
 test('invalid chart queries fail safely to the chooser without reflecting input', () => {
     for (const chart of ['', 'skort', 'court-skort-lookalike', 'Court-skort',
         '../court-skort', '<script>alert(1)</script>', ['court-skort'],
-        { key: 'bubble-dress' }, 'the-eyelet-dress', 'elite-dress ', '__proto__', null, 1]) {
+        { key: 'bubble-dress' }, 'the-eyelet-dress', 'elite-dress ', 'mens-polo-tee ',
+        'everyday-active-tee', 'every-active-polo', ['mens-polo-tee'], '__proto__', null, 1]) {
         const html = renderGuide({ action: 'page', page: true, query: { chart } });
         assert.match(html, /Choose your product/);
         assert.doesNotMatch(html, /<img|<table|<script>|\.\.\//);
@@ -446,19 +473,21 @@ test('invalid chart queries fail safely to the chooser without reflecting input'
 
 test('original illustrated guides are intact and restricted to their exact products', () => {
     const { createHash } = require('node:crypto');
-    for (const { chart, slug, sha256, filename } of guides) {
+    for (const { chart, slugs, sha256, filename } of guides) {
         const asset = fs.readFileSync(path.join(projectRoot,
             'wordpress/wp-content/themes/blocksy-child/assets/images/size-guides', filename));
         assert.equal(createHash('sha256').update(asset).digest('hex'), sha256);
         assert.equal(asset.subarray(0, 3).toString('hex'), 'ffd8ff');
-        const html = renderGuide({ slug });
-        assert.equal([...html.matchAll(/<img /g)].length, 1);
-        assert.doesNotMatch(html, /<table/);
-        assert.ok(html.includes(`/assets/images/size-guides/${filename}`));
-        assert.match(html, /width="853" height="1280" loading="lazy" alt="[^"]+"/);
-        assert.match(html, /target="_blank" rel="noopener" aria-label="Open [^"]+new tab"/);
-        for (const other of guides.filter(item => item.chart !== chart)) {
-            assert.ok(!html.includes(other.filename));
+        for (const slug of slugs) {
+            const html = renderGuide({ slug });
+            assert.equal([...html.matchAll(/<img /g)].length, 1);
+            assert.doesNotMatch(html, /<table/);
+            assert.ok(html.includes(`/assets/images/size-guides/${filename}`));
+            assert.match(html, /width="853" height="1280" loading="lazy" alt="[^"]+"/);
+            assert.match(html, /target="_blank" rel="noopener" aria-label="Open [^"]+new tab"/);
+            for (const other of guides.filter(item => item.chart !== chart)) {
+                assert.ok(!html.includes(other.filename));
+            }
         }
     }
     // Superseded originals remain intact for scoped rollback; they are no longer rendered.

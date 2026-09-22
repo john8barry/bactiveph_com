@@ -32,4 +32,19 @@ Because the header is global and asset URLs use filemtime, purge LiteSpeed page 
 
 Rollback only when live asset hashes still equal this release: atomically restore their exact preimages, invalidate applicable page cache and repeat live checks. Preserve any later writer changes and all database/order state. A full backup is disaster recovery, not the routine UI rollback.
 
-Production acceptance remains pending until a receipt is appended.
+## Production receipt — September 22, 2026
+
+[PR #140](https://github.com/john8barry/bactiveph_com/pull/140) merged as `1f2909dd509a771a9696cbd37f2072633268ff09` from implementation `499d8e306ef260852ea8562b21d36e28b5dccf9c`. PR workflow `35758937123` and merged-main workflow `35759132079` both passed. Independent source/test review passed. The shared dirty checkout was preserved.
+
+Before implementation, a fresh complete backup qualified: seven archives, all six component kinds, **563,199,988 bytes**, independently verified SHA-256 and ZIP/gzip integrity off-server. Exact original CSS/JS bytes and modes were also retained privately. The narrow deployment used strict-host SFTP, an exclusive writer directory, fresh destination guards, private staging, atomic replacement and immediate destination readback; file modes remained 0644.
+
+| Asset | Before SHA-256 | Deployed SHA-256 |
+| --- | --- | --- |
+| `header-sage.css` | `0a083f8474511dda5001a155ab3e32e491b256f9257bc587e3742aac5983c687` | `599a4b28ee0d9336523b8d3406a2ada12c20f0c86e7ccddc295a329dfe891257` |
+| `header-sage.js` | `a49301ff29ef6d08b89588d237f698abdb5c2de4c82d6478a6e1515b7f38366a` | `63882565683bb4c458c5bf3fc14a3c978171609e1329a1e361681730c1d3c7db` |
+
+LiteSpeed page cache was purged once. An initial independent shop request returned stale versions; normal browser navigation and repeated independent ordinary shop requests subsequently returned the new versions and exact hashes, without another purge. Homepage, shop, men's Tops, Every Active Polo, About, cart and empty-checkout HTTP routes returned 200 (including normal redirects). Actual served asset versions are CSS `1790097219` and JavaScript `1790097224`; both hashed to the reviewed bytes.
+
+Live 1280px desktop and 390px mobile checks confirmed 110→78px and 96→68px compression, fixed top, stable main-content position and no horizontal overflow. Mobile Men → Tops, nested Escape/focus return, lower menu/search reachability, product-page navigation, cart and checkout rendering passed. Browser error output was empty. No order or payment was submitted.
+
+Authenticated readbacks at 108, 227 and **302 seconds** after installation showed unchanged candidate hashes, zero new error-log bytes, zero new debug-log bytes and zero critical patterns. The private server stage was removed and the exclusive writer lock released after acceptance. The full backup, two-file preimages and sanitized local receipts remain private and available for rollback.

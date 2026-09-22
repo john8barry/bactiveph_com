@@ -66,6 +66,7 @@ function links($group) {
     if ($group === 'collections') {
         return array(
             'Leggings' => '/collections/leggings',
+            'Men' => men_links(),
             'Pickleball Dresses' => '/collections/pickleball-dresses',
             'Pilates & Yoga' => '/collections/pilates-and-yoga/',
             'Sets' => '/collections/sets',
@@ -76,6 +77,19 @@ function links($group) {
         );
     }
     return array('Pickleball Looks' => '/pickleball-looks/', 'About' => '/about-our-story/', 'Contact' => '/contact/');
+}
+
+/** Keep Bottoms hidden until its archive contains a catalog-visible product. */
+function men_links() {
+    $links = array('Tops' => '/collections/tops-men/');
+    if (function_exists('get_term_by')) {
+        $bottoms = get_term_by('slug', 'bottoms-men', 'product_cat');
+        if ($bottoms && !is_wp_error($bottoms)
+            && (int) get_term_meta($bottoms->term_id, 'product_count_product_cat', true) > 0) {
+            $links['Bottoms'] = '/collections/bottoms-men/';
+        }
+    }
+    return $links;
 }
 
 function current_attribute($path) {

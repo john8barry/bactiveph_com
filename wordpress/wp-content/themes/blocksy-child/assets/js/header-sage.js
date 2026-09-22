@@ -24,8 +24,7 @@
     });
     header.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
-        const active = mobileMenu && mobileMenu.open && mobileMenu.contains(event.target)
-            ? mobileMenu : event.target.closest('details[open]');
+        const active = event.target.closest('details[open]');
         if (active && header.contains(active)) {
             close(active, true);
             event.preventDefault();

@@ -13,7 +13,18 @@ $account_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink(
             <summary>Shop <?php icon('chevron'); ?></summary>
             <div class="bactive-header__dropdown">
                 <?php foreach (links('collections') as $label => $path) : ?>
+                <?php if (is_array($path)) : ?>
+                <details class="bactive-header__men">
+                    <summary><?php echo esc_html($label); ?> <?php icon('chevron'); ?></summary>
+                    <div class="bactive-header__men-links">
+                        <?php foreach ($path as $child_label => $child_path) : ?>
+                        <a href="<?php echo esc_url(home_url($child_path)); ?>"<?php echo current_attribute($child_path); ?>><?php echo esc_html($child_label); ?></a>
+                        <?php endforeach; ?>
+                    </div>
+                </details>
+                <?php else : ?>
                 <a href="<?php echo esc_url(home_url($path)); ?>"<?php echo current_attribute($path); ?>><?php echo esc_html($label); ?></a>
+                <?php endif; ?>
                 <?php endforeach; ?>
             </div>
         </details>
@@ -41,7 +52,18 @@ $account_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink(
                 <summary>Shop <?php icon('chevron'); ?></summary>
                 <div class="bactive-header__collection-links">
                     <?php foreach (links('collections') as $label => $path) : ?>
+                    <?php if (is_array($path)) : ?>
+                    <details class="bactive-header__men">
+                        <summary><?php echo esc_html($label); ?> <?php icon('chevron'); ?></summary>
+                        <div class="bactive-header__men-links">
+                            <?php foreach ($path as $child_label => $child_path) : ?>
+                            <a href="<?php echo esc_url(home_url($child_path)); ?>"<?php echo current_attribute($child_path); ?>><?php echo esc_html($child_label); ?></a>
+                            <?php endforeach; ?>
+                        </div>
+                    </details>
+                    <?php else : ?>
                     <a href="<?php echo esc_url(home_url($path)); ?>"<?php echo current_attribute($path); ?>><?php echo esc_html($label); ?></a>
+                    <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             </details>

@@ -50,15 +50,15 @@ namespace {
     ), 'primary destinations and URLs are preserved in requested priority order');
     check(\BactivePH\SageHeader\links('collections') === array(
         'Leggings' => '/collections/leggings',
-        'Men' => array('Tops' => '/collections/tops-men/'),
         'Pickleball Dresses' => '/collections/pickleball-dresses',
         'Pilates & Yoga' => '/collections/pilates-and-yoga/',
         'Sets' => '/collections/sets',
         'Skorts' => '/collections/skorts',
         'Sports Bras' => '/collections/sports-bras',
         'Tops & Tanks' => '/collections/tops',
+        'Men' => array('Tops' => '/collections/tops-men/'),
         'Shop All' => '/shop/',
-    ), 'Shop categories stay alphabetical with Men nested and Shop All last');
+    ), 'Men follows Tops & Tanks and precedes Shop All');
     $bottoms_count = 'error';
     check(\BactivePH\SageHeader\men_links() === array('Tops' => '/collections/tops-men/'), 'Bottoms lookup errors leave no broken link');
     $bottoms_count = 0;
@@ -106,7 +106,7 @@ namespace {
         }
     }
     check($mobileLabels === array('Shop', 'Pickleball Looks', 'About', 'Contact'), 'mobile top-level navigation follows requested priority order');
-    $expectedCollections = array('Leggings', 'Men', 'Pickleball Dresses', 'Pilates & Yoga', 'Sets', 'Skorts', 'Sports Bras', 'Tops & Tanks', 'Shop All');
+    $expectedCollections = array('Leggings', 'Pickleball Dresses', 'Pilates & Yoga', 'Sets', 'Skorts', 'Sports Bras', 'Tops & Tanks', 'Men', 'Shop All');
     foreach (array(
         'desktop' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__primary ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__dropdown ")]/*[self::a or self::details]',
         'mobile' => '//nav[contains(concat(" ",normalize-space(@class)," ")," bactive-header__mobile-panel ")]//div[contains(concat(" ",normalize-space(@class)," ")," bactive-header__collection-links ")]/*[self::a or self::details]',
@@ -115,7 +115,7 @@ namespace {
         foreach ($xpath->query($query) as $node) {
             $collectionLabels[] = trim($node->nodeName === 'details' ? $xpath->query('./summary', $node)->item(0)->textContent : $node->textContent);
         }
-        check($collectionLabels === $expectedCollections, $deviceName . ' renders Men in the alphabetical Shop order');
+        check($collectionLabels === $expectedCollections, $deviceName . ' renders Men between Tops & Tanks and Shop All');
         $men = $xpath->query($query . '[contains(concat(" ",normalize-space(@class)," ")," bactive-header__men ")]');
         check($men->length === 1, $deviceName . ' renders one nested Men disclosure');
         $tops = $xpath->query('.//a[@href="https://bactiveph.com/collections/tops-men/"]', $men->item(0));

@@ -26,7 +26,7 @@ namespace {
     class WP_Error {}
     function is_wp_error($value) { return $value instanceof WP_Error; }
     function get_term_by($field, $value, $taxonomy) {
-        if ($field !== 'slug' || $value !== 'bottoms-men' || $taxonomy !== 'product_cat') {
+        if ($field !== 'slug' || $value !== 'bottoms' || $taxonomy !== 'product_cat') {
             throw new \RuntimeException('Bottoms lookup must stay scoped to its category');
         }
         if ($GLOBALS['bottoms_count'] === 'error') return new WP_Error();
@@ -66,7 +66,7 @@ namespace {
     $bottoms_count = 1;
     check(\BactivePH\SageHeader\men_links() === array('Tops' => '/collections/tops-men/'), 'hidden Bottoms product does not expose an empty archive');
     $bottoms_visible_count = 1;
-    check(\BactivePH\SageHeader\men_links() === array('Tops' => '/collections/tops-men/', 'Bottoms' => '/collections/bottoms-men/'), 'published Bottoms category becomes visible');
+    check(\BactivePH\SageHeader\men_links() === array('Tops' => '/collections/tops-men/', 'Bottoms' => '/collections/men/bottoms/'), 'published Bottoms category becomes visible');
     $bottoms_count = null;
     $bottoms_visible_count = 0;
     foreach (array('/template-parts/header-sage.php', '/assets/css/header-sage.css', '/assets/js/header-sage.js') as $file) {
@@ -119,7 +119,7 @@ namespace {
         $men = $xpath->query($query . '[contains(concat(" ",normalize-space(@class)," ")," bactive-header__men ")]');
         check($men->length === 1, $deviceName . ' renders one nested Men disclosure');
         $tops = $xpath->query('.//a[@href="https://bactiveph.com/collections/tops-men/"]', $men->item(0));
-        $bottoms = $xpath->query('.//a[@href="https://bactiveph.com/collections/bottoms-men/"]', $men->item(0));
+        $bottoms = $xpath->query('.//a[@href="https://bactiveph.com/collections/men/bottoms/"]', $men->item(0));
         check($tops->length === 1 && $bottoms->length === 0, $deviceName . ' links to men’s Tops and hides empty Bottoms');
     }
     $bottoms_count = 1;
@@ -127,7 +127,7 @@ namespace {
     foreach (array('desktop', 'mobile') as $device) {
         ob_start(); include dirname(__DIR__) . '/wordpress/wp-content/themes/blocksy-child/template-parts/header-sage.php';
         $withBottoms = ob_get_clean();
-        check(str_contains($withBottoms, 'https://bactiveph.com/collections/bottoms-men/'), $device . ' links to stocked men’s Bottoms');
+        check(str_contains($withBottoms, 'https://bactiveph.com/collections/men/bottoms/'), $device . ' links to stocked men’s Bottoms');
     }
     check(!str_contains($markup, 'role="menu"'), 'ordinary site navigation semantics retained');
     echo "Header guard and markup checks passed.\n";

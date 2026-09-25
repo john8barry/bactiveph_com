@@ -83,10 +83,10 @@ function links($group) {
 function men_links() {
     $links = array('Tops' => '/collections/tops-men/');
     if (function_exists('get_term_by')) {
-        $bottoms = get_term_by('slug', 'bottoms-men', 'product_cat');
+        $bottoms = get_term_by('slug', 'bottoms', 'product_cat');
         if ($bottoms && !is_wp_error($bottoms)
             && (int) get_term_meta($bottoms->term_id, 'product_count_product_cat', true) > 0) {
-            $links['Bottoms'] = '/collections/bottoms-men/';
+            $links['Bottoms'] = '/collections/men/bottoms/';
         }
     }
     return $links;

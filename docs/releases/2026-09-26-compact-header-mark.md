@@ -38,7 +38,6 @@ Served versions: CSS `1790416426`, JavaScript `1790416430`.
 
 | Asset | SHA-256 |
 | --- | --- |
-
 | header-sage-mark.png | `d0cad61159dcfde7b7a43823d5520c8b26523fea934724812fad2706e5afb370` |
 | header-sage.css | `67c2269073c2d5b196c14f1c86bce2ecb718cb0772188b2d76cd769777fde5fe` |
 | header-sage.js | `9854cee5b0dad1848e86e9a379e4962b2a56ff577933f326bde248b9427fa9db` |

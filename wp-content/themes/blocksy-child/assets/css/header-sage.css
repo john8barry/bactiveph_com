@@ -272,14 +272,14 @@ html.bactive-header-sticky { scroll-padding-top: var(--bactive-header-clearance,
     #header.bactive-header--sage .bactive-header__brand img.bactive-header__compact-mark { width: 52px; height: 52px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-    /* One dimensional handoff: wordmark turns away, B rotates forward, then
-       a sage reflection crosses only the artwork. The home link stays still. */
+    /* Let the turn read before the reflection: the B arrives at 1060ms,
+       settles for 60ms, then the sage sweep finishes at 1770ms. */
     #header.bactive-header--fixed {
-        --header-logo-turn-out: 340ms;
-        --header-logo-turn-in: 700ms;
-        --header-logo-turn-delay: 120ms;
-        --header-logo-sweep-duration: 480ms;
-        --header-logo-sweep-delay: 410ms;
+        --header-logo-turn-out: 520ms;
+        --header-logo-turn-in: 1060ms;
+        --header-logo-turn-delay: 0ms;
+        --header-logo-sweep-duration: 650ms;
+        --header-logo-sweep-delay: 1120ms;
     }
     #header.bactive-header--fixed .bactive-header__brand img {
         backface-visibility: hidden;
@@ -288,22 +288,22 @@ html.bactive-header-sticky { scroll-padding-top: var(--bactive-header-clearance,
     #header.bactive-header--fixed .bactive-header__brand img:not(.bactive-header__compact-mark) {
         transform: perspective(420px) translateX(0) rotateY(0deg) rotateZ(0deg) scale(1);
         transition: height 220ms cubic-bezier(0.16, 1, 0.3, 1), max-height 220ms cubic-bezier(0.16, 1, 0.3, 1),
-            opacity 280ms ease-out var(--header-logo-turn-delay),
-            transform var(--header-logo-turn-in) cubic-bezier(0.18, 1.12, 0.3, 1) var(--header-logo-turn-delay);
+            opacity 420ms ease-out var(--header-logo-turn-delay),
+            transform var(--header-logo-turn-in) cubic-bezier(0.32, 0, 0.2, 1) var(--header-logo-turn-delay);
     }
     #header.bactive-header--fixed.bactive-header--compact .bactive-header__mark-ready img:not(.bactive-header__compact-mark) {
         transform: perspective(420px) translateX(-14px) rotateY(100deg) rotateZ(-10deg) scale(0.72);
         transition: height 220ms cubic-bezier(0.16, 1, 0.3, 1), max-height 220ms cubic-bezier(0.16, 1, 0.3, 1),
-            opacity 110ms ease-in 180ms, transform var(--header-logo-turn-out) cubic-bezier(0.55, 0, 0.85, 0.4);
+            opacity 260ms ease-in 220ms, transform var(--header-logo-turn-out) cubic-bezier(0.4, 0, 0.6, 1);
     }
     #header.bactive-header--fixed .bactive-header__brand img.bactive-header__compact-mark {
         transform: translate(-50%, -50%) perspective(320px) translateX(20px) rotateY(-110deg) rotateZ(18deg) scale(0.48);
-        transition: opacity 110ms ease-in 150ms, transform var(--header-logo-turn-out) cubic-bezier(0.55, 0, 0.85, 0.4);
+        transition: opacity 260ms ease-in 220ms, transform var(--header-logo-turn-out) cubic-bezier(0.4, 0, 0.6, 1);
     }
     #header.bactive-header--fixed.bactive-header--compact .bactive-header__mark-ready img.bactive-header__compact-mark {
         transform: translate(-50%, -50%) perspective(320px) translateX(0) rotateY(0deg) rotateZ(0deg) scale(1);
-        transition: opacity 280ms ease-out var(--header-logo-turn-delay),
-            transform var(--header-logo-turn-in) cubic-bezier(0.18, 1.18, 0.3, 1) var(--header-logo-turn-delay);
+        transition: opacity 420ms ease-out var(--header-logo-turn-delay),
+            transform var(--header-logo-turn-in) cubic-bezier(0.32, 0, 0.2, 1) var(--header-logo-turn-delay);
     }
     /* Unsupported masks omit the reflection; the 3D logo handoff still works. */
     @supports (mask-image: url('../images/header-sage-mark.png')) or (-webkit-mask-image: url('../images/header-sage-mark.png')) {

@@ -22,4 +22,22 @@ Rollback restores existing JS/CSS first in reverse install order, then removes o
 
 Independent source review found no release blockers. Reduced-motion styles have zero transition duration; landscape search remains reachable in its scrolling panel; Escape returns focus; simulated admin offsets and native no-JavaScript menu behavior pass. Real iOS/Android hardware and software-keyboard behavior are not certified by browser emulation.
 
-Live release receipt will be appended after deployment and five-minute monitoring.
+## Live receipt
+
+Implementation commit: `500ae3eaa9779194c0506e2d50e50b4f7c34f1d5`; PR #147; merged source: `a6141085f0a5bc84c719730f5a1dda48d8d463bc`. Both PR and merged-head Sage header CI passed. Independent source and deployment-helper reviews passed.
+
+Only the three reviewed assets were atomically installed with mode 0644 under the production writer lock. Exact authenticated readback matched source. No template, MU plugin, database, order or payment changes.
+
+Initial ordinary pages still referenced old cache versions. A queued purge and targeted CLI request were insufficient. The native site LSCache page purge (`LiteSpeed\Purge::purge_all_lscache`) followed by an uncached loopback request processed the purge; ordinary homepage/shop then returned new versions on both MISS and subsequent HIT responses. No Cloudflare-wide purge was used. This follows the [LiteSpeed page-cache API](https://docs.litespeedtech.com/lscache/lscwp/api/) and [CLI guidance](https://docs.litespeedtech.com/lscache/lscwp/cli/); public readback is the acceptance proof.
+
+All eight ordinary routes returned 200: homepage, shop, every-active-polo product, cart, checkout, account, men’s Tops, and men’s Bottoms. Empty checkout redirected normally to cart. All served CSS/JS versions and the PNG matched source. Live browser checks confirmed 96→56px mobile after pointer menu close, 110→78px desktop, unchanged content position, standalone B on both devices, no overflow, correct Men navigation, working search/account/bag and no console errors. A local compact-animation sample used 2.5ms layout and 3.3ms scripting; this is laboratory evidence, not a field performance claim.
+
+Final authenticated readback at 494 seconds after installation found all three hashes unchanged and zero new bytes in error_log/debug.log. Writer lock released after acceptance. Private backup, exact preimages and rollback script remain available; receipt directory also contains public-final.json, deployment.json, latest-readback.json and writer-released.json.
+
+Served versions: CSS `1790416426`, JavaScript `1790416430`.
+
+| Asset | SHA-256 |
+| --- | --- |
+| header-sage-mark.png | `d0cad61159dcfde7b7a43823d5520c8b26523fea934724812fad2706e5afb370` |
+| header-sage.css | `67c2269073c2d5b196c14f1c86bce2ecb718cb0772188b2d76cd769777fde5fe` |
+| header-sage.js | `9854cee5b0dad1848e86e9a379e4962b2a56ff577933f326bde248b9427fa9db` |

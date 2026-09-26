@@ -9,6 +9,8 @@ const markup = execFileSync('php', ['-r', 'ob_start(); require "tests/sage-heade
 function fixture({mobile=false, y=0, height=900, adminBottom=0}={}) {
     const dom = new JSDOM(`<div id="wpadminbar"></div><header id="header" class="bactive-header--sage">${markup}</header><button id="outside">Outside</button>`, {url:'https://bactiveph.com', runScripts:'outside-only'});
     const w=dom.window, d=w.document, h=d.querySelector('header');
+    const scriptElement=d.createElement('script');scriptElement.src='/wp-content/themes/blocksy-child/assets/js/header-sage.js';
+    Object.defineProperty(d,'currentScript',{value:scriptElement});
     const media = new w.EventTarget(); media.matches=!mobile;
     w.matchMedia=()=>media; w.scrollY=y; w.innerHeight=height;
     w.visualViewport=new w.EventTarget(); w.visualViewport.height=height; w.visualViewport.offsetTop=0;
@@ -16,7 +18,7 @@ function fixture({mobile=false, y=0, height=900, adminBottom=0}={}) {
     w.requestAnimationFrame=callback=>{frames.push(callback);return frames.length;};
     w.scrollBy=options=>{w.lastScroll=options;};
     d.querySelector('#wpadminbar').getBoundingClientRect=()=>({bottom:adminBottom});
-    h.getBoundingClientRect=()=>({bottom:adminBottom+(media.matches?(h.classList.contains('bactive-header--compact')?78:110):(h.classList.contains('bactive-header--compact')?68:96))});
+    h.getBoundingClientRect=()=>({bottom:adminBottom+(media.matches?(h.classList.contains('bactive-header--compact')?78:110):(h.classList.contains('bactive-header--compact')?56:96))});
     const flush=()=>{const pending=frames;frames=[];pending.forEach(f=>f());};
     const scroll=value=>{w.scrollY=value;w.dispatchEvent(new w.Event('scroll'));flush();};
     const toggle=(el,open)=>{el.open=open;el.dispatchEvent(new w.Event('toggle'));flush();};
@@ -84,4 +86,31 @@ test('open mobile menu survives resize; closing reevaluates scroll and admin off
     f.d.querySelector('#wpadminbar').getBoundingClientRect=()=>({bottom:-254});
     f.toggle(menu,false);assert.equal(f.compact(),true);
     assert.equal(f.h.style.getPropertyValue('--header-admin-offset'),'0px');f.close();
+});
+
+test('pointer focus after closing mobile menu releases the size lock; keyboard restores it',()=>{
+    const f=fixture({mobile:true});const menu=f.d.querySelector('.bactive-header__mobile-menu');
+    const summary=menu.querySelector('summary');
+    summary.dispatchEvent(new f.w.Event('pointerdown',{bubbles:true}));summary.focus();
+    f.toggle(menu,true);f.scroll(200);assert.equal(f.compact(),false);
+    f.toggle(menu,false);assert.equal(f.compact(),true);assert.equal(f.d.activeElement,summary);
+    summary.dispatchEvent(new f.w.KeyboardEvent('keydown',{key:'Tab',bubbles:true}));
+    f.scroll(0);assert.equal(f.compact(),true);
+    summary.dispatchEvent(new f.w.Event('pointerdown',{bubbles:true}));f.flush();
+    assert.equal(f.compact(),false);f.close();
+});
+test('compact mark is decorative, load-gated and retains the original home link and failure fallback',()=>{
+    const f=fixture({y:200});const brands=[...f.d.querySelectorAll('.site-logo-container')];
+    assert.equal(brands.length,2);
+    brands.forEach(brand=>{
+        const mark=brand.querySelector('.bactive-header__compact-mark');
+        assert.ok(mark);assert.equal(mark.alt,'');assert.equal(mark.getAttribute('aria-hidden'),'true');
+        assert.equal(mark.src,'https://bactiveph.com/wp-content/themes/blocksy-child/assets/images/header-sage-mark.png');
+        assert.equal(brand.querySelector('img:not(.bactive-header__compact-mark)').alt,'B Active');
+        assert.equal(brand.classList.contains('bactive-header__mark-ready'),false);
+        Object.defineProperty(mark,'naturalWidth',{value:1024});mark.dispatchEvent(new f.w.Event('load'));
+        assert.equal(brand.classList.contains('bactive-header__mark-ready'),true);
+        mark.dispatchEvent(new f.w.Event('error'));assert.equal(brand.classList.contains('bactive-header__mark-ready'),false);
+    });
+    f.w.eval(script);assert.equal(f.d.querySelectorAll('.bactive-header__compact-mark').length,2);f.close();
 });

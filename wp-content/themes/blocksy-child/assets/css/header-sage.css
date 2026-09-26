@@ -232,8 +232,8 @@ html.bactive-header-sticky { scroll-padding-top: var(--bactive-header-clearance,
         --header-logo-height: 74px;
     }
     #header.bactive-header--sage.bactive-header--compact {
-        --header-row-height: 66px;
-        --header-logo-height: 54px;
+        --header-row-height: 54px;
+        --header-logo-height: 44px;
     }
     #header.bactive-header--fixed .bactive-header__mobile .bactive-header__brand img {
         height: var(--header-logo-height);
@@ -245,12 +245,38 @@ html.bactive-header-sticky { scroll-padding-top: var(--bactive-header-clearance,
     .bactive-header--fixed .bactive-header__menu-toggle {
         transition: height 220ms cubic-bezier(0.16, 1, 0.3, 1), min-height 220ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    #header.bactive-header--fixed .bactive-header__brand img {
-        transition: height 220ms cubic-bezier(0.16, 1, 0.3, 1), max-height 220ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
     .bactive-header--fixed .bactive-header__mobile > .bactive-header__brand,
     .bactive-header--fixed .bactive-header__mobile-bag {
         transition: top 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+}
+/* The original image keeps the link's name and width while the loaded B fades in. */
+#header.bactive-header--sage .site-logo-container { position: relative; }
+#header.bactive-header--sage .bactive-header__brand img.bactive-header__compact-mark {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 64px;
+    height: 64px;
+    max-width: none;
+    max-height: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.92);
+    pointer-events: none;
+}
+#header.bactive-header--compact .bactive-header__mark-ready img:not(.bactive-header__compact-mark) { opacity: 0; }
+#header.bactive-header--compact .bactive-header__mark-ready img.bactive-header__compact-mark {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+@media (max-width: 999.98px) {
+    #header.bactive-header--sage .bactive-header__brand img.bactive-header__compact-mark { width: 52px; height: 52px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    #header.bactive-header--fixed .bactive-header__brand img {
+        transition: height 220ms cubic-bezier(0.16, 1, 0.3, 1), max-height 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms ease-out;
+    }
+    #header.bactive-header--fixed .bactive-header__brand img.bactive-header__compact-mark {
+        transition: opacity 220ms ease-out, transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 }
 @media print {

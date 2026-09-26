@@ -4,6 +4,27 @@
     const header = document.querySelector('#header.bactive-header--sage');
     if (!header || header.dataset.stickyInitialized) return;
     header.dataset.stickyInitialized = 'true';
+    // Keep Blocksy's home link and accessible name; enhance only loaded marks.
+    const scriptURL = document.currentScript && document.currentScript.src;
+    if (scriptURL) {
+        const markURL = new URL('../images/header-sage-mark.png', scriptURL).href;
+        header.querySelectorAll('.site-logo-container').forEach(brand => {
+            if (!brand.querySelector('img')) return;
+            const mark = document.createElement('img');
+            mark.className = 'bactive-header__compact-mark';
+            mark.alt = '';
+            mark.setAttribute('aria-hidden', 'true');
+            mark.width = 1024;
+            mark.height = 1024;
+            mark.decoding = 'async';
+            mark.addEventListener('load', () => {
+                brand.classList.toggle('bactive-header__mark-ready', mark.naturalWidth > 0);
+            });
+            mark.addEventListener('error', () => brand.classList.remove('bactive-header__mark-ready'));
+            brand.append(mark);
+            mark.src = markURL;
+        });
+    }
     const disclosures = Array.from(header.querySelectorAll('.bactive-header__disclosure'));
     const mobileMenu = header.querySelector('.bactive-header__mobile-menu');
     const close = (details, returnFocus = false) => {
@@ -52,6 +73,7 @@
     const root = document.documentElement;
     const adminBar = document.getElementById('wpadminbar');
     let compact = false;
+    let keyboardInteraction = true;
     let frame = 0;
     const setPixel = (element, property, value) => {
         const next = `${Math.round(value)}px`;
@@ -59,7 +81,7 @@
     };
     const locked = () => {
         const visible = header.querySelector(desktop.matches ? '.bactive-header__desktop' : '.bactive-header__mobile');
-        return Boolean(visible && visible.contains(document.activeElement)) ||
+        return Boolean(keyboardInteraction && visible && visible.contains(document.activeElement)) ||
             (desktop.matches ? disclosures.some(details => details.open) : Boolean(mobileMenu && mobileMenu.open));
     };
     const update = () => {
@@ -93,6 +115,17 @@
     const schedule = () => {
         if (!frame) frame = window.requestAnimationFrame(update);
     };
+    // Touch/pointer focus may remain on a closed menu. Only keyboard focus
+    // should hold its size; never blur the control or change native behavior.
+    document.addEventListener('pointerdown', () => {
+        keyboardInteraction = false;
+        schedule();
+    }, {capture: true, passive: true});
+    document.addEventListener('keydown', event => {
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+        keyboardInteraction = true;
+        schedule();
+    }, true);
     window.addEventListener('scroll', schedule, {passive: true});
     window.addEventListener('resize', schedule);
     window.addEventListener('pageshow', schedule);

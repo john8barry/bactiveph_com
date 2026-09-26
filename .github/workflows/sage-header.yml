@@ -5,6 +5,7 @@ on:
       - '.github/workflows/sage-header.yml'
       - '**/bactiveph-sage-header.php'
       - '**/header-sage.*'
+      - '**/header-sage-mark.png'
       - '**/footer-sage.php'
       - 'tests/sage-header-contract.php'
       - 'tests/sage-header.test.cjs'
@@ -16,6 +17,7 @@ on:
       - '.github/workflows/sage-header.yml'
       - '**/bactiveph-sage-header.php'
       - '**/header-sage.*'
+      - '**/header-sage-mark.png'
       - '**/footer-sage.php'
       - 'tests/sage-header-contract.php'
       - 'tests/sage-header.test.cjs'
@@ -54,3 +56,4 @@ jobs:
           cmp wordpress/wp-content/themes/blocksy-child/assets/css/header-sage.css wp-content/themes/blocksy-child/assets/css/header-sage.css
           cmp wordpress/wp-content/themes/blocksy-child/assets/js/header-sage.js wp-content/themes/blocksy-child/assets/js/header-sage.js
           cmp wordpress/wp-content/themes/blocksy-child/template-parts/footer-sage.php wp-content/themes/blocksy-child/template-parts/footer-sage.php
+          cmp wordpress/wp-content/themes/blocksy-child/assets/images/header-sage-mark.png wp-content/themes/blocksy-child/assets/images/header-sage-mark.png

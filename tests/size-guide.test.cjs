@@ -143,9 +143,9 @@ const guides = [
         ],
     },
     {
-        chart: 'mens-polo-tee', slugs: ['everyday-active-tee', 'every-active-polo'],
-        name: 'Men’s Polo / Tee', filename: 'mens-polo-tee-illustrated-20260921.jpg',
-        sha256: '6abaa6fe70448b00c60110129f6f20a966aa465ffe28572c1fc96e86f84c2c92',
+        chart: 'mens-polo-tee', slugs: ['every-active-polo'],
+        name: 'Men’s Polo', filename: 'mens-polo-tee-illustrated-20261002.jpg',
+        sha256: 'a873c0e9161028a868126d8189ea179c5435abfe38ead75f80482a4c5cd06d7a',
         values: [
             'Each size lists Bust, Shoulder Width, Sleeve Length and Cuff, in that order.',
             'S: 98, 43, 20.5, 34.', 'M: 102, 44.5, 23, 35.3.',
@@ -157,6 +157,43 @@ const guides = [
             'Bust: Measure around the fullest part of your chest.',
             'Sleeve Length: Measure from the shoulder seam to the end of the sleeve.',
             'Cuff: Measure around the sleeve opening.',
+            'Please allow 1–2 cm difference due to manual measurement.',
+            'Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
+        ],
+    },
+    {
+        chart: 'mens-tee', slugs: ['everyday-active-tee'], name: 'Men’s T-Shirt',
+        filename: 'mens-tee-illustrated-20261002.jpg',
+        sha256: 'a798443704d5adf34377a468ad802cbd717c1f54914ccb5c72429c6ed72be12c',
+        values: [
+            'Each size lists Length, Bust, Hem Width and Sleeve Length, in that order.',
+            'S: 68, 96, 96, 22.5.', 'M: 70, 102, 102, 23.5.',
+            'L: 72, 108, 108, 24.5.', 'XL: 74, 114, 114, 25.5.',
+            'XXL: 76, 120, 120, 26.5.',
+        ],
+        instructions: [
+            'Length: Measure from the highest point of the shoulder to the bottom hem.',
+            'Bust: Measure around the fullest part of your chest.',
+            'Hem Width: Measure around the bottom hem of the shirt.',
+            'Sleeve Length: Measure from the shoulder seam to the end of the sleeve.',
+            'Please allow 1–2 cm difference due to manual measurement.',
+            'Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
+        ],
+    },
+    {
+        chart: 'mens-shorts', slugs: ['essential-workout-shorts'], name: 'Men’s Shorts',
+        filename: 'mens-shorts-illustrated-20261002.jpg',
+        sha256: 'd67e65357474a15b6ecd7dcb21ddd18e54e350b6239c6e9dd927e2f22d3dd563',
+        values: [
+            'Each size lists Length, Waist, Hip and Leg Opening, in that order.',
+            'S: 46, 72, 100, 58.', 'M: 47, 76, 104, 60.',
+            'L: 48, 80, 108, 62.', 'XL: 49, 84, 112, 64.', 'XXL: 50, 88, 116, 66.',
+        ],
+        instructions: [
+            'Waist: Measure around the narrowest part of your waist (usually where you bend side to side).',
+            'Hip: Measure around the fullest part of your hips.',
+            'Length: Measure from the top of the waistband to the bottom hem.',
+            'Leg Opening: Measure across the leg opening (one side, laid flat).',
             'Please allow 1–2 cm difference due to manual measurement.',
             'Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
         ],
@@ -398,6 +435,7 @@ test('other skorts, dresses and unknown products never inherit an approved chart
         'the-bubble-dress', 'the-elite-dress', 'the-courtline-dress',
         'the-match-polo', 'the-everyday-tee', 'unrelated-mens-polo', 'mens-training-shorts',
         'everyday-active-polo', 'everyday-active-tee-lookalike', 'every-active-polo-lookalike',
+        'essential-workout-shorts-lookalike',
         'the-court-skort-lookalike', 'the-eyelet-dress-lookalike', 'Bubble-Dress', '']) {
         const html = renderGuide({ slug });
         assert.match(html, /Size guidance/);
@@ -436,8 +474,6 @@ test('standalone guide offers a chooser instead of stacking charts', () => {
         assert.ok(html.includes(name + ' visual size chart'));
     }
     assert.match(html, /id="sizing-help"/);
-    assert.equal([...html.matchAll(/id="mens-polo-tee-size-chart"/g)].length, 1,
-        'both exact men’s products share one chooser entry');
     for (const override of [{ page: false }, { admin: true }, { loop: false }, { main: false }]) {
         assert.equal(renderGuide({ action: 'page', page: true, ...override }), 'original content');
     }
@@ -460,11 +496,25 @@ test('product fallback pages show only their exact selected visual chart', () =>
     }
 });
 
+test('the men’s tee uses its new measurements without changing the existing polo fallback URL', () => {
+    const tee = renderGuide({ slug: 'everyday-active-tee' });
+    const polo = renderGuide({ slug: 'every-active-polo' });
+    assert.ok(tee.includes('S: 68, 96, 96, 22.5.'));
+    assert.ok(!tee.includes('S: 98, 43, 20.5, 34.'));
+    assert.ok(polo.includes('S: 98, 43, 20.5, 34.'));
+    assert.ok(!polo.includes('S: 68, 96, 96, 22.5.'));
+    assert.match(renderGuide({ slug: 'everyday-active-tee', action: 'link' }),
+        /\/size-guide\/\?chart=mens-tee#mens-tee-size-chart/);
+    assert.match(renderGuide({ slug: 'every-active-polo', action: 'link' }),
+        /\/size-guide\/\?chart=mens-polo-tee#mens-polo-tee-size-chart/);
+});
+
 test('invalid chart queries fail safely to the chooser without reflecting input', () => {
     for (const chart of ['', 'skort', 'court-skort-lookalike', 'Court-skort',
         '../court-skort', '<script>alert(1)</script>', ['court-skort'],
         { key: 'bubble-dress' }, 'the-eyelet-dress', 'elite-dress ', 'mens-polo-tee ',
-        'everyday-active-tee', 'every-active-polo', ['mens-polo-tee'], '__proto__', null, 1]) {
+        'everyday-active-tee', 'every-active-polo', 'essential-workout-shorts',
+        'mens-tee ', '../mens-shorts', ['mens-polo-tee'], '__proto__', null, 1]) {
         const html = renderGuide({ action: 'page', page: true, query: { chart } });
         assert.match(html, /Choose your product/);
         assert.doesNotMatch(html, /<img|<table|<script>|\.\.\//);
@@ -491,13 +541,13 @@ test('original illustrated guides are intact and restricted to their exact produ
         }
     }
     // Superseded originals remain intact for scoped rollback; they are no longer rendered.
-    for (const [chart, sha256] of [
-        ['court-skort', '9658c8213afa114480f5563f839fb890a93cb786bc019e374d788b6c0b6cdfaf'],
-        ['bubble-dress', '42a81babe16dea20dbeb5bf6a86cd6c8d05880a4466ebd727c78136badbac2e9'],
+    for (const [filename, sha256] of [
+        ['court-skort-illustrated-20260911.jpg', '9658c8213afa114480f5563f839fb890a93cb786bc019e374d788b6c0b6cdfaf'],
+        ['bubble-dress-illustrated-20260911.jpg', '42a81babe16dea20dbeb5bf6a86cd6c8d05880a4466ebd727c78136badbac2e9'],
+        ['mens-polo-tee-illustrated-20260921.jpg', '6abaa6fe70448b00c60110129f6f20a966aa465ffe28572c1fc96e86f84c2c92'],
     ]) {
         const asset = fs.readFileSync(path.join(projectRoot,
-            'wordpress/wp-content/themes/blocksy-child/assets/images/size-guides',
-            `${chart}-illustrated-20260911.jpg`));
+            'wordpress/wp-content/themes/blocksy-child/assets/images/size-guides', filename));
         assert.equal(createHash('sha256').update(asset).digest('hex'), sha256);
     }
     assert.equal([...renderGuide({ action: 'page', page: true }).matchAll(/<img /g)].length, 0);

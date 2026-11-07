@@ -163,8 +163,8 @@ const guides = [
     },
     {
         chart: 'mens-tee', slugs: ['everyday-active-tee'], name: 'Men’s T-Shirt',
-        filename: 'mens-tee-illustrated-20261002.jpg',
-        sha256: 'a798443704d5adf34377a468ad802cbd717c1f54914ccb5c72429c6ed72be12c',
+        filename: 'mens-tee-illustrated-20261107.jpg',
+        sha256: 'b55ba641e0257961b54e50d331091ddc7cb87769662ab5a62d5b784a0feb5fdd',
         values: [
             'Each size lists Length, Bust, Hem Width and Sleeve Length, in that order.',
             'S: 68, 96, 96, 22.5.', 'M: 70, 102, 102, 23.5.',
@@ -181,9 +181,27 @@ const guides = [
         ],
     },
     {
-        chart: 'mens-shorts', slugs: ['essential-workout-shorts'], name: 'Men’s Shorts',
-        filename: 'mens-shorts-illustrated-20261002.jpg',
-        sha256: 'd67e65357474a15b6ecd7dcb21ddd18e54e350b6239c6e9dd927e2f22d3dd563',
+        chart: 'mens-shorts', slugs: ['essential-workout-shorts'], name: 'Essential Workout Shorts',
+        filename: 'mens-shorts-illustrated-20261107.jpg',
+        sha256: 'ebf7bb09d24ffc4bab2e3a869dbaedfce853a98fef901417986dcccacff224b2',
+        values: [
+            'Each size lists Length, Waist, Hip and Leg Opening, in that order.',
+            'S: 42.5, 72, 100, 61.2.', 'M: 43.5, 76, 104, 63.2.',
+            'L: 44.5, 80, 108, 65.2.', 'XL: 45.5, 84, 112, 67.2.', 'XXL: 46.5, 88, 116, 69.2.',
+        ],
+        instructions: [
+            'Waist: Measure around the narrowest part of your waist (usually where you bend side to side).',
+            'Hip: Measure around the fullest part of your hips.',
+            'Length: Measure from the top of the waistband to the bottom hem.',
+            'Leg Opening: Measure across the leg opening (one side, laid flat).',
+            'Please allow 1–2 cm difference due to manual measurement.',
+            'Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
+        ],
+    },
+    {
+        chart: 'go-anywhere-shorts', slugs: ['go-anywhere-performance-shorts'], name: 'Go-Anywhere Performance Shorts',
+        filename: 'go-anywhere-shorts-illustrated-20261107.jpg',
+        sha256: '00f262b44c137a06db74953d89f4992f10a0b75b23fa629f5041a86fa654966d',
         values: [
             'Each size lists Length, Waist, Hip and Leg Opening, in that order.',
             'S: 46, 72, 100, 58.', 'M: 47, 76, 104, 60.',
@@ -197,6 +215,36 @@ const guides = [
             'Please allow 1–2 cm difference due to manual measurement.',
             'Lightweight and breathable, moisture wicking, 4-way stretch and comfort for every move.',
         ],
+    },
+    {
+        chart: 'banded-waist-zip-polo', slugs: ['banded-waist-zip-polo'], name: 'Banded Waist Zip Polo',
+        filename: 'banded-waist-zip-polo-illustrated-20261107.jpg',
+        sha256: 'cf54503a521ad8f1a736810513104b71a45aaf088124961dcdbeefca0fc79c41',
+        values: [
+            'Each size lists Length, Neck Width and Bust, in that order.',
+            'S: 48.5, 18, 88.',
+            'M: 50, 18, 92.',
+            'L: 51.5, 19, 96.',
+            'XL: 53, 19, 102.',
+            '2XL: 54.5, 20, 108.',
+            '3XL: 56, 20, 114.',
+        ],
+        instructions: ['Bust: Measure around the fullest part of your bust, keeping the tape level. Length: Measure from the highest point of the shoulder down to the hem. Neck Width: Measure across the neckline from seam to seam.'],
+    },
+    {
+        chart: 'clubhouse-zip-polo', slugs: ['clubhouse-zip-polo'], name: 'The Clubhouse Zip Polo',
+        filename: 'clubhouse-zip-polo-illustrated-20261107.jpg',
+        sha256: 'adb1c2d8fa1985633ba2a2c41bbd256a0ba4a122b58ff784628c3e325fd599bc',
+        values: [
+            'Each size lists Length, Bust, Waist, Sleeve Length and Shoulder Width, in that order.',
+            'S: 54, 86, 72, 23.4, 38.',
+            'M: 56, 90, 76, 24, 39.',
+            'L: 58, 94, 80, 24.6, 40.',
+            'XL: 60, 100, 84, 25.2, 41.5.',
+            '2XL: 61, 106, 88, 25.8, 43.',
+            '3XL: 62, 112, 92, 26.4, 44.5.',
+        ],
+        instructions: ['Bust: Measure around the fullest part of your bust, keeping the tape level. Length: Measure from the highest point of the shoulder down to the hem. Shoulder Width: Measure across the back from shoulder seam to shoulder seam. Sleeve Length: Measure from the shoulder seam down to the end of the sleeve.'],
     },
 ].map(guide => ({ ...guide, filename: guide.filename ?? `${guide.chart}-illustrated-20260919.jpg` }));
 const productGuides = guides.flatMap(guide => guide.slugs.map(slug => ({ ...guide, slug })));
